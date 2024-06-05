@@ -179,6 +179,159 @@ public class DatabaseManager {
 
     //endregion
 
+    //region [ - Channel - ]
+
+    //region [ - insertChannel(Channel user) - ]
+    public void insertChannel(Channel user) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertChannel)");
+
+            stmt = c.prepareStatement("INSERT INTO UserManagement.Channel(\"Id\", CreatedId, \"Title\", \"Description\", \"DateCreated\") VALUES (?, ?, ?, ?, ?);");
+            stmt.setObject(1, user.getId());
+            stmt.setObject(2, user.getCreatorId());
+            stmt.setString(3, user.getTitle());
+            stmt.setString(4, user.getDescription());
+            stmt.setObject(5, user.getDateCreated());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertChannel)");
+    }
+    //endregion
+
+    //region [ - ArrayList<Channel> selectChannels() - ]
+    public ArrayList<Channel> selectChannels() {
+        Connection c;
+        Statement stmt;
+        ArrayList<Channel> users = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectChannels)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM UserManagement.Channel;");
+            users = new ArrayList<>();
+            while (rs.next()) {
+                Channel user = new Channel();
+                user.setId(UUID.fromString(rs.getString("Id")));
+                user.setCreatorId(UUID.fromString(rs.getString("Id")));
+                user.setCreator(selectUser(user.getCreatorId()));
+                user.setTitle(rs.getString("Title"));
+                user.setDescription(rs.getString("Description"));
+                user.setDateCreated(LocalDateTime.parse(rs.getString("DateOfBirth")));
+                users.add(user);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectChannels)");
+        return users;
+    }
+    //endregion
+
+    //region [ - Channel selectChannel(UUID Id) - ]
+    public Channel selectChannel(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Channel user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectChannel)");
+
+            stmt = c.prepareStatement("SELECT * FROM UserManagement.Channel WHERE \"Id\" = ?");
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+            user = new Channel();
+
+            user.setId(UUID.fromString(rs.getString("Id")));
+            user.setCreatorId(UUID.fromString(rs.getString("Id")));
+            user.setCreator(selectUser(user.getCreatorId()));
+            user.setTitle(rs.getString("Title"));
+            user.setDescription(rs.getString("Description"));
+            user.setDateCreated(LocalDateTime.parse(rs.getString("DateOfBirth")));
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectChannel)");
+        return user;
+    }
+    //endregion
+
+    //region [ - updateChannel(Channel user) - ]
+    public void updateChannel(Channel user) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updateChannel)");
+
+            stmt = c.prepareStatement("UPDATE UserManagement.Channel SET \"CreatedId\" = ?, \"Title\" = ?, \"Description\" = ?, \"DateCreated\" = ?  WHERE \"Id\" = ?;");
+
+            stmt.setObject(1, user.getCreatorId());
+            stmt.setString(2, user.getTitle());
+            stmt.setString(3, user.getDescription());
+            stmt.setObject(4, user.getDateCreated());
+            stmt.setObject(5, user.getId());
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (updateChannel)");
+    }
+    //endregion
+
+    //region [ - deleteChannel(UUID Id) - ]
+    public void deleteChannel(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteChannel)");
+
+            stmt = c.prepareStatement("DELETE FROM UserManagement.Channel WHERE \"Id\" = ?;");
+            stmt.setObject(1, Id);
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteChannel)");
+    }
+    //endregion
+
+    //endregion
+
 
 
     //endregion
