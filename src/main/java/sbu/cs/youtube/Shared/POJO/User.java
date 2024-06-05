@@ -1,16 +1,18 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 public class User {
-    private UUID Id ;
-    private String fullName ;
-    private String email ;
-    private Date dateOfBirth ;
-    private String userName ;
-    private String password ;
-    private Date joinDate ;
+    private UUID Id;
+    private String fullName;
+    private String email;
+    private LocalDateTime dateOfBirth;
+    private String username;
+    private String password;
+    private LocalDateTime joinDate;
 
     public UUID getId() {
         return Id;
@@ -36,20 +38,20 @@ public class User {
         this.email = email;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDateTime getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDateTime dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -60,11 +62,11 @@ public class User {
         this.password = password;
     }
 
-    public Date getJoinDate() {
+    public LocalDateTime getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(Date joinDate) {
+    public void setJoinDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
     }
 }

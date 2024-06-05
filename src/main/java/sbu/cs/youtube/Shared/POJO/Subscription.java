@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -8,7 +9,7 @@ public class Subscription {
     private UUID subscriberId ;
     private Channel channel ;
     private UUID channelId ;
-    private Date joinDate ;
+    private LocalDateTime joinDate ;
 
     public User getSubscriber() {
         return subscriber;
@@ -42,11 +43,11 @@ public class Subscription {
         this.channelId = channelId;
     }
 
-    public Date getJoinDate() {
+    public LocalDateTime getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(Date joinDate) {
+    public void setJoinDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
     }
 }

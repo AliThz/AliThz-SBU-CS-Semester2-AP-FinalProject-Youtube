@@ -1,16 +1,17 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 public class Channel {
-    private UUID Id ;
-    private User creator ;
-    private UUID creatorId ;
-    private String title ;
-    private String description ;
-    private Integer subscribers ;
-    private Date dateCreated ;
+    private UUID Id;
+    private User creator;
+    private UUID creatorId;
+    private String title;
+    private String description;
+    private int subscribers;
+    private LocalDateTime dateCreated;
 
     public UUID getId() {
         return Id;
@@ -60,11 +61,11 @@ public class Channel {
         this.subscribers = subscribers;
     }
 
-    public Date getDateCreated() {
+    public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 }
