@@ -332,6 +332,127 @@ public class DatabaseManager {
 
     //endregion
 
+    //region [ - Subscription - ]
+
+    //region [ - insertSubscription(Subscription subscription) - ]
+    public void insertSubscription(Subscription subscription) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertSubscription)");
+
+            stmt = c.prepareStatement("INSERT INTO UserManagement.Subscription(SubscriberId, channelId, joinDate) VALUES (?, ?, ?);");
+            stmt.setObject(1, subscription.getChannel());
+            stmt.setObject(2, subscription.getSubscriberId());
+            stmt.setObject(3, subscription.getJoinDate());
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertSubscription)");
+    }
+    //endregion
+
+    //region [ - ArrayList<Subscription> selectSubscriptions() - ]
+    public ArrayList<Subscription> selectSubscriptions() {
+        Connection c;
+        Statement stmt;
+        ArrayList<Subscription> subscriptions = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectSubscriptions)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM UserManagement.Subscription;");
+            subscriptions = new ArrayList<>();
+            while (rs.next()) {
+                Subscription subscription = new Subscription();
+                subscription.setSubscriberId(UUID.fromString(rs.getString("Id")));
+                subscription.setChannelId(UUID.fromString(rs.getString("Id")));
+                subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
+                subscription.setChannel(selectChannel(subscription.getChannelId()));
+                subscription.setJoinDate(LocalDateTime.parse(rs.getString("JoinDate")));
+                subscriptions.add(subscription);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectSubscriptions)");
+        return subscriptions;
+    }
+    //endregion
+
+    //region [ - Subscription selectSubscription(UUID Id) - ]
+    public Subscription selectSubscription(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Subscription subscription = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectSubscription)");
+
+            stmt = c.prepareStatement("SELECT * FROM UserManagement.Subscription WHERE \"Id\" = ?");
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+            subscription = new Subscription();
+
+            subscription.setSubscriberId(UUID.fromString(rs.getString("Id")));
+            subscription.setChannelId(UUID.fromString(rs.getString("Id")));
+            subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
+            subscription.setChannel(selectChannel(subscription.getChannelId()));
+            subscription.setJoinDate(LocalDateTime.parse(rs.getString("JoinDate")));
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectSubscription)");
+        return subscription;
+    }
+    //endregion
+
+    //region [ - deleteSubscription(UUID SubscriberId, UUID channelId) - ]
+    public void deleteSubscription(UUID SubscriberId, UUID channelId) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteSubscription)");
+
+            stmt = c.prepareStatement("DELETE FROM UserManagement.Subscription WHERE SubscriberId = ? AND channelId = ?;");
+            stmt.setObject(1, SubscriberId);
+            stmt.setObject(2, channelId);
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteSubscription)");
+    }
+    //endregion
+
+    //endregion
+
 
 
     //endregion
