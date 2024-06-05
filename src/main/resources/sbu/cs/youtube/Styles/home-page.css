@@ -1,0 +1,41 @@
+.background {
+    -fx-background-color : black;
+}
+
+.foreground {
+    -fx-background-color : rgb(41,41,41);
+}
+
+.transparent-btn {
+    -fx-background-color : transparent;
+}
+
+.logo-btn {
+    -fx-background-image: url("../Images/youtubeLogoLight.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color : transparent;
+}
+
+.burger-btn {
+    -fx-shape : "M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z";
+    -fx-background-color : white;
+}
+
+.search-field {
+    -fx-background-color : black;
+    -fx-text-fill : white;
+}
+
+.search-btn {
+    -fx-shape : "M16.296 16.996a8 8 0 11.707-.708l3.909 3.91-.707.707-3.909-3.909ZM18 11a7 7 0 11-14 0 7 7 0 0114 0Z";
+    -fx-border-color : white;
+    -fx-background-color : transparent;
+}
+
+.search-bar {
+    -fx-background-radius : 50;
+    -fx-border-radius : 50;
+    -fx-border-color : rgb(41,41,41);
+    -fx-border-width : 2;
+}
