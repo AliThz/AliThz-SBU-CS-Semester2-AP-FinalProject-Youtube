@@ -1,4 +1,4 @@
-package sbu.cs.youtube;
+package sbu.cs.youtube.Client.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
