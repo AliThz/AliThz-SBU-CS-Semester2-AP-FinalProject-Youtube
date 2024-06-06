@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -8,7 +9,7 @@ public class PlaylistDetail {
     private UUID playlistId ;
     private Video video ;
     private UUID videoId;
-    private Date dateAdded ;
+    private LocalDateTime dateAdded ;
     private Integer number ;
 
     public Playlist getPlaylist() {
@@ -43,11 +44,11 @@ public class PlaylistDetail {
         this.videoId = videoId;
     }
 
-    public Date getDateAdded() {
+    public LocalDateTime getDateAdded() {
         return dateAdded;
     }
 
-    public void setDateAdded(Date dateAdded) {
+    public void setDateAdded(LocalDateTime dateAdded) {
         this.dateAdded = dateAdded;
     }
 

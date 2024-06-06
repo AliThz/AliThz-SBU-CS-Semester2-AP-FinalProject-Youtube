@@ -1038,5 +1038,160 @@ public class DatabaseManager {
 
     //endregion
 
+
+    //region [ - PlaylistDetail - ]
+
+    //region [ - insertPlaylistDetail(PlaylistDetail playlistDetail) - ]
+    public void insertPlaylistDetail(PlaylistDetail playlistDetail) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertPlaylistDetail)");
+
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.PlaylistDetail(\"PlaylistId\", \"VideoId\", \"DateAdded\" , \"Number\") VALUES (?, ?, ?, ?);");
+            stmt.setObject(1, playlistDetail.getPlaylistId());
+            stmt.setObject(2, playlistDetail.getVideoId());
+            stmt.setObject(3, playlistDetail.getDateAdded());
+            stmt.setInt(4 , playlistDetail.getNumber());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertPlaylistDetail)");
+    }
+    //endregion
+
+    //region [ - selectPlaylistDetails() - ]
+    public ArrayList<PlaylistDetail> selectPlaylistDetails() {
+        Connection c;
+        Statement stmt;
+        ArrayList<PlaylistDetail> playlistDetails = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectPlaylistDetails)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.PlaylistDetail;");
+            playlistDetails = new ArrayList<>();
+            while (rs.next()) {
+                PlaylistDetail playlistDetail = new PlaylistDetail();
+
+                playlistDetail.setPlaylistId(UUID.fromString(rs.getString("PlaylistId")));
+                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
+                playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
+                playlistDetail.setDateAdded(LocalDateTime.parse(rs.getString("DateAdded")));
+                playlistDetail.setNumber(rs.getInt("Number"));
+
+                playlistDetails.add(playlistDetail);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectPlaylistDetails)");
+        return playlistDetails;
+    }
+    //endregion
+
+    //region [ - selectPlaylistDetail(UUID Id) - ]
+    public PlaylistDetail selectPlaylistDetail(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        PlaylistDetail playlistDetail = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectPlaylistDetail)");
+
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.PlaylistDetail WHERE \"Id\" = ?");
+            stmt.setObject(1, Id); // what is this
+            ResultSet rs = stmt.executeQuery();
+            playlistDetail = new PlaylistDetail();
+
+            playlistDetail.setPlaylistId(UUID.fromString(rs.getString("PlaylistId")));
+            playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
+            playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
+            playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
+            playlistDetail.setDateAdded(LocalDateTime.parse(rs.getString("DateAdded")));
+            playlistDetail.setNumber(rs.getInt("Number"));
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectPlaylistDetail)");
+        return playlistDetail;
+    }
+    //endregion
+
+    //region [ - updatePlaylistDetail(PlaylistDetail playlistDetail) - ]
+    public void updatePlaylistDetail(PlaylistDetail playlistDetail) { // what shoud be update in here
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updatePlaylistDetail)");
+
+            stmt = c.prepareStatement("UPDATE ContentManagement.PlaylistDetail SET \"Title\" = ?, \"Description\" = ?, \"IsPublic\" = ? WHERE \"Id\" = ?;");
+
+            stmt.setObject(1, playlistDetail.getTitle());
+            stmt.setString(2, playlistDetail.getDescription());
+            stmt.setObject(3, playlistDetail.isPublic());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (updatePlaylistDetail)");
+    }
+    //endregion
+
+    //region [ - deletePlaylistDetail(UUID Id) - ]
+    public void deletePlaylistDetail(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deletePlaylistDetail)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"Id\" = ?;");
+            stmt.setObject(1, Id);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deletePlaylistDetail)");
+    }
+    //endregion
+
+    //endregion
+
     //endregion
 }
