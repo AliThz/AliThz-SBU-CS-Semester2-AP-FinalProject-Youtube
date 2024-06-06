@@ -1,9 +1,6 @@
 package sbu.cs.youtube.Database;
 
-import sbu.cs.youtube.Shared.POJO.Channel;
-import sbu.cs.youtube.Shared.POJO.Notification;
-import sbu.cs.youtube.Shared.POJO.Subscription;
-import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.POJO.*;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -448,6 +445,148 @@ public class DatabaseManager {
             System.exit(0);
         }
         System.out.println("Operation done successfully (deleteSubscription)");
+    }
+    //endregion
+
+    //endregion
+
+
+    //region [ - Category - ]
+
+    //region [ - insertUser(Category category) - ]
+    public void insertUser(Category category) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertCategory)");
+
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.Category(\"Id\", \"Title\") VALUES (?, ?);");
+            stmt.setObject(1, category.getId());
+            stmt.setString(2, category.getTitle());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertCategory)");
+    }
+    //endregion
+
+    //region [ - selectCategories() - ]
+    public ArrayList<Category> selectCategories() {
+        Connection c;
+        Statement stmt;
+        ArrayList<Category> categories = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectCategories)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.Category;");
+            categories = new ArrayList<>();
+            while (rs.next()) {
+                Category category = new Category();
+                category.setId(UUID.fromString(rs.getString("Id")));
+                category.setTitle(rs.getString("Title"));
+                categories.add(category);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectCategories)");
+        return categories;
+    }
+    //endregion
+
+    //region [ - selectCategory(UUID Id) - ]
+    public Category selectCategory(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Category category = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectCategory)");
+
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.Category WHERE \"Id\" = ?");
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+            category = new Category();
+
+            category.setId(UUID.fromString(rs.getString("Id")));
+            category.setTitle(rs.getString("Title"));
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectCategory)");
+        return category;
+    }
+    //endregion
+
+    //region [ - updateCategory(Category category) - ]
+    public void updateCategory(Category category) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updateCategory)");
+
+            stmt = c.prepareStatement("UPDATE ContentManagement.Category SET \"Title\" = ? WHERE \"Id\" = ?;");
+
+            stmt.setString(1, category.getTitle());
+            stmt.setObject(2, category.getId());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (updateCategory)");
+    }
+    //endregion
+
+    //region [ - deleteCategory(UUID Id) - ]
+    public void deleteCategory(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteCategory)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.Category WHERE \"Id\" = ?;");
+            stmt.setObject(1, Id);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteCategory)");
     }
     //endregion
 
