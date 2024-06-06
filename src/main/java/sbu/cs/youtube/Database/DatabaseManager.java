@@ -1351,5 +1351,132 @@ public class DatabaseManager {
 
     //endregion
 
+
+    //region [ - CommentLike - ]
+
+    //region [ - insertCommentLike(CommentLike commentLike) - ]
+    public void insertCommentLike(CommentLike commentLike) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertCommentLike)");
+
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.CommentLike(\"Id\", \"UserId\", \"CommentId\") VALUES (?, ?, ?);");
+            stmt.setObject(1, commentLike.getId());
+            stmt.setObject(2, commentLike.getUserId());
+            stmt.setObject(3, commentLike.getCommentId());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertCommentLike)");
+    }
+    //endregion
+
+    //region [ - ArrayList<CommentLike> selectCommentLikes() - ]
+    public ArrayList<CommentLike> selectCommentLikes() {
+        Connection c;
+        Statement stmt;
+        ArrayList<CommentLike> commentLikes = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectCommentLikes)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.CommentLike;");
+            commentLikes = new ArrayList<>();
+            while (rs.next()) {
+                CommentLike commentLike = new CommentLike();
+
+                commentLike.setId(UUID.fromString(rs.getString("Id")));
+                commentLike.setCommentId(UUID.fromString(rs.getString("CommentId")));
+                commentLike.setComment(selectComment(commentLike.getCommentId()));
+                commentLike.setUserId(UUID.fromString(rs.getString("UserId")));
+                commentLike.setUser(selectUser(commentLike.getUserId())); // why not commentLike.User
+
+                commentLikes.add(commentLike);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectCommentLikes)");
+        return commentLikes;
+    }
+    //endregion
+
+    //region [ - CommentLike selectCommentLike(UUID Id) - ]
+    public CommentLike selectCommentLike(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        CommentLike commentLike = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectCommentLike)");
+
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.CommentLike WHERE \"Id\" = ?");
+            stmt.setObject(1, Id); // what is this
+            ResultSet rs = stmt.executeQuery();
+            commentLike = new CommentLike();
+
+            commentLike.setId(UUID.fromString(rs.getString("Id")));
+            commentLike.setCommentId(UUID.fromString(rs.getString("CommentId")));
+            commentLike.setComment(selectComment(commentLike.getCommentId()));
+            commentLike.setUserId(UUID.fromString(rs.getString("UserId")));
+            commentLike.setUser(selectUser(commentLike.getUserId())); // why not commentLike.User
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectCommentLike)");
+        return commentLike;
+    }
+    //endregion
+
+// don't want commentLike Update .
+
+    //region [ - deleteCommentLike(UUID Id) - ]
+    public void deleteCommentLike(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteCommentLike)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.CommentLike WHERE \"Id\" = ?;");
+            stmt.setObject(1, Id);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteCommentLike)");
+    }
+    //endregion
+
+    //endregion
+
     //endregion
 }
