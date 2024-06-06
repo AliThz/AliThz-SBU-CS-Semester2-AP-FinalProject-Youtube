@@ -755,6 +755,130 @@ public class DatabaseManager {
 
     //endregion
 
+//region [ - VideoLike - ]
+
+    //region [ - insertVideoLike(VideoLike videoLike) - ]
+    public void insertVideoLike(VideoLike videoLike) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertVideoLike)");
+
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.VideoLike(\"Id\", \"VideoId\", \"UserId\") VALUES (?, ?, ?);");
+            stmt.setObject(1, videoLike.getId());
+            stmt.setObject(2, videoLike.getVideoId());
+            stmt.setObject(3, videoLike.getUserId());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertVideoLike)");
+    }
+    //endregion
+
+    //region [ - ArrayList<VideoLike> selectVideoLikes() - ]
+    public ArrayList<VideoLike> selectVideoLikes() {
+        Connection c;
+        Statement stmt;
+        ArrayList<VideoLike> videoLikes = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoLikes)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.VideoLike;");
+            videoLikes = new ArrayList<>();
+            while (rs.next()) {
+                VideoLike videoLike = new VideoLike();
+
+                videoLike.setId(UUID.fromString(rs.getString("Id")));
+                videoLike.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                videoLike.setVideo(selectVideo(videoLike.getVideoId()));
+                videoLike.setUserId(UUID.fromString(rs.getString("UserId")));
+                videoLike.setUser(selectUser(videoLike.getUserId())); // why not videoLike.User
+                videoLikes.add(videoLike);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectVideoLikes)");
+        return videoLikes;
+    }
+    //endregion
+
+    //region [ - VideoLike selectVideoLike(UUID Id) - ]
+    public VideoLike selectVideoLike(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        VideoLike videoLike = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoLike)");
+
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.VideoLike WHERE \"Id\" = ?");
+            stmt.setObject(1, Id); // what is this
+            ResultSet rs = stmt.executeQuery();
+            videoLike = new VideoLike();
+
+            videoLike.setId(UUID.fromString(rs.getString("Id")));
+            videoLike.setVideoId(UUID.fromString(rs.getString("VideoId")));
+            videoLike.setVideo(selectVideo(videoLike.getVideoId()));
+            videoLike.setUserId(UUID.fromString(rs.getString("UserId")));
+            videoLike.setUser(selectUser(videoLike.getUserId())); // why not videoLike.User
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectVideoLike)");
+        return videoLike;
+    }
+    //endregion
+
+// don't want videoLike Update .
+
+    //region [ - deleteVideoLike(UUID Id) - ]
+    public void deleteVideoLike(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteVideoLike)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.VideoLike WHERE \"Id\" = ?;");
+            stmt.setObject(1, Id);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteVideoLike)");
+    }
+    //endregion
+
+    //endregion
 
     //endregion
 }
