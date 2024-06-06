@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public class Video {
     private Category category ;
     private UUID categoryId ;
     private Integer views ;
-    private Date uploadDate ;
+    private LocalDateTime uploadDate ;
 
     public UUID getId() {
         return Id;
@@ -78,11 +79,11 @@ public class Video {
         this.views = views;
     }
 
-    public Date getUploadDate() {
+    public LocalDateTime getUploadDate() {
         return uploadDate;
     }
 
-    public void setUploadDate(Date uploadDate) {
+    public void setUploadDate(LocalDateTime uploadDate) {
         this.uploadDate = uploadDate;
     }
 }

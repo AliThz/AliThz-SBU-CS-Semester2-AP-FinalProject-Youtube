@@ -593,5 +593,168 @@ public class DatabaseManager {
     //endregion
 
 
+    //region [ - Video - ]
+
+    //region [ - insertVideo(Video video) - ]
+    public void insertVideo(Video video) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertVideo)");
+
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.Video(\"Id\", \"Title\", \"Description\", \"ChannelId\",\"CategoryId\", \"Views\" , \"UploadDate\") VALUES (?, ?, ?, ?, ?, ?, ?);");
+            stmt.setObject(1, video.getId());
+            stmt.setString(2, video.getTitle());
+            stmt.setString(3, video.getDescription());
+            stmt.setObject(4, video.getChannelId());
+            stmt.setObject(5, video.getCategoryId());
+            stmt.setInt(6, video.getViews());
+            stmt.setObject(7, video.getUploadDate());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertVideo)");
+    }
+    //endregion
+
+    //region [ - selectVideos() - ]
+    public ArrayList<Video> selectVideos() {
+        Connection c;
+        Statement stmt;
+        ArrayList<Video> videos = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideos)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.Video;");
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannel(video.getChannelId()));
+                video.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
+                video.setCategory(selectCategory(video.getCategoryId())); // why not user.creator
+                video.setViews(Integer.valueOf(rs.getString("Views")));
+                video.setUploadDate(LocalDateTime.parse(rs.getString("UploadDateTime")));
+                videos.add(video);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectVideos)");
+        return videos;
+    }
+    //endregion
+
+    //region [ - selectVideo(UUID Id) - ]
+    public Video selectVideo(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Video video = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideo)");
+
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.Video WHERE \"Id\" = ?");
+            stmt.setObject(1, Id); // what is this
+            ResultSet rs = stmt.executeQuery();
+            video = new Video();
+
+            video.setId(UUID.fromString(rs.getString("Id")));
+            video.setTitle(rs.getString("Title"));
+            video.setDescription(rs.getString("Description"));
+            video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+            video.setChannel(selectChannel(video.getChannelId()));
+            video.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
+            video.setCategory(selectCategory(video.getCategoryId())); // why not user.creator
+            video.setViews(Integer.valueOf(rs.getString("Views")));
+            video.setUploadDate(LocalDateTime.parse(rs.getString("UploadDateTime")));
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectVideo)");
+        return video;
+    }
+    //endregion
+
+    //region [ - updateVideo(Video video) - ]
+    public void updateVideo(Video video) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updateVideo)");
+
+            stmt = c.prepareStatement("UPDATE ContentManagement.Video SET \"Title\" = ?, \"Description\" = ?, \"CategoryId\" = ? , \"Views\" = ? WHERE \"Id\" = ?;");
+
+            stmt.setObject(1, video.getTitle());
+            stmt.setString(2, video.getDescription());
+            stmt.setObject(3, video.getCategoryId());
+            stmt.setObject(4, video.getViews());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (updateVideo)");
+    }
+    //endregion
+
+    //region [ - deleteVideo(UUID Id) - ]
+    public void deleteVideo(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteVideo)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.Video WHERE \"Id\" = ?;");
+            stmt.setObject(1, Id);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteVideo)");
+    }
+    //endregion
+
+    //endregion
+
+
     //endregion
 }
