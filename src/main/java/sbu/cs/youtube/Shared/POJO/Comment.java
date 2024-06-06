@@ -1,19 +1,26 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 public class Comment {
-    private UUID Id ;
-    private String content ;
-    private Video video ;
-    private UUID videoId ;
-    private User sender  ;
-    private UUID senderId ;
-    private Comment parentComment ;
-    private UUID parentCommentId ;
-    private LocalDateTime dateCommented ;
+    private UUID Id;
+    private String content;
+    private Video video;
+    private UUID videoId;
+    private User sender;
+    private UUID senderId;
+    private Comment parentComment;
+    private UUID parentCommentId;
+    private LocalDateTime dateCommented;
+    private ArrayList<CommentLike> commentLikes;
+
+    public Comment() {
+        commentLikes = new ArrayList<>();
+    }
 
     public UUID getId() {
         return Id;

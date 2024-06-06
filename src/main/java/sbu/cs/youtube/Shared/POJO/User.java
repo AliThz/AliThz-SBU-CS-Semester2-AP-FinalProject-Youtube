@@ -2,6 +2,7 @@ package sbu.cs.youtube.Shared.POJO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -13,6 +14,15 @@ public class User {
     private String username;
     private String password;
     private LocalDateTime joinDate;
+    private ArrayList<Subscription> subscriptions;
+    private ArrayList<Notification> notifications;
+    private ArrayList<VideoLike> likedVideos;
+
+    public User() {
+        subscriptions = new ArrayList<>();
+        notifications = new ArrayList<>();
+        likedVideos = new ArrayList<>();
+    }
 
     public UUID getId() {
         return Id;
@@ -68,5 +78,29 @@ public class User {
 
     public void setJoinDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
+    }
+
+    public ArrayList<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(ArrayList<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public ArrayList<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(ArrayList<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public ArrayList<VideoLike> getLikedVideos() {
+        return likedVideos;
+    }
+
+    public void setLikedVideos(ArrayList<VideoLike> likedVideos) {
+        this.likedVideos = likedVideos;
     }
 }

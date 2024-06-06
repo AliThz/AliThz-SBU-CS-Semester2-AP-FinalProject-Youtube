@@ -1,6 +1,7 @@
 package sbu.cs.youtube.Shared.POJO;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,6 +15,11 @@ public class Playlist {
     private UUID creatorId ;
     private boolean isPublic ;
     private LocalDateTime dateCreated ;
+    private ArrayList<PlaylistDetail> playlistDetails;
+
+    public Playlist() {
+        this.playlistDetails = new ArrayList<>();
+    }
 
     public UUID getId() {
         return Id;
@@ -69,5 +75,13 @@ public class Playlist {
 
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public ArrayList<PlaylistDetail> getPlaylistDetails() {
+        return playlistDetails;
+    }
+
+    public void setPlaylistDetails(ArrayList<PlaylistDetail> playlistDetails) {
+        this.playlistDetails = playlistDetails;
     }
 }
