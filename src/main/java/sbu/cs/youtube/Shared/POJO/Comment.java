@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public class Comment {
     private UUID senderId ;
     private Comment parentComment ;
     private UUID parentCommentId ;
-    private Date dateCommented ;
+    private LocalDateTime dateCommented ;
 
     public UUID getId() {
         return Id;
@@ -78,11 +79,11 @@ public class Comment {
         this.parentCommentId = parentCommentId;
     }
 
-    public Date getDateCommented() {
+    public LocalDateTime getDateCommented() {
         return dateCommented;
     }
 
-    public void setDateCommented(Date dateCommented) {
+    public void setDateCommented(LocalDateTime dateCommented) {
         this.dateCommented = dateCommented;
     }
 }

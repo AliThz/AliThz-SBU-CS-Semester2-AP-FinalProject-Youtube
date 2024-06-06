@@ -1193,5 +1193,163 @@ public class DatabaseManager {
 
     //endregion
 
+    //region [ - Comment - ]
+
+    //region [ - insertComment(Comment comment) - ]
+    public void insertComment(Comment comment) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (insertComment)");
+
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.Comment(\"Id\", \"Content\", \"VideoId\", \"SenderId\",\"ParentCommentId\" , \"DataCommented\") VALUES (?, ?, ?, ?, ?, ?);");
+            stmt.setObject(1, comment.getId());
+            stmt.setString(2, comment.getContent());
+            stmt.setObject(3, comment.getVideoId());
+            stmt.setObject(4, comment.getSender());
+            stmt.setObject(5, comment.getParentCommentId());
+            stmt.setObject(6, comment.getDateCommented());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (insertComment)");
+    }
+    //endregion
+
+    //region [ - selectComments() - ]
+    public ArrayList<Comment> selectComments() {
+        Connection c;
+        Statement stmt;
+        ArrayList<Comment> comments = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectComments)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.Comment;");
+            comments = new ArrayList<>();
+            while (rs.next()) {
+                Comment comment = new Comment();
+
+                comment.setId(UUID.fromString(rs.getString("Id")));
+                comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                comment.setVideo(selectVideo(comment.getVideoId()));
+                comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
+                comment.setSender(selectUser(comment.getSenderId()));
+                comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
+                comment.setParentComment(selectComment(comment.getParentCommentId())); // ?????????????????????????????????
+                comment.setDateCommented(LocalDateTime.parse(rs.getString("DataCommented")));
+
+                comments.add(comment);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectComments)");
+        return comments;
+    }
+    //endregion
+
+    //region [ - selectComment(UUID Id) - ]
+    public Comment selectComment(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Comment comment = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectComment)");
+
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.Comment WHERE \"Id\" = ?");
+            stmt.setObject(1, Id); // what is this
+            ResultSet rs = stmt.executeQuery();
+            comment = new Comment();
+
+            comment.setId(UUID.fromString(rs.getString("Id")));
+            comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
+            comment.setVideo(selectVideo(comment.getVideoId()));
+            comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
+            comment.setSender(selectUser(comment.getSenderId()));
+            comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
+            comment.setParentComment(selectComment(comment.getParentCommentId())); // ?????????????????????????????????
+            comment.setDateCommented(LocalDateTime.parse(rs.getString("DataCommented")));
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectComment)");
+        return comment;
+    }
+    //endregion
+
+    //region [ - updateComment(Comment comment) - ]
+    public void updateComment(Comment comment) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updateComment)");
+
+            stmt = c.prepareStatement("UPDATE ContentManagement.Comment SET \"Content\" = ? WHERE \"Id\" = ?;");
+
+            stmt.setString(1, comment.getContent());
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (updateComment)");
+    }
+    //endregion
+
+    //region [ - deleteComment(UUID Id) - ]
+    public void deleteComment(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteComment)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.Comment WHERE \"Id\" = ?;");
+            stmt.setObject(1, Id);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteComment)");
+    }
+    //endregion
+
+    //endregion
+
     //endregion
 }
