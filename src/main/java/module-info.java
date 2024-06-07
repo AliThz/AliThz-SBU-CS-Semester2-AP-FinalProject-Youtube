@@ -4,6 +4,7 @@ module sbu.cs.youtube {
 
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
 
     opens sbu.cs.youtube to javafx.fxml;
     exports sbu.cs.youtube;
