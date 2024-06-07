@@ -1,21 +1,31 @@
 package sbu.cs.youtube.Client.Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.Notifications;
 
-import java.awt.event.ActionEvent;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
 
+    //region [ - Fields - ]
+
     boolean isExpanded = true;
+
     boolean isSignedIn = false;
 
     @FXML
@@ -23,6 +33,24 @@ public class HomePageController implements Initializable {
 
     @FXML
     private HBox hbxRightNavItem;
+
+    //endregion
+
+    //region [ - Methods - ]
+
+    //region [ - initialize(URL location, ResourceBundle resources) - ]
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        setRightNavBarHBox();
+
+
+    }
+
+    //endregion
+
+    //region [ - openSesame() - ]
 
     @FXML
     void openSesame() {
@@ -59,8 +87,11 @@ public class HomePageController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    //endregion
+
+    //region [ - setRightNavBarHBox() - ]
+
+    private void setRightNavBarHBox() {
         if (!isSignedIn) {
 
 
@@ -80,7 +111,8 @@ public class HomePageController implements Initializable {
             signInBtn.setGraphic(signInHbx);
             signInBtn.setTooltip(new Tooltip("Sign In"));
 
-            // ToDo set onAction for signInBtn
+            signInBtn.setOnAction(this::getSignInPage);
+
             hbxRightNavItem.getChildren().clear();
             hbxRightNavItem.getChildren().add(signInBtn);
         } else {
@@ -108,13 +140,64 @@ public class HomePageController implements Initializable {
             notificationsBtn.setGraphic(notificationsSvg);
             accountBtn.setGraphic(accountImg);
 
-            // ToDo set onAction for buttons
+            createBtn.setTooltip(new Tooltip("Create"));
+            notificationsBtn.setTooltip(new Tooltip("Notifications"));
+            accountBtn.setTooltip(new Tooltip("Account Management"));
+
+            createBtn.setOnAction(this::getCreatePage);
+            notificationsBtn.setOnAction(this::getNotificationsScene);
+            accountBtn.setOnAction(this::getDashboard);
 
             hbxRightNavItem.getChildren().clear();
             hbxRightNavItem.getChildren().add(createBtn);
             hbxRightNavItem.getChildren().add(notificationsBtn);
             hbxRightNavItem.getChildren().add(accountBtn);
         }
-
     }
+    //endregion
+
+    //region [ - getDashboard(ActionEvent event) - ]
+
+    private void getDashboard(ActionEvent event) {
+    }
+
+    //endregion
+
+    //region [ - getNotificationsScene(ActionEvent event) - ]
+
+    private void getNotificationsScene(ActionEvent event) {
+    }
+
+    //endregion
+
+    //region [ - getCreatePage(ActionEvent event) - ]
+
+    private void getCreatePage(ActionEvent event) {
+    }
+
+    //endregion
+
+    //region [ - getSignInPage(ActionEvent event) - ]
+
+    private void getSignInPage(ActionEvent event) {
+    }
+
+    //endregion
+
+    //region [ - sendNotification(String text) - ]
+
+    private void sendNotification(String text) {
+        Notifications.create()
+                .text(text)
+                .hideAfter(Duration.seconds(2))
+                .owner(hbxRightNavItem)
+                .position(Pos.BASELINE_RIGHT)
+                .threshold(3, Notifications. create().title("Notifications"))
+                .show();
+    }
+
+    //endregion
+
+    //endregion
+
 }
