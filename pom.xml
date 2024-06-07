@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>SBU.CS</groupId>
-    <artifactId>Youtube</artifactId>
+    <groupId>SBU.CS.Youtube</groupId>
+    <artifactId>Client</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Youtube</name>
+    <name>Client</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -69,7 +69,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>sbu.cs.youtube/sbu.cs.youtube.HelloApplication</mainClass>
+                            <mainClass>sbu.cs.youtube/sbu.cs.youtube.YouTubeApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
