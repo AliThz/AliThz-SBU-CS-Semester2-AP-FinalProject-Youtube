@@ -19,7 +19,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="253.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button mnemonicParsing="false" styleClass="burger-btn">
+                  <Button mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
                      <graphic>
                         <Label prefHeight="0.0" prefWidth="0.0" styleClass="burger-svg" />
                      </graphic>
