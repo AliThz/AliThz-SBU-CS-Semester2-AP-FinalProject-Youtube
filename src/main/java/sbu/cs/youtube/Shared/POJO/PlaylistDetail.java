@@ -5,12 +5,20 @@ import java.util.Date;
 import java.util.UUID;
 
 public class PlaylistDetail {
-    private Playlist playlist ;
-    private UUID playlistId ;
-    private Video video ;
+    private Playlist playlist;
+    private UUID playlistId;
+    private Video video;
     private UUID videoId;
-    private LocalDateTime dateAdded ;
-    private Integer number ;
+    private LocalDateTime dateAdded;
+    private int number;
+
+    public PlaylistDetail() {
+    }
+
+    public PlaylistDetail(UUID playlistId, UUID videoId) {
+        this.playlistId = playlistId;
+        this.videoId = videoId;
+    }
 
     public Playlist getPlaylist() {
         return playlist;
@@ -52,11 +60,11 @@ public class PlaylistDetail {
         this.dateAdded = dateAdded;
     }
 
-    public Integer getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 }

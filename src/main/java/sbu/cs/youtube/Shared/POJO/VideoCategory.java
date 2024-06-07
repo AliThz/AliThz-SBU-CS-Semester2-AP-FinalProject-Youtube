@@ -8,6 +8,14 @@ public class VideoCategory {
     private Category category;
     private UUID categoryId;
 
+    public VideoCategory() {
+    }
+
+    public VideoCategory(UUID videoId, UUID categoryId) {
+        this.videoId = videoId;
+        this.categoryId = categoryId;
+    }
+
     public Video getVideo() {
         return video;
     }

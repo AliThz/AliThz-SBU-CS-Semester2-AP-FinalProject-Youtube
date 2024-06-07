@@ -3,11 +3,22 @@ package sbu.cs.youtube.Shared.POJO;
 import java.util.UUID;
 
 public class VideoLike {
-    private UUID Id ;
-    private Video video ;
-    private UUID videoId ;
-    private User user ;
-    private UUID userId ;
+    private UUID Id;
+    private Video video;
+    private UUID videoId;
+    private User user;
+    private UUID userId;
+
+
+    public VideoLike() {
+        Id = UUID.randomUUID();
+    }
+
+    public VideoLike(UUID videoId, UUID userId) {
+        Id = UUID.randomUUID();
+        this.videoId = videoId;
+        this.userId = userId;
+    }
 
     public UUID getId() {
         return Id;

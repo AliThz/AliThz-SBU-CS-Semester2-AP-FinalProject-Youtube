@@ -11,6 +11,14 @@ public class Subscription {
     private UUID channelId ;
     private LocalDateTime joinDate ;
 
+    public Subscription() {
+    }
+
+    public Subscription(UUID subscriberId, UUID channelId) {
+        this.subscriberId = subscriberId;
+        this.channelId = channelId;
+    }
+
     public User getSubscriber() {
         return subscriber;
     }

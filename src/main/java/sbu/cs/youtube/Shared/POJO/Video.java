@@ -18,6 +18,16 @@ public class Video {
     private ArrayList<Comment> comments;
 
     public Video() {
+        Id = UUID.randomUUID();
+        this.categories = new ArrayList<>();
+        this.videoLikes = new ArrayList<>();
+        this.comments = new ArrayList<>();
+    }
+
+    public Video(String title, String description) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
         this.categories = new ArrayList<>();
         this.videoLikes = new ArrayList<>();
         this.comments = new ArrayList<>();

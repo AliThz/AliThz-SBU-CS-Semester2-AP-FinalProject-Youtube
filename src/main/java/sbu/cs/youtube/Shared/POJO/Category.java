@@ -9,7 +9,14 @@ public class Category {
     private ArrayList<VideoCategory> videoCategories;
 
     public Category() {
+        Id = UUID.randomUUID();
         this.videoCategories = new ArrayList<>();
+    }
+
+    public Category(String title) {
+        Id = UUID.randomUUID();
+        this.videoCategories = new ArrayList<>();
+        this.title = title;
     }
 
     public UUID getId() {

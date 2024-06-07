@@ -18,6 +18,16 @@ public class Playlist {
     private ArrayList<PlaylistDetail> playlistDetails;
 
     public Playlist() {
+        Id = UUID.randomUUID();
+        this.playlistDetails = new ArrayList<>();
+    }
+
+    public Playlist(String title, String description, UUID creatorId, boolean isPublic) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.creatorId = creatorId;
+        this.isPublic = isPublic;
         this.playlistDetails = new ArrayList<>();
     }
 

@@ -15,6 +15,17 @@ public class Channel {
     private LocalDateTime dateCreated;
     private ArrayList<Subscription> subscriptions;
 
+    public Channel() {
+        subscriptions = new ArrayList<>();
+    }
+
+    public Channel(UUID creatorId, String title) {
+        Id = UUID.randomUUID();
+        this.creatorId = creatorId;
+        this.title = title;
+        subscriptions = new ArrayList<>();
+    }
+
     public UUID getId() {
         return Id;
     }

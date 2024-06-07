@@ -19,6 +19,19 @@ public class User {
     private ArrayList<VideoLike> likedVideos;
 
     public User() {
+        Id = UUID.randomUUID();
+        subscriptions = new ArrayList<>();
+        notifications = new ArrayList<>();
+        likedVideos = new ArrayList<>();
+    }
+
+    public User(String fullName, String email, String username, String password, LocalDateTime dateOfBirth) {
+        Id = UUID.randomUUID();
+        this.fullName = fullName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
         subscriptions = new ArrayList<>();
         notifications = new ArrayList<>();
         likedVideos = new ArrayList<>();

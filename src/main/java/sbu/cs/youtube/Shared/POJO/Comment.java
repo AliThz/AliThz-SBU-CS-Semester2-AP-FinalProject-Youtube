@@ -19,6 +19,16 @@ public class Comment {
     private ArrayList<CommentLike> commentLikes;
 
     public Comment() {
+        Id = UUID.randomUUID();
+        commentLikes = new ArrayList<>();
+    }
+
+    public Comment(String content, UUID videoId, UUID senderId, UUID parentCommentId) {
+        Id = UUID.randomUUID();
+        this.content = content;
+        this.videoId = videoId;
+        this.senderId = senderId;
+        this.parentCommentId = parentCommentId;
         commentLikes = new ArrayList<>();
     }
 
