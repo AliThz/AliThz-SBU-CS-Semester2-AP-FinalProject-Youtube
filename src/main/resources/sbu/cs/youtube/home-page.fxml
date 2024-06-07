@@ -21,9 +21,6 @@
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="253.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
-                     <graphic>
-                        <Label prefHeight="0.0" prefWidth="0.0" styleClass="burger-svg" />
-                     </graphic>
                      <tooltip>
                         <Tooltip text="Expand">
                            <font>
@@ -31,6 +28,9 @@
                            </font>
                         </Tooltip>
                      </tooltip>
+                     <graphic>
+                        <SVGPath content="M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z" styleClass="burger-svg" />
+                     </graphic>
                   </Button>
                   <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="134.0" style="-fx-background-color: transparent;">
                      <graphic>
@@ -82,6 +82,9 @@
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
+                     <graphic>
+                        <SVGPath content="M16.296 16.996a8 8 0 11.707-.708l3.909 3.91-.707.707-3.909-3.909ZM18 11a7 7 0 11-14 0 7 7 0 0114 0Z" fill="RED" fillRule="EVEN_ODD" styleClass="search-svg" />
+                     </graphic>
                   </Button>
                </children>
                <HBox.margin>
@@ -101,13 +104,13 @@
          </padding></HBox>
       <HBox prefHeight="467.0" prefWidth="939.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="vbxSideBar" prefHeight="466.0" prefWidth="220.0" styleClass="side-bar" stylesheets="@../../../Styles/side-bar-dark.css">
+            <VBox fx:id="vbxSideBar" prefHeight="466.0" prefWidth="220.0" styleClass="background" stylesheets="@../../../Styles/side-bar-dark.css">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="198.0" styleClass="side-btn">
+                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="144.0" styleClass="side-btn">
                      <graphic>
-                        <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" prefHeight="42.0" prefWidth="125.0" vgap="2.0">
+                        <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" prefHeight="42.0" prefWidth="114.0" vgap="2.0">
                            <children>
-                              <Label prefHeight="22.0" prefWidth="21.0" styleClass="home-svg" />
+                              <SVGPath content="m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z" fill="WHITE" styleClass="home-svg" />
                               <Label prefHeight="22.0" prefWidth="42.0" text="Home" textFill="WHITE">
                                  <FlowPane.margin>
                                     <Insets />
@@ -134,8 +137,8 @@
                      <graphic>
                         <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" prefHeight="0.0" prefWidth="0.0" vgap="2.0">
                            <children>
-                              <Label prefHeight="22.0" prefWidth="21.0" styleClass="subscriptions-svg" />
-                              <Label prefHeight="22.0" prefWidth="90.0" text="Subscriptions" textFill="WHITE" wrapText="true">
+                              <SVGPath content="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z" styleClass="subscriptions-svg" />
+                              <Label prefHeight="22.0" prefWidth="90.0" text="Subscriptions" textFill="WHITE">
                                  <FlowPane.margin>
                                     <Insets />
                                  </FlowPane.margin>
@@ -161,7 +164,7 @@
                      <graphic>
                         <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" prefHeight="0.0" prefWidth="0.0" vgap="2.0">
                            <children>
-                              <Label prefHeight="22.0" prefWidth="21.0" styleClass="you-svg" />
+                              <SVGPath content="m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z" styleClass="dashboard-svg" />
                               <Label alignment="BOTTOM_LEFT" prefHeight="22.0" prefWidth="74.0" text="Dashboard" textFill="WHITE">
                                  <FlowPane.margin>
                                     <Insets />
@@ -194,9 +197,9 @@
                   <Insets />
                </HBox.margin>
             </Separator>
-            <ScrollPane prefHeight="466.0" prefWidth="718.0" HBox.hgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPane" prefHeight="466.0" prefWidth="718.0" styleClass="background" stylesheets="@../../../Styles/home-page-dark.css" HBox.hgrow="ALWAYS">
                <content>
-                  <FlowPane fx:id="flowPane" prefHeight="466.0" prefWidth="702.0" />
+                  <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="703.0" styleClass="background" />
                </content>
             </ScrollPane>
          </children>
