@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,7 +25,7 @@ public class HomePageController implements Initializable {
     private HBox hbxRightNavItem;
 
     @FXML
-    void expand() {
+    void openSesame() {
         if (isExpanded) {
             vbxSideBar.setPrefSize(80, 466);
             vbxSideBar.setSpacing(30);
@@ -75,12 +76,44 @@ public class HomePageController implements Initializable {
 
             signInHbx.getChildren().add(signInSvg);
             signInHbx.getChildren().add(signInLbl);
-            signInHbx.setSpacing(10);
+            signInHbx.setSpacing(7);
             signInBtn.setGraphic(signInHbx);
+            signInBtn.setTooltip(new Tooltip("Sign In"));
 
+            // ToDo set onAction for signInBtn
+            hbxRightNavItem.getChildren().clear();
             hbxRightNavItem.getChildren().add(signInBtn);
         } else {
+            // create buttons
+            Button createBtn = new Button();
+            createBtn.getStyleClass().add("loggedIn-btn");
 
+            Button notificationsBtn = new Button();
+            notificationsBtn.getStyleClass().add("loggedIn-btn");
+
+            Button accountBtn = new Button();
+            accountBtn.getStyleClass().add("loggedIn-btn");
+
+            // create graphics for buttons
+            Label createSvg = new Label();
+            createSvg.getStyleClass().add("create-svg");
+
+            Label notificationsSvg = new Label();
+            notificationsSvg.getStyleClass().add("notifications-svg");
+
+            Label accountImg = new Label();
+            accountImg.getStyleClass().add("account-img");
+
+            createBtn.setGraphic(createSvg);
+            notificationsBtn.setGraphic(notificationsSvg);
+            accountBtn.setGraphic(accountImg);
+
+            // ToDo set onAction for buttons
+
+            hbxRightNavItem.getChildren().clear();
+            hbxRightNavItem.getChildren().add(createBtn);
+            hbxRightNavItem.getChildren().add(notificationsBtn);
+            hbxRightNavItem.getChildren().add(accountBtn);
         }
 
     }
