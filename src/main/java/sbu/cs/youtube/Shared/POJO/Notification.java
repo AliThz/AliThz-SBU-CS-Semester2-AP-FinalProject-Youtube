@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,7 +10,16 @@ public class Notification {
     private UUID userId ;
     private String message ;
     private boolean isRead ;
-    private Date dateSent ;
+    private LocalDateTime dateSent ;
+
+    public Notification() {
+        Id = UUID.randomUUID();
+    }
+
+    public Notification(String message) {
+        Id = UUID.randomUUID();
+        this.message = message;
+    }
 
     public UUID getId() {
         return Id;
@@ -51,11 +61,11 @@ public class Notification {
         isRead = read;
     }
 
-    public Date getDateSent() {
+    public LocalDateTime getDateSent() {
         return dateSent;
     }
 
-    public void setDateSent(Date dateSent) {
+    public void setDateSent(LocalDateTime dateSent) {
         this.dateSent = dateSent;
     }
 }

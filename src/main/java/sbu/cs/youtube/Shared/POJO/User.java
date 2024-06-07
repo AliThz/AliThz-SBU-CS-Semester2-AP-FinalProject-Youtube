@@ -1,16 +1,41 @@
 package sbu.cs.youtube.Shared.POJO;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 public class User {
-    private UUID Id ;
-    private String fullName ;
-    private String email ;
-    private Date dateOfBirth ;
-    private String userName ;
-    private String password ;
-    private Date joinDate ;
+    private UUID Id;
+    private String fullName;
+    private String email;
+    private LocalDateTime dateOfBirth;
+    private String username;
+    private String password;
+    private LocalDateTime joinDate;
+    private ArrayList<Subscription> subscriptions;
+    private ArrayList<Notification> notifications;
+    private ArrayList<VideoLike> likedVideos;
+
+    public User() {
+        Id = UUID.randomUUID();
+        subscriptions = new ArrayList<>();
+        notifications = new ArrayList<>();
+        likedVideos = new ArrayList<>();
+    }
+
+    public User(String fullName, String email, String username, String password, LocalDateTime dateOfBirth) {
+        Id = UUID.randomUUID();
+        this.fullName = fullName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        subscriptions = new ArrayList<>();
+        notifications = new ArrayList<>();
+        likedVideos = new ArrayList<>();
+    }
 
     public UUID getId() {
         return Id;
@@ -36,20 +61,20 @@ public class User {
         this.email = email;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDateTime getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDateTime dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -60,11 +85,35 @@ public class User {
         this.password = password;
     }
 
-    public Date getJoinDate() {
+    public LocalDateTime getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(Date joinDate) {
+    public void setJoinDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
+    }
+
+    public ArrayList<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(ArrayList<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public ArrayList<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(ArrayList<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public ArrayList<VideoLike> getLikedVideos() {
+        return likedVideos;
+    }
+
+    public void setLikedVideos(ArrayList<VideoLike> likedVideos) {
+        this.likedVideos = likedVideos;
     }
 }
