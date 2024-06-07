@@ -38,6 +38,8 @@ public class DatabaseManager {
             stmt.setString(6, user.getPassword());
             stmt.setObject(7, user.getJoinDate());
 
+            insertChannel(new Channel(user.getId(), user.getUsername()));
+
             stmt.executeUpdate();
             c.commit();
             stmt.close();
@@ -184,8 +186,8 @@ public class DatabaseManager {
 
     //region [ - Channel - ]
 
-    //region [ - insertChannel(Channel user) - ]
-    public void insertChannel(Channel user) {
+    //region [ - insertChannel(Channel channel) - ]
+    public void insertChannel(Channel channel) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -195,11 +197,11 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (insertChannel)");
 
             stmt = c.prepareStatement("INSERT INTO UserManagement.Channel(\"Id\", CreatedId, \"Title\", \"Description\", \"DateCreated\") VALUES (?, ?, ?, ?, ?);");
-            stmt.setObject(1, user.getId());
-            stmt.setObject(2, user.getCreatorId());
-            stmt.setString(3, user.getTitle());
-            stmt.setString(4, user.getDescription());
-            stmt.setObject(5, user.getDateCreated());
+            stmt.setObject(1, channel.getId());
+            stmt.setObject(2, channel.getCreatorId());
+            stmt.setString(3, channel.getTitle());
+            stmt.setString(4, channel.getDescription());
+            stmt.setObject(5, channel.getDateCreated());
 
             stmt.executeUpdate();
             c.commit();
@@ -216,7 +218,7 @@ public class DatabaseManager {
     public ArrayList<Channel> selectChannels() {
         Connection c;
         Statement stmt;
-        ArrayList<Channel> users = null;
+        ArrayList<Channel> channels = null;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -225,16 +227,16 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM UserManagement.Channel;");
-            users = new ArrayList<>();
+            channels = new ArrayList<>();
             while (rs.next()) {
-                Channel user = new Channel();
-                user.setId(UUID.fromString(rs.getString("Id")));
-                user.setCreatorId(UUID.fromString(rs.getString("Id")));
-                user.setCreator(selectUser(user.getCreatorId()));
-                user.setTitle(rs.getString("Title"));
-                user.setDescription(rs.getString("Description"));
-                user.setDateCreated(LocalDateTime.parse(rs.getString("DateOfBirth")));
-                users.add(user);
+                Channel channel = new Channel();
+                channel.setId(UUID.fromString(rs.getString("Id")));
+                channel.setCreatorId(UUID.fromString(rs.getString("Id")));
+                channel.setCreator(selectUser(channel.getCreatorId()));
+                channel.setTitle(rs.getString("Title"));
+                channel.setDescription(rs.getString("Description"));
+                channel.setDateCreated(LocalDateTime.parse(rs.getString("DateOfBirth")));
+                channels.add(channel);
             }
             rs.close();
             stmt.close();
@@ -243,7 +245,7 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         System.out.println("Operation done successfully (selectChannels)");
-        return users;
+        return channels;
     }
     //endregion
 
@@ -840,6 +842,10 @@ public class DatabaseManager {
             stmt.setObject(4, video.getChannelId());
             stmt.setInt(5, video.getViews());
             stmt.setObject(6, video.getUploadDate());
+
+            for (var videoCategory : video.getCategories()) {
+                insertVideoCategory(videoCategory);
+            }
 
             stmt.executeUpdate();
             c.commit();
