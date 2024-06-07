@@ -957,8 +957,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteVideo(UUID Id) - ]
-    public void deleteVideo(UUID Id) {
+    //region [ - deleteVideo(UUID videoid) - ]
+    public void deleteVideo(UUID videoid) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -967,8 +967,14 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteVideo)");
 
+            for (var comment : selectComments(videoid)) {
+                deleteComment(comment.getId());
+            }
+            deletePlaylistDetail(videoid);
+            deleteVideoCategory(videoid);
+            deleteVideoLike(videoid);
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Video WHERE \"Id\" = ?;");
-            stmt.setObject(1, Id);
+            stmt.setObject(1, videoid);
 
             stmt.executeUpdate();
             c.commit();
@@ -1167,6 +1173,30 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - deleteVideoCategory(UUID videoId) - ]
+    public void deleteVideoCategory(UUID videoId) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteVideoCategory (based on videoId))");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.VideoCategory WHERE VideoId = ?;");
+            stmt.setObject(1, videoId);
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteVideoCategory (based on videoId))");
+    }
+    //endregion
+
     //endregion
 
     //region [ - VideoLike - ]
@@ -1359,6 +1389,31 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - deleteVideoLike(UUID videoId) - ]
+    public void deleteVideoLike(UUID videoId) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteVideoLike (based on videoId))");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.VideoLike WHERE videoId = ?;");
+            stmt.setObject(1, videoId);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteVideoLike (based on videoId))");
+    }
+    //endregion
+
     //endregion
 
     //region [ - Playlist - ]
@@ -1504,6 +1559,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deletePlaylist)");
 
+            deletePlaylistDetails(Id);
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Playlist WHERE \"Id\" = ?;");
             stmt.setObject(1, Id);
 
@@ -1659,8 +1715,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deletePlaylistDetail(UUID Id) - ]
-    public void deletePlaylistDetail(UUID Id) {
+    //region [ - deletePlaylistDetail(UUID playlistId, UUID videoId) - ]
+    public void deletePlaylistDetail(UUID playlistId, UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1669,8 +1725,59 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deletePlaylistDetail)");
 
-            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"Id\" = ?;");
-            stmt.setObject(1, Id);
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"PlaylistId\" = ? AND \"VideoId\" = ?;");
+            stmt.setObject(1, playlistId);
+            stmt.setObject(2, videoId);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deletePlaylistDetail)");
+    }
+    //endregion
+
+    //region [ - deletePlaylistDetail(UUID videoId) - ]
+    public void deletePlaylistDetail(UUID videoId) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deletePlaylistDetail)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"VideoId\" = ?;");
+            stmt.setObject(1, videoId);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deletePlaylistDetail)");
+    }
+    //endregion
+
+    //region [ - deletePlaylistDetails(UUID playlistId) - ]
+    public void deletePlaylistDetails(UUID playlistId) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deletePlaylistDetail)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"VideoId\" = ?;");
+            stmt.setObject(1, playlistId);
 
             stmt.executeUpdate();
             c.commit();
@@ -1872,6 +1979,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteComment)");
 
+            deleteACommentLikes(Id);
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Comment WHERE \"Id\" = ?;");
             stmt.setObject(1, Id);
 
@@ -2047,9 +2155,33 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - deleteACommentLikes(UUID commentId) - ]
+    public void deleteACommentLikes(UUID commentId) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (deleteCommentLike)");
+
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.CommentLike WHERE \"CommentId\" = ?;");
+            stmt.setObject(1, commentId);
+
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully (deleteCommentLike)");
+    }
     //endregion
 
     //endregion
 
+    //endregion
 
 }
