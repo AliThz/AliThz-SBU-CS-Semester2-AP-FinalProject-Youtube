@@ -69,7 +69,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>sbu.cs.youtube/sbu.cs.youtube.HelloApplication</mainClass>
+                            <mainClass>sbu.cs.youtube/sbu.cs.youtube.YouTubeApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
