@@ -1,25 +1,50 @@
 /* -------------------------------- BackGround -------------------------------- */
 .background {
     -fx-background-color : black;
+    -fx-pref-width : 206px;
+    -f-spacing : 0px;
+    -fx-padding: 15px;
 }
 /* -------------------------------- Home Button -------------------------------- */
 .home-svg {
     -fx-fill : white;
-    -fx-scale-x : 1;
-    -fx-scale-y : 1;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
 }
+
+.home-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 15;
+    -fx-pref-width : 42px;
+    -fx-pref-height : 12px;
+}
+
 /* -------------------------------- Subscriptions Button -------------------------------- */
 .subscriptions-svg {
     -fx-fill : white;
-    -fx-scale-x : 1;
-    -fx-scale-y : 1;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
+}
+
+.subscriptions-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 15;
+    -fx-pref-width : 89px;
+    -fx-pref-height : 22px;
 }
 
 /* -------------------------------- Dashboard Button -------------------------------- */
 .dashboard-svg {
     -fx-fill : white;
-    -fx-scale-x : 1;
-    -fx-scale-y : 1;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
+}
+
+.dashboard-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 15;
+    -fx-pref-width : 74px;
+    -fx-pref-height : 22px;
 }
 
 /* -------------------------------- Side Button Group -------------------------------- */
@@ -45,12 +70,8 @@
 }
 
 /* -------------------------------- Expanded Side Bar -------------------------------- */
-.expand-flow-pane {
+.flow-pane {
     -fx-alignment : center-left;
+    -fx-vgap: 10px;
+    -fx-hgap: 40px;
 }
-
-/* -------------------------------- Collapsed Side Bar -------------------------------- */
-.collapse-flow-pane {
-    -fx-alignment : center;
-}
-

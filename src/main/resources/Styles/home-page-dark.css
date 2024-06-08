@@ -1,4 +1,5 @@
 /* -------------------------------- Scroll Pane -------------------------------- */
 .background {
     -fx-background-color : black;
+    -fx-border-color : black;
 }
