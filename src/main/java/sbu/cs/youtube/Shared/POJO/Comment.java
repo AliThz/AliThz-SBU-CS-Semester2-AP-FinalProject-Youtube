@@ -1,9 +1,7 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class Comment {
@@ -16,7 +14,7 @@ public class Comment {
     private Comment parentComment;
     private UUID parentCommentId;
     private LocalDateTime dateCommented;
-    private ArrayList<CommentLike> commentLikes;
+    private ArrayList<UserComment> commentLikes;
 
     public Comment() {
         Id = UUID.randomUUID();
