@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Database;
 
+import javafx.util.converter.LocalDateTimeStringConverter;
 import sbu.cs.youtube.Shared.POJO.*;
 
 import java.sql.*;
@@ -10,38 +11,91 @@ import java.util.UUID;
 public class DatabaseManager {
 
     //region [ - Fields - ]
-    private final String URL = "jdbc:postgresql://localhost:5432/Youtube-Development";
-    private final String USER = "postgres";
-    private final String PASSWORD = "musketeers";
+    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-development";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "musketeers";
     //endregion
 
-    //region [ - Methods - ]
+    public static void main(String[] args) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        User user = new User("1", "1", "1", "1", LocalDateTime.now());
+        insertUser(user);
+        User user1 = new User("2", "2", "2", "2", LocalDateTime.now());
+//        updateUser(user1);
+        Channel channel = new Channel(user.getId(), "lalala");
+        channel.setId(UUID.fromString("e01c7ca2-6f82-43ed-b95f-843e316a7cd5"));
+        user1.setId(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+        Subscription subscription = new Subscription(user1.getId(), channel.getId());
 
+//        Category category = new Category("fun");
+//        insertCategory(category);
+//        Category category1 = new Category("game");
+//        category1.setId(category.getId());
+//        updateCategory(category1);
+//        deleteCategory(category.getId());
+
+//        Video video = new Video("1", "1", channel.getId(), 4, LocalDateTime.now());
+//        insertVideo(video);
+//        Video video1 = new Video("hahaha", "lahlala", channel.getId(), 9, LocalDateTime.now());
+//        video1.setId(video.getId());
+//        updateVideo(video1);
+//        deleteVideo(video.getId());
+
+//        VideoLike videoLike = new VideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"), UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        insertVideoLike(videoLike);
+//        VideoLike videoLike1 = new VideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"), UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f"));
+//        insertVideoLike(videoLike1);
+//        deleteVideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"),UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+
+
+//        Playlist playlist = new Playlist("1" , "1" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
+//        insertPlaylist(playlist);
+//        Playlist playlist1 = new Playlist("2" , "2" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
+//        playlist1.setId(playlist.getId());
+//        updatePlaylist(playlist1);
+//        deletePlaylist(playlist.getId());
+
+//        PlaylistDetail playlistDetail = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+//        insertPlaylistDetail(playlistDetail);
+//        PlaylistDetail playlistDetail1 = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , UUID.fromString("015f254e-ca95-4bae-a8cd-1e3d6b4b69ee"));
+//        insertPlaylistDetail(playlistDetail1);
+//        PlaylistDetail playlistDetail2 = new PlaylistDetail(UUID.fromString("2a88cea5-ee25-48f4-aad4-afe49a25739f") , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+//        insertPlaylistDetail(playlistDetail2);
+//        PlaylistDetail playlistDetail3 = new PlaylistDetail(UUID.fromString("2a88cea5-ee25-48f4-aad4-afe49a25739f") , UUID.fromString("015f254e-ca95-4bae-a8cd-1e3d6b4b69ee"));
+//        insertPlaylistDetail(playlistDetail3);
+//        deletePlaylistDetails(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
+//        deletePlaylistDetail(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+//        deletePlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+    }
+
+    //region [ - Methods - ]
     //region [ - User - ]
 
-    //region [ - insertUser(User user) - ]
-    public void insertUser(User user) {
+    //region [ - insertUser(User user) - ] Tested
+    public static void insertUser(User user) {
         Connection c;
         PreparedStatement stmt;
         try {
-//            Class.forName("org.postgresql.Driver");
+            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertUser)");
 
-            stmt = c.prepareStatement("INSERT INTO UserManagement.User(\"Id\", FullName, \"Email\", \"DateOfBirth\", \"Username\",\"Password\", \"JoinDate\") VALUES (?, ?, ?, ?, ?, ?,?);");
+            stmt = c.prepareStatement("INSERT INTO UserManagement.User(\"Id\", FullName, email, DateOfBirth, Username, \"Password\") VALUES (?, ?, ?, ?, ?,?);");
             stmt.setObject(1, user.getId());
             stmt.setString(2, user.getFullName());
             stmt.setString(3, user.getEmail());
             stmt.setObject(4, user.getDateOfBirth());
             stmt.setString(5, user.getUsername());
             stmt.setString(6, user.getPassword());
-            stmt.setObject(7, user.getJoinDate());
-
-            insertChannel(new Channel(user.getId(), user.getUsername()));
 
             stmt.executeUpdate();
             c.commit();
+
+
+            insertChannel(new Channel(user.getId(), user.getUsername()));
+
+
             stmt.close();
             c.close();
 
@@ -52,7 +106,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUsers() - ]
+    //region [ - selectUsers() - ] Not Tested
     public ArrayList<User> selectUsers() {
         Connection c;
         Statement stmt;
@@ -74,10 +128,12 @@ public class DatabaseManager {
                 user.setSubscriptions(selectSubscriptions(user.getId()));
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setLikedVideos(selectLikedVideos(user.getId()));
-                user.setDateOfBirth(LocalDateTime.parse(rs.getString("DateOfBirth")));
+                Timestamp timestamp =rs.getTimestamp("DateOfBirth");
+                user.setDateOfBirth(timestamp.toLocalDateTime());
+                timestamp =rs.getTimestamp("JoinDate");
+                user.setDateOfBirth(timestamp.toLocalDateTime());
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
-                user.setDateOfBirth(LocalDateTime.parse(rs.getString("JoinDate")));
                 users.add(user);
             }
             rs.close();
@@ -89,10 +145,10 @@ public class DatabaseManager {
         System.out.println("Operation done successfully (selectUsers)");
         return users;
     }
-    //endregion
+    //endregion No    kl;asdf
 
-    //region [ - selectUser(UUID Id) - ]
-    public User selectUser(UUID Id) {
+    //region [ - selectUser(UUID Id) - ] Not Tested
+    public static User selectUser(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         User user = null;
@@ -102,25 +158,29 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (selectUser)");
 
-            stmt = c.prepareStatement("SELECT * FROM UserManagement.User WHERE \"Id\" = ?");
-            stmt.setObject(1, Id);
-            ResultSet rs = stmt.executeQuery();
+                stmt = c.prepareStatement("SELECT * FROM UserManagement.User WHERE \"Id\" = ?");
+                 stmt.setObject(1, Id);
+                ResultSet rs = stmt.executeQuery();
+
             user = new User();
-
-            user.setId(UUID.fromString(rs.getString("Id")));
-            user.setFullName(rs.getString("FullName"));
-            user.setEmail(rs.getString("Email"));
-            user.setDateOfBirth(LocalDateTime.parse(rs.getString("DateOfBirth")));
-            user.setSubscriptions(selectSubscriptions(user.getId()));
-            user.setNotifications(selectNotifications(user.getId()));
-            user.setLikedVideos(selectLikedVideos(user.getId()));
-            user.setUsername(rs.getString("Username"));
-            user.setPassword(rs.getString("Password"));
-            user.setDateOfBirth(LocalDateTime.parse(rs.getString("JoinDate")));
-
+            if (rs.next()) {
+                user.setId(Id);
+                user.setFullName(rs.getString("FullName"));
+                user.setEmail(rs.getString("Email"));
+                Timestamp timestamp =rs.getTimestamp("DateOfBirth");
+                user.setDateOfBirth(timestamp.toLocalDateTime());
+                timestamp =rs.getTimestamp("JoinDate");
+                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setSubscriptions(selectSubscriptions(user.getId()));
+                user.setNotifications(selectNotifications(user.getId()));
+                user.setLikedVideos(selectLikedVideos(user.getId()));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+            }
             rs.close();
             stmt.close();
             c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
@@ -129,8 +189,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - updateUser(User user) - ]
-    public void updateUser(User user) {
+    //region [ - updateUser(User user) - ] Tested
+    public static void updateUser(User user) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -139,7 +199,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateUser)");
 
-            stmt = c.prepareStatement("UPDATE UserManagement.User SET \"FullName\" = ?, \"Email\" = ?, \"DateOfBirth\" = ?, \"Username\" = ?, \"Password\" = ? WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("UPDATE UserManagement.User SET fullname = ?, email = ?, DateOfBirth = ?, Username = ?, \"Password\" = ? WHERE \"Id\" = ?;");
 
             stmt.setString(1, user.getFullName());
             stmt.setString(2, user.getEmail());
@@ -147,6 +207,7 @@ public class DatabaseManager {
             stmt.setString(4, user.getUsername());
             stmt.setString(5, user.getPassword());
             stmt.setObject(6, user.getId());
+
             stmt.executeUpdate();
             c.commit();
             stmt.close();
@@ -158,12 +219,12 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteUser(UUID Id) - ]
-    public void deleteUser(UUID Id) {
+    //region [ - deleteUser(UUID Id) - ] Not Exist
+    public static void deleteUser(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
-//            Class.forName("org.postgresql.Driver");
+            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteUser)");
@@ -186,8 +247,8 @@ public class DatabaseManager {
 
     //region [ - Channel - ]
 
-    //region [ - insertChannel(Channel channel) - ]
-    public void insertChannel(Channel channel) {
+    //region [ - insertChannel(Channel channel) - ] Tested
+    public static void insertChannel(Channel channel) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -196,12 +257,11 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertChannel)");
 
-            stmt = c.prepareStatement("INSERT INTO UserManagement.Channel(\"Id\", CreatedId, \"Title\", \"Description\", \"DateCreated\") VALUES (?, ?, ?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO UserManagement.Channel(\"Id\", CreatorId, Title, Description) VALUES (?, ?, ?, ?);");
             stmt.setObject(1, channel.getId());
             stmt.setObject(2, channel.getCreatorId());
             stmt.setString(3, channel.getTitle());
             stmt.setString(4, channel.getDescription());
-            stmt.setObject(5, channel.getDateCreated());
 
             stmt.executeUpdate();
             c.commit();
@@ -214,7 +274,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Channel> selectChannels() - ]
+    //region [ - ArrayList<Channel> selectChannels() - ] Not Tested
     public ArrayList<Channel> selectChannels() {
         Connection c;
         Statement stmt;
@@ -249,8 +309,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Channel selectChannel(UUID Id) - ]
-    public Channel selectChannel(UUID Id) {
+    //region [ - Channel selectChannel(UUID Id) - ] Not Tested
+    public static Channel selectChannel(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Channel user = null;
@@ -283,8 +343,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - updateChannel(Channel user) - ]
-    public void updateChannel(Channel user) {
+    //region [ - updateChannel(Channel user) - ] Tested
+    public static void updateChannel(Channel channel) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -293,13 +353,13 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateChannel)");
 
-            stmt = c.prepareStatement("UPDATE UserManagement.Channel SET \"CreatedId\" = ?, \"Title\" = ?, \"Description\" = ?, \"DateCreated\" = ?  WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("UPDATE UserManagement.Channel SET CreatorId = ?, Title = ?, Description = ?, \"DateCreated\" = ?  WHERE \"Id\" = ?;");
 
-            stmt.setObject(1, user.getCreatorId());
-            stmt.setString(2, user.getTitle());
-            stmt.setString(3, user.getDescription());
-            stmt.setObject(4, user.getDateCreated());
-            stmt.setObject(5, user.getId());
+            stmt.setObject(1, channel.getCreatorId());
+            stmt.setString(2, channel.getTitle());
+            stmt.setString(3, channel.getDescription());
+            stmt.setObject(4, channel.getDateCreated());
+            stmt.setObject(5, channel.getId());
             stmt.executeUpdate();
             c.commit();
             stmt.close();
@@ -311,7 +371,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteChannel(UUID Id) - ]
+    //region [ - deleteChannel(UUID Id) - ] Not Exist
     public void deleteChannel(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -339,8 +399,9 @@ public class DatabaseManager {
 
     //region [ - Subscription - ]
 
-    //region [ - insertSubscription(Subscription subscription) - ]
-    public void insertSubscription(Subscription subscription) {
+    //region [ - insertSubscription(Subscription subscription) - ] Tested
+    public static void insertSubscription(Subscription subscription) {
+        System.out.println(subscription.getSubscriberId());
         Connection c;
         PreparedStatement stmt;
         try {
@@ -349,10 +410,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertSubscription)");
 
-            stmt = c.prepareStatement("INSERT INTO UserManagement.Subscription(SubscriberId, channelId, joinDate) VALUES (?, ?, ?);");
-            stmt.setObject(1, subscription.getChannel());
-            stmt.setObject(2, subscription.getSubscriberId());
-            stmt.setObject(3, subscription.getJoinDate());
+            stmt = c.prepareStatement("INSERT INTO UserManagement.Subscription(SubscriberId, channelId) VALUES (?, ?);");
+            stmt.setObject(1, subscription.getSubscriberId());
+            stmt.setObject(2, subscription.getChannelId());
             stmt.executeUpdate();
             c.commit();
             stmt.close();
@@ -364,7 +424,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Subscription> selectSubscriptions() - ]
+    //region [ - ArrayList<Subscription> selectSubscriptions() - ] Not Test
     public ArrayList<Subscription> selectSubscriptions() {
         Connection c;
         Statement stmt;
@@ -398,8 +458,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Subscription> selectSubscriptions(UUID userId) - ]
-    public ArrayList<Subscription> selectSubscriptions(UUID userId) {
+    //region [ - ArrayList<Subscription> selectSubscriptions(UUID userId) - ] Not Test
+    public static ArrayList<Subscription> selectSubscriptions(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Subscription> subscriptions = null;
@@ -432,7 +492,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Subscription selectSubscription(UUID Id) - ]
+    //region [ - Subscription selectSubscription(UUID Id) - ] Not Exist
     public Subscription selectSubscription(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -465,8 +525,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteSubscription(UUID SubscriberId, UUID channelId) - ]
-    public void deleteSubscription(UUID SubscriberId, UUID channelId) {
+    //region [ - deleteSubscription(UUID SubscriberId, UUID channelId) - ] Tested
+    public static void deleteSubscription(UUID SubscriberId, UUID channelId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -494,8 +554,8 @@ public class DatabaseManager {
 
     //region [ - Notification - ]
 
-    //region [ - insertNotification(Notification notification) - ]
-    public void insertNotification(Notification notification) {
+    //region [ - insertNotification(Notification notification) - ] Tested
+    public static void insertNotification(Notification notification) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -504,7 +564,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertNotification)");
 
-            stmt = c.prepareStatement("INSERT INTO UserManagement.Notification(\"Id\", UserId, Message, IsRead, dateSent) VALUES (?, ?, ?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO UserManagement.Notification(\"Id\", UserId, \"Message\", IsRead, dateSent) VALUES (?, ?, ?, ?, ?);");
             stmt.setObject(1, notification.getId());
             stmt.setObject(2, notification.getUserId());
             stmt.setString(3, notification.getMessage());
@@ -522,8 +582,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Notification> selectNotifications() - ]
-    public ArrayList<Notification> selectNotifications() {
+    //region [ - ArrayList<Notification> selectNotifications() - ] Not test
+    public ArrayList<Notification> selectNotifications() { //
         Connection c;
         Statement stmt;
         ArrayList<Notification> notifications = null;
@@ -557,8 +617,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Notification> selectNotifications(UUID userId) - ]
-    public ArrayList<Notification> selectNotifications(UUID userId) {
+    //region [ - ArrayList<Notification> selectNotifications(UUID userId) - ] Not test
+    public static ArrayList<Notification> selectNotifications(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Notification> notifications = null;
@@ -593,7 +653,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Notification selectNotification(UUID Id) - ]
+    //region [ - Notification selectNotification(UUID Id) - ] Not Test
     public Notification selectNotification(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -627,8 +687,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - updateNotification(Notification notification) - ]
-    public void updateNotification(Notification notification) {
+    //region [ - updateNotification(Notification notification) - ] Tested
+    public static void updateNotification(Notification notification) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -654,8 +714,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteNotification(UUID Id) - ]
-    public void deleteNotification(UUID Id) {
+    //region [ - deleteNotification(UUID Id) - ] Tested
+    public static void deleteNotification(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -682,8 +742,8 @@ public class DatabaseManager {
 
     //region [ - Category - ]
 
-    //region [ - insertUser(Category category) - ]
-    public void insertUser(Category category) {
+    //region [ - insertCategory(Category category) - ] Tested
+    public static void insertCategory(Category category) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -692,7 +752,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertCategory)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.Category(\"Id\", \"Title\") VALUES (?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.Category(\"Id\", Title) VALUES (?, ?);");
             stmt.setObject(1, category.getId());
             stmt.setString(2, category.getTitle());
 
@@ -708,7 +768,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectCategories() - ]
+    //region [ - selectCategories() - ] Not Tested
     public ArrayList<Category> selectCategories() {
         Connection c;
         Statement stmt;
@@ -739,8 +799,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectCategory(UUID Id) - ]
-    public Category selectCategory(UUID Id) {
+    //region [ - selectCategory(UUID Id) - ] Not Tested
+    public static Category selectCategory(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Category category = null;
@@ -770,8 +830,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - updateCategory(Category category) - ]
-    public void updateCategory(Category category) {
+    //region [ - updateCategory(Category category) - ] Tested
+    public static void updateCategory(Category category) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -780,7 +840,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateCategory)");
 
-            stmt = c.prepareStatement("UPDATE ContentManagement.Category SET \"Title\" = ? WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("UPDATE ContentManagement.Category SET Title = ? WHERE \"Id\" = ?;");
 
             stmt.setString(1, category.getTitle());
             stmt.setObject(2, category.getId());
@@ -796,8 +856,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteCategory(UUID Id) - ]
-    public void deleteCategory(UUID Id) {
+    //region [ - deleteCategory(UUID Id) - ] Not Exist
+    public static void deleteCategory(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -825,8 +885,8 @@ public class DatabaseManager {
 
     //region [ - Video - ]
 
-    //region [ - insertVideo(Video video) - ]
-    public void insertVideo(Video video) {
+    //region [ - insertVideo(Video video) - ] Tested
+    public static void insertVideo(Video video) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -835,7 +895,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertVideo)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.Video(\"Id\", \"Title\", \"Description\", \"ChannelId\", \"Views\" , \"UploadDate\") VALUES (?, ?, ?, ?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId, \"Views\" , \"UploadDate\" ) VALUES (?, ?, ?, ?, ?, ?);");
             stmt.setObject(1, video.getId());
             stmt.setString(2, video.getTitle());
             stmt.setString(3, video.getDescription());
@@ -843,9 +903,10 @@ public class DatabaseManager {
             stmt.setInt(5, video.getViews());
             stmt.setObject(6, video.getUploadDate());
 
-            for (var videoCategory : video.getCategories()) {
-                insertVideoCategory(videoCategory);
-            }
+
+//            for (var videoCategory : video.getCategories()) {
+//                insertVideoCategory(videoCategory);
+//            }
 
             stmt.executeUpdate();
             c.commit();
@@ -858,11 +919,11 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectVideos() - ]
+    //region [ - selectVideos() - ] Not Tested
     public ArrayList<Video> selectVideos() {
         Connection c;
         Statement stmt;
-        ArrayList<Video> videos = null;
+        ArrayList<Video> videos = null ;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -897,8 +958,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectVideo(UUID Id) - ]
-    public Video selectVideo(UUID Id) {
+    //region [ - selectVideo(UUID Id) - ] Not Tested
+    public static Video selectVideo(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Video video = null;
@@ -935,8 +996,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - updateVideo(Video video) - ]
-    public void updateVideo(Video video) {
+    //region [ - updateVideo(Video video) - ] Tested
+    public static void updateVideo(Video video) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -945,12 +1006,12 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateVideo)");
 
-            stmt = c.prepareStatement("UPDATE ContentManagement.Video SET \"Title\" = ?, \"Description\" = ?, \"Views\" = ? WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("UPDATE ContentManagement.Video SET Title = ?, Description = ?, \"Views\" = ? WHERE \"Id\" = ?;");
 
             stmt.setString(1, video.getTitle());
             stmt.setString(2, video.getDescription());
             stmt.setInt(3, video.getViews());
-            stmt.setObject(4, video.getChannelId());
+            stmt.setObject(4, video.getId());
 
             stmt.executeUpdate();
             c.commit();
@@ -963,8 +1024,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteVideo(UUID videoid) - ]
-    public void deleteVideo(UUID videoid) {
+//    region [ - deleteVideo(UUID videoid) - ] Not Tested
+    public static void deleteVideo(UUID videoid) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -973,12 +1034,12 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteVideo)");
 
-            for (var comment : selectComments(videoid)) {
-                deleteComment(comment.getId());
-            }
-            deletePlaylistDetail(videoid);
-            deleteVideoCategory(videoid);
-            deleteVideoLike(videoid);
+//            for (var comment : selectComments(videoid)) {
+//                deleteComment(comment.getId());
+//            }
+//            deletePlaylistDetail(videoid);
+//            deleteVideoCategory(videoid);
+//            deleteVideoLike(videoid);
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Video WHERE \"Id\" = ?;");
             stmt.setObject(1, videoid);
 
@@ -998,8 +1059,8 @@ public class DatabaseManager {
 
     //region [ - VideoCategory - ]
 
-    //region [ - insertVideoCategory(VideoCategory videoCategory) - ]
-    public void insertVideoCategory(VideoCategory videoCategory) {
+    //region [ - insertVideoCategory(VideoCategory videoCategory) - ] Tested
+    public static void insertVideoCategory(VideoCategory videoCategory) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1008,9 +1069,10 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertVideoCategory)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.VideoCategory(VideoId, CategoryId,) VALUES (?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.VideoCategory(VideoId, CategoryId) VALUES (?, ?);");
             stmt.setObject(1, videoCategory.getVideoId());
             stmt.setObject(2, videoCategory.getCategoryId());
+
             stmt.executeUpdate();
             c.commit();
             stmt.close();
@@ -1022,7 +1084,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<VideoCategory> selectVideoCategories() - ]
+    //region [ - ArrayList<VideoCategory> selectVideoCategories() - ] Not Tested
     public ArrayList<VideoCategory> selectVideoCategories() {
         Connection c;
         Statement stmt;
@@ -1055,8 +1117,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<VideoCategory> selectVideoCategories(UUID videoId) - ]
-    public ArrayList<VideoCategory> selectVideoCategories(UUID videoId) {
+    //region [ - ArrayList<VideoCategory> selectVideoCategories(UUID videoId) - ]  Not Tested
+    public static ArrayList<VideoCategory> selectVideoCategories(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<VideoCategory> videoCategories = null;
@@ -1089,8 +1151,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) - ]
-    public ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) {
+    //region [ - ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) - ] Not Tested
+    public static ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<VideoCategory> videoCategories = null;
@@ -1123,7 +1185,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - VideoCategory selectVideoCategory(UUID Id) - ]
+    //region [ - VideoCategory selectVideoCategory(UUID Id) - ] Not Tested
     public VideoCategory selectVideoCategory(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -1154,8 +1216,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteVideoCategory(UUID videoId, UUID categoryId) - ]
-    public void deleteVideoCategory(UUID videoId, UUID categoryId) {
+    //region [ - deleteVideoCategory(UUID videoId, UUID categoryId) - ] Tested
+    public static void deleteVideoCategory(UUID videoId, UUID categoryId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1179,8 +1241,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteVideoCategory(UUID videoId) - ]
-    public void deleteVideoCategory(UUID videoId) {
+    //region [ - deleteVideoCategory(UUID videoId) - ] Tested
+    public static void deleteVideoCategory(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1207,8 +1269,8 @@ public class DatabaseManager {
 
     //region [ - VideoLike - ]
 
-    //region [ - insertVideoLike(VideoLike videoLike) - ]
-    public void insertVideoLike(VideoLike videoLike) {
+    //region [ - insertVideoLike(VideoLike videoLike) - ] Tested
+    public static void insertVideoLike(VideoLike videoLike) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1217,7 +1279,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertVideoLike)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.VideoLike(\"Id\", \"VideoId\", \"UserId\") VALUES (?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.VideoLike(\"Id\", VideoId, UserId) VALUES (?, ?, ?);");
             stmt.setObject(1, videoLike.getId());
             stmt.setObject(2, videoLike.getVideoId());
             stmt.setObject(3, videoLike.getUserId());
@@ -1269,7 +1331,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectVideoLikes(UUID videoId) - ]
-    public ArrayList<VideoLike> selectVideoLikes(UUID videoId) {
+    public static ArrayList<VideoLike> selectVideoLikes(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<VideoLike> videoLikes = null;
@@ -1303,7 +1365,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectLikedVideos(UUID userId) - ]
-    public ArrayList<VideoLike> selectLikedVideos(UUID userId) {
+    public static ArrayList<VideoLike> selectLikedVideos(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<VideoLike> videoLikes = null;
@@ -1369,8 +1431,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteVideoLike(UUID videoId, UUID likeId) - ]
-    public void deleteVideoLike(UUID videoId, UUID likeId) {
+    //region [ - deleteVideoLike(UUID videoId, UUID likeId) - ] Tested
+    public static void deleteVideoLike(UUID videoId, UUID userId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1379,9 +1441,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteVideoLike)");
 
-            stmt = c.prepareStatement("DELETE FROM ContentManagement.VideoLike WHERE videoId = ? AND liekId = ?;");
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.VideoLike WHERE videoId = ? AND userId = ?;");
             stmt.setObject(1, videoId);
-            stmt.setObject(2, likeId);
+            stmt.setObject(2, userId);
 
             stmt.executeUpdate();
             c.commit();
@@ -1395,8 +1457,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteVideoLike(UUID videoId) - ]
-    public void deleteVideoLike(UUID videoId) {
+    //region [ - deleteVideoLike(UUID videoId) - ] Tested
+    public static void deleteVideoLike(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1424,8 +1486,8 @@ public class DatabaseManager {
 
     //region [ - Playlist - ]
 
-    //region [ - insertPlaylist(Playlist playlist) - ]
-    public void insertPlaylist(Playlist playlist) {
+    //region [ - insertPlaylist(Playlist playlist) - ] Tested
+    public static void insertPlaylist(Playlist playlist) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1434,13 +1496,13 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertPlaylist)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.Playlist(\"Id\", \"Title\", \"Description\", \"CreatorId\",\"IsPublic\", \"DateCreated\" ) VALUES (?, ?, ?, ?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.Playlist(\"Id\", Title, Description, CreatorId,IsPublic) VALUES (?, ?, ?, ?, ?);");
             stmt.setObject(1, playlist.getId());
             stmt.setString(2, playlist.getTitle());
             stmt.setString(3, playlist.getDescription());
             stmt.setObject(4, playlist.getCreatorId());
             stmt.setBoolean(5, playlist.isPublic());
-            stmt.setObject(6, playlist.getDateCreated());
+//            stmt.setObject(6, playlist.getDateCreated());
 
             stmt.executeUpdate();
             c.commit();
@@ -1528,8 +1590,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - updatePlaylist(Playlist playlist) - ]
-    public void updatePlaylist(Playlist playlist) {
+    //region [ - updatePlaylist(Playlist playlist) - ] Tested
+    public static void updatePlaylist(Playlist playlist) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1538,12 +1600,12 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updatePlaylist)");
 
-            stmt = c.prepareStatement("UPDATE ContentManagement.Playlist SET \"Title\" = ?, \"Description\" = ?, \"IsPublic\" = ? WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("UPDATE ContentManagement.Playlist SET Title = ?, Description = ?, IsPublic = ? WHERE \"Id\" = ?;");
 
             stmt.setObject(1, playlist.getTitle());
             stmt.setString(2, playlist.getDescription());
             stmt.setObject(3, playlist.isPublic());
-
+            stmt.setObject(4 , playlist.getId());
             stmt.executeUpdate();
             c.commit();
             stmt.close();
@@ -1555,8 +1617,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deletePlaylist(UUID Id) - ]
-    public void deletePlaylist(UUID Id) {
+    //region [ - deletePlaylist(UUID Id) - ] Not Test
+    public static void deletePlaylist(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1585,8 +1647,8 @@ public class DatabaseManager {
 
     //region [ - PlaylistDetail - ]
 
-    //region [ - insertPlaylistDetail(PlaylistDetail playlistDetail) - ]
-    public void insertPlaylistDetail(PlaylistDetail playlistDetail) {
+    //region [ - insertPlaylistDetail(PlaylistDetail playlistDetail) - ] Tested
+    public static void insertPlaylistDetail(PlaylistDetail playlistDetail) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1595,11 +1657,10 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertPlaylistDetail)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.PlaylistDetail(\"PlaylistId\", \"VideoId\", \"DateAdded\" , \"Number\") VALUES (?, ?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.PlaylistDetail(PlaylistId, VideoId , SequenceNumber) VALUES (?, ?, ?);");
             stmt.setObject(1, playlistDetail.getPlaylistId());
             stmt.setObject(2, playlistDetail.getVideoId());
-            stmt.setObject(3, playlistDetail.getDateAdded());
-            stmt.setInt(4, playlistDetail.getNumber());
+            stmt.setInt(3, playlistDetail.getNumber());
 
             stmt.executeUpdate();
             c.commit();
@@ -1721,8 +1782,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deletePlaylistDetail(UUID playlistId, UUID videoId) - ]
-    public void deletePlaylistDetail(UUID playlistId, UUID videoId) {
+    //region [ - deletePlaylistDetail(UUID playlistId, UUID videoId) - ] Tested
+    public static void deletePlaylistDetail(UUID playlistId, UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1731,7 +1792,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deletePlaylistDetail)");
 
-            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"PlaylistId\" = ? AND \"VideoId\" = ?;");
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE PlaylistId = ? AND VideoId = ?;");
             stmt.setObject(1, playlistId);
             stmt.setObject(2, videoId);
 
@@ -1747,8 +1808,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deletePlaylistDetail(UUID videoId) - ]
-    public void deletePlaylistDetail(UUID videoId) {
+    //region [ - deletePlaylistDetail(UUID videoId) - ] Tested
+    public static void deletePlaylistDetail(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1757,7 +1818,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deletePlaylistDetail)");
 
-            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"VideoId\" = ?;");
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE VideoId = ?;");
             stmt.setObject(1, videoId);
 
             stmt.executeUpdate();
@@ -1772,8 +1833,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deletePlaylistDetails(UUID playlistId) - ]
-    public void deletePlaylistDetails(UUID playlistId) {
+    //region [ - deletePlaylistDetails(UUID playlistId) - ] Tested
+    public static void deletePlaylistDetails(UUID playlistId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1782,7 +1843,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deletePlaylistDetail)");
 
-            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE \"VideoId\" = ?;");
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.PlaylistDetail WHERE PlaylistId = ?;");
             stmt.setObject(1, playlistId);
 
             stmt.executeUpdate();
@@ -1872,7 +1933,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectComments(UUID videoId) - ]
-    public ArrayList<Comment> selectComments(UUID videoId) {
+    public static ArrayList<Comment> selectComments(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Comment> comments = null;
@@ -1913,7 +1974,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectComment(UUID Id) - ]
-    public Comment selectComment(UUID Id) {
+    public static Comment selectComment(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Comment comment = null;
@@ -1976,7 +2037,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteComment(UUID Id) - ]
-    public void deleteComment(UUID Id) {
+    public static void deleteComment(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2162,7 +2223,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteACommentLikes(UUID commentId) - ]
-    public void deleteACommentLikes(UUID commentId) {
+    public static void deleteACommentLikes(UUID commentId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2187,7 +2248,5 @@ public class DatabaseManager {
     //endregion
 
     //endregion
-
     //endregion
-
 }

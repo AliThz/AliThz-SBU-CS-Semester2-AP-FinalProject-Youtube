@@ -33,6 +33,15 @@ public class Video {
         this.comments = new ArrayList<>();
     }
 
+    public Video(String title, String description, UUID channelId, int views, LocalDateTime uploadDate) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.channelId = channelId;
+        this.views = views;
+        this.uploadDate = uploadDate;
+    }
+
     public UUID getId() {
         return Id;
     }
