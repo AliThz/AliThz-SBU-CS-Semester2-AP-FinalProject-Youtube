@@ -37,50 +37,51 @@ public class DatabaseManager {
 
 //        ------------ Video --------------------
 
-//        Video video = new Video("1", "1", channel.getId(), 4, LocalDateTime.now());
-//
-//        ArrayList<VideoCategory> videoCategories= new ArrayList<>() ;
-//        VideoCategory videoCategory = new VideoCategory(video.getId() , UUID.fromString("3d967083-bdd6-4016-b412-b7a2d9576d28"));
-//        videoCategories.add(videoCategory);
-//        VideoCategory videoCategory1 = new VideoCategory(video.getId() , UUID.fromString("46e7d055-33c9-4a2f-b802-a5b0bb3332ec"));
-//        videoCategories.add(videoCategory1);
-//        video.setCategories(videoCategories);
-//
-//        insertVideo(video);
-//
-//        PlaylistDetail playlistDetail = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , video.getId());
-//        insertPlaylistDetail(playlistDetail);
-//        PlaylistDetail playlistDetail1 = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , video.getId());
-//        insertPlaylistDetail(playlistDetail1);
-//
-//        VideoLike videoLike = new VideoLike(video.getId(), UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
-//        insertVideoLike(videoLike);
-//        VideoLike videoLike1 = new VideoLike(video.getId(), UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f"));
-//        insertVideoLike(videoLike1);
-//
-//        deleteVideo(video.getId());
+        Video video = new Video("1", "1", channel.getId(), 4, LocalDateTime.now());
 
-//        ------------ VideoLike ---------------
+        ArrayList<VideoCategory> videoCategories= new ArrayList<>() ;
+        VideoCategory videoCategory = new VideoCategory(video.getId() , UUID.fromString("3d967083-bdd6-4016-b412-b7a2d9576d28"));
+        videoCategories.add(videoCategory);
+        VideoCategory videoCategory1 = new VideoCategory(video.getId() , UUID.fromString("46e7d055-33c9-4a2f-b802-a5b0bb3332ec"));
+        videoCategories.add(videoCategory1);
+        video.setCategories(videoCategories);
 
-//        VideoLike videoLike = new VideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"), UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
-//        insertVideoLike(videoLike);
-//        VideoLike videoLike1 = new VideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"), UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f"));
-//        insertVideoLike(videoLike1);
-//        deleteVideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"),UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+        insertVideo(video);
+
+        PlaylistDetail playlistDetail = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , video.getId());
+        insertPlaylistDetail(playlistDetail);
+        PlaylistDetail playlistDetail1 = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , video.getId());
+        insertPlaylistDetail(playlistDetail1);
+
+        UserVideo userVideo = new UserVideo( UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") , video.getId());
+        insertUserVideo(userVideo);
+        UserVideo userVideo1 = new UserVideo( UUID.fromString("13d11d94-e385-4e29-9c68-38d8c97a0429") , video.getId());
+        insertUserVideo(userVideo1);
+
+        deleteVideo(video.getId());
+
+//        ------------ UserVideo ---------------
+
+//        UserVideo userVideo = new UserVideo( UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") , UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"));
+//        insertUserVideo(userVideo);
+//        UserVideo userVideo1 = new UserVideo( UUID.fromString("13d11d94-e385-4e29-9c68-38d8c97a0429") , UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"));
+//        insertUserVideo(userVideo1);
+//        deleteUserVideo(UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"));
+//        deleteUserVideo( UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") , UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"));
 
 //        ------------ Plaulist ---------------
 
-        Playlist playlist = new Playlist("1" , "1" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
-        insertPlaylist(playlist);
+//        Playlist playlist = new Playlist("1" , "1" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
+//        insertPlaylist(playlist);
 //        Playlist playlist1 = new Playlist("2" , "2" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
 //        playlist1.setId(playlist.getId());
-
-        PlaylistDetail playlistDetail = new PlaylistDetail(playlist.getId() , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
-        insertPlaylistDetail(playlistDetail);
-        PlaylistDetail playlistDetail1 = new PlaylistDetail(playlist.getId(), UUID.fromString("015f254e-ca95-4bae-a8cd-1e3d6b4b69ee"));
-        insertPlaylistDetail(playlistDetail1);
-
-        deletePlaylist(playlist.getId());
+//
+//        PlaylistDetail playlistDetail = new PlaylistDetail(playlist.getId() , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+//        insertPlaylistDetail(playlistDetail);
+//        PlaylistDetail playlistDetail1 = new PlaylistDetail(playlist.getId(), UUID.fromString("015f254e-ca95-4bae-a8cd-1e3d6b4b69ee"));
+//        insertPlaylistDetail(playlistDetail1);
+//
+//        deletePlaylist(playlist.getId());
 
 //        ------------ PlaulistDatinl ---------------
 
@@ -105,20 +106,20 @@ public class DatabaseManager {
 //        updateComment(comment1);
 //        deleteComment(comment1.getId());
 
-//        ------------------- CommentLike -----------------
+//        ------------------- UserComment -----------------
 
-//        CommentLike commentLike = new CommentLike(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68") , UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
-//        insertCommentLike(commentLike);
-//        CommentLike commentLike1 = new CommentLike(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68") , UUID.fromString("7e15195d-7696-4bef-b268-440f240e6719"));
-//        insertCommentLike(commentLike1);
-//        deleteCommentLike(commentLike1.getId());
-//        deleteACommentLikes(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
+//    UserComment userComment = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
+//    insertUserComment(userComment);
+//    UserComment userComment1 = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
+//    insertUserComment(userComment1);
+//    deleteUserComment(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
+//    deleteUserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
 
     }
 
     //region [ - Methods - ]
 
-    //region [ - User - ]
+    //region [ - User - ] To Think
 
     //region [ - insertUser(User user) - ] Tested
     public static void insertUser(User user) {
@@ -292,7 +293,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //endregion
+    //endregion //////// To Think
 
     //region [ - Channel - ]
 
@@ -932,7 +933,7 @@ public class DatabaseManager {
 
     //endregion
 
-    //region [ - Video - ]
+    //region [ - Video - ] To Think
 
     //region [ - insertVideo(Video video) - ] Tested
     public static void insertVideo(Video video) {
@@ -1076,7 +1077,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //    region [ - deleteVideo(UUID videoid) - ] Tested
+    //    region [ - deleteVideo(UUID videoid) - ] YES
     public static void deleteVideo(UUID videoid) {
         Connection c;
         PreparedStatement stmt;
@@ -1092,6 +1093,7 @@ public class DatabaseManager {
             deletePlaylistDetail(videoid);
             deleteVideoCategory(videoid);
             deleteUserVideo(videoid);
+
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Video WHERE \"Id\" = ?;");
             stmt.setObject(1, videoid);
 
@@ -1108,7 +1110,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //endregion
+    //endregion /////////////////////
 
     //region [ - VideoCategory - ]
 
@@ -1324,7 +1326,7 @@ public class DatabaseManager {
 
     //region [ - UserVideo - ]
 
-    //region [ - insertUserVideo (UserVideo UserVideo) - ] Tested
+    //region [ - insertUserVideo (UserVideo UserVideo) - ] YES
     public static void insertUserVideo(UserVideo userVideo) {
         Connection c;
         PreparedStatement stmt;
@@ -1334,10 +1336,10 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertUserVideo)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.UserVideo(VideoId, CategoryId , \"Like\") VALUES (?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.UserVideo(VideoId, UserId , \"Like\") VALUES (?, ?, ?);");
             stmt.setObject(1, userVideo.getVideoId());
             stmt.setObject(2, userVideo.getUserId());
-            stmt.setObject(3, userVideo.getUserId());
+            stmt.setObject(3, userVideo.getLike());
 
             stmt.executeUpdate();
             c.commit();
@@ -1454,7 +1456,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - UserVideo selectUserVideo(UUID userID , UUID videoId) - ] Not Tested
+    //region [ - UserVideo selectUserVideo(UUID userID , UUID videoId) - ] Not Test
     public UserVideo selectUserVideo(UUID userID , UUID videoId) {
         Connection c;
         PreparedStatement stmt;
@@ -1488,7 +1490,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteUserVideo(UUID userId , UUID videoId) - ] Not Tested
+    //region [ - deleteUserVideo(UUID userId , UUID videoId) - ] YES
     public static void deleteUserVideo(UUID userId , UUID videoId) {
         Connection c;
         PreparedStatement stmt;
@@ -1513,7 +1515,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteUserVideo(UUID videoId) - ] Tested
+    //region [ - deleteUserVideo(UUID videoId) - ] Yes
     public static void deleteUserVideo(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
@@ -2123,7 +2125,7 @@ public class DatabaseManager {
 
     //region [ - UserComment - ]
 
-    //region [ - insertUserComment (UserComment UserComment) - ] Tested
+    //region [ - insertUserComment (UserComment UserComment) - ] Yes
     public static void insertUserComment(UserComment userVideo) {
         Connection c;
         PreparedStatement stmt;
@@ -2292,7 +2294,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteUserComment(UUID userId , UUID commentID) - ] Not Tested
+    //region [ - deleteUserComment(UUID userId , UUID commentID) - ] Yes (this method don't want to exist)
     public static void deleteUserComment(UUID userId , UUID commentID) {
         Connection c;
         PreparedStatement stmt;
@@ -2317,7 +2319,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteUserComment(UUID commentID) - ] Tested
+    //region [ - deleteUserComment(UUID commentID) - ] Yes
     public static void deleteUserComment(UUID commentId) {
         Connection c;
         PreparedStatement stmt;
