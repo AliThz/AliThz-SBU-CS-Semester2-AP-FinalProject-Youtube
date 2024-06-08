@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public class Playlist {
     private UUID Id ;
+    private String thumbnailPath ;
     private String title ;
     private String description ;
 
@@ -93,5 +94,13 @@ public class Playlist {
 
     public void setPlaylistDetails(ArrayList<PlaylistDetail> playlistDetails) {
         this.playlistDetails = playlistDetails;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 }
