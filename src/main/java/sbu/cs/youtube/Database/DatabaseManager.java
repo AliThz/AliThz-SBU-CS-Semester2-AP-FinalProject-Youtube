@@ -27,6 +27,8 @@ public class DatabaseManager {
         user1.setId(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
         Subscription subscription = new Subscription(user1.getId(), channel.getId());
 
+//        ------------ Category --------------------
+
 //        Category category = new Category("fun");
 //        insertCategory(category);
 //        Category category1 = new Category("game");
@@ -34,12 +36,32 @@ public class DatabaseManager {
 //        updateCategory(category1);
 //        deleteCategory(category.getId());
 
+//        ------------ Video --------------------
+
 //        Video video = new Video("1", "1", channel.getId(), 4, LocalDateTime.now());
+//
+//        ArrayList<VideoCategory> videoCategories= new ArrayList<>() ;
+//        VideoCategory videoCategory = new VideoCategory(video.getId() , UUID.fromString("3d967083-bdd6-4016-b412-b7a2d9576d28"));
+//        videoCategories.add(videoCategory);
+//        VideoCategory videoCategory1 = new VideoCategory(video.getId() , UUID.fromString("46e7d055-33c9-4a2f-b802-a5b0bb3332ec"));
+//        videoCategories.add(videoCategory1);
+//        video.setCategories(videoCategories);
+//
 //        insertVideo(video);
-//        Video video1 = new Video("hahaha", "lahlala", channel.getId(), 9, LocalDateTime.now());
-//        video1.setId(video.getId());
-//        updateVideo(video1);
+//
+//        PlaylistDetail playlistDetail = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , video.getId());
+//        insertPlaylistDetail(playlistDetail);
+//        PlaylistDetail playlistDetail1 = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , video.getId());
+//        insertPlaylistDetail(playlistDetail1);
+//
+//        VideoLike videoLike = new VideoLike(video.getId(), UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        insertVideoLike(videoLike);
+//        VideoLike videoLike1 = new VideoLike(video.getId(), UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f"));
+//        insertVideoLike(videoLike1);
+//
 //        deleteVideo(video.getId());
+
+//        ------------ VideoLike ---------------
 
 //        VideoLike videoLike = new VideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"), UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
 //        insertVideoLike(videoLike);
@@ -47,13 +69,21 @@ public class DatabaseManager {
 //        insertVideoLike(videoLike1);
 //        deleteVideoLike(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"),UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
 
+//        ------------ Plaulist ---------------
 
-//        Playlist playlist = new Playlist("1" , "1" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
-//        insertPlaylist(playlist);
+        Playlist playlist = new Playlist("1" , "1" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
+        insertPlaylist(playlist);
 //        Playlist playlist1 = new Playlist("2" , "2" , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , false);
 //        playlist1.setId(playlist.getId());
-//        updatePlaylist(playlist1);
-//        deletePlaylist(playlist.getId());
+
+        PlaylistDetail playlistDetail = new PlaylistDetail(playlist.getId() , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+        insertPlaylistDetail(playlistDetail);
+        PlaylistDetail playlistDetail1 = new PlaylistDetail(playlist.getId(), UUID.fromString("015f254e-ca95-4bae-a8cd-1e3d6b4b69ee"));
+        insertPlaylistDetail(playlistDetail1);
+
+        deletePlaylist(playlist.getId());
+
+//        ------------ PlaulistDatinl ---------------
 
 //        PlaylistDetail playlistDetail = new PlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
 //        insertPlaylistDetail(playlistDetail);
@@ -66,6 +96,30 @@ public class DatabaseManager {
 //        deletePlaylistDetails(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
 //        deletePlaylistDetail(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
 //        deletePlaylistDetail(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b") , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+
+//        -------------------- Comment --------------------
+
+//        Comment comment = new Comment("5" , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7") , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , null);
+//        insertComment(comment);
+//        Comment comment1 = new Comment("lalala" , UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7") , UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f") , null);
+//        comment1.setId(comment.getId());
+//        updateComment(comment1);
+//        deleteComment(comment1.getId());
+
+//        ------------------- CommentLike -----------------
+
+//        CommentLike commentLike = new CommentLike(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68") , UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        insertCommentLike(commentLike);
+//        CommentLike commentLike1 = new CommentLike(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68") , UUID.fromString("7e15195d-7696-4bef-b268-440f240e6719"));
+//        insertCommentLike(commentLike1);
+//        deleteCommentLike(commentLike1.getId());
+//        deleteACommentLikes(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
+
+
+
+
+
+
     }
 
     //region [ - Methods - ]
@@ -895,6 +949,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertVideo)");
 
+
             stmt = c.prepareStatement("INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId, \"Views\" , \"UploadDate\" ) VALUES (?, ?, ?, ?, ?, ?);");
             stmt.setObject(1, video.getId());
             stmt.setString(2, video.getTitle());
@@ -903,13 +958,15 @@ public class DatabaseManager {
             stmt.setInt(5, video.getViews());
             stmt.setObject(6, video.getUploadDate());
 
-
-//            for (var videoCategory : video.getCategories()) {
-//                insertVideoCategory(videoCategory);
-//            }
-
             stmt.executeUpdate();
             c.commit();
+
+            if (video.getCategories() != null) {
+                for (var videoCategory : video.getCategories()) {
+                    insertVideoCategory(videoCategory);
+                }
+            }
+
             stmt.close();
             c.close();
         } catch (Exception e) {
@@ -1024,7 +1081,7 @@ public class DatabaseManager {
     }
     //endregion
 
-//    region [ - deleteVideo(UUID videoid) - ] Not Tested
+    //    region [ - deleteVideo(UUID videoid) - ] Tested
     public static void deleteVideo(UUID videoid) {
         Connection c;
         PreparedStatement stmt;
@@ -1037,9 +1094,10 @@ public class DatabaseManager {
 //            for (var comment : selectComments(videoid)) {
 //                deleteComment(comment.getId());
 //            }
-//            deletePlaylistDetail(videoid);
-//            deleteVideoCategory(videoid);
-//            deleteVideoLike(videoid);
+
+            deletePlaylistDetail(videoid);
+            deleteVideoCategory(videoid);
+            deleteVideoLike(videoid);
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Video WHERE \"Id\" = ?;");
             stmt.setObject(1, videoid);
 
@@ -1617,7 +1675,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deletePlaylist(UUID Id) - ] Not Test
+//    region [ - deletePlaylist(UUID Id) - ] Tested
     public static void deletePlaylist(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -1862,8 +1920,8 @@ public class DatabaseManager {
 
     //region [ - Comment - ]
 
-    //region [ - insertComment(Comment comment) - ]
-    public void insertComment(Comment comment) {
+    //region [ - insertComment(Comment comment) - ] Tested
+    public static void insertComment(Comment comment) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1872,13 +1930,12 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertComment)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.Comment(\"Id\", \"Content\", \"VideoId\", \"SenderId\",\"ParentCommentId\", \"DataCommented\") VALUES (?, ?, ?, ?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.Comment(\"Id\", \"Message\", VideoId, SenderId,ParentCommentId) VALUES (?, ?, ?, ?, ?);");
             stmt.setObject(1, comment.getId());
             stmt.setString(2, comment.getContent());
             stmt.setObject(3, comment.getVideoId());
             stmt.setObject(4, comment.getSenderId());
             stmt.setObject(5, comment.getParentCommentId());
-            stmt.setObject(6, comment.getDateCommented());
 
             stmt.executeUpdate();
             c.commit();
@@ -2011,24 +2068,27 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - updateComment(Comment comment) - ]
-    public void updateComment(Comment comment) {
+    //region [ - updateComment(Comment comment) - ] Tested
+    public static void updateComment(Comment comment) {
         Connection c;
         PreparedStatement stmt;
         try {
+
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateComment)");
 
-            stmt = c.prepareStatement("UPDATE ContentManagement.Comment SET \"Content\" = ? WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("UPDATE ContentManagement.Comment SET \"Message\" = ? WHERE \"Id\" = ?;");
 
             stmt.setString(1, comment.getContent());
+            stmt.setObject(2 , comment.getId());
 
             stmt.executeUpdate();
             c.commit();
             stmt.close();
             c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
@@ -2036,7 +2096,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteComment(UUID Id) - ]
+    //region [ - deleteComment(UUID Id) - ] Not Tested
     public static void deleteComment(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -2046,7 +2106,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteComment)");
 
-            deleteACommentLikes(Id);
+//            deleteACommentLikes(Id);
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Comment WHERE \"Id\" = ?;");
             stmt.setObject(1, Id);
 
@@ -2066,8 +2126,8 @@ public class DatabaseManager {
 
     //region [ - CommentLike - ]
 
-    //region [ - insertCommentLike(CommentLike commentLike) - ]
-    public void insertCommentLike(CommentLike commentLike) {
+    //region [ - insertCommentLike(CommentLike commentLike) - ] Tested
+    public static void insertCommentLike(CommentLike commentLike) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2076,7 +2136,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertCommentLike)");
 
-            stmt = c.prepareStatement("INSERT INTO ContentManagement.CommentLike(\"Id\", \"UserId\", \"CommentId\") VALUES (?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ContentManagement.CommentLike(\"Id\", UserId, CommentId) VALUES (?, ?, ?);");
             stmt.setObject(1, commentLike.getId());
             stmt.setObject(2, commentLike.getUserId());
             stmt.setObject(3, commentLike.getCommentId());
@@ -2085,6 +2145,7 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
@@ -2197,8 +2258,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteCommentLike(UUID Id) - ]
-    public void deleteCommentLike(UUID Id) {
+    //region [ - deleteCommentLike(UUID Id) - ] Tested
+    public static void deleteCommentLike(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2222,7 +2283,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - deleteACommentLikes(UUID commentId) - ]
+    //region [ - deleteACommentLikes(UUID commentId) - ] Tested
     public static void deleteACommentLikes(UUID commentId) {
         Connection c;
         PreparedStatement stmt;
@@ -2232,7 +2293,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteCommentLike)");
 
-            stmt = c.prepareStatement("DELETE FROM ContentManagement.CommentLike WHERE \"CommentId\" = ?;");
+            stmt = c.prepareStatement("DELETE FROM ContentManagement.CommentLike WHERE CommentId = ?;");
             stmt.setObject(1, commentId);
 
             stmt.executeUpdate();
