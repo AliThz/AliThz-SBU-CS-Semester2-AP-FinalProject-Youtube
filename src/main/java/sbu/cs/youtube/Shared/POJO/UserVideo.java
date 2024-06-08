@@ -20,7 +20,7 @@ public class UserVideo {
     public UserVideo() {
     }
 
-    public UserVideo(UUID videoId, UUID userId) {
+    public UserVideo( UUID userId , UUID videoId) {
         this.videoId = videoId;
         this.userId = userId;
 

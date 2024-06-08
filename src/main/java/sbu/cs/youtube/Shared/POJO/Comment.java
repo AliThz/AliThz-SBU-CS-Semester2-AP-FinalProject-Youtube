@@ -14,12 +14,13 @@ public class Comment {
     private Comment parentComment;
     private UUID parentCommentId;
     private LocalDateTime dateCommented;
-    private ArrayList<UserComment> commentLikes;
+    private ArrayList<UserComment> viewers;
 
     public Comment() {
         Id = UUID.randomUUID();
-        commentLikes = new ArrayList<>();
+        viewers = new ArrayList<>();
     }
+
 
     public Comment(String content, UUID videoId, UUID senderId, UUID parentCommentId) {
         Id = UUID.randomUUID();
@@ -27,7 +28,7 @@ public class Comment {
         this.videoId = videoId;
         this.senderId = senderId;
         this.parentCommentId = parentCommentId;
-        commentLikes = new ArrayList<>();
+        viewers = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -101,4 +102,12 @@ public class Comment {
     public void setDateCommented(LocalDateTime dateCommented) {
         this.dateCommented = dateCommented;
     }
+    public ArrayList<UserComment> getViewers() {
+        return viewers;
+    }
+
+    public void setViewers(ArrayList<UserComment> viewers) {
+        this.viewers = viewers;
+    }
+
 }

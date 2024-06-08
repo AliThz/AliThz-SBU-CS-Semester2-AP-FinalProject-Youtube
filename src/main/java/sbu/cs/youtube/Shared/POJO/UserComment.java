@@ -20,7 +20,7 @@ public class UserComment {
         this.like = like;
     }
 
-    public UserComment(UUID commentId, UUID userId) {
+    public UserComment(UUID userId,UUID commentId ) {
         this.commentId = commentId;
         this.userId = userId;
     }

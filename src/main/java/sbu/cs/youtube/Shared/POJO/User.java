@@ -16,6 +16,8 @@ public class User {
     private ArrayList<Subscription> subscriptions;
     private ArrayList<Notification> notifications;
     private ArrayList<UserVideo> viewedVideos;
+    private ArrayList<UserVideo> viewedComments;
+
 
     public User() {
         Id = UUID.randomUUID();
@@ -115,12 +117,16 @@ public class User {
     public void setViewedVideos(ArrayList<UserVideo> viewedVideos) {
         this.viewedVideos = viewedVideos;
     }
-
     public String getAvatarPath() {
         return AvatarPath;
     }
-
     public void setAvatarPath(String avatarPath) {
         AvatarPath = avatarPath;
+    }
+    public ArrayList<UserVideo> getViewedComments() {
+        return viewedComments;
+    }
+    public void setViewedComments(ArrayList<UserVideo> viewedComments) {
+        this.viewedComments = viewedComments;
     }
 }
