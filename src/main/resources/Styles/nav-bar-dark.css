@@ -3,6 +3,13 @@
     -fx-background-color : black;
 }
 
+/* -------------------------------- Youtube Logo -------------------------------- */
+.youtube-svg {
+        -fx-fill : white;
+        -fx-scale-x : 1.2;
+        -fx-scale-y : 1.2;
+}
+
 /* -------------------------------- Burger Button -------------------------------- */
 .burger-svg {
     -fx-fill : white;

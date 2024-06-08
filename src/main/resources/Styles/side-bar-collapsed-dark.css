@@ -5,6 +5,7 @@
     -f-spacing : 70px;
     -fx-padding: 15px 0px 0px 0px;
 }
+
 /* -------------------------------- Home Button -------------------------------- */
 .home-svg {
     -fx-fill : white;
@@ -33,17 +34,17 @@
     -fx-pref-height : 15px;
 }
 
-/* -------------------------------- Dashboard Button -------------------------------- */
-.dashboard-svg {
+/* -------------------------------- You Button -------------------------------- */
+.you-svg {
     -fx-fill : white;
     -fx-scale-x : 1;
     -fx-scale-y : 1;
 }
 
-.dashboard-lbl {
+.you-lbl {
     -fx-text-fill : white;
     -fx-font-size : 10;
-    -fx-pref-width : 49px;
+    -fx-pref-width : 18px;
     -fx-pref-height : 15px;
 }
 
@@ -64,7 +65,7 @@
 }
 
 /* -------------------------------- Separator -------------------------------- */
-.separator-horizontal .line {
+.separator-vertical .line {
     -fx-border-color : rgb(33,33,33);
     -fx-border-width : 1;
 }

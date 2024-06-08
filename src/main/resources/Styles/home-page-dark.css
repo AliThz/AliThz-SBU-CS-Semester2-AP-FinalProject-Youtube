@@ -1,5 +1,24 @@
-/* -------------------------------- Scroll Pane -------------------------------- */
+/* -------------------------------- Background -------------------------------- */
 .background {
     -fx-background-color : black;
     -fx-border-color : black;
 }
+
+/* -------------------------------- Scroll Pane -------------------------------- */
+.scroll-pane {
+    -fx-background-color: black;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgb(41,41,41);
+    -fx-background-radius: 10;
+    -fx-pref-width: 15;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 10;
+}
+
+
+
