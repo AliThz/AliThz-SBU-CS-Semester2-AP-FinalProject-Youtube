@@ -38,10 +38,10 @@ public class HomePageController extends LayoutController implements Initializabl
     //region [ - initialize(URL location, ResourceBundle resources) - ]
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resoursces) {
 
         setRightNavBarHBox();
-        flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(16));
+        flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
         flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
     }
 
