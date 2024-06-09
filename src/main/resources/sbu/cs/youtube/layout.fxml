@@ -190,7 +190,7 @@
             </Separator>
             <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="466.0" prefWidth="718.0" stylesheets="@../../../Styles/home-page-dark.css" HBox.hgrow="ALWAYS">
                <content>
-                  <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="850.0" styleClass="background" />
+                  <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="850.0" styleClass="flwpane" />
                </content>
             </ScrollPane>
          </children>

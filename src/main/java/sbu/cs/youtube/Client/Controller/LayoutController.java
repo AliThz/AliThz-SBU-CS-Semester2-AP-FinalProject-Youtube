@@ -502,7 +502,11 @@ public class LayoutController implements Initializable {
 
     //endregion
 
-
+    //region [ - addToFlowPane(Parent parent) - ]
+    public void addToFlowPane(Parent parent) {
+        flowPane.getChildren().add(parent);
+    }
+    //endregion
 
 
 }

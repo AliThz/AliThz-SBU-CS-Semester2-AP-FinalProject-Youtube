@@ -17,16 +17,32 @@ public class HomeSectionController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/layout.fxml"));
-        Parent layout = null;
+        Parent layout;
         try {
             layout = loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         mainPane.getChildren().add(layout);
-        LayoutController controller = loader.getController();
+        LayoutController layoutController = loader.getController();
 
-        controller.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
-        controller.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
+        layoutController.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
+        layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
+
+        for (int i = 0; i < 12; i++) {
+            FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+            Parent videoPreview;
+            try {
+                videoPreview = videoPreviewLoader.load();
+                VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                if (videoPreviewController != null) {
+                    videoPreviewController.addThumbnail("/Images/Thumbnail.jpg");
+                    videoPreviewController.addChannelProfile("/Images/ChannelProfile.png");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            layoutController.addToFlowPane(videoPreview);
+        }
     }
 }
