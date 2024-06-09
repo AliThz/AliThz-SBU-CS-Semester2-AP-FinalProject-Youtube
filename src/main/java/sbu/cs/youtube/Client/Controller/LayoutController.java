@@ -43,9 +43,6 @@ public class LayoutController implements Initializable {
     protected HBox hbxContent;
 
     @FXML
-    protected FlowPane flowPane;
-
-    @FXML
     protected ScrollPane scrollPane;
 
     @FXML
@@ -60,9 +57,6 @@ public class LayoutController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setRightNavBarHBox();
-
-        flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
-        flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
     }
     //endregion
 

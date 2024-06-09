@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,9 +25,16 @@ public class HomeSectionController implements Initializable {
             throw new RuntimeException(e);
         }
         mainPane.getChildren().add(layout);
-        LayoutController controller = loader.getController();
+        LayoutController layoutController = loader.getController();
 
-        controller.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
-        controller.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
+        FlowPane flowPane = new FlowPane();
+        flowPane.getStyleClass().add("background");
+        layoutController.scrollPane.setContent(flowPane);
+
+        flowPane.prefWidthProperty().bind(layoutController.scrollPane.widthProperty().subtract(15));
+        flowPane.prefHeightProperty().bind(layoutController.scrollPane.heightProperty());
+
+        layoutController.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
+        layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
     }
 }
