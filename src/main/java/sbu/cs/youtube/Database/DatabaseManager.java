@@ -18,12 +18,19 @@ public class DatabaseManager {
     public static void main(String[] args) {
         Subscription subscription = new Subscription(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),UUID.fromString("e0ce92d5-f8ff-40eb-8d46-31c7a19ecc1a"));
         insertSubscription(subscription);
+        Subscription subscription1 = new Subscription(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),UUID.fromString("9c824884-139c-4deb-a0cb-c298dfe36efb"));
+        insertSubscription(subscription1);
         Notification notification = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"salam" , false , LocalDateTime.now());
         insertNotification(notification);
+        Notification notification1 = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"mahan" , false , LocalDateTime.now());
+        insertNotification(notification1);
         VideoCategory videoCategory = new VideoCategory() ;
         User user = selectUser(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
         System.out.println(user.getId());
-        System.out.println(user.getSubscriptions());
+        for (Subscription subscription2 : user.getSubscriptions()){
+            System.out.println(subscription2.getJoinDate());
+        }
+        System.out.println(user.getNotifications().get(67).getMessage());
 
 
 //        ------------ Category --------------------
