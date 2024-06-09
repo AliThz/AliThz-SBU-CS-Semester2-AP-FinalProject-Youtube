@@ -2,6 +2,7 @@ package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -13,9 +14,11 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class LayoutController {
+public class LayoutController implements Initializable {
 
     //region [ - Fields - ]
 
@@ -34,10 +37,29 @@ public class LayoutController {
     @FXML
     protected Button btnYou;
 
+    @FXML
+    protected HBox hbxContent;
+
+    @FXML
+    protected FlowPane flowPane;
+
+    @FXML
+    protected ScrollPane scrollPane;
 
     //endregion
 
     //region [ - Methods - ]
+
+    //region [ - initialize(URL location, ResourceBundle resources) - ]
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setRightNavBarHBox();
+
+        flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
+        flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
+    }
+    //endregion
 
     //region [ - openSesame() - ]
 
@@ -408,6 +430,40 @@ public class LayoutController {
     }
     //endregion
 
+    //region [ - setHomeSection - ]
+    @FXML
+    void setHomeSection() {
+
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/layout.fxml"));
+//        Parent layout = null;
+//        try {
+//            layout = loader.load();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        testPane.getChildren().add(layout);
+//        LayoutController controller = loader.getController();
+
+
+        //endregion
+
+    }
+    //endregion
+
+    //region [ - setSubscriptionsSection(ActionEvent event) - ]
+    @FXML
+    void setSubscriptionsSection(ActionEvent event) {
+
+    }
+    //endregion
+
+    //region [ - setYouSection(ActionEvent event) - ]
+    @FXML
+    void setYouSection(ActionEvent event) {
+
+    }
+    //endregion
+
     //region [ - getDashboard(ActionEvent event) - ]
 
     protected void getDashboard(ActionEvent event) {
@@ -448,8 +504,10 @@ public class LayoutController {
                 .show();
     }
 
-    //endregion
 
     //endregion
+
+
+
 
 }
