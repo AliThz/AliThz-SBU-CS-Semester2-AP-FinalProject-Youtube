@@ -2,9 +2,11 @@ package sbu.cs.youtube.Shared;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import sbu.cs.youtube.Shared.POJO.Notification;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -13,6 +15,7 @@ public class Response<T> {
     //region [ - Fields - ]
     private final Socket client;
     private final BufferedWriter bufferedWriter;
+    private Notification notification;
     private String type;
     private T body;
     private boolean isDone;
@@ -20,9 +23,14 @@ public class Response<T> {
     //endregion
 
     //region [ - Constructor - ]
-    public Response(Socket client, BufferedWriter bufferedWriter) {
-        this.client = client;
-        this.bufferedWriter = bufferedWriter;
+    public Response(Socket client) {
+        try {
+            notification = new Notification();
+            this.client = client;
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     //endregion
 

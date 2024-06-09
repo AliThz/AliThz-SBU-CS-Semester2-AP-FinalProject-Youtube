@@ -2,6 +2,9 @@ package sbu.cs.youtube.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import sbu.cs.youtube.Database.DatabaseManager;
+import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.Response;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,12 +12,14 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
     private final Socket client;
     private BufferedReader bufferedReader;
+    private DatabaseManager databaseManager;
 
     //region [ - Constructor - ]
     public ClientHandler(Socket client) {
         this.client = client;
         try {
             this.bufferedReader = new BufferedReader(new InputStreamReader((client.getInputStream())));
+            this.databaseManager = new DatabaseManager();
         } catch (IOException ioe) {
             System.out.println("!!Exception : " + ioe.getMessage());
         }
@@ -59,7 +64,10 @@ public class ClientHandler implements Runnable {
         JsonObject jsonRequest = gson.fromJson(request, JsonObject.class);
 
         switch (jsonRequest.get("Type").getAsString()) {
-
+            case "SignUp":
+                databaseManager.insertUser(gson.fromJson(jsonRequest.get("Body"), User.class));
+                Response<User> response = new Response<>(client);
+                response.send();
         }
     }
     //endregion
