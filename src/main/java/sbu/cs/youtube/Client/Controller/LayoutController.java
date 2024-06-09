@@ -2,8 +2,10 @@ package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -13,9 +15,12 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class LayoutController {
+public class LayoutController implements Initializable {
 
     //region [ - Fields - ]
 
@@ -34,10 +39,32 @@ public class LayoutController {
     @FXML
     protected Button btnYou;
 
+    @FXML
+    protected HBox hbxContent;
+
+    @FXML
+    protected FlowPane flowPane;
+
+    @FXML
+    protected ScrollPane scrollPane;
+
+    @FXML
+    protected VBox vbxLayout;
 
     //endregion
 
     //region [ - Methods - ]
+
+    //region [ - initialize(URL location, ResourceBundle resources) - ]
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setRightNavBarHBox();
+
+        flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
+        flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
+    }
+    //endregion
 
     //region [ - openSesame() - ]
 
@@ -408,6 +435,30 @@ public class LayoutController {
     }
     //endregion
 
+    //region [ - setHomeSection - ]
+    @FXML
+    void setHomeSection(ActionEvent event) {
+        System.out.println("This is home section");
+
+
+
+    }
+    //endregion
+
+    //region [ - setSubscriptionsSection(ActionEvent event) - ]
+    @FXML
+    void setSubscriptionsSection(ActionEvent event) {
+
+    }
+    //endregion
+
+    //region [ - setYouSection(ActionEvent event) - ]
+    @FXML
+    void setYouSection(ActionEvent event) {
+
+    }
+    //endregion
+
     //region [ - getDashboard(ActionEvent event) - ]
 
     protected void getDashboard(ActionEvent event) {
@@ -448,8 +499,10 @@ public class LayoutController {
                 .show();
     }
 
-    //endregion
 
     //endregion
+
+
+
 
 }
