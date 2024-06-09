@@ -8,7 +8,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Response<T> {
 
@@ -18,14 +20,16 @@ public class Response<T> {
     private Notification notification;
     private String type;
     private T body;
+    private ArrayList<T> bodyList;
     private boolean isDone;
     private String error;
     //endregion
 
     //region [ - Constructor - ]
-    public Response(Socket client) {
+    public Response(Socket client, String type) {
         try {
             notification = new Notification();
+            this.type = type;
             this.client = client;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException e) {
@@ -36,14 +40,43 @@ public class Response<T> {
 
     //region [ - Methods - ]
 
-    //region [ - send(T body) - ]
+    //region [ - send() - ]
     public void send() {
         JsonObject jsonResponse = new JsonObject();
         Gson gson = new Gson();
         String jsonObject = gson.toJson(body);
 
         jsonResponse.addProperty("Type", gson.toJson(type));
+        jsonResponse.addProperty("IsDone", gson.toJson(isDone));
+        jsonResponse.addProperty("Error", gson.toJson(error));
+
+        write(jsonResponse.toString());
+    }
+    //endregion
+
+    //region [ - send(T body) - ]
+    public void send(T body) {
+        JsonObject jsonResponse = new JsonObject();
+        Gson gson = new Gson();
+        String jsonObject = gson.toJson(body);
+
+        jsonResponse.addProperty("Type", gson.toJson(type));
         jsonResponse.addProperty("Body", jsonObject);
+        jsonResponse.addProperty("IsDone", gson.toJson(isDone));
+        jsonResponse.addProperty("Error", gson.toJson(error));
+
+        write(jsonResponse.toString());
+    }
+    //endregion
+
+    //region [ - send(ArrayList<T> bodyList) - ]
+    public void send(ArrayList<T> bodyList) {
+        JsonObject jsonResponse = new JsonObject();
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(bodyList);
+
+        jsonResponse.addProperty("Type", gson.toJson(type));
+        jsonResponse.addProperty("BodyList", jsonArray);
         jsonResponse.addProperty("IsDone", gson.toJson(isDone));
         jsonResponse.addProperty("Error", gson.toJson(error));
 

@@ -10,9 +10,12 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
+
+    //region [ - Fields - ]
     private final Socket client;
     private BufferedReader bufferedReader;
     private DatabaseManager databaseManager;
+    //endregion
 
     //region [ - Constructor - ]
     public ClientHandler(Socket client) {
@@ -33,7 +36,9 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             try {
-                receiveRequest();
+                while (true) {
+                    receiveRequest();
+                }
             } finally {
                 try {
                     bufferedReader.close();
@@ -66,12 +71,15 @@ public class ClientHandler implements Runnable {
         switch (jsonRequest.get("Type").getAsString()) {
             case "SignUp":
                 databaseManager.insertUser(gson.fromJson(jsonRequest.get("Body"), User.class));
-                Response<User> response = new Response<>(client);
+                Response<User> response = new Response<>(client, "SignUp");
                 response.send();
+                break;
+            case "SignIn":
+
+
         }
     }
     //endregion
-
 
     //endregion
 

@@ -14,14 +14,13 @@ public class Request<T> {
     private final Socket socket;
     private BufferedWriter bufferedWriter;
     private final String type;
-    private final T body;
+    private T body;
     //endregion
 
     //region [ - Constructor - ]
-    public Request(Socket socket, String type, T body) {
+    public Request(Socket socket, String type) {
         this.socket = socket;
         this.type = type;
-        this.body = body;
         try {
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         } catch (IOException ioe) {
@@ -32,8 +31,20 @@ public class Request<T> {
 
     //region [ - Methods - ]
 
-    //region [ - send(T body) - ]
+    //region [ - send() - ]
     public void send() {
+        JsonObject jsonRequest = new JsonObject();
+        Gson gson = new Gson();
+        String jsonObject = gson.toJson(body);
+
+        jsonRequest.addProperty("Type", gson.toJson(type));
+
+        write(jsonRequest.toString());
+    }
+    //endregion
+
+    //region [ - send(T object) - ]
+    public void send(T body) {
         JsonObject jsonRequest = new JsonObject();
         Gson gson = new Gson();
         String jsonObject = gson.toJson(body);
@@ -70,5 +81,4 @@ public class Request<T> {
     //endregion
 
     //endregion
-
 }
