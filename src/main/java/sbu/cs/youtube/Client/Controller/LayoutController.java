@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,7 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -45,6 +47,9 @@ public class LayoutController implements Initializable {
 
     @FXML
     protected ScrollPane scrollPane;
+
+    @FXML
+    protected VBox vbxLayout;
 
     //endregion
 
@@ -432,20 +437,10 @@ public class LayoutController implements Initializable {
 
     //region [ - setHomeSection - ]
     @FXML
-    void setHomeSection() {
-
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/layout.fxml"));
-//        Parent layout = null;
-//        try {
-//            layout = loader.load();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        testPane.getChildren().add(layout);
-//        LayoutController controller = loader.getController();
+    void setHomeSection(ActionEvent event) {
+        System.out.println("This is home section");
 
 
-        //endregion
 
     }
     //endregion
