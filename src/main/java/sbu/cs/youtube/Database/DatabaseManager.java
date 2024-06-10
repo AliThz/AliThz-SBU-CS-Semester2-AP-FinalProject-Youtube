@@ -16,41 +16,48 @@ public class DatabaseManager {
     //endregion
 
     public static void main(String[] args) {
-        Subscription subscription = new Subscription(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),UUID.fromString("e0ce92d5-f8ff-40eb-8d46-31c7a19ecc1a"));
-        insertSubscription(subscription);
-        Subscription subscription1 = new Subscription(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),UUID.fromString("9c824884-139c-4deb-a0cb-c298dfe36efb"));
-        insertSubscription(subscription1);
-
-        Notification notification = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"salam" , false , LocalDateTime.now());
-        insertNotification(notification);
-        Notification notification1 = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"mahan" , false , LocalDateTime.now());
-        insertNotification(notification1);
-
-        UserVideo userVideo = new UserVideo(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"));
-        insertUserVideo(userVideo);
-        UserVideo userVideo1 = new UserVideo(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
-        insertUserVideo(userVideo1);
-
-        VideoCategory videoCategory = new VideoCategory(UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"),UUID.fromString("45a91717-6e6c-4c7a-a7d9-54b1d69ad1bd"));
-        insertVideoCategory(videoCategory);
-        VideoCategory videoCategory1 = new VideoCategory(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"),UUID.fromString("45a91717-6e6c-4c7a-a7d9-54b1d69ad1bd"));
-        insertVideoCategory(videoCategory1);
-
-        UserComment userComment = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
-        insertUserComment(userComment);
-        UserComment userComment1 = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5a7ea6ba-3999-4fe3-8774-89600bebfe0e"));
-        insertUserComment(userComment1);
-
-        User user = selectUser(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
-        System.out.println(user.getId());
-        for (Subscription subscription2 : user.getSubscriptions()){
-            System.out.println(subscription2.getJoinDate());
-        }
-        System.out.println(user.getViewedVideos().size());
-        System.out.println(user.getNotifications().size());
-        System.out.println(user.getViewedComments().size());
-//        System.out.println(user.g);
-
+//        Playlist playlist = selectPlaylist(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
+//        System.out.println(playlist.getDateCreated());
+//        ------------------ Select Notification Test ------------------------
+//        Notification notification = selectNotification(UUID.fromString("7b024880-3f65-418e-aace-995735f9d827"));
+//        System.out.println(notification.getMessage());
+//        ------------------- Channel Select Test --------------------------------------------------------------------------------------------------------------------
+//        Channel channel = selectChannel(UUID.fromString("e0ce92d5-f8ff-40eb-8d46-31c7a19ecc1a"));
+//        System.out.println(channel.getDateCreated());
+//        -------------------- User select Test -----------------------------------------------------------------------------------------------------------------------
+//        Subscription subscription = new Subscription(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),UUID.fromString("e0ce92d5-f8ff-40eb-8d46-31c7a19ecc1a"));
+//        insertSubscription(subscription);
+//        Subscription subscription1 = new Subscription(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),UUID.fromString("9c824884-139c-4deb-a0cb-c298dfe36efb"));
+//        insertSubscription(subscription1);
+//
+//        Notification notification = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"salam" , false , LocalDateTime.now());
+//        insertNotification(notification);
+//        Notification notification1 = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"mahan" , false , LocalDateTime.now());
+//        insertNotification(notification1);
+//
+//        UserVideo userVideo = new UserVideo(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"));
+//        insertUserVideo(userVideo);
+//        UserVideo userVideo1 = new UserVideo(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+//        insertUserVideo(userVideo1);
+//
+//        VideoCategory videoCategory = new VideoCategory(UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"),UUID.fromString("45a91717-6e6c-4c7a-a7d9-54b1d69ad1bd"));
+//        insertVideoCategory(videoCategory);
+//        VideoCategory videoCategory1 = new VideoCategory(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"),UUID.fromString("45a91717-6e6c-4c7a-a7d9-54b1d69ad1bd"));
+//        insertVideoCategory(videoCategory1);
+//
+//        UserComment userComment = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
+//        insertUserComment(userComment);
+//        UserComment userComment1 = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5a7ea6ba-3999-4fe3-8774-89600bebfe0e"));
+//        insertUserComment(userComment1);
+//
+//        User user = selectUser(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        System.out.println(user.getId());
+//        for (Subscription subscription2 : user.getSubscriptions()){
+//            System.out.println(subscription2.getJoinDate());
+//        }
+//        System.out.println(user.getViewedVideos().size());
+//        System.out.println(user.getNotifications().size());
+//        System.out.println(user.getViewedComments().size());
 
 //        ------------ Category --------------------
 
@@ -145,7 +152,7 @@ public class DatabaseManager {
 
     //region [ - Methods - ]
 
-    //region [ - User - ] To Think
+    //region [ - User - ]
 
     //region [ - insertUser(User user) - ] Tested
     public static void insertUser(User user) {
@@ -320,7 +327,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //endregion //////// To Think
+    //endregion
 
     //region [ - Channel - ]
 
@@ -387,7 +394,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Channel selectChannel(UUID Id) - ] Not Tested
+    //region [ - Channel selectChannel(UUID Id) - ] Tested
     public static Channel selectChannel(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -419,6 +426,7 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
@@ -543,7 +551,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Subscription> selectSubscriptions(UUID userId) - ] Not Test
+    //region [ - ArrayList<Subscription> selectSubscriptions(UUID userId) - ] Test
     public static ArrayList<Subscription> selectSubscriptions(UUID userId) {
         Connection c;
         PreparedStatement stmt;
@@ -706,7 +714,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Notification> selectNotifications(UUID userId) - ] Not test
+    //region [ - ArrayList<Notification> selectNotifications(UUID userId) - ] test
     public static ArrayList<Notification> selectNotifications(UUID userId) {
         Connection c;
         PreparedStatement stmt;
@@ -723,6 +731,7 @@ public class DatabaseManager {
             notifications = new ArrayList<>();
             while (rs.next()) {
                 Notification notification = new Notification();
+
                 notification.setId(UUID.fromString(rs.getString("Id")));
                 notification.setUserId(UUID.fromString(rs.getString("UserId")));
 //                notification.setUser(selectUser(notification.getUserId()));
@@ -730,6 +739,7 @@ public class DatabaseManager {
                 notification.setRead(Boolean.getBoolean(rs.getString("isRead")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
                 notification.setDateSent(timestamp.toLocalDateTime());
+
                 notifications.add(notification);
             }
             rs.close();
@@ -743,8 +753,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Notification selectNotification(UUID Id) - ] Not Test
-    public Notification selectNotification(UUID Id) {
+    //region [ - Notification selectNotification(UUID Id) - ] Test
+    public static Notification selectNotification(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Notification notification = null;
@@ -757,15 +767,18 @@ public class DatabaseManager {
             stmt = c.prepareStatement("SELECT * FROM UserManagement.Notification WHERE \"Id\" = ?");
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
+
             notification = new Notification();
 
-            notification.setId(UUID.fromString(rs.getString("Id")));
-            notification.setUserId(UUID.fromString(rs.getString("UserId")));
-            notification.setUser(selectUser(notification.getUserId()));
-            notification.setMessage(rs.getString("Message"));
-            notification.setRead(Boolean.getBoolean(rs.getString("Description")));
-            Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-            notification.setDateSent(timestamp.toLocalDateTime());
+            if (rs.next()) {
+                notification.setId(UUID.fromString(rs.getString("Id")));
+                notification.setUserId(UUID.fromString(rs.getString("UserId")));
+//                notification.setUser(selectUser(notification.getUserId()));
+                notification.setMessage(rs.getString("Message"));
+                notification.setRead(Boolean.getBoolean(rs.getString("isRead")));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
+                notification.setDateSent(timestamp.toLocalDateTime());
+            }
 
             rs.close();
             stmt.close();
@@ -890,7 +903,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectCategory(UUID Id) - ] Not Tested
+    //region [ - selectCategory(UUID Id) - ] Tested
     public static Category selectCategory(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -1053,7 +1066,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectVideo(UUID Id) - ] Not Tested name
+    //region [ - selectVideo(UUID Id) - ] test
     public static Video selectVideo(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -1215,7 +1228,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<VideoCategory> selectVideoCategories(UUID videoId) - ]  Not Tested
+    //region [ - ArrayList<VideoCategory> selectVideoCategories(UUID videoId) - ] Tested
     public static ArrayList<VideoCategory> selectVideoCategories(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
@@ -1429,7 +1442,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserVideo> selectUserVideos(UUID userId) - ]  Not Tested
+    //region [ - ArrayList<UserVideo> selectUserVideos(UUID userId) - ] Tested
     public static ArrayList<UserVideo> selectUserVideos(UUID userId) {
         Connection c;
         PreparedStatement stmt;
@@ -1438,7 +1451,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUserVideos(based on video))");
+            System.out.println("Opened database successfully (selectUserVideos(based on User))");
 
             stmt = c.prepareStatement("SELECT * FROM ContentManagement.UserVideo WHERE UserId = ?;");
             stmt.setObject(1, userId);
@@ -1459,34 +1472,34 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserVideos(based on video))");
+        System.out.println("Operation done successfully (selectUserVideos(based on User))");
         return userVideos;
     }
     //endregion
 
     //region [ - ArrayList<UserVideo> selectVideoUsers(UUID userId) - ] Not Tested
-    public static ArrayList<UserVideo> selectVideoUsers(UUID userId) {
+    public static ArrayList<UserVideo> selectVideoUsers(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
-        ArrayList<UserVideo> userVideos = null;
+        ArrayList<UserVideo> videoUsers = null;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideoCategories (selectVideoLikes(based on category))");
+            System.out.println("Opened database successfully (selectUserVideos(based on userId))");
 
-            stmt = c.prepareStatement("SELECT * FROM ContentManagement.UserVideo WHERE UserId = ?;");
-            stmt.setObject(1, userId);
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.UserVideo WHERE VideoId = ?;");
+            stmt.setObject(1, videoId);
             ResultSet rs = stmt.executeQuery();
-            userVideos = new ArrayList<>();
+            videoUsers = new ArrayList<>();
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
                 userVideo.setVideo(selectVideo(userVideo.getVideoId()));
-                userVideo.setUser(selectUser(userVideo.getUserId()));
-                userVideos.add(userVideo);
+//                userVideo.setUser(selectUser(userVideo.getUserId()));
+                videoUsers.add(userVideo);
             }
             rs.close();
             stmt.close();
@@ -1494,8 +1507,8 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoCategories (selectVideoLikes(based on category))");
-        return userVideos;
+        System.out.println("Operation done successfully (selectUserVideos(based on userId))");
+        return videoUsers;
     }
     //endregion
 
@@ -1615,8 +1628,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectPlaylists() - ]
-    public ArrayList<Playlist> selectPlaylists() {
+    //region [ - selectPlaylists() - ] Not test
+    public static ArrayList<Playlist> selectPlaylists() {
         Connection c;
         Statement stmt;
         ArrayList<Playlist> playlists = null;
@@ -1654,8 +1667,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectPlaylist(UUID Id) - ]
-    public Playlist selectPlaylist(UUID Id) {
+    //region [ - selectPlaylist(UUID Id) - ] Tested
+    public static Playlist selectPlaylist(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Playlist playlist = null;
@@ -1670,16 +1683,17 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery();
             playlist = new Playlist();
 
-            playlist.setId(UUID.fromString(rs.getString("Id")));
-            playlist.setTitle(rs.getString("Title"));
-            playlist.setDescription(rs.getString("Description"));
-            playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-            playlist.setCreator(selectUser(playlist.getCreatorId()));
-            playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
-            playlist.setPublic(rs.getBoolean("IsPublic"));
-            Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-            playlist.setDateCreated(timestamp.toLocalDateTime());
-
+            if(rs.next()) {
+                playlist.setId(UUID.fromString(rs.getString("Id")));
+                playlist.setTitle(rs.getString("Title"));
+                playlist.setDescription(rs.getString("Description"));
+                playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+//                playlist.setCreator(selectUser(playlist.getCreatorId()));
+                playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
+                playlist.setPublic(rs.getBoolean("IsPublic"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
+                playlist.setDateCreated(timestamp.toLocalDateTime());
+            }
 
             rs.close();
             stmt.close();
@@ -1798,7 +1812,7 @@ public class DatabaseManager {
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
                 playlistDetail.setDateAdded(timestamp.toLocalDateTime());
-                playlistDetail.setNumber(rs.getInt("Number"));
+                playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
                 playlistDetails.add(playlistDetail);
             }
@@ -1814,7 +1828,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectPlaylistDetails(UUID playlistId) - ]
-    public ArrayList<PlaylistDetail> selectPlaylistDetails(UUID playlistId) {
+    public static ArrayList<PlaylistDetail> selectPlaylistDetails(UUID playlistId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<PlaylistDetail> playlistDetails = null;
@@ -1837,7 +1851,7 @@ public class DatabaseManager {
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
                 playlistDetail.setDateAdded(timestamp.toLocalDateTime());
-                playlistDetail.setNumber(rs.getInt("Number"));
+                playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
                 playlistDetails.add(playlistDetail);
             }
@@ -1874,7 +1888,7 @@ public class DatabaseManager {
             playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
             Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
             playlistDetail.setDateAdded(timestamp.toLocalDateTime());
-            playlistDetail.setNumber(rs.getInt("Number"));
+            playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
             rs.close();
             stmt.close();
@@ -2037,7 +2051,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectComments(UUID videoId) - ]
+    //region [ - selectComments(UUID videoId) - ] Tested
     public static ArrayList<Comment> selectComments(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
@@ -2079,7 +2093,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectComment(UUID Id) - ]
+    //region [ - selectComment(UUID Id) - ] Tested
     public static Comment selectComment(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -2157,7 +2171,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteComment)");
 
-//            deleteACommentLikes(Id);
+            deleteUserComment(Id);
             stmt = c.prepareStatement("DELETE FROM ContentManagement.Comment WHERE \"Id\" = ?;");
             stmt.setObject(1, Id);
 
@@ -2239,7 +2253,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserComment> selectUserComments(UUID userID) - ]  Not Tested
+    //region [ - ArrayList<UserComment> selectUserComments(UUID userID) - ] Tested
     public static ArrayList<UserComment> selectUserComments(UUID userId) {
         Connection c;
         PreparedStatement stmt;
@@ -2277,7 +2291,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserComment> selectVideoUsers(UUID commentId) - ] Not Tested
+    //region [ - ArrayList<UserComment> selectCommentUsers(UUID commentId) - ] Not Tested
     public static ArrayList<UserComment> selectCommentUsers(UUID commentId) {
         Connection c;
         PreparedStatement stmt;
