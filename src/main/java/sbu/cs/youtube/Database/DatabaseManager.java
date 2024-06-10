@@ -36,6 +36,10 @@ public class DatabaseManager {
         VideoCategory videoCategory1 = new VideoCategory(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"),UUID.fromString("45a91717-6e6c-4c7a-a7d9-54b1d69ad1bd"));
         insertVideoCategory(videoCategory1);
 
+        UserComment userComment = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
+        insertUserComment(userComment);
+        UserComment userComment1 = new UserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5a7ea6ba-3999-4fe3-8774-89600bebfe0e"));
+        insertUserComment(userComment1);
 
         User user = selectUser(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
         System.out.println(user.getId());
@@ -44,6 +48,7 @@ public class DatabaseManager {
         }
         System.out.println(user.getViewedVideos().size());
         System.out.println(user.getNotifications().size());
+        System.out.println(user.getViewedComments());
 //        System.out.println(user.g);
 
 
@@ -2016,7 +2021,7 @@ public class DatabaseManager {
                 if (comment.getParentCommentId() != null) {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DataCommented"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
                 comment.setDateCommented(timestamp.toLocalDateTime());
 
                 comments.add(comment);
@@ -2027,7 +2032,7 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectComments)");
+        System.out.println("Operation done successfully (selectComments(ALL))");
         return comments;
     }
     //endregion
@@ -2090,18 +2095,19 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery();
             comment = new Comment();
 
-            comment.setId(UUID.fromString(rs.getString("Id")));
-            comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
-            comment.setVideo(selectVideo(comment.getVideoId()));
-            comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
-            comment.setSender(selectUser(comment.getSenderId()));
-            comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
-            if (comment.getParentCommentId() != null) {
-                comment.setParentComment(selectComment(comment.getParentCommentId()));
+            if (rs.next()) {
+                comment.setId(UUID.fromString(rs.getString("Id")));
+                comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                comment.setVideo(selectVideo(comment.getVideoId()));
+                comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
+//            comment.setSender(selectUser(comment.getSenderId()));
+                if (rs.getString("ParentCommentId") != null) {
+                    comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
+                    comment.setParentComment(selectComment(comment.getParentCommentId()));
+                }
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
+                comment.setDateCommented(timestamp.toLocalDateTime());
             }
-            Timestamp timestamp = Timestamp.valueOf(rs.getString("DataCommented"));
-            comment.setDateCommented(timestamp.toLocalDateTime());
-
             rs.close();
             stmt.close();
             c.close();
@@ -2247,6 +2253,8 @@ public class DatabaseManager {
             stmt = c.prepareStatement("SELECT * FROM ContentManagement.UserComment WHERE UserId = ?;");
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
+
+            userComments = new ArrayList<>();
             while (rs.next()) {
                 UserComment userComment = new UserComment();
 
@@ -2291,7 +2299,7 @@ public class DatabaseManager {
                 userComment.setUserId(UUID.fromString(rs.getString("UserId")));
                 userComment.setCommentId(UUID.fromString(rs.getString("CommentId")));
                 userComment.setComment(selectComment(userComment.getCommentId()));
-                userComment.setUser(selectUser(userComment.getUserId()));
+//                userComment.setUser(selectUser(userComment.getUserId()));
 
                 userComments.add(userComment);
             }
