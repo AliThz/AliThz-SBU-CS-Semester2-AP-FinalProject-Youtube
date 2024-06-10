@@ -19,6 +19,7 @@ public class Comment {
     public Comment() {
         Id = UUID.randomUUID();
         viewers = new ArrayList<>();
+        parentComment = null;
     }
 
 

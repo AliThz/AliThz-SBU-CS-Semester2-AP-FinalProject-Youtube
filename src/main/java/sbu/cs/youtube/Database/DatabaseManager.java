@@ -1047,7 +1047,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectVideo(UUID Id) - ] Not Tested
+    //region [ - selectVideo(UUID Id) - ] Not Tested name
     public static Video selectVideo(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -2053,8 +2053,9 @@ public class DatabaseManager {
 //                comment.setVideo(selectVideo(comment.getVideoId()));
                 comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
 //                comment.setSender(selectUser(comment.getSenderId()));
-                comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
-                if (comment.getParentCommentId() != null) {
+
+                if (rs.getString("ParentCommentId") != null) {
+                    comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DataCommented"));
@@ -2067,7 +2068,7 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectComments)");
+        System.out.println("Operation done successfully (selectComments(base on videoId))");
         return comments;
     }
     //endregion
