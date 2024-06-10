@@ -20,17 +20,31 @@ public class DatabaseManager {
         insertSubscription(subscription);
         Subscription subscription1 = new Subscription(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),UUID.fromString("9c824884-139c-4deb-a0cb-c298dfe36efb"));
         insertSubscription(subscription1);
+
         Notification notification = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"salam" , false , LocalDateTime.now());
         insertNotification(notification);
         Notification notification1 = new Notification(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"),"mahan" , false , LocalDateTime.now());
         insertNotification(notification1);
-        VideoCategory videoCategory = new VideoCategory() ;
+
+        UserVideo userVideo = new UserVideo(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"));
+        insertUserVideo(userVideo);
+        UserVideo userVideo1 = new UserVideo(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"));
+        insertUserVideo(userVideo1);
+
+        VideoCategory videoCategory = new VideoCategory(UUID.fromString("be7d7d84-c089-4c71-8492-572627494875"),UUID.fromString("45a91717-6e6c-4c7a-a7d9-54b1d69ad1bd"));
+        insertVideoCategory(videoCategory);
+        VideoCategory videoCategory1 = new VideoCategory(UUID.fromString("3d416e3a-629c-4559-83f5-5aa41fe8ece7"),UUID.fromString("45a91717-6e6c-4c7a-a7d9-54b1d69ad1bd"));
+        insertVideoCategory(videoCategory1);
+
+
         User user = selectUser(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
         System.out.println(user.getId());
         for (Subscription subscription2 : user.getSubscriptions()){
             System.out.println(subscription2.getJoinDate());
         }
-        System.out.println(user.getNotifications().get(67).getMessage());
+        System.out.println(user.getViewedVideos().size());
+        System.out.println(user.getNotifications().size());
+//        System.out.println(user.g);
 
 
 //        ------------ Category --------------------
@@ -371,7 +385,7 @@ public class DatabaseManager {
     public static Channel selectChannel(UUID Id) {
         Connection c;
         PreparedStatement stmt;
-        Channel channel = null;
+         Channel channel = null;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -385,13 +399,15 @@ public class DatabaseManager {
             channel = new Channel();
 
             if(rs.next()) {
-                channel.setId(UUID.fromString(rs.getString("Id")));
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
 //                channel.setCreator(selectUser(channel.getCreatorId()));
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                channel.setDateCreated(timestamp.toLocalDateTime());
+                if (rs.getString("DateCreated") != null) {
+                    Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
+                    channel.setDateCreated(timestamp.toLocalDateTime());
+                }
+                channel.setId(UUID.fromString(rs.getString("Id")));
             }
 
             rs.close();
@@ -1982,7 +1998,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectComments)");
+            System.out.println("Opened database successfully (selectComments(ALL))");
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.Comment;");
@@ -2024,7 +2040,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectComments)");
+            System.out.println("Opened database successfully (selectComments(base on videoId))");
 
             stmt = c.prepareStatement("SELECT * FROM ContentManagement.Comment WHERE videoId = ?;");
             stmt.setObject(1, videoId);
@@ -2034,9 +2050,9 @@ public class DatabaseManager {
                 Comment comment = new Comment();
                 comment.setId(UUID.fromString(rs.getString("Id")));
                 comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                comment.setVideo(selectVideo(comment.getVideoId()));
+//                comment.setVideo(selectVideo(comment.getVideoId()));
                 comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
-                comment.setSender(selectUser(comment.getSenderId()));
+//                comment.setSender(selectUser(comment.getSenderId()));
                 comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
                 if (comment.getParentCommentId() != null) {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
