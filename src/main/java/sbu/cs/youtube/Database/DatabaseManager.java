@@ -218,7 +218,7 @@ public class DatabaseManager {
     }
     //endregion No    kl;asdf
 
-    //region [ - selectUser(UUID Id) - ] Not Tested
+    //region [ - selectUser(UUID Id) - ] Tested
     public static User selectUser(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -245,6 +245,7 @@ public class DatabaseManager {
                 user.setSubscriptions(selectSubscriptions(user.getId()));
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
+                user.setViewedComments(selectUserComments(user.getId()));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
             }
@@ -2058,7 +2059,7 @@ public class DatabaseManager {
                     comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DataCommented"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
                 comment.setDateCommented(timestamp.toLocalDateTime());
                 comments.add(comment);
             }
@@ -2232,8 +2233,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserComment> selectUserComments(UUID commentID) - ]  Not Tested
-    public static ArrayList<UserComment> selectUserComments(UUID commentID) {
+    //region [ - ArrayList<UserComment> selectUserComments(UUID userID) - ]  Not Tested
+    public static ArrayList<UserComment> selectUserComments(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<UserComment> userComments = null;
@@ -2241,47 +2242,47 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideoCategories (selectVideoLikes(based on video))");
-
-            stmt = c.prepareStatement("SELECT * FROM ContentManagement.UserComment WHERE ComentId = ?;");
-            stmt.setObject(1, commentID);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                UserComment userComment = new UserComment();
-
-                userComment.setLike(rs.getBoolean("Like"));
-                userComment.setUserId(UUID.fromString(rs.getString("UserId")));
-                userComment.setCommentId(UUID.fromString(rs.getString("CommentId")));
-                userComment.setComment(selectComment(userComment.getCommentId()));
-                userComment.setUser(selectUser(userComment.getUserId()));
-
-                userComments.add(userComment);
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        System.out.println("Operation done successfully (selectVideoCategories (selectVideoLikes(based on video))");
-        return userComments;
-    }
-    //endregion
-
-    //region [ - ArrayList<UserComment> selectVideoUsers(UUID userId) - ] Not Tested
-    public static ArrayList<UserComment> selectCommentUsers(UUID userId) {
-        Connection c;
-        PreparedStatement stmt;
-        ArrayList<UserComment> userComments = null;
-        try {
-//            Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideoCategories (selectVideoLikes(based on category))");
+            System.out.println("Opened database successfully (selectUserComments(based on userId))");
 
             stmt = c.prepareStatement("SELECT * FROM ContentManagement.UserComment WHERE UserId = ?;");
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                UserComment userComment = new UserComment();
+
+                userComment.setLike(rs.getBoolean("Like"));
+                userComment.setUserId(UUID.fromString(rs.getString("UserId")));
+                userComment.setCommentId(UUID.fromString(rs.getString("CommentId")));
+                userComment.setComment(selectComment(userComment.getCommentId()));
+//                userComment.setUser(selectUser(userComment.getUserId()));
+
+                userComments.add(userComment);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectUserComments(based on userId))");
+        return userComments;
+    }
+    //endregion
+
+    //region [ - ArrayList<UserComment> selectVideoUsers(UUID commentId) - ] Not Tested
+    public static ArrayList<UserComment> selectCommentUsers(UUID commentId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<UserComment> userComments = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectCommentUsers(based on commentId))");
+
+            stmt = c.prepareStatement("SELECT * FROM ContentManagement.UserComment WHERE CommentId = ?;");
+            stmt.setObject(1, commentId);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 UserComment userComment = new UserComment();
@@ -2300,7 +2301,7 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoCategories (selectVideoLikes(based on category))");
+        System.out.println("Operation done successfully (selectCommentUsers(based on commentId))");
         return userComments;
     }
     //endregion

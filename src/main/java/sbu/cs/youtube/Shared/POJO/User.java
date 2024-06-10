@@ -16,7 +16,7 @@ public class User {
     private ArrayList<Subscription> subscriptions;
     private ArrayList<Notification> notifications;
     private ArrayList<UserVideo> viewedVideos;
-    private ArrayList<UserVideo> viewedComments;
+    private ArrayList<UserComment> viewedComments;
 
 
     public User() {
@@ -123,10 +123,12 @@ public class User {
     public void setAvatarPath(String avatarPath) {
         AvatarPath = avatarPath;
     }
-    public ArrayList<UserVideo> getViewedComments() {
+
+    public ArrayList<UserComment> getViewedComments() {
         return viewedComments;
     }
-    public void setViewedComments(ArrayList<UserVideo> viewedComments) {
+
+    public void setViewedComments(ArrayList<UserComment> viewedComments) {
         this.viewedComments = viewedComments;
     }
 }
