@@ -43,9 +43,9 @@
     -fx-background-color : black;
     -fx-border-color : black;
     -fx-alignment: center;
-    -fx-padding: 10 0;
-    -fx-hgap: 20;
-    -fx-vgap: 20;
+    -fx-padding: 10;
+    -fx-hgap: 50;
+    -fx-vgap: 30;
 }
 
 
