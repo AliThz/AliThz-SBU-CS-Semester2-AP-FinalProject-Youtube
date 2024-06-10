@@ -48,7 +48,7 @@ public class DatabaseManager {
         }
         System.out.println(user.getViewedVideos().size());
         System.out.println(user.getNotifications().size());
-        System.out.println(user.getViewedComments());
+        System.out.println(user.getViewedComments().size());
 //        System.out.println(user.g);
 
 
