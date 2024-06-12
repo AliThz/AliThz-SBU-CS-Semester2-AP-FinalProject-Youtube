@@ -498,7 +498,7 @@ public class LayoutController implements Initializable {
 
     //region [ - addToFlowPane(Parent parent) - ]
     public void addToFlowPane(Parent parent) {
-        flowPane.getChildren().add(parent);
+//        flowPane.getChildren().add(parent);
     }
     //endregion
 
