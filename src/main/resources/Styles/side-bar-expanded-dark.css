@@ -109,11 +109,12 @@
     -fx-spacing : 5px;
 }
 
-.side-scroll-pane {
-    -fx-background-color : black;
-    -fx-border-color : black;
-}
 
+/* -------------------------------- Scroll Pane -------------------------------- */
+.side-scroll-pane {
+    -fx-background-color: black;
+    -fx-spacing : 5px;
+}
 .side-scroll-pane .scroll-bar:vertical .thumb {
     -fx-background-color: rgb(41,41,41);
     -fx-background-radius: 10;
@@ -122,6 +123,35 @@
 .side-scroll-pane .scroll-bar:vertical .track {
     -fx-background-color: rgb(33, 33, 33);
     -fx-background-radius: 10;
+}
+.side-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: gray;
+    -fx-background-radius: 10;
+    -fx-pref-width: 10;
+}
+
+.side-scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .increment-button {
+    -fx-background-color: rgb(0,0,0);
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Custom shape */
+}
+
+/* Style for the decrement arrow button */
+.scroll-bar .decrement-button {
+    -fx-background-color: rgb(0,0,0);
+    -fx-shape: "M 0 4 L 4 0 L 8 4 Z"; /* Custom shape */
+}
+
+.scroll-bar .increment-arrow {
+    -fx-background-color: black;
+}
+
+.scroll-bar .decrement-arrow {
+    -fx-background-color: black;
 }
 
 .category-lbl {
@@ -134,6 +164,3 @@
     -fx-scale-x : 1.2;
     -fx-scale-y : 1.2;
 }
-
-.
-

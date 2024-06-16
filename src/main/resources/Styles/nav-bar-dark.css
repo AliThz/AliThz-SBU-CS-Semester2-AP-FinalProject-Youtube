@@ -58,10 +58,6 @@
     -fx-border-radius : 100;
 }
 
-.search-btn:pressed {
-    -fx-background-color : rgb(41, 41, 41);
-}
-
 .search-bar {
     -fx-background-radius : 50;
     -fx-border-radius : 50;

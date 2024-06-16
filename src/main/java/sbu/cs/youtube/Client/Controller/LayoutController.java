@@ -48,6 +48,9 @@ public class LayoutController implements Initializable {
     @FXML
     protected VBox vbxLayout;
 
+    @FXML
+    protected FlowPane flowPane;
+
     //endregion
 
     //region [ - Methods - ]
@@ -57,6 +60,9 @@ public class LayoutController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setRightNavBarHBox();
+
+        flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
+        flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
     }
     //endregion
 
@@ -498,8 +504,10 @@ public class LayoutController implements Initializable {
 
     //region [ - addToFlowPane(Parent parent) - ]
     public void addToFlowPane(Parent parent) {
-//        flowPane.getChildren().add(parent);
+        flowPane.getChildren().add(parent);
     }
+    //endregion
+
     //endregion
 
 

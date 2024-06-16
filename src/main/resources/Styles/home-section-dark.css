@@ -10,7 +10,7 @@
 }
 
 .scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: rgb(41,41,41);
+    -fx-background-color: gray;
     -fx-background-radius: 10;
     -fx-pref-width: 15;
 }
