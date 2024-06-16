@@ -154,7 +154,7 @@ public class DatabaseManager {
 
     //region [ - User - ]
 
-    //region [ - insertUser(User user) - ] Tested
+    //region [ - insertUser(User user) - ]
     public static void insertUser(User user) {
         Connection c;
         PreparedStatement stmt;
@@ -164,7 +164,10 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertUser)");
 
-            stmt = c.prepareStatement("INSERT INTO UserManagement.User(\"Id\", FullName, email, DateOfBirth, Username, \"Password\") VALUES (?, ?, ?, ?, ?,?);");
+            stmt = c.prepareStatement("""
+                    INSERT INTO UserManagement.User(\"Id\", FullName, email, DateOfBirth, Username, \"Password\")
+                    VALUES (?, ?, ?, ?, ?,?);
+                    """);
             stmt.setObject(1, user.getId());
             stmt.setString(2, user.getFullName());
             stmt.setString(3, user.getEmail());
@@ -189,6 +192,39 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectUserBriefly() - ] Not Tested
+    public User selectUserBriefly() {
+        Connection c;
+        Statement stmt;
+        User user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUserBriefly)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("""
+                    SELECT "Username", "Email", "Password" FROM UserManagement.User;
+                    """);
+            user = new User();
+            while (rs.next()) {
+                user.setId(UUID.fromString(rs.getString("Id")));
+                user.setEmail(rs.getString("Email"));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectUserBriefly)");
+        return user;
+    }
+    //endregion
+
     //region [ - selectUsers() - ] Not Tested
     public ArrayList<User> selectUsers() {
         Connection c;
@@ -201,7 +237,9 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUsers)");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM UserManagement.User;");
+            ResultSet rs = stmt.executeQuery("""
+                    SELECT * FROM UserManagement.User;
+                    """);
             users = new ArrayList<>();
             while (rs.next()) {
                 User user = new User();
@@ -211,9 +249,9 @@ public class DatabaseManager {
                 user.setSubscriptions(selectSubscriptions(user.getId()));
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
-                Timestamp timestamp =rs.getTimestamp("DateOfBirth");
+                Timestamp timestamp = rs.getTimestamp("DateOfBirth");
                 user.setDateOfBirth(timestamp.toLocalDateTime());
-                timestamp =rs.getTimestamp("JoinDate");
+                timestamp = rs.getTimestamp("JoinDate");
                 user.setDateOfBirth(timestamp.toLocalDateTime());
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
@@ -241,18 +279,20 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (selectUser)");
 
-                stmt = c.prepareStatement("SELECT * FROM UserManagement.User WHERE \"Id\" = ?");
-                 stmt.setObject(1, Id);
-                ResultSet rs = stmt.executeQuery();
+            stmt = c.prepareStatement("""
+                    SELECT * FROM UserManagement.User WHERE \"Id\" = ?
+                    """);
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
 
             user = new User();
             if (rs.next()) {
                 user.setId(Id);
                 user.setFullName(rs.getString("FullName"));
                 user.setEmail(rs.getString("Email"));
-                Timestamp timestamp =rs.getTimestamp("DateOfBirth");
+                Timestamp timestamp = rs.getTimestamp("DateOfBirth");
                 user.setDateOfBirth(timestamp.toLocalDateTime());
-                timestamp =rs.getTimestamp("JoinDate");
+                timestamp = rs.getTimestamp("JoinDate");
                 user.setDateOfBirth(timestamp.toLocalDateTime());
                 user.setSubscriptions(selectSubscriptions(user.getId()));
                 user.setNotifications(selectNotifications(user.getId()));
@@ -283,14 +323,19 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateUser)");
 
-            stmt = c.prepareStatement("UPDATE UserManagement.User SET fullname = ?, email = ?, DateOfBirth = ?, Username = ?, \"Password\" = ? WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("""
+                    UPDATE UserManagement.User
+                    SET fullname = ?, email = ?, DateOfBirth = ?, Username = ?, \"Password\" = ?, AvatarPath = ?
+                    WHERE \"Id\" = ?;
+                    """);
 
             stmt.setString(1, user.getFullName());
             stmt.setString(2, user.getEmail());
             stmt.setObject(3, user.getDateOfBirth());
             stmt.setString(4, user.getUsername());
             stmt.setString(5, user.getPassword());
-            stmt.setObject(6, user.getId());
+            stmt.setObject(6, user.getAvatarPath());
+            stmt.setObject(7, user.getId());
 
             stmt.executeUpdate();
             c.commit();
@@ -313,7 +358,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (deleteUser)");
 
-            stmt = c.prepareStatement("DELETE FROM UserManagement.User WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("""
+                    DELETE FROM UserManagement.User WHERE \"Id\" = ?;
+                    """);
             stmt.setObject(1, Id);
             stmt.executeUpdate();
             c.commit();
@@ -341,7 +388,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertChannel)");
 
-            stmt = c.prepareStatement("INSERT INTO UserManagement.Channel(\"Id\", CreatorId, Title, Description) VALUES (?, ?, ?, ?);");
+            stmt = c.prepareStatement("""
+                    INSERT INTO UserManagement.Channel(\"Id\", CreatorId, Title, Description) VALUES (?, ?, ?, ?);
+                    """);
             stmt.setObject(1, channel.getId());
             stmt.setObject(2, channel.getCreatorId());
             stmt.setString(3, channel.getTitle());
@@ -370,7 +419,9 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectChannels(ALL))");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM UserManagement.Channel;");
+            ResultSet rs = stmt.executeQuery("""
+                    SELECT * FROM UserManagement.Channel;
+                    """);
             channels = new ArrayList<>();
             while (rs.next()) {
                 Channel channel = new Channel();
@@ -394,11 +445,58 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - Channel selectChannelBriefly(UUID Id) - ] Tested
+    public static Channel selectChannelBriefly(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Channel channel = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectChannelBriefly)");
+
+            stmt = c.prepareStatement("""
+                    SELECT "Title", "Description" FROM UserManagement.Channel WHERE \"Id\" = ?
+                    """);
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+
+            channel = new Channel();
+
+            if (rs.next()) {
+                channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                channel.setTitle(rs.getString("Title"));
+                channel.setDescription(rs.getString("Description"));
+                channel.setId(UUID.fromString(rs.getString("Id")));
+            }
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS Subscribers
+                    FROM UserManagement.Subscription
+                    WHERE ChannelId = ?;
+                    """);
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            channel.setSubscribers(rs.getInt("Subscribers"));
+
+            rs.close();
+            stmt.close();
+            c.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectChannelBriefly)");
+        return channel;
+    }
+    //endregion
+
     //region [ - Channel selectChannel(UUID Id) - ] Tested
     public static Channel selectChannel(UUID Id) {
         Connection c;
         PreparedStatement stmt;
-         Channel channel = null;
+        Channel channel = null;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -411,7 +509,7 @@ public class DatabaseManager {
 
             channel = new Channel();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
 //                channel.setCreator(selectUser(channel.getCreatorId()));
                 channel.setTitle(rs.getString("Title"));
@@ -445,7 +543,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateChannel)");
 
-            stmt = c.prepareStatement("UPDATE UserManagement.Channel SET CreatorId = ?, Title = ?, Description = ?, \"DateCreated\" = ?  WHERE \"Id\" = ?;");
+            stmt = c.prepareStatement("""
+                    UPDATE UserManagement.Channel SET CreatorId = ?, Title = ?, Description = ?, \"DateCreated\" = ?  WHERE \"Id\" = ?;
+                    """);
 
             stmt.setObject(1, channel.getCreatorId());
             stmt.setString(2, channel.getTitle());
@@ -748,7 +848,7 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectNotifications)");
+        System.out.println("Operation done successfully (base on userId)");
         return notifications;
     }
     //endregion
@@ -1030,7 +1130,7 @@ public class DatabaseManager {
     public ArrayList<Video> selectVideos() {
         Connection c;
         Statement stmt;
-        ArrayList<Video> videos = null ;
+        ArrayList<Video> videos = null;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -1081,7 +1181,7 @@ public class DatabaseManager {
             stmt.setObject(1, Id); // what is this
             ResultSet rs = stmt.executeQuery();
             video = new Video();
-            if(rs.next()) {
+            if (rs.next()) {
                 video.setId(UUID.fromString(rs.getString("Id")));
                 video.setTitle(rs.getString("Title"));
                 video.setDescription(rs.getString("Description"));
@@ -1297,7 +1397,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - VideoCategory selectVideoCategory(UUID videoId ,UUID categoryId ) - ] Not Tested
-    public VideoCategory selectVideoCategory(UUID videoId ,UUID categoryId ) {
+    public VideoCategory selectVideoCategory(UUID videoId, UUID categoryId) {
         Connection c;
         PreparedStatement stmt;
         VideoCategory videoCategory = null;
@@ -1513,7 +1613,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - UserVideo selectUserVideo(UUID userID , UUID videoId) - ] Not Test
-    public UserVideo selectUserVideo(UUID userID , UUID videoId) {
+    public UserVideo selectUserVideo(UUID userID, UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         UserVideo userVideo = null;
@@ -1547,7 +1647,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteUserVideo(UUID userId , UUID videoId) - ] YES
-    public static void deleteUserVideo(UUID userId , UUID videoId) {
+    public static void deleteUserVideo(UUID userId, UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1683,7 +1783,7 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery();
             playlist = new Playlist();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 playlist.setId(UUID.fromString(rs.getString("Id")));
                 playlist.setTitle(rs.getString("Title"));
                 playlist.setDescription(rs.getString("Description"));
@@ -1721,7 +1821,7 @@ public class DatabaseManager {
             stmt.setObject(1, playlist.getTitle());
             stmt.setString(2, playlist.getDescription());
             stmt.setObject(3, playlist.isPublic());
-            stmt.setObject(4 , playlist.getId());
+            stmt.setObject(4, playlist.getId());
             stmt.executeUpdate();
             c.commit();
             stmt.close();
@@ -2147,7 +2247,7 @@ public class DatabaseManager {
             stmt = c.prepareStatement("UPDATE ContentManagement.Comment SET \"Message\" = ? WHERE \"Id\" = ?;");
 
             stmt.setString(1, comment.getContent());
-            stmt.setObject(2 , comment.getId());
+            stmt.setObject(2, comment.getId());
 
             stmt.executeUpdate();
             c.commit();
@@ -2329,7 +2429,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - UserComment selectUserComment(UUID Id) - ] Not Tested
-    public UserComment selectUserComment(UUID userID , UUID commentID) {
+    public UserComment selectUserComment(UUID userID, UUID commentID) {
         Connection c;
         PreparedStatement stmt;
         UserComment userComment = null;
@@ -2363,7 +2463,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteUserComment(UUID userId , UUID commentID) - ] Yes (this method don't want to exist)
-    public static void deleteUserComment(UUID userId , UUID commentID) {
+    public static void deleteUserComment(UUID userId, UUID commentID) {
         Connection c;
         PreparedStatement stmt;
         try {

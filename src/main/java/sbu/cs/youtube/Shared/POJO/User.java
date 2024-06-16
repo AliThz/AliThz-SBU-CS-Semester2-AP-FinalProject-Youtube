@@ -9,7 +9,7 @@ public class User {
     private String fullName;
     private String email;
     private LocalDateTime dateOfBirth;
-    private String AvatarPath;
+    private String avatarPath;
     private String username;
     private String password;
     private LocalDateTime joinDate;
@@ -118,10 +118,10 @@ public class User {
         this.viewedVideos = viewedVideos;
     }
     public String getAvatarPath() {
-        return AvatarPath;
+        return avatarPath;
     }
     public void setAvatarPath(String avatarPath) {
-        AvatarPath = avatarPath;
+        this.avatarPath = avatarPath;
     }
 
     public ArrayList<UserComment> getViewedComments() {
