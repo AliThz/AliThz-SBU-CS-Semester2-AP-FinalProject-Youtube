@@ -1217,20 +1217,20 @@ public class DatabaseManager {
 //                stmt = c.prepareStatement("""
 //                    SELECT COUNT(UserId) AS VideoLikes
 //                    FROM ContentManagement.PlaylistDetail
-//                    WHERE VideoId = video.getId() AND Like = 1;
+//                    WHERE VideoId = video.getId() AND Like = true;
 //                    """);
 //                stmt.setObject(1, video.getId());
 //                rs = stmt.executeQuery();
 //                video.setLikes(rs.getInt("VideosLikes"));
 //
 //                stmt = c.prepareStatement("""
-//                    SELECT COUNT(UserId) AS VideodisLikes
+//                    SELECT COUNT(UserId) AS VideoDisLikes
 //                    FROM ContentManagement.PlaylistDetail
-//                    WHERE VideoId = ? AND Like = -1;
+//                    WHERE VideoId = ? AND Like = false;
 //                    """);
 //                stmt.setObject(1, Id);
 //                rs = stmt.executeQuery();
-//                video.setDislikes(rs.getInt("VideosDisikes"));
+//                video.setDislikes(rs.getInt("VideosDislikes"));
 
 
             }
@@ -1327,7 +1327,7 @@ public class DatabaseManager {
             stmt = c.prepareStatement("""
                     SELECT COUNT(UserId) AS VideoLikes
                     FROM ContentManagement.UserVideo
-                    WHERE VideoId = ? AND Like = 1;
+                    WHERE VideoId = ? AND Like = true;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -1336,7 +1336,7 @@ public class DatabaseManager {
             stmt = c.prepareStatement("""
                     SELECT COUNT(UserId) AS VideodisLikes
                     FROM ContentManagement.UserVideo
-                    WHERE VideoId = ? AND Like = -1;
+                    WHERE VideoId = ? AND Like = false;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -2538,7 +2538,7 @@ public class DatabaseManager {
             stmt = c.prepareStatement("""
                     SELECT COUNT(UserId) AS CommentLikes
                     FROM ContentManagement.UserComment
-                    WHERE CommentId = ? AND Like = 1;
+                    WHERE CommentId = ? AND Like = true;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -2547,7 +2547,7 @@ public class DatabaseManager {
             stmt = c.prepareStatement("""
                     SELECT COUNT(UserId) AS CommentdisLikes
                     FROM ContentManagement.UserComment
-                    WHERE CommentId = ? AND Like = -1;
+                    WHERE CommentId = ? AND Like = false;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
