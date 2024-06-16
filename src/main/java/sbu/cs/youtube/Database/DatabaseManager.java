@@ -1186,6 +1186,7 @@ public class DatabaseManager {
     public ArrayList<Video> selectVideos() {
         Connection c;
         Statement stmt;
+        PreparedStatement stmt1;
         ArrayList<Video> videos = null;
         try {
 //            Class.forName("org.postgresql.Driver");
@@ -1210,6 +1211,28 @@ public class DatabaseManager {
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDateTime"));
                 video.setUploadDate(timestamp.toLocalDateTime());
                 videos.add(video);
+
+                //TODO
+//                ---------------------------- what should i do for handle likes and dislike in this method -------------------
+//                stmt = c.prepareStatement("""
+//                    SELECT COUNT(UserId) AS VideoLikes
+//                    FROM ContentManagement.PlaylistDetail
+//                    WHERE VideoId = video.getId() AND Like = 1;
+//                    """);
+//                stmt.setObject(1, video.getId());
+//                rs = stmt.executeQuery();
+//                video.setLikes(rs.getInt("VideosLikes"));
+//
+//                stmt = c.prepareStatement("""
+//                    SELECT COUNT(UserId) AS VideodisLikes
+//                    FROM ContentManagement.PlaylistDetail
+//                    WHERE VideoId = ? AND Like = -1;
+//                    """);
+//                stmt.setObject(1, Id);
+//                rs = stmt.executeQuery();
+//                video.setDislikes(rs.getInt("VideosDisikes"));
+
+
             }
             rs.close();
             stmt.close();
@@ -1279,8 +1302,8 @@ public class DatabaseManager {
             stmt = c.prepareStatement("""
                     SELECT * FROM ContentManagement.Video 
                     WHERE \"Id\" = ?;
-                    """)
-            ;
+                    """);
+
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
 
@@ -1301,6 +1324,23 @@ public class DatabaseManager {
                 video.setPath(rs.getString("Path"));
             }
 
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS VideoLikes
+                    FROM ContentManagement.UserVideo
+                    WHERE VideoId = ? AND Like = 1;
+                    """);
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            video.setLikes(rs.getInt("VideosLikes"));
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS VideodisLikes
+                    FROM ContentManagement.UserVideo
+                    WHERE VideoId = ? AND Like = -1;
+                    """);
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            video.setDislikes(rs.getInt("VideosDisikes"));
 
             rs.close();
             stmt.close();
@@ -2007,9 +2047,10 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT COUNT(VidoeId) AS Videos
-                    FROM UserManagement.PlaylistDetail
+                    FROM ContentManagement.PlaylistDetail
                     WHERE PlaylistId = ?;
                     """);
+
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
             playlist.setVideos(rs.getInt("Videos"));
@@ -2476,7 +2517,7 @@ public class DatabaseManager {
                     WHERE \"Id\" = ?
                     """);
 
-            stmt.setObject(1, Id); // what is this
+            stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
             comment = new Comment();
 
@@ -2493,6 +2534,25 @@ public class DatabaseManager {
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
                 comment.setDateCommented(timestamp.toLocalDateTime());
             }
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS CommentLikes
+                    FROM ContentManagement.UserComment
+                    WHERE CommentId = ? AND Like = 1;
+                    """);
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            comment.setLikes(rs.getInt("VideoLikes"));
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS CommentdisLikes
+                    FROM ContentManagement.UserComment
+                    WHERE CommentId = ? AND Like = -1;
+                    """);
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            comment.setDislikes(rs.getInt("VideoDislikes"));
+
             rs.close();
             stmt.close();
             c.close();

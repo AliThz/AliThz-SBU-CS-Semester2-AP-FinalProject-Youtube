@@ -17,6 +17,8 @@ public class Video {
     private ArrayList<VideoCategory> categories;
     private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
+    private int likes = 0 ;
+    private int dislikes = 0 ;
 
     public Video() {
         Id = UUID.randomUUID();
@@ -137,5 +139,21 @@ public class Video {
 
     public void setPath(String path) {
         Path = path;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
 }

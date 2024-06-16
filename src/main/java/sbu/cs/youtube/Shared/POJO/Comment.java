@@ -15,6 +15,8 @@ public class Comment {
     private UUID parentCommentId;
     private LocalDateTime dateCommented;
     private ArrayList<UserComment> viewers;
+    private int likes = 0 ;
+    private int dislikes = 0 ;
 
     public Comment() {
         Id = UUID.randomUUID();
@@ -111,4 +113,19 @@ public class Comment {
         this.viewers = viewers;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
 }
