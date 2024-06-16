@@ -168,6 +168,7 @@ public class DatabaseManager {
                     INSERT INTO UserManagement.User(\"Id\", FullName, email, DateOfBirth, Username, \"Password\")
                     VALUES (?, ?, ?, ?, ?,?);
                     """);
+
             stmt.setObject(1, user.getId());
             stmt.setString(2, user.getFullName());
             stmt.setString(3, user.getEmail());
@@ -192,7 +193,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUserBriefly() - ] Not Tested
+    //region [ - selectUserBriefly() - ] UnUsed
     public User selectUserBriefly() {
         Connection c;
         Statement stmt;
@@ -207,6 +208,7 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery("""
                     SELECT "Username", "Email", "Password" FROM UserManagement.User;
                     """);
+
             user = new User();
             while (rs.next()) {
                 user.setId(UUID.fromString(rs.getString("Id")));
@@ -445,7 +447,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Channel selectChannelBriefly(UUID Id) - ] Tested
+    //region [ - Channel selectChannelBriefly(UUID Id) - ] UnUsed
     public static Channel selectChannelBriefly(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -1137,7 +1139,7 @@ public class DatabaseManager {
 
     //endregion
 
-    //region [ - Video - ] To Think
+    //region [ - Video - ] To think
 
     //region [ - insertVideo(Video video) - ] Tested
     public static void insertVideo(Video video) {
@@ -1220,6 +1222,49 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectVideoBriefly(UUID Id) - ] Not test
+    public static Video selectVideoBriefly(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Video video = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoBriefly)");
+
+            stmt = c.prepareStatement("""
+                    SELECT * FROM ContentManagement.Video 
+                    WHERE \"Id\" = ?;
+                    """)
+            ;
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+
+            video = new Video();
+            if (rs.next()) {
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setViewers(selectUserVideos(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setViews(Integer.valueOf(rs.getString("Views")));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectVideoBriefly)");
+        return video;
+    }
+    //endregion
+
     //region [ - selectVideo(UUID Id) - ] test
     public static Video selectVideo(UUID Id) {
         Connection c;
@@ -1252,7 +1297,10 @@ public class DatabaseManager {
                 video.setViews(Integer.valueOf(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime());
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setPath(rs.getString("Path"));
             }
+
 
             rs.close();
             stmt.close();
@@ -1914,6 +1962,7 @@ public class DatabaseManager {
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                 playlist.setDateCreated(timestamp.toLocalDateTime());
+                playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
             }
 
             rs.close();
@@ -1923,6 +1972,55 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         System.out.println("Operation done successfully (selectPlaylist)");
+        return playlist;
+    }
+    //endregion
+
+    //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
+    public static Playlist selectPlaylistBriefly(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Playlist playlist = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectPlaylistBriefly)");
+
+            stmt = c.prepareStatement("""
+                    SELECT * FROM ContentManagement.Playlist 
+                    WHERE \"Id\" = ? ;
+                    """);
+
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+            playlist = new Playlist();
+
+            if (rs.next()) {
+                playlist.setId(UUID.fromString(rs.getString("Id")));
+                playlist.setTitle(rs.getString("Title"));
+                playlist.setDescription(rs.getString("Description")); // WHY ???
+                playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+//                playlist.setCreator(selectUser(playlist.getCreatorId()));
+                playlist.setThumbnailPath(rs.getString("thumbnailPath"));
+            }
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(VidoeId) AS Videos
+                    FROM UserManagement.PlaylistDetail
+                    WHERE PlaylistId = ?;
+                    """);
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            playlist.setVideos(rs.getInt("Videos"));
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectPlaylistBriefly)");
         return playlist;
     }
     //endregion
