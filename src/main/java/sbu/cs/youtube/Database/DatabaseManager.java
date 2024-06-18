@@ -1197,6 +1197,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.Video;");
+
             videos = new ArrayList<>();
             while (rs.next()) {
                 Video video = new Video();
@@ -1212,7 +1213,6 @@ public class DatabaseManager {
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDateTime"));
                 video.setUploadDate(timestamp.toLocalDateTime());
                 videos.add(video);
-
                 //TODO
 //                ---------------------------- what should i do for handle likes and dislike in this method -------------------
 //                stmt = c.prepareStatement("""
@@ -1258,7 +1258,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideoBriefly)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Title" , "ChannelId" , "UploadDate" , "ThumbnailPath" 
+                    SELECT "Title" , "ChannelId" , "UploadDate" , "ThumbnailPath" , "Description" 
                     FROM ContentManagement.Video 
                     WHERE \"Id\" = ?;
                     """)
@@ -1974,11 +1974,13 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectPlaylist(UUID Id) - ] Tested
+    //region [ - selectPlaylist(UUID Id) - ]
     public static Playlist selectPlaylist(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Playlist playlist = null;
+        PlaylistDetail playlistDetail = null;
+        ArrayList<PlaylistDetail> playlistDetails = null;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -1986,12 +1988,10 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectPlaylist)");
 
             stmt = c.prepareStatement("""
-                    SELECT pd.PlaylistId, pd.VideoId, v.Title, v.Description, v. , v. , v. , v.
-                    FROM ContentManagement.PlaylistDetail pd
-                    JOIN ContentManagment.Video v ON p.VideoId = pd.Id 
-                    WHERE pd.PlaylistId = ? ;
+                    SELECT *
+                    FROM ContentManagement.Playlist 
+                    WHERE \"Id\" = ? ;
                     """);
-
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
             playlist = new Playlist();
@@ -2006,10 +2006,40 @@ public class DatabaseManager {
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                 playlist.setDateCreated(timestamp.toLocalDateTime());
-                //TODO
-//                playlist.setPlaylistDetails();
-                playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
             }
+
+            rs.close();
+            stmt.close();
+
+            stmt = c.prepareStatement("""
+                    SELECT pd.PlaylistId, pd.VideoId, v.Title, v.Description, v.ChannelId , v.UploadDate , v.ThumbnailPath 
+                    FROM ContentManagement.PlaylistDetail pd
+                    INNER JOIN ContentManagment.Video v ON pd.VideoId = v.Id
+                    WHERE pd.PlaylistId = ? ;
+                    """);
+
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+
+            playlistDetails = new ArrayList<>();
+            while (rs.next()) {
+                playlistDetail = new PlaylistDetail();
+                playlistDetail.setPlaylist(playlist);
+                playlistDetail.setPlaylistId(Id);
+                playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("VideoId")));
+                video.setTitle(rs.getString("Title"));
+                video.setViewers(selectUserVideos(Id));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                playlistDetail.setVideo(video);
+                playlistDetails.add(playlistDetail);
+            }
+            playlist.setPlaylistDetails(playlistDetails);
 
             rs.close();
             stmt.close();
@@ -2022,6 +2052,7 @@ public class DatabaseManager {
     }
     //endregion
 
+    //
     //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
     public static Playlist selectPlaylistBriefly(UUID Id) {
         Connection c;
