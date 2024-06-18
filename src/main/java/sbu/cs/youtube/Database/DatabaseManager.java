@@ -193,7 +193,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUserBriefly() - ] UnUsed !!!
+    //region [ - selectUserBriefly() - ]
     public User selectUserBriefly() {
         Connection c;
         Statement stmt;
