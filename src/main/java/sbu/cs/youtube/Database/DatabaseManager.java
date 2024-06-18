@@ -159,7 +159,7 @@ public class DatabaseManager {
         Connection c;
         PreparedStatement stmt;
         try {
-            Class.forName("org.postgresql.Driver");
+//            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertUser)");
@@ -193,7 +193,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUserBriefly() - ] UnUsed
+    //region [ - selectUserBriefly() - ] UnUsed !!!
     public User selectUserBriefly() {
         Connection c;
         Statement stmt;
@@ -206,7 +206,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT "Username", "Email", "Password" FROM UserManagement.User;
+                    SELECT "Id","Username", "Email", "Password" FROM UserManagement.User;
                     """);
 
             user = new User();
@@ -227,7 +227,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUsers() - ] Not Tested
+    //region [ - selectUsers() - ]
     public ArrayList<User> selectUsers() {
         Connection c;
         Statement stmt;
@@ -282,7 +282,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement.User WHERE \"Id\" = ?
+                    SELECT * FROM UserManagement.User 
+                    WHERE \"Id\" = ?
                     """);
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
@@ -459,7 +460,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectChannelBriefly)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Title", "Description" FROM UserManagement.Channel 
+                    SELECT "Title", "Description" , "CreatorId" FROM UserManagement.Channel 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -471,7 +472,7 @@ public class DatabaseManager {
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
-                channel.setId(UUID.fromString(rs.getString("Id")));
+                channel.setId(Id);
             }
 
             stmt = c.prepareStatement("""
@@ -479,6 +480,7 @@ public class DatabaseManager {
                     FROM UserManagement.Subscription
                     WHERE ChannelId = ?;
                     """);
+
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
             channel.setSubscribers(rs.getInt("Subscribers"));
@@ -685,7 +687,6 @@ public class DatabaseManager {
             subscriptions = new ArrayList<>();
             while (rs.next()) {
                 Subscription subscription = new Subscription();
-
                 subscription.setSubscriberId(UUID.fromString(rs.getString("SubscriberId")));
                 subscription.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 subscription.setChannel(selectChannel(subscription.getChannelId()));
@@ -1257,21 +1258,22 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideoBriefly)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement.Video 
+                    SELECT "Title" , "ChannelId" , "UploadDate" , "ThumbnailPath" 
+                    FROM ContentManagement.Video 
                     WHERE \"Id\" = ?;
                     """)
             ;
+
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
 
             video = new Video();
             if (rs.next()) {
-                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setId(Id);
                 video.setTitle(rs.getString("Title"));
-                video.setViewers(selectUserVideos(video.getId()));
+                video.setViewers(selectUserVideos(Id));
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
-                video.setViews(Integer.valueOf(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
@@ -1984,8 +1986,10 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectPlaylist)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement.Playlist 
-                    WHERE \"Id\" = ? ;
+                    SELECT pd.PlaylistId, pd.VideoId, v.Title, v.Description, v. , v. , v. , v.
+                    FROM ContentManagement.PlaylistDetail pd
+                    JOIN ContentManagment.Video v ON p.VideoId = pd.Id 
+                    WHERE pd.PlaylistId = ? ;
                     """);
 
             stmt.setObject(1, Id);
@@ -2002,6 +2006,8 @@ public class DatabaseManager {
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                 playlist.setDateCreated(timestamp.toLocalDateTime());
+                //TODO
+//                playlist.setPlaylistDetails();
                 playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
             }
 
@@ -2028,7 +2034,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectPlaylistBriefly)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement.Playlist 
+                    SELECT "Title" , "Description" , "CreatorId" , "thumbnailPath"
+                    FROM ContentManagement.Playlist 
                     WHERE \"Id\" = ? ;
                     """);
 
@@ -2037,7 +2044,7 @@ public class DatabaseManager {
             playlist = new Playlist();
 
             if (rs.next()) {
-                playlist.setId(UUID.fromString(rs.getString("Id")));
+                playlist.setId(Id);
                 playlist.setTitle(rs.getString("Title"));
                 playlist.setDescription(rs.getString("Description")); // WHY ???
                 playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
