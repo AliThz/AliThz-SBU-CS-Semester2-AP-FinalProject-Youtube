@@ -1052,6 +1052,8 @@ public class DatabaseManager {
         Connection c;
         PreparedStatement stmt;
         Category category = null;
+        VideoCategory videoCategory = null ;
+        ArrayList<VideoCategory> videoCategories = null;
         try {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -1059,7 +1061,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectCategory)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement.Category 
+                    SELECT * 
+                    FROM ContentManagement.Category 
                     WHERE \"Id\" = ?
                     """);
 
@@ -1067,9 +1070,44 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery();
             category = new Category();
 
-            category.setId(UUID.fromString(rs.getString("Id")));
-            category.setTitle(rs.getString("Title"));
-            category.setVideoCategories(selectCategoryVideos(category.getId()));
+            if(rs.next()) {
+                category.setId(UUID.fromString(rs.getString("Id")));
+                category.setTitle(rs.getString("Title"));
+                category.setVideoCategories(selectCategoryVideos(category.getId()));
+            }
+
+            rs.close();
+            stmt.close();
+
+            stmt = c.prepareStatement("""
+                    SELECT vc.CategoryId, pd.VideoId, v.Title, v.Description, v.ChannelId , v.UploadDate , v.ThumbnailPath 
+                    FROM ContentManagement.VideoCategory vc
+                    INNER JOIN ContentManagment.Video v ON vc.VideoId = v.Id
+                    WHERE pd.CategoryId = ? ;
+                    """);
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+
+            videoCategories = new ArrayList<>();
+            while (rs.next())
+            {
+                videoCategory = new VideoCategory();
+                videoCategory.setCategory(category);
+                videoCategory.setCategoryId(Id);
+                videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("VideoId")));
+                video.setTitle(rs.getString("Title"));
+                video.setViewers(selectUserVideos(Id));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                videoCategory.setVideo(video);
+                videoCategories.add(videoCategory);
+            }
+            category.setVideoCategories(videoCategories);
 
             rs.close();
             stmt.close();
@@ -2017,7 +2055,6 @@ public class DatabaseManager {
                     INNER JOIN ContentManagment.Video v ON pd.VideoId = v.Id
                     WHERE pd.PlaylistId = ? ;
                     """);
-
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
 
@@ -2052,7 +2089,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //
     //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
     public static Playlist selectPlaylistBriefly(UUID Id) {
         Connection c;
