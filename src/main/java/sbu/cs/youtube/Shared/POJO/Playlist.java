@@ -10,13 +10,20 @@ public class Playlist {
     private String thumbnailPath ;
     private String title ;
     private String description ;
-
-//    private Thumnail thumnail ;
     private User creator ;
     private UUID creatorId ;
     private boolean isPublic ;
     private LocalDateTime dateCreated ;
     private ArrayList<PlaylistDetail> playlistDetails;
+    private int videos ;
+
+    public int getVideos() {
+        return videos;
+    }
+
+    public void setVideos(int videos) {
+        this.videos = videos;
+    }
 
     public Playlist() {
         Id = UUID.randomUUID();
