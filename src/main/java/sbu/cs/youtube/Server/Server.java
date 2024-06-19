@@ -15,6 +15,7 @@ public class Server {
             while (true) {
                 //Waiting for clients to connect
                 Socket socket = serverSocket.accept();
+                System.out.println("User with Local address :  " + socket.getLocalAddress() + " connected");
 
                 //Giving service to each client
                 ClientHandler clientHandler = new ClientHandler(socket);
