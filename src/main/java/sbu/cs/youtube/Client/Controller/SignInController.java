@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SignIn implements Initializable {
+public class SignInController implements Initializable {
 
     @FXML
     private SVGPath inputError;

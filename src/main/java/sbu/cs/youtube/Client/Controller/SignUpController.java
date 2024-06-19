@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SignUp implements Initializable {
+public class SignUpController implements Initializable {
 
     @FXML
     private TextField inputField;

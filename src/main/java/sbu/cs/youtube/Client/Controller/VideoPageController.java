@@ -45,7 +45,7 @@ public class VideoPageController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        String videoPath = "src/main/resources/Videos/Arcane2.mp4";
-        String videoPath = "file:///C:/Users/HMHA/OneDrive/Desktop/Arcane2.mp4";
+        String videoPath = "file:///C:/Users/Admin/Desktop/Project/AliThz-SBU-CS-Semester2-AP-FinalProject-Youtube/src/main/resources/Videos/Arcane2.mp4";
 
         Media media = new Media(videoPath);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
