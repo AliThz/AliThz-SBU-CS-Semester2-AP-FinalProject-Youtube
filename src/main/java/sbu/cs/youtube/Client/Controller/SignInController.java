@@ -21,6 +21,8 @@ import java.util.ResourceBundle;
 
 public class SignInController implements Initializable {
 
+    //region [ - Fields - ]
+
     @FXML
     private SVGPath inputError;
 
@@ -48,12 +50,20 @@ public class SignInController implements Initializable {
     @FXML
     private VBox vbxRight;
 
+    //endregion
+
+    //region [ - Methods - ]
+
+    //region [ - initialize(URL location, ResourceBundle resources) - ]
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inputError.getParent().setVisible(false);
         nextBtn.setOnAction(this::checkEmail);
     }
+    //endregion
+
+    //region [ - exitSignInSignUp(ActionEvent event) - ]
 
     @FXML
     private void exitSignInSignUp(ActionEvent event) {
@@ -71,6 +81,9 @@ public class SignInController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    //endregion
+
+    //region [ - checkEmail(ActionEvent event) - ]
 
     @FXML
     private void checkEmail(ActionEvent event) {
@@ -83,6 +96,9 @@ public class SignInController implements Initializable {
         }
 
     }
+    //endregion
+
+    //region [ - checkPassword(ActionEvent event) - ]
 
     private void checkPassword(ActionEvent event) {
         boolean passwordIsValid = true; // ToDo needs connection to socket
@@ -92,8 +108,16 @@ public class SignInController implements Initializable {
         }
     }
 
+    //endregion
+
+    //region [ - signIn() - ]
+
     private void signIn() {
     }
+
+    //endregion
+
+    //region [ - getSignUpPage(ActionEvent event) - ]
 
     @FXML
     private void getSignUpPage(ActionEvent event) {
@@ -111,4 +135,8 @@ public class SignInController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    //endregion
+
+    //endregion
+
 }
