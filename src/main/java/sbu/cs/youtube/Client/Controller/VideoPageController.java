@@ -23,7 +23,7 @@ public class VideoPageController implements Initializable {
     //region [ - Fields - ]
 
     @FXML
-    private HBox hbxVideoPage;
+    private HBox hbxVideoPage, hbxControls;
 
     @FXML
     private VBox vbxLeft;
@@ -33,6 +33,9 @@ public class VideoPageController implements Initializable {
 
     @FXML
     private VBox vbxVideo;
+
+    @FXML
+    private Button btnVolume, btnPause, btnNext;
 
     //endregion
 
@@ -63,6 +66,7 @@ public class VideoPageController implements Initializable {
 
         Button pauseButton = new Button("Pause");
         pauseButton.setOnAction(e -> mediaPlayer.pause());
+        btnPause.setOnAction(e -> mediaPlayer.pause());
 
         Button stopButton = new Button("Stop");
         stopButton.setOnAction(e -> mediaPlayer.stop());
@@ -86,7 +90,7 @@ public class VideoPageController implements Initializable {
             }
         });
 
-        vbxVideo.getChildren().add(mediaView);
+        vbxVideo.getChildren().addFirst(mediaView);
 
         HBox hbxControls = new HBox(10, playButton, pauseButton, stopButton);
 //        HBox.setHgrow(mediaView, Priority.ALWAYS);
