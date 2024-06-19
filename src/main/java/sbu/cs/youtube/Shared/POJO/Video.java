@@ -2,25 +2,28 @@ package sbu.cs.youtube.Shared.POJO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class Video {
     private UUID Id;
     private String title;
+    private String thumbnailPath ;
+    private String Path ;
     private String description;
     private Channel channel;
     private UUID channelId;
     private int views;
     private LocalDateTime uploadDate;
     private ArrayList<VideoCategory> categories;
-    private ArrayList<VideoLike> videoLikes;
+    private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
+    private int likes = 0 ;
+    private int dislikes = 0 ;
 
     public Video() {
         Id = UUID.randomUUID();
         this.categories = new ArrayList<>();
-        this.videoLikes = new ArrayList<>();
+        this.viewers = new ArrayList<>();
         this.comments = new ArrayList<>();
     }
 
@@ -29,8 +32,17 @@ public class Video {
         this.title = title;
         this.description = description;
         this.categories = new ArrayList<>();
-        this.videoLikes = new ArrayList<>();
+        this.viewers = new ArrayList<>();
         this.comments = new ArrayList<>();
+    }
+
+    public Video(String title, String description, UUID channelId, int views, LocalDateTime uploadDate) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.channelId = channelId;
+        this.views = views;
+        this.uploadDate = uploadDate;
     }
 
     public UUID getId() {
@@ -97,12 +109,12 @@ public class Video {
         this.categories = categories;
     }
 
-    public ArrayList<VideoLike> getVideoLikes() {
-        return videoLikes;
+    public ArrayList<UserVideo> getViewers() {
+        return viewers;
     }
 
-    public void setVideoLikes(ArrayList<VideoLike> videoLikes) {
-        this.videoLikes = videoLikes;
+    public void setViewers(ArrayList<UserVideo> viewers) {
+        this.viewers = viewers;
     }
 
     public ArrayList<Comment> getComments() {
@@ -111,5 +123,37 @@ public class Video {
 
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
+    }
+
+    public String getPath() {
+        return Path;
+    }
+
+    public void setPath(String path) {
+        Path = path;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
 }

@@ -2,29 +2,27 @@ package sbu.cs.youtube.Shared.POJO;
 
 import java.util.UUID;
 
-public class CommentLike {
-    private UUID Id;
+public class UserComment {
     private User user;
     private UUID userId;
     private Comment comment;
     private UUID commentId;
+    private Boolean like;
 
-    public CommentLike() {
-        Id = UUID.randomUUID();
+    public UserComment() {
     }
 
-    public CommentLike(UUID commentId, UUID userId) {
-        Id = UUID.randomUUID();
+    public Boolean getLike() {
+        return like;
+    }
+
+    public void setLike(Boolean like) {
+        this.like = like;
+    }
+
+    public UserComment(UUID userId,UUID commentId ) {
         this.commentId = commentId;
         this.userId = userId;
-    }
-
-    public UUID getId() {
-        return Id;
-    }
-
-    public void setId(UUID id) {
-        Id = id;
     }
 
     public User getUser() {

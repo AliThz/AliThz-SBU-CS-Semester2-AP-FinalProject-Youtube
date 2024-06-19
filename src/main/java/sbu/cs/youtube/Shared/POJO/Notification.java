@@ -16,9 +16,12 @@ public class Notification {
         Id = UUID.randomUUID();
     }
 
-    public Notification(String message) {
+    public Notification(UUID userId, String message, boolean isRead, LocalDateTime dateSent) {
         Id = UUID.randomUUID();
+        this.userId = userId;
         this.message = message;
+        this.isRead = isRead;
+        this.dateSent = dateSent;
     }
 
     public UUID getId() {

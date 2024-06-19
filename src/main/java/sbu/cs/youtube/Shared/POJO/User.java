@@ -1,9 +1,7 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class User {
@@ -11,18 +9,21 @@ public class User {
     private String fullName;
     private String email;
     private LocalDateTime dateOfBirth;
+    private String avatarPath;
     private String username;
     private String password;
     private LocalDateTime joinDate;
     private ArrayList<Subscription> subscriptions;
     private ArrayList<Notification> notifications;
-    private ArrayList<VideoLike> likedVideos;
+    private ArrayList<UserVideo> viewedVideos;
+    private ArrayList<UserComment> viewedComments;
+
 
     public User() {
         Id = UUID.randomUUID();
         subscriptions = new ArrayList<>();
         notifications = new ArrayList<>();
-        likedVideos = new ArrayList<>();
+        viewedVideos = new ArrayList<>();
     }
 
     public User(String fullName, String email, String username, String password, LocalDateTime dateOfBirth) {
@@ -34,7 +35,7 @@ public class User {
         this.dateOfBirth = dateOfBirth;
         subscriptions = new ArrayList<>();
         notifications = new ArrayList<>();
-        likedVideos = new ArrayList<>();
+        viewedVideos = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -109,11 +110,25 @@ public class User {
         this.notifications = notifications;
     }
 
-    public ArrayList<VideoLike> getLikedVideos() {
-        return likedVideos;
+    public ArrayList<UserVideo> getViewedVideos() {
+        return viewedVideos;
     }
 
-    public void setLikedVideos(ArrayList<VideoLike> likedVideos) {
-        this.likedVideos = likedVideos;
+    public void setViewedVideos(ArrayList<UserVideo> viewedVideos) {
+        this.viewedVideos = viewedVideos;
+    }
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
+    public ArrayList<UserComment> getViewedComments() {
+        return viewedComments;
+    }
+
+    public void setViewedComments(ArrayList<UserComment> viewedComments) {
+        this.viewedComments = viewedComments;
     }
 }
