@@ -12,7 +12,8 @@ import java.util.Objects;
 public class YouTubeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-page.fxml"));
+//        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("video-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/YoutubeIcon.png"))));
         stage.setTitle("Youtube");

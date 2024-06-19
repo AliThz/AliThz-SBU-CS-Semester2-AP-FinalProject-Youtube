@@ -6,6 +6,9 @@ module sbu.cs.youtube {
     requires org.kordamp.bootstrapfx.core;
     requires java.desktop;
     requires java.sql;
+    requires org.controlsfx.controls;
+    requires javafx.media;
+    requires animatefx;
 
     opens sbu.cs.youtube to javafx.fxml;
     exports sbu.cs.youtube;
