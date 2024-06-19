@@ -8,6 +8,7 @@ import sbu.cs.youtube.Shared.Response;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ClientHandler implements Runnable {
 
@@ -70,13 +71,14 @@ public class ClientHandler implements Runnable {
 
         switch (jsonRequest.get("Type").getAsString()) {
             case "SignUp":
-                databaseManager.insertUser(gson.fromJson(jsonRequest.get("Body"), User.class));
-                Response<User> response = new Response<>(client, "SignUp");
-                response.send();
+//                User user = databaseManager.insertUser(gson.fromJson(jsonRequest.get("Body"), User.class));
+//                Response<User> response = new Response<>(client, "SignUp");
+//                response.send();
                 break;
             case "SignIn":
-
-
+                ArrayList<User> users = databaseManager.selectUserBriefly();
+                Response<User> response = new Response<>(client, "SignIn");
+                response.send(users);
         }
     }
     //endregion
