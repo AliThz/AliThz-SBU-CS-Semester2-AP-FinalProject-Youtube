@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="vbxContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/sign-in-dark.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.SignIn">
+   <children>
+      <HBox prefHeight="392.0" prefWidth="659.0" styleClass="foreground">
+         <children>
+            <VBox fx:id="vbxLeft" prefHeight="148.0" prefWidth="383.0">
+               <children>
+                  <AnchorPane prefHeight="61.0" prefWidth="298.0">
+                     <children>
+                        <SVGPath content="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z" styleClass="google-svg-4" />
+                        <SVGPath content="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z" styleClass="google-svg-3" />
+                        <SVGPath content="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z" styleClass="google-svg-2" />
+                        <SVGPath content="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z" styleClass="google-svg-1" />
+                     </children>
+                  </AnchorPane>
+                  <Label fx:id="lblTitle" prefHeight="42.0" prefWidth="367.0" text="Sign in" textFill="WHITE">
+                     <font>
+                        <Font name="Open Sans SemiBold" size="30.0" />
+                     </font>
+                  </Label>
+                  <Text fx:id="txtDescription" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="to continue to YouTube" wrappingWidth="288.3152542114258">
+                     <font>
+                        <Font name="Open Sans Light" size="15.0" />
+                     </font>
+                  </Text>
+               </children>
+            </VBox>
+            <HBox prefHeight="148.0" prefWidth="50.0" HBox.hgrow="ALWAYS" />
+            <VBox fx:id="vbxRight" prefHeight="148.0" prefWidth="391.0" spacing="5.0">
+               <children>
+                  <HBox prefHeight="66.0" prefWidth="309.0" />
+                  <TextField fx:id="inputField" prefHeight="59.0" prefWidth="309.0" promptText="Email or Username" styleClass="input-field">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </TextField>
+                  <HBox prefHeight="37.0" prefWidth="309.0" spacing="5.0">
+                     <children>
+                        <SVGPath fx:id="inputError" content="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="WHITE" styleClass="error-svg" />
+                        <Text fx:id="inputLog" fill="#ff7a60" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error-txt" wrappingWidth="278.4347267150879">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Text>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="106.0" prefWidth="309.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#getSignUpPage" prefHeight="34.0" prefWidth="119.0" styleClass="createAcnt-btn" text="Create account">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="nextBtn" mnemonicParsing="false" prefHeight="34.0" prefWidth="70.0" styleClass="next-btn" text="Next">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding></HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="686.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="137.0" styleClass="bottom-btn" text="English (United States)" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <HBox prefHeight="26.0" prefWidth="350.0" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="58.0" styleClass="bottom-btn" text="Privacy" textFill="WHITE" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="51.0" styleClass="bottom-btn" text="Terms" textFill="RED" />
+            <Button mnemonicParsing="false" onAction="#exitSignInSignUp" prefHeight="26.0" prefWidth="46.0" styleClass="bottom-btn" text="Exit" textFill="WHITE" />
+         </children>
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="100.0" left="150.0" right="150.0" top="100.0" />
+   </padding>
+</VBox>
