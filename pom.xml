@@ -67,11 +67,6 @@
             <artifactId>javafx-media</artifactId>
             <version>21</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.typhon0</groupId>
-            <artifactId>animateFX</artifactId>
-            <version>1.3.0</version>
-        </dependency>
     </dependencies>
 
     <build>

@@ -9,7 +9,6 @@ module sbu.cs.youtube {
     requires com.google.gson;
     requires org.controlsfx.controls;
     requires javafx.media;
-    requires animatefx;
 
 
     opens sbu.cs.youtube to javafx.fxml;
