@@ -25,6 +25,8 @@ import java.util.ResourceBundle;
 
 public class SignUpController implements Initializable {
 
+    //region [ - Fields - ]
+
     @FXML
     private TextField inputField;
 
@@ -53,14 +55,21 @@ public class SignUpController implements Initializable {
     private SVGPath inputError;
 
     @FXML
-    private
-    Text inputLog;
+    private Text inputLog;
+    //endregion
+
+    //region [ - Methods - ]
+
+    //region [ - initialize(URL location, ResourceBundle resources) - ]
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         birthDatePicker.prefWidthProperty().bind(vbxRight.widthProperty());
         nextBtn.setOnAction(this::changeToEmail);
     }
+    //endregion
+
+    //region [ - changeToEmail(ActionEvent event) - ]
 
     private void changeToEmail(ActionEvent event) {
         boolean canChange = true; // ToDo
@@ -85,6 +94,10 @@ public class SignUpController implements Initializable {
         }
     }
 
+    //endregion
+
+    //region [ - changeToPassword(ActionEvent event) - ]
+
     private void changeToPassword(ActionEvent event) {
         boolean checkEmail = true; //Todo
         if (checkEmail) {
@@ -93,6 +106,9 @@ public class SignUpController implements Initializable {
             nextBtn.setOnAction(this::checkPassword);
         }
     }
+    //endregion
+
+    //region [ - checkPassword(ActionEvent event) - ]
 
     private void checkPassword(ActionEvent event) {
         boolean checkPassword = true; //todo
@@ -100,9 +116,15 @@ public class SignUpController implements Initializable {
             signIn();
         }
     }
+    //endregion
+
+    //region [ - signIn() - ]
 
     private void signIn() {
     }
+    //endregion
+
+    //region [ - exitSignUp(ActionEvent event) - ]
 
     @FXML
     void exitSignUp(ActionEvent event) {
@@ -120,6 +142,9 @@ public class SignUpController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    //endregion
+
+    //region [ - getSignInPage(ActionEvent event) - ]
 
     @FXML
     void getSignInPage(ActionEvent event) {
@@ -137,6 +162,9 @@ public class SignUpController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    //endregion
+
+    //endregion
 
 
 
