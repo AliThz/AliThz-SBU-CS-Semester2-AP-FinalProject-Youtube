@@ -1,9 +1,8 @@
-package sbu.cs.youtube.Database;
+package sbu.cs.youtube.Server.Database;
 
 import sbu.cs.youtube.Shared.POJO.*;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 

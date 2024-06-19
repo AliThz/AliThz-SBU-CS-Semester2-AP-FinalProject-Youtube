@@ -2,7 +2,7 @@ package sbu.cs.youtube.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import sbu.cs.youtube.Database.DatabaseManager;
+import sbu.cs.youtube.Server.Database.DatabaseManager;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.Response;
 
