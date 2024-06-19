@@ -7,6 +7,10 @@ module sbu.cs.youtube {
     requires java.desktop;
     requires java.sql;
     requires com.google.gson;
+    requires org.controlsfx.controls;
+    requires javafx.media;
+    requires animatefx;
+
 
     opens sbu.cs.youtube to javafx.fxml;
     exports sbu.cs.youtube;

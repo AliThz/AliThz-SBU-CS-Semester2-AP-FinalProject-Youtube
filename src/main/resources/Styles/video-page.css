@@ -1,0 +1,11 @@
+/* -------------------------------- Background -------------------------------- */
+.background {
+    -fx-background-color : black;
+    -fx-border-color : black;
+}
+
+/* -------------------------------- Video -------------------------------- */
+.left-vbox {
+    -fx-padding: 10;
+    -fx-alignment: top-center;
+}

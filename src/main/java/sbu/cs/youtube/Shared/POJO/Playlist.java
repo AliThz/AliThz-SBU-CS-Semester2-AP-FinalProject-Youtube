@@ -7,15 +7,23 @@ import java.util.UUID;
 
 public class Playlist {
     private UUID Id ;
+    private String thumbnailPath ;
     private String title ;
     private String description ;
-
-//    private Thumnail thumnail ;
     private User creator ;
     private UUID creatorId ;
     private boolean isPublic ;
     private LocalDateTime dateCreated ;
     private ArrayList<PlaylistDetail> playlistDetails;
+    private int videos ;
+
+    public int getVideos() {
+        return videos;
+    }
+
+    public void setVideos(int videos) {
+        this.videos = videos;
+    }
 
     public Playlist() {
         Id = UUID.randomUUID();
@@ -93,5 +101,13 @@ public class Playlist {
 
     public void setPlaylistDetails(ArrayList<PlaylistDetail> playlistDetails) {
         this.playlistDetails = playlistDetails;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 }

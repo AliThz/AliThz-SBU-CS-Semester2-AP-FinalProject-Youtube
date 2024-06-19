@@ -1,9 +1,7 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class Comment {
@@ -16,12 +14,16 @@ public class Comment {
     private Comment parentComment;
     private UUID parentCommentId;
     private LocalDateTime dateCommented;
-    private ArrayList<CommentLike> commentLikes;
+    private ArrayList<UserComment> viewers;
+    private int likes = 0 ;
+    private int dislikes = 0 ;
 
     public Comment() {
         Id = UUID.randomUUID();
-        commentLikes = new ArrayList<>();
+        viewers = new ArrayList<>();
+        parentComment = null;
     }
+
 
     public Comment(String content, UUID videoId, UUID senderId, UUID parentCommentId) {
         Id = UUID.randomUUID();
@@ -29,7 +31,7 @@ public class Comment {
         this.videoId = videoId;
         this.senderId = senderId;
         this.parentCommentId = parentCommentId;
-        commentLikes = new ArrayList<>();
+        viewers = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -102,5 +104,28 @@ public class Comment {
 
     public void setDateCommented(LocalDateTime dateCommented) {
         this.dateCommented = dateCommented;
+    }
+    public ArrayList<UserComment> getViewers() {
+        return viewers;
+    }
+
+    public void setViewers(ArrayList<UserComment> viewers) {
+        this.viewers = viewers;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
 }
