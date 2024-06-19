@@ -21,11 +21,11 @@
     -fx-background-color : transparent;
     -fx-pref-width : 40px;
     -fx-pref-height : 40px;
+    -fx-background-radius : 100;
 }
 
 .burger-btn:hover {
     -fx-background-color : rgb(33, 33, 33);
-    -fx-background-radius : 100;
 }
 
 .burger-btn:pressed {
@@ -58,10 +58,6 @@
     -fx-border-radius : 100;
 }
 
-.search-btn:pressed {
-    -fx-background-color : rgb(41, 41, 41);
-}
-
 .search-bar {
     -fx-background-radius : 50;
     -fx-border-radius : 50;
@@ -90,6 +86,7 @@
     -fx-background-color : transparent;
     -fx-background-radius : 50;
     -fx-border-color : rgb(33, 33, 33);
+    -fx-background-radius : 50;
     -fx-border-width : 3;
     -fx-border-radius : 50;
     -fx-pref-width: 89px;
@@ -97,12 +94,14 @@
 }
 
 .signIn-btn:hover {
-    -fx-background-color : rgb(33, 33, 33);
-    -fx-background-radius : 50;
+    -fx-background-color : rgb(38, 56, 80);
+    -fx-border-color : rgb(38, 56, 80);
+
 }
 
 .signIn-btn:pressed {
-    -fx-background-color : rgb(41, 41, 41);
+    -fx-background-color : rgb(50,50,60);
+    -fx-border-color : rgb(50,50,60);
 }
 
 /* -------------------------------- Create Button -------------------------------- */

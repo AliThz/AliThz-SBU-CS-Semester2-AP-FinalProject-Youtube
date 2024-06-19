@@ -53,14 +53,14 @@
     -fx-background-color : transparent;
     -fx-pref-width : 199px;
     -fx-pref-height : 70px;
+    -fx-background-radius : 8;
 }
 
 .side-btn:hover {
     -fx-background-color : rgb(33, 33, 33);
-    -fx-background-radius : 8;
 }
 
-.side-btn:pressed {
+.side-btn:focused {
     -fx-background-color : rgb(41, 41, 41);
 }
 
