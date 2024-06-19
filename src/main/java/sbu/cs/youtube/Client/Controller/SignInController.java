@@ -14,10 +14,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.Request;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignInController implements Initializable {
 
@@ -87,8 +91,30 @@ public class SignInController implements Initializable {
 
     @FXML
     private void checkEmail(ActionEvent event) {
-        String email = inputField.getText();
+        String input = inputField.getText();
+        Boolean isEmail = null;
+
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        String usernameRegex = "^[A-Za-z0-9_]+$";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        Pattern usernamePattern = Pattern.compile(usernameRegex);
+        Matcher emailMatcher = emailPattern.matcher(input);
+        Matcher usernameMatcher = usernamePattern.matcher(input);
+
+        if (emailMatcher.matches()) {
+            isEmail = true;
+        } else if (usernameMatcher.matches()) {
+            isEmail = false;
+        }
+
+
+
+
         boolean emailIsValid = true; // ToDo needs connection to socket
+
+
+
+
         if (emailIsValid) {
             System.out.println("Email verified");
             nextBtn.setOnAction(this::checkPassword);
