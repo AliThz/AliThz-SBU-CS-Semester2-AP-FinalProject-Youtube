@@ -13,22 +13,24 @@ import java.util.ArrayList;
 public class Response<T> {
 
     //region [ - Fields - ]
-    private final Socket client;
-    private final BufferedWriter bufferedWriter;
-    private Notification notification;
+    private transient final Socket client;
     private String type;
-    private T body;
-    private ArrayList<T> bodyList;
     private boolean isDone;
     private String error;
+    private T body;
+    private ArrayList<T> bodyList;
+    private Notification notification;
+    private transient final BufferedWriter bufferedWriter;
     //endregion
 
     //region [ - Constructor - ]
-    public Response(Socket client, String type) {
+    public Response(Socket client, String type, boolean isDone, String error) {
         try {
-            notification = new Notification();
-            this.type = type;
             this.client = client;
+            this.type = type;
+            this.isDone = isDone;
+            this.error = error;
+            notification = new Notification();
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -4,17 +4,20 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
+import sbu.cs.youtube.Shared.POJO.User;
 
 public class Request<T> {
 
     //region [ - Fields - ]
-    private final Socket socket;
-    private BufferedWriter bufferedWriter;
+    private transient final Socket socket;
     private final String type;
     private T body;
+    private transient BufferedWriter bufferedWriter;
     //endregion
 
     //region [ - Constructor - ]
@@ -33,26 +36,24 @@ public class Request<T> {
 
     //region [ - send() - ]
     public void send() {
-        JsonObject jsonRequest = new JsonObject();
         Gson gson = new Gson();
-        String jsonObject = gson.toJson(body);
-
-        jsonRequest.addProperty("Type", gson.toJson(type));
-
-        write(jsonRequest.toString());
+        String jsonRequest = gson.toJson(this);
+        write(jsonRequest);
     }
     //endregion
 
     //region [ - send(T object) - ]
     public void send(T body) {
-        JsonObject jsonRequest = new JsonObject();
         Gson gson = new Gson();
-        String jsonObject = gson.toJson(body);
+        this.body = body;
+        String jsonRequest = gson.toJson(this);
+        write(jsonRequest);
+    }
+    //endregion
 
-        jsonRequest.addProperty("Type", gson.toJson(type));
-        jsonRequest.addProperty("Body", jsonObject);
-
-        write(jsonRequest.toString());
+    //region [ - getSocket() - ]
+    public Socket getSocket() {
+        return socket;
     }
     //endregion
 
@@ -63,7 +64,7 @@ public class Request<T> {
     //endregion
 
     //region [ - getObject() - ]
-    public T getObject() {
+    public T getBody() {
         return body;
     }
     //endregion

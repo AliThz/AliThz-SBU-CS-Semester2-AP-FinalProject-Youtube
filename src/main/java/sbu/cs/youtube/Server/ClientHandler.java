@@ -2,8 +2,10 @@ package sbu.cs.youtube.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import sbu.cs.youtube.Server.Database.DatabaseManager;
 import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 
 import java.io.*;
@@ -37,9 +39,11 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             try {
-                while (true) {
+                while (client.isConnected()) {
                     receiveRequest();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             } finally {
                 try {
                     bufferedReader.close();
@@ -67,18 +71,20 @@ public class ClientHandler implements Runnable {
     //region [ - handleRequest(String request) - ]
     public void handleRequest(String request) {
         Gson gson = new Gson();
-        JsonObject jsonRequest = gson.fromJson(request, JsonObject.class);
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {};
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
 
-        switch (jsonRequest.get("Type").getAsString()) {
+        switch (userRequest.getType()) {
             case "SignUp":
-//                User user = databaseManager.insertUser(gson.fromJson(jsonRequest.get("Body"), User.class));
-//                Response<User> response = new Response<>(client, "SignUp");
-//                response.send();
+                User user = userRequest.getBody();
+                databaseManager.insertUser(user);
+                Response<User> response = new Response<>(client, "SignUp", true, null);
+                response.send();
                 break;
             case "SignIn":
-                ArrayList<User> users = databaseManager.selectUserBriefly();
-                Response<User> response = new Response<>(client, "SignIn");
-                response.send(users);
+//                ArrayList<User> users = databaseManager.selectUserBriefly();
+//                Response<User> response = new Response<>(client, "SignIn");
+//                response.send(users);
         }
     }
     //endregion

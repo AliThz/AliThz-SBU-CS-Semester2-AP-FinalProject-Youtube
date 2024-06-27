@@ -13,7 +13,7 @@ public class Playlist {
     private User creator ;
     private UUID creatorId ;
     private boolean isPublic ;
-    private LocalDateTime dateCreated ;
+    private String dateCreated ;
     private ArrayList<PlaylistDetail> playlistDetails;
     private int videos ;
 
@@ -87,11 +87,11 @@ public class Playlist {
         isPublic = aPublic;
     }
 
-    public LocalDateTime getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(LocalDateTime dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 

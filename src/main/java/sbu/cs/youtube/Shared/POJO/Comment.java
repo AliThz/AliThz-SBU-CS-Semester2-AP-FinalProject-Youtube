@@ -13,7 +13,7 @@ public class Comment {
     private UUID senderId;
     private Comment parentComment;
     private UUID parentCommentId;
-    private LocalDateTime dateCommented;
+    private String dateCommented;
     private ArrayList<UserComment> viewers;
     private int likes = 0 ;
     private int dislikes = 0 ;
@@ -98,11 +98,11 @@ public class Comment {
         this.parentCommentId = parentCommentId;
     }
 
-    public LocalDateTime getDateCommented() {
+    public String getDateCommented() {
         return dateCommented;
     }
 
-    public void setDateCommented(LocalDateTime dateCommented) {
+    public void setDateCommented(String dateCommented) {
         this.dateCommented = dateCommented;
     }
     public ArrayList<UserComment> getViewers() {

@@ -10,9 +10,11 @@ module sbu.cs.youtube {
     requires org.controlsfx.controls;
     requires javafx.media;
     requires java.base;
+    requires org.postgresql.jdbc;
 
 
     opens sbu.cs.youtube.Shared.POJO to com.google.gson;
+    opens sbu.cs.youtube.Shared to com.google.gson;
 //    opens java.time to com.google.gson;
     opens sbu.cs.youtube to javafx.fxml;
     exports sbu.cs.youtube;
