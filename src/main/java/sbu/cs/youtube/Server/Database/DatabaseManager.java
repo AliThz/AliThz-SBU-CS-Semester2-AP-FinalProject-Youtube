@@ -10,7 +10,7 @@ import java.util.UUID;
 public class DatabaseManager {
 
     //region [ - Fields - ]
-    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-Development";
+    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-development";
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
     //endregion
@@ -304,6 +304,80 @@ public class DatabaseManager {
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
                 user.setViewedComments(selectUserComments(user.getId()));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectUser)");
+        return user;
+    }
+    //endregion
+
+    //region [ - selectUserByUsername(String Username) - ]
+    public User selectUserByUsername(String username) {
+        Connection c;
+        PreparedStatement stmt;
+        User user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUser)");
+
+            stmt = c.prepareStatement("""
+                    SELECT * FROM UserManagement.User 
+                    WHERE username = ?
+                    """);
+            stmt.setObject(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            user = new User();
+            if (rs.next()) {
+                user.setId(UUID.fromString(rs.getString("Id")));
+                user.setEmail(rs.getString("Email"));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectUser)");
+        return user;
+    }
+    //endregion
+
+    //region [ - selectUserByEmail(String email) - ]
+    public User selectUserByUserEmail(String email) {
+        Connection c;
+        PreparedStatement stmt;
+        User user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUser)");
+
+            stmt = c.prepareStatement("""
+                    SELECT * FROM UserManagement.User 
+                    WHERE Email = ?
+                    """);
+            stmt.setObject(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            user = new User();
+            if (rs.next()) {
+                user.setId(UUID.fromString(rs.getString("Id")));
+                user.setEmail(rs.getString("Email"));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
             }
