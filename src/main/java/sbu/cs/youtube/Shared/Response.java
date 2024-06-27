@@ -14,9 +14,9 @@ public class Response<T> {
 
     //region [ - Fields - ]
     private transient final Socket client;
-    private String type;
-    private boolean isDone;
-    private String error;
+    private final String type;
+    private final boolean isDone;
+    private final String message;
     private T body;
     private ArrayList<T> bodyList;
     private Notification notification;
@@ -24,12 +24,12 @@ public class Response<T> {
     //endregion
 
     //region [ - Constructor - ]
-    public Response(Socket client, String type, boolean isDone, String error) {
+    public Response(Socket client, String type, boolean isDone, String message) {
         try {
             this.client = client;
             this.type = type;
             this.isDone = isDone;
-            this.error = error;
+            this.message = message;
             notification = new Notification();
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException e) {
@@ -87,8 +87,8 @@ public class Response<T> {
     //endregion
 
     //region [ - getError() - ]
-    public String getError() {
-        return error;
+    public String getMessage() {
+        return message;
     }
     //endregion
 
