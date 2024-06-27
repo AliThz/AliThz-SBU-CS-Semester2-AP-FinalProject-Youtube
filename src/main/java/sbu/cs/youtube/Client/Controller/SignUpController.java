@@ -1,5 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,10 +20,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.Response;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignUpController implements Initializable {
 
@@ -56,6 +66,25 @@ public class SignUpController implements Initializable {
 
     @FXML
     private Text inputLog;
+
+    @FXML
+    private HBox hbxLog;
+
+    private YouTubeApplication client;
+
+    public YouTubeApplication getClient() {
+        return client;
+    }
+
+    public void setClient(YouTubeApplication client) {
+        this.client = client;
+    }
+
+    private String fullName;
+    private LocalDateTime birthDate;
+    private String email;
+    private String username;
+    private String password;
     //endregion
 
     //region [ - Methods - ]
@@ -66,61 +95,140 @@ public class SignUpController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         birthDatePicker.prefWidthProperty().bind(vbxRight.widthProperty());
         nextBtn.setOnAction(this::changeToEmail);
+        hbxLog = new HBox();
+        inputError = new SVGPath();
+        inputError.setContent("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z");
+        inputError.getStyleClass().add("error-svg");
+        inputLog = new Text("");
+        inputLog.setFill(Color.rgb(255, 122, 96));
+        inputLog.setWrappingWidth(204);
+        hbxLog.getChildren().addAll(inputError, inputLog);
+        hbxLog.setPadding(new Insets(2, 2, 2, 2));
+        hbxLog.setSpacing(5);
+        hbxLog.setVisible(false);
+        vbxRight.getChildren().add(3, hbxLog);
+
     }
     //endregion
 
     //region [ - changeToEmail(ActionEvent event) - ]
 
     private void changeToEmail(ActionEvent event) {
-        boolean canChange = true; // ToDo
-        if(canChange) {
+        if (validateName(inputField.getText()) && validateBday(birthDatePicker.getValue())) {
+            fullName = inputField.getText();
+            birthDate = birthDatePicker.getValue().atStartOfDay();
+
+            hbxLog.setVisible(false);
+            inputField.clear();
             vbxRight.getChildren().remove(2);
             inputField.setPromptText("Email");
-            HBox hbxLog = new HBox();
-            inputError = new SVGPath();
-            inputError.setContent("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z");
-            inputError.getStyleClass().add("error-svg");
-            inputLog = new Text("");
-            inputLog.setFill(Color.rgb(255,122,96));
-            inputLog.prefWidth(204);
-            hbxLog.getChildren().addAll(inputError, inputLog);
-            hbxLog.setPadding(new Insets(2, 2, 2, 2));
-            hbxLog.setSpacing(5);
-            hbxLog.setVisible(false);
-            vbxRight.getChildren().add(2, hbxLog);
-
             txtDescription.setText("Enter your email");
             nextBtn.setOnAction(this::changeToPassword);
+        } else {
+            hbxLog.setVisible(true);
         }
     }
-
     //endregion
+
+    private boolean validateBday(LocalDate birthDay) {
+        if (birthDay == null) {
+            inputLog.setText("Invalid entry: please complete the birthday field");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateName(String fullName) {
+        String usernameRegex = "^[A-Za-z]+(\\s[A-Za-z]+){0,2}[A-Za-z]{6,}$";
+        Pattern usernamePattern = Pattern.compile(usernameRegex);
+        Matcher usernameMatcher = usernamePattern.matcher(fullName);
+
+        if (usernameMatcher.matches()) {
+            return true;
+        }
+
+        inputLog.setText("Invalid entry: full name should only contain alphabets and up to two spaces");
+        return false;
+    }
+
 
     //region [ - changeToPassword(ActionEvent event) - ]
 
     private void changeToPassword(ActionEvent event) {
-        boolean checkEmail = true; //Todo
-        if (checkEmail) {
+        if (validateEmail(inputField.getText())) {
+            email = inputField.getText();
+            username = getUsername(inputField.getText());
+
+            hbxLog.setVisible(false);
+            inputField.clear();
             inputField.setPromptText("Password");
             txtDescription.setText("Enter your password");
-            nextBtn.setOnAction(this::checkPassword);
+            nextBtn.setOnAction(this::signIn);
+        }
+        else {
+            hbxLog.setVisible(true);
+        }
+    }
+
+    //endregion
+
+    private String getUsername(String email) {
+        String usernameRegex = "^([^@]+)@";
+        Pattern pattern = Pattern.compile(usernameRegex);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.group(1);
+    }
+
+    private boolean validateEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        Matcher emailMatcher = emailPattern.matcher(email);
+
+        if (emailMatcher.find()) {
+            return true;
+        }
+        inputLog.setText("Invalid entry: please enter the correct email format");
+        return false;
+    }
+
+
+    //region [ - changeToSignIn(ActionEvent event) - ]
+
+    private void signIn(ActionEvent event) {
+        if (validatePassword(inputField.getText())) {
+            password = inputField.getText();
+
+            Request<User> userRequest = new Request<>(client.getSocket(), "SignUp");
+            userRequest.send(new User(fullName, email, username, password, birthDate.toString()));
+
+            String response = client.receiveResponse();
+            Gson gson = new Gson();
+            TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {};
+            Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
+
+            client.setUser(userResponse.getBody());
+
+        }
+        else {
+            hbxLog.setVisible(true);
         }
     }
     //endregion
 
-    //region [ - checkPassword(ActionEvent event) - ]
+    //region [ - validatePassword(String password) - ]
 
-    private void checkPassword(ActionEvent event) {
-        boolean checkPassword = true; //todo
-        if (checkPassword) {
-            signIn();
+    private boolean validatePassword(String password) {
+        String passwordRegex = "^[A-Za-z0-9]+$";
+        Pattern passwordPattern = Pattern.compile(passwordRegex);
+        Matcher passwordMatcher = passwordPattern.matcher(password);
+
+        if (passwordMatcher.matches()) {
+            return true;
         }
-    }
-    //endregion
 
-    //region [ - signIn() - ]
-
-    private void signIn() {
+        inputLog.setText("Invalid entry: password can only contain alphabets and numbers and have at least 8 characters");
+        return false;
     }
     //endregion
 
@@ -137,6 +245,10 @@ public class SignUpController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        HomeSectionController controller = loader.getController();
+        controller.setClient(client);
+
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -157,6 +269,10 @@ public class SignUpController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        SignInController controller = loader.getController();
+        controller.setClient(client);
+
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -165,8 +281,6 @@ public class SignUpController implements Initializable {
     //endregion
 
     //endregion
-
-
 
 
 }

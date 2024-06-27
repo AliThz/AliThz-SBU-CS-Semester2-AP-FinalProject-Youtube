@@ -18,6 +18,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
@@ -55,7 +56,16 @@ public class LayoutController implements Initializable {
     @FXML
     protected FlowPane flowPane;
 
-    //endregion
+    private YouTubeApplication client;
+
+    public YouTubeApplication getClient() {
+        return client;
+    }
+
+    public void setClient(YouTubeApplication client) {
+        this.client = client;
+    }
+//endregion
 
     //region [ - Methods - ]
 

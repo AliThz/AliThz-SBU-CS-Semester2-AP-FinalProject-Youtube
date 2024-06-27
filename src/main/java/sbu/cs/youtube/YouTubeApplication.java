@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalDateTimeStringConverter;
+import sbu.cs.youtube.Client.Controller.HomeSectionController;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.Request;
 
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class YouTubeApplication extends Application {
 
     private Socket socket;
+    private User user;
     private static BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
 
@@ -37,12 +39,15 @@ public class YouTubeApplication extends Application {
         }
     }
 
-    public static void receiveResponse() {
+    public String receiveResponse() {
+        String response = null;
         try {
-            System.out.println( bufferedReader.readLine());
+            response = bufferedReader.readLine();
         } catch (IOException ioe) {
             System.out.println("!!Exception : " + ioe.getMessage());
         }
+
+        return response;
     }
 
     private void close(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
@@ -65,6 +70,8 @@ public class YouTubeApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        HomeSectionController controller = fxmlLoader.getController();
+        controller.setClient(this);
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/YoutubeIcon.png"))));
         stage.setTitle("Youtube");
         stage.setScene(scene);
@@ -82,6 +89,19 @@ public class YouTubeApplication extends Application {
         }
     }
     //endregion
+
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public static void main(String[] args) throws IOException {
 //        Socket socket = new Socket("localhost", 2345);

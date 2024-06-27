@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,6 +55,15 @@ public class SignInController implements Initializable {
     @FXML
     private VBox vbxRight;
 
+    private YouTubeApplication client;
+
+    public YouTubeApplication getClient() {
+        return client;
+    }
+
+    public void setClient(YouTubeApplication client) {
+        this.client = client;
+    }
     //endregion
 
     //region [ - Methods - ]
@@ -80,6 +90,10 @@ public class SignInController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        HomeSectionController controller = loader.getController();
+        controller.setClient(client);
+
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -156,6 +170,10 @@ public class SignInController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        SignUpController controller = loader.getController();
+        controller.setClient(client);
+
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
