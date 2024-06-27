@@ -1,22 +1,30 @@
 package sbu.cs.youtube.Client.Controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
+
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+
+import static java.nio.file.Paths.get;
 
 public class VideoPageController implements Initializable {
 
@@ -35,7 +43,10 @@ public class VideoPageController implements Initializable {
     private VBox vbxVideo;
 
     @FXML
-    private Button btnVolume, btnPause, btnNext;
+    private Button btnVolume, btnPause, btnNext, btnPlay;
+
+    @FXML
+    private StackPane stckpnVideo;
 
     //endregion
 
@@ -44,25 +55,45 @@ public class VideoPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        String videoPath = "src/main/resources/Videos/Arcane2.mp4";
-        String videoPath = "file:///C:/Users/Admin/Desktop/Project/AliThz-SBU-CS-Semester2-AP-FinalProject-Youtube/src/main/resources/Videos/Arcane2.mp4";
+
+//        hbxVideoPage.prefWidthProperty().bind(scrlpnMain.prefWidthProperty());
+//        hbxVideoPage.prefHeightProperty().bind(scrlpnMain.prefHeightProperty());
+
+//        hbxVideoPage.minWidthProperty().bind(scrlpnMain.viewportBoundsProperty().get().widthProperty());
+//        hbxVideoPage.prefWidthProperty().bind(scrlpnMain.viewportBoundsProperty().get().widthProperty());
+//        hbxVideoPage.maxWidthProperty().bind(scrlpnMain.viewportBoundsProperty().get().widthProperty());
+
+        // Bind the HBox width to the ScrollPane viewport width
+//        hbxVideoPage.minWidthProperty().bind(Bindings.createDoubleBinding(
+//                () -> scrlpnMain.getViewportBounds().getWidth(),
+//                scrlpnMain.viewportBoundsProperty()));
+//        hbxVideoPage.prefWidthProperty().bind(Bindings.createDoubleBinding(
+//                () -> scrlpnMain.getViewportBounds().getWidth(),
+//                scrlpnMain.viewportBoundsProperty()));
+//        hbxVideoPage.maxWidthProperty().bind(Bindings.createDoubleBinding(
+//                () -> scrlpnMain.getViewportBounds().getWidth(),
+//                scrlpnMain.viewportBoundsProperty()));
+
+        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
 
         Media media = new Media(videoPath);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mediaPlayer);
 //        mediaView1.setMediaPlayer(mediaPlayer);
 
+
+//        mediaView.fitWidthProperty().bind(vbxVideo.widthProperty());
+//        mediaView.fitHeightProperty().bind(vbxVideo.heightProperty());
+
         mediaView.setPreserveRatio(true);
         mediaView.setSmooth(true);
-//
-        mediaView.fitWidthProperty().bind(vbxVideo.widthProperty());
-        mediaView.fitHeightProperty().bind(vbxVideo.heightProperty());
 
-        VBox.setVgrow(mediaView, Priority.ALWAYS);
+//        VBox.setVgrow(mediaView, Priority.ALWAYS);
 
         // Playback controls
         Button playButton = new Button("Play");
         playButton.setOnAction(e -> mediaPlayer.play());
+        btnPlay.setOnAction(e -> mediaPlayer.play());
 
         Button pauseButton = new Button("Pause");
         pauseButton.setOnAction(e -> mediaPlayer.pause());
@@ -72,8 +103,8 @@ public class VideoPageController implements Initializable {
         stopButton.setOnAction(e -> mediaPlayer.stop());
 
         Slider timeSlider = new Slider();
-        timeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty());
-        timeSlider.prefHeightProperty().bind(mediaView.fitHeightProperty());
+        timeSlider.prefWidthProperty().bind(stckpnVideo.prefWidthProperty());
+        timeSlider.prefHeightProperty().bind(stckpnVideo.prefHeightProperty());
         timeSlider.setMin(0);
         timeSlider.setMax(100);
         timeSlider.setValue(0);
@@ -90,19 +121,28 @@ public class VideoPageController implements Initializable {
             }
         });
 
-        vbxVideo.getChildren().addFirst(mediaView);
+//        StackPane stckpnVideo = new StackPane();
+//        stckpnVideo.setVisible(true);
+//        vbxVideo.prefWidthProperty().bind(vbxLeft.widthProperty());
+//        vbxVideo.prefHeightProperty().bind(vbxLeft.heightProperty());
+//        stckpnVideo.prefWidthProperty().bind(vbxVideo.widthProperty());
+//        stckpnVideo.prefHeightProperty().bind(vbxVideo.heightProperty());
 
-        HBox hbxControls = new HBox(10, playButton, pauseButton, stopButton);
+        VBox.setVgrow(stckpnVideo, Priority.ALWAYS);
+        stckpnVideo.getChildren().add(mediaView);
+
+        mediaView.fitWidthProperty().bind(stckpnVideo.widthProperty());
+        mediaView.fitHeightProperty().bind(stckpnVideo.heightProperty());
+
+//        vbxVideo.getChildren().addFirst(stckpnVideo);
+
+//        HBox hbxControls = new HBox(10, playButton, pauseButton, stopButton);
 //        HBox.setHgrow(mediaView, Priority.ALWAYS);
 
-        vbxVideo.getChildren().add(timeSlider);
-        vbxVideo.getChildren().add(hbxControls);
+        hbxControls.getChildren().add(timeSlider);
+//        vbxVideo.getChildren().add(hbxControls);
 
         mediaPlayer.play();
-
-
-
-
 
 
         for (int i = 0; i < 4; i++) {
