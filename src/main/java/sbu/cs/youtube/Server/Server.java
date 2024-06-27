@@ -19,7 +19,7 @@ public class Server {
 
                 //Giving service to each client
                 ClientHandler clientHandler = new ClientHandler(socket);
-                Thread thread = new Thread(String.valueOf(clientHandler));
+                Thread thread = new Thread(clientHandler);
                 thread.start();
             }
         } catch (IOException ioe) {

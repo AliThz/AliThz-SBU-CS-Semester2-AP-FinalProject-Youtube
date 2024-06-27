@@ -1,7 +1,9 @@
 package sbu.cs.youtube;
 
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -11,6 +13,7 @@ import sbu.cs.youtube.Shared.Request;
 
 import java.io.*;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -81,11 +84,11 @@ public class YouTubeApplication extends Application {
     //endregion
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 2345);
-        Request<User> userRequest = new Request<>(socket, "SignUp");
-        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "AliThz", "Ali123456", LocalDateTime.now()));
-        YouTubeApplication client = new YouTubeApplication(socket);
-        receiveResponse();
+//        Socket socket = new Socket("localhost", 2345);
+////        Request<User> userRequest = new Request<>(socket, "SignUp");
+////        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "AliThz", "Ali123456", LocalDateTime.now().toString()));
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        receiveResponse();
 
         launch();
     }

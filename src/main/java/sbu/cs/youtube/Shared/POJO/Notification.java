@@ -10,13 +10,13 @@ public class Notification {
     private UUID userId ;
     private String message ;
     private boolean isRead ;
-    private LocalDateTime dateSent ;
+    private String dateSent ;
 
     public Notification() {
         Id = UUID.randomUUID();
     }
 
-    public Notification(UUID userId, String message, boolean isRead, LocalDateTime dateSent) {
+    public Notification(UUID userId, String message, boolean isRead, String dateSent) {
         Id = UUID.randomUUID();
         this.userId = userId;
         this.message = message;
@@ -64,11 +64,11 @@ public class Notification {
         isRead = read;
     }
 
-    public LocalDateTime getDateSent() {
+    public String getDateSent() {
         return dateSent;
     }
 
-    public void setDateSent(LocalDateTime dateSent) {
+    public void setDateSent(String dateSent) {
         this.dateSent = dateSent;
     }
 }

@@ -13,7 +13,7 @@ public class Video {
     private Channel channel;
     private UUID channelId;
     private int views;
-    private LocalDateTime uploadDate;
+    private String uploadDate;
     private ArrayList<VideoCategory> categories;
     private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
@@ -36,7 +36,7 @@ public class Video {
         this.comments = new ArrayList<>();
     }
 
-    public Video(String title, String description, UUID channelId, int views, LocalDateTime uploadDate) {
+    public Video(String title, String description, UUID channelId, int views, String uploadDate) {
         Id = UUID.randomUUID();
         this.title = title;
         this.description = description;
@@ -93,11 +93,11 @@ public class Video {
         this.views = views;
     }
 
-    public LocalDateTime getUploadDate() {
+    public String getUploadDate() {
         return uploadDate;
     }
 
-    public void setUploadDate(LocalDateTime uploadDate) {
+    public void setUploadDate(String uploadDate) {
         this.uploadDate = uploadDate;
     }
 

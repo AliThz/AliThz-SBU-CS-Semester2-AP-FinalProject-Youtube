@@ -13,22 +13,24 @@ import java.util.ArrayList;
 public class Response<T> {
 
     //region [ - Fields - ]
-    private final Socket client;
-    private final BufferedWriter bufferedWriter;
-    private Notification notification;
-    private String type;
+    private transient final Socket client;
+    private final String type;
+    private final boolean isDone;
+    private final String message;
     private T body;
     private ArrayList<T> bodyList;
-    private boolean isDone;
-    private String error;
+    private Notification notification;
+    private transient final BufferedWriter bufferedWriter;
     //endregion
 
     //region [ - Constructor - ]
-    public Response(Socket client, String type) {
+    public Response(Socket client, String type, boolean isDone, String message) {
         try {
-            notification = new Notification();
-            this.type = type;
             this.client = client;
+            this.type = type;
+            this.isDone = isDone;
+            this.message = message;
+            notification = new Notification();
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -40,46 +42,74 @@ public class Response<T> {
 
     //region [ - send() - ]
     public void send() {
-        JsonObject jsonResponse = new JsonObject();
         Gson gson = new Gson();
-        String jsonObject = gson.toJson(body);
-
-        jsonResponse.addProperty("Type", gson.toJson(type));
-        jsonResponse.addProperty("IsDone", gson.toJson(isDone));
-        jsonResponse.addProperty("Error", gson.toJson(error));
-
-        write(jsonResponse.toString());
+        String jsonResponse = gson.toJson(this);
+        write(jsonResponse);
     }
     //endregion
 
     //region [ - send(T body) - ]
     public void send(T body) {
-        JsonObject jsonResponse = new JsonObject();
         Gson gson = new Gson();
-        String jsonObject = gson.toJson(body);
-
-        jsonResponse.addProperty("Type", gson.toJson(type));
-        jsonResponse.addProperty("Body", jsonObject);
-        jsonResponse.addProperty("IsDone", gson.toJson(isDone));
-        jsonResponse.addProperty("Error", gson.toJson(error));
-
-        write(jsonResponse.toString());
+        this.body = body;
+        String jsonResponse = gson.toJson(this);
+        write(jsonResponse);
     }
     //endregion
 
     //region [ - send(ArrayList<T> bodyList) - ]
     public void send(ArrayList<T> bodyList) {
-        JsonObject jsonResponse = new JsonObject();
         Gson gson = new Gson();
-        String jsonArray = gson.toJson(bodyList);
-
-        jsonResponse.addProperty("Type", gson.toJson(type));
-        jsonResponse.addProperty("BodyList", jsonArray);
-        jsonResponse.addProperty("IsDone", gson.toJson(isDone));
-        jsonResponse.addProperty("Error", gson.toJson(error));
-
-        write(jsonResponse.toString());
+        this.bodyList = bodyList;
+        String jsonResponse = gson.toJson(this);
+        write(jsonResponse);
     }
+    //endregion
+
+    //region [ - Getters - ]
+
+    //region [ - getClient() - ]
+    public Socket getClient() {
+        return client;
+    }
+    //endregion
+
+    //region [ - getType() - ]
+    public String getType() {
+        return type;
+    }
+    //endregion
+
+    //region [ - isDone() - ]
+    public boolean isDone() {
+        return isDone;
+    }
+    //endregion
+
+    //region [ - getError() - ]
+    public String getMessage() {
+        return message;
+    }
+    //endregion
+
+    //region [ - getBody() - ]
+    public T getBody() {
+        return body;
+    }
+    //endregion
+
+    //region [ - getBodyList() - ]
+    public ArrayList<T> getBodyList() {
+        return bodyList;
+    }
+    //endregion
+
+    //region [ - getNotification() - ]
+    public Notification getNotification() {
+        return notification;
+    }
+    //endregion
+
     //endregion
 
     //region [ - write(String content) - ]

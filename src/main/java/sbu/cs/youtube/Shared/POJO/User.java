@@ -8,11 +8,11 @@ public class User {
     private UUID Id;
     private String fullName;
     private String email;
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
     private String avatarPath;
     private String username;
     private String password;
-    private LocalDateTime joinDate;
+    private String joinDate;
     private ArrayList<Subscription> subscriptions;
     private ArrayList<Notification> notifications;
     private ArrayList<UserVideo> viewedVideos;
@@ -26,7 +26,7 @@ public class User {
         viewedVideos = new ArrayList<>();
     }
 
-    public User(String fullName, String email, String username, String password, LocalDateTime dateOfBirth) {
+    public User(String fullName, String email, String username, String password, String dateOfBirth) {
         Id = UUID.randomUUID();
         this.fullName = fullName;
         this.email = email;
@@ -62,11 +62,11 @@ public class User {
         this.email = email;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDateTime dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -86,11 +86,11 @@ public class User {
         this.password = password;
     }
 
-    public LocalDateTime getJoinDate() {
+    public String getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(LocalDateTime joinDate) {
+    public void setJoinDate(String joinDate) {
         this.joinDate = joinDate;
     }
 

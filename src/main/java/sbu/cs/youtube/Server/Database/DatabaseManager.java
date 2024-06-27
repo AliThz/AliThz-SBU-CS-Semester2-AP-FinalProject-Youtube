@@ -3,13 +3,14 @@ package sbu.cs.youtube.Server.Database;
 import sbu.cs.youtube.Shared.POJO.*;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class DatabaseManager {
 
     //region [ - Fields - ]
-    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-development";
+    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-Development";
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
     //endregion
@@ -164,14 +165,14 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (insertUser)");
 
             stmt = c.prepareStatement("""
-                    INSERT INTO UserManagement.User(\"Id\", FullName, email, DateOfBirth, Username, \"Password\")
+                    INSERT INTO UserManagement.User(\"Id\", FullName, Email, DateOfBirth, Username, \"Password\")
                     VALUES (?, ?, ?, ?, ?,?);
                     """);
 
             stmt.setObject(1, user.getId());
             stmt.setString(2, user.getFullName());
             stmt.setString(3, user.getEmail());
-            stmt.setObject(4, user.getDateOfBirth());
+            stmt.setObject(4, LocalDateTime.parse(user.getDateOfBirth()));
             stmt.setString(5, user.getUsername());
             stmt.setString(6, user.getPassword());
 
@@ -254,9 +255,9 @@ public class DatabaseManager {
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
                 Timestamp timestamp = rs.getTimestamp("DateOfBirth");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 timestamp = rs.getTimestamp("JoinDate");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
                 users.add(user);
@@ -270,7 +271,7 @@ public class DatabaseManager {
         System.out.println("Operation done successfully (selectUsers)");
         return users;
     }
-    //endregion No    kl;asdf
+    //endregion No
 
     //region [ - selectUser(UUID Id) - ] Tested
     public User selectUser(UUID Id) {
@@ -296,9 +297,9 @@ public class DatabaseManager {
                 user.setFullName(rs.getString("FullName"));
                 user.setEmail(rs.getString("Email"));
                 Timestamp timestamp = rs.getTimestamp("DateOfBirth");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 timestamp = rs.getTimestamp("JoinDate");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 user.setSubscriptions(selectSubscriptions(user.getId()));
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
@@ -336,7 +337,7 @@ public class DatabaseManager {
 
             stmt.setString(1, user.getFullName());
             stmt.setString(2, user.getEmail());
-            stmt.setObject(3, user.getDateOfBirth());
+            stmt.setObject(3, LocalDateTime.parse(user.getDateOfBirth()));
             stmt.setString(4, user.getUsername());
             stmt.setString(5, user.getPassword());
             stmt.setObject(6, user.getAvatarPath());
@@ -436,7 +437,7 @@ public class DatabaseManager {
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                channel.setDateCreated(timestamp.toLocalDateTime());
+                channel.setDateCreated(timestamp.toLocalDateTime().toString().toString());
                 channels.add(channel);
             }
             rs.close();
@@ -526,7 +527,7 @@ public class DatabaseManager {
                 channel.setDescription(rs.getString("Description"));
                 if (rs.getString("DateCreated") != null) {
                     Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                    channel.setDateCreated(timestamp.toLocalDateTime());
+                    channel.setDateCreated(timestamp.toLocalDateTime().toString().toString());
                 }
                 channel.setId(UUID.fromString(rs.getString("Id")));
             }
@@ -656,7 +657,7 @@ public class DatabaseManager {
                 subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
                 subscription.setChannel(selectChannel(subscription.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-                subscription.setJoinDate(timestamp.toLocalDateTime());
+                subscription.setJoinDate(timestamp.toLocalDateTime().toString());
                 subscriptions.add(subscription);
             }
             rs.close();
@@ -693,7 +694,7 @@ public class DatabaseManager {
                 subscription.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 subscription.setChannel(selectChannel(subscription.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-                subscription.setJoinDate(timestamp.toLocalDateTime());
+                subscription.setJoinDate(timestamp.toLocalDateTime().toString());
                 subscriptions.add(subscription);
             }
             rs.close();
@@ -730,7 +731,7 @@ public class DatabaseManager {
             subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
             subscription.setChannel(selectChannel(subscription.getChannelId()));
             Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-            subscription.setJoinDate(timestamp.toLocalDateTime());
+            subscription.setJoinDate(timestamp.toLocalDateTime().toString());
 
             rs.close();
             stmt.close();
@@ -827,7 +828,7 @@ public class DatabaseManager {
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("Description")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime());
+                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
                 notifications.add(notification);
             }
             rs.close();
@@ -868,7 +869,7 @@ public class DatabaseManager {
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("isRead")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime());
+                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
 
                 notifications.add(notification);
             }
@@ -909,7 +910,7 @@ public class DatabaseManager {
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("isRead")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime());
+                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
             }
 
             rs.close();
@@ -1104,7 +1105,7 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 videoCategory.setVideo(video);
                 videoCategories.add(videoCategory);
@@ -1251,7 +1252,7 @@ public class DatabaseManager {
                 video.setComments(selectComments(video.getId()));
                 video.setViews(Integer.parseInt(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDateTime"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 videos.add(video);
                 //TODO
 //                ---------------------------- what should i do for handle likes and dislike in this method -------------------
@@ -1315,7 +1316,7 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
             }
 
@@ -1361,7 +1362,7 @@ public class DatabaseManager {
                 video.setChannel(selectChannel(video.getChannelId()));
                 video.setViews(Integer.valueOf(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setPath(rs.getString("Path"));
             }
@@ -1999,7 +2000,7 @@ public class DatabaseManager {
                 playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                playlist.setDateCreated(timestamp.toLocalDateTime());
+                playlist.setDateCreated(timestamp.toLocalDateTime().toString());
 
                 playlists.add(playlist);
             }
@@ -2045,7 +2046,7 @@ public class DatabaseManager {
                 playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                playlist.setDateCreated(timestamp.toLocalDateTime());
+                playlist.setDateCreated(timestamp.toLocalDateTime().toString());
             }
 
             rs.close();
@@ -2073,7 +2074,7 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 playlistDetail.setVideo(video);
                 playlistDetails.add(playlistDetail);
@@ -2261,7 +2262,7 @@ public class DatabaseManager {
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-                playlistDetail.setDateAdded(timestamp.toLocalDateTime());
+                playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
                 playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
                 playlistDetails.add(playlistDetail);
@@ -2305,7 +2306,7 @@ public class DatabaseManager {
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-                playlistDetail.setDateAdded(timestamp.toLocalDateTime());
+                playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
                 playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
                 playlistDetails.add(playlistDetail);
@@ -2347,7 +2348,7 @@ public class DatabaseManager {
             playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
             playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
             Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-            playlistDetail.setDateAdded(timestamp.toLocalDateTime());
+            playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
             playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
             rs.close();
@@ -2514,7 +2515,7 @@ public class DatabaseManager {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
 
                 comments.add(comment);
             }
@@ -2562,7 +2563,7 @@ public class DatabaseManager {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
                 comments.add(comment);
             }
             
@@ -2608,7 +2609,7 @@ public class DatabaseManager {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
             }
 
             stmt = c.prepareStatement("""
