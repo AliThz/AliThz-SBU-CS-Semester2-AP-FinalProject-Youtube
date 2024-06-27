@@ -20,26 +20,26 @@ import java.util.Objects;
 
 public class YouTubeApplication extends Application {
 
-    private Socket socket;
-    private User user;
+    public static Socket socket;
+    public static User user;
     private static BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
 
 
-    public YouTubeApplication() {
+    public YouTubeApplication() throws IOException {
     }
 
-    public YouTubeApplication(Socket socket) {
+    public YouTubeApplication(Socket socket) throws IOException {
         try {
-            this.socket = socket;
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            YouTubeApplication.socket = socket;
+            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         } catch (IOException e) {
             close(socket, bufferedReader, bufferedWriter);
         }
     }
 
-    public String receiveResponse() {
+    public static String receiveResponse() {
         String response = null;
         try {
             response = bufferedReader.readLine();
@@ -70,8 +70,6 @@ public class YouTubeApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        HomeSectionController controller = fxmlLoader.getController();
-        controller.setClient(this);
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/YoutubeIcon.png"))));
         stage.setTitle("Youtube");
         stage.setScene(scene);
@@ -90,19 +88,6 @@ public class YouTubeApplication extends Application {
     }
     //endregion
 
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public static void main(String[] args) throws IOException {
 //        ------------------------- Sign up Test ----------------------------------
 //        Socket socket = new Socket("localhost", 2345);
@@ -112,10 +97,10 @@ public class YouTubeApplication extends Application {
 //        receiveResponse();
 //        ------------------------- Sign in Test ----------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<User> userRequest = new Request<>(socket, "SignIn");
-        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "", "Ali123456", LocalDateTime.now().toString()));
+//        Request<User> userRequest = new Request<>(socket, "SignIn");
+//        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "", "Ali123456", LocalDateTime.now().toString()));
         YouTubeApplication client = new YouTubeApplication(socket);
-        receiveResponse();
+//        receiveResponse();
 
         launch();
     }

@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
-import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,8 +13,6 @@ import java.util.ResourceBundle;
 public class HomeSectionController implements Initializable {
     @FXML
     AnchorPane mainPane;
-
-    private YouTubeApplication client;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -28,7 +25,6 @@ public class HomeSectionController implements Initializable {
         }
         mainPane.getChildren().add(layout);
         LayoutController layoutController = loader.getController();
-        layoutController.setClient(client);
 
         layoutController.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
@@ -48,13 +44,5 @@ public class HomeSectionController implements Initializable {
             }
             layoutController.addToFlowPane(videoPreview);
         }
-    }
-
-    public YouTubeApplication getClient() {
-        return client;
-    }
-
-    public void setClient(YouTubeApplication client) {
-        this.client = client;
     }
 }

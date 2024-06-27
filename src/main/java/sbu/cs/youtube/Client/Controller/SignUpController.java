@@ -70,16 +70,6 @@ public class SignUpController implements Initializable {
     @FXML
     private HBox hbxLog;
 
-    private YouTubeApplication client;
-
-    public YouTubeApplication getClient() {
-        return client;
-    }
-
-    public void setClient(YouTubeApplication client) {
-        this.client = client;
-    }
-
     private String fullName;
     private LocalDateTime birthDate;
     private String email;
@@ -157,7 +147,7 @@ public class SignUpController implements Initializable {
     private void changeToPassword(ActionEvent event) {
         if (validateEmail(inputField.getText())) {
             email = inputField.getText();
-            username = getUsername(inputField.getText());
+            getUsername(email);
 
             hbxLog.setVisible(false);
             inputField.clear();
@@ -172,12 +162,9 @@ public class SignUpController implements Initializable {
 
     //endregion
 
-    private String getUsername(String email) {
-        String usernameRegex = "^([^@]+)@";
-        Pattern pattern = Pattern.compile(usernameRegex);
-        Matcher matcher = pattern.matcher(email);
-
-        return matcher.group(1);
+    private void getUsername(String email) {
+        String[] parts = email.split("@");
+        username = parts[0];
     }
 
     private boolean validateEmail(String email) {
@@ -199,16 +186,17 @@ public class SignUpController implements Initializable {
         if (validatePassword(inputField.getText())) {
             password = inputField.getText();
 
-            Request<User> userRequest = new Request<>(client.getSocket(), "SignUp");
+            Request<User> userRequest = new Request<>(YouTubeApplication.socket, "SignUp");
             userRequest.send(new User(fullName, email, username, password, birthDate.toString()));
 
-            String response = client.receiveResponse();
+            String response = YouTubeApplication.receiveResponse();
             Gson gson = new Gson();
             TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {};
             Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
 
-            client.setUser(userResponse.getBody());
+            YouTubeApplication.user = userResponse.getBody(); //todo
 
+            System.out.println("User created : " + YouTubeApplication.user.getUsername());
         }
         else {
             hbxLog.setVisible(true);
@@ -245,10 +233,6 @@ public class SignUpController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        HomeSectionController controller = loader.getController();
-        controller.setClient(client);
-
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -269,10 +253,6 @@ public class SignUpController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        SignInController controller = loader.getController();
-        controller.setClient(client);
-
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
