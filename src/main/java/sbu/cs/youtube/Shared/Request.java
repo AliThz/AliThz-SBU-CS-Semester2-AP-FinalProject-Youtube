@@ -51,6 +51,8 @@ public class Request<T> {
     }
     //endregion
 
+    //region [ - Getters - ]
+
     //region [ - getSocket() - ]
     public Socket getSocket() {
         return socket;
@@ -67,6 +69,8 @@ public class Request<T> {
     public T getBody() {
         return body;
     }
+    //endregion
+
     //endregion
 
     //region [ - write(String content) - ]
