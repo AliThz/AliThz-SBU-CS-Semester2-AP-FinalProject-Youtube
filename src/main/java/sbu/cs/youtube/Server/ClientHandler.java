@@ -71,21 +71,61 @@ public class ClientHandler implements Runnable {
     //region [ - handleRequest(String request) - ]
     public void handleRequest(String request) {
         Gson gson = new Gson();
-        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {};
-        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
-
-        switch (userRequest.getType()) {
+        TypeToken<Request<Object>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Object> objectRequest = gson.fromJson(request, responseTypeToken.getType());
+        switch (objectRequest.getType()) {
             case "SignUp":
-                User user = userRequest.getBody();
-                databaseManager.insertUser(user);
-                Response<User> response = new Response<>(client, "SignUp", true, null);
-                new Response<User>(client, "SignUp", true, null).send();
-                response.send();
+                signUp(request);
                 break;
             case "SignIn":
-//                ArrayList<User> users = databaseManager.selectUserBriefly();
-//                Response<User> response = new Response<>(client, "SignIn");
-//                response.send(users);
+                signIn(request);
+        }
+    }
+    //endregion
+
+//region [ - SignUp - ]
+
+    private void signUp(String request) {
+        Gson gson = new Gson();
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        User user = userRequest.getBody();
+        databaseManager.insertUser(user);
+        Response<User> response = new Response<>(client, "SignUp", true, null);
+        new Response<User>(client, "SignUp", true, null).send();
+        response.send(user);
+    }
+
+//endregion
+
+    //region [ - signIn - ]
+    private void signIn(String request) {
+        Gson gson = new Gson();
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        User requestedUser = userRequest.getBody();
+        User user;
+
+        if (requestedUser.getEmail().isEmpty()) {
+            user = databaseManager.selectUserByUsername(requestedUser.getUsername());
+        } else {
+            user = databaseManager.selectUserByUserEmail(requestedUser.getEmail());
+        }
+        Response<User> response;
+        if (user != null) {
+            if (requestedUser.getPassword().equals(user.getPassword())) {
+                response = new Response<>(client, "SignUp", true, "Signed in successfully");
+                response.send(user);
+            } else {
+                response = new Response<>(client, "SignIn", true, "Password is incorrect");
+                response.send();
+            }
+        } else {
+            response = new Response<>(client, "SignIn", true, "User not found");
+            response.send();
         }
     }
     //endregion

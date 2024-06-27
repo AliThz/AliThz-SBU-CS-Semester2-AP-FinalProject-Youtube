@@ -104,11 +104,18 @@ public class YouTubeApplication extends Application {
     }
 
     public static void main(String[] args) throws IOException {
+//        ------------------------- Sign up Test ----------------------------------
 //        Socket socket = new Socket("localhost", 2345);
-////        Request<User> userRequest = new Request<>(socket, "SignUp");
-////        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "AliThz", "Ali123456", LocalDateTime.now().toString()));
+//        Request<User> userRequest = new Request<>(socket, "SignUp");
+//        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "AliThz", "Ali123456", LocalDateTime.now().toString()));
 //        YouTubeApplication client = new YouTubeApplication(socket);
 //        receiveResponse();
+//        ------------------------- Sign in Test ----------------------------------
+        Socket socket = new Socket("localhost", 2345);
+        Request<User> userRequest = new Request<>(socket, "SignIn");
+        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "", "Ali123456", LocalDateTime.now().toString()));
+        YouTubeApplication client = new YouTubeApplication(socket);
+        receiveResponse();
 
         launch();
     }
