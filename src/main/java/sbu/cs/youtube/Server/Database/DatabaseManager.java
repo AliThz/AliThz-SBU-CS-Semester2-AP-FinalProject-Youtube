@@ -193,8 +193,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUserBriefly() - ]
-    public ArrayList<User> selectUserBriefly() {
+    //region [ - selectUsersBriefly() - ]
+    public ArrayList<User> selectUsersBriefly() {
         Connection c;
         Statement stmt;
         ArrayList<User> users = null ;
@@ -357,7 +357,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectUserByEmail(String email) - ]
-    public User selectUserByUserEmail(String email) {
+    public User selectUserByEmail(String email) {
         Connection c;
         PreparedStatement stmt;
         User user = null;

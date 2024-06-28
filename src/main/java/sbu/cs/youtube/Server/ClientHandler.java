@@ -18,6 +18,7 @@ public class ClientHandler implements Runnable {
     private final Socket client;
     private BufferedReader bufferedReader;
     private DatabaseManager databaseManager;
+    private transient String request;
     //endregion
 
     //region [ - Constructor - ]
@@ -71,49 +72,56 @@ public class ClientHandler implements Runnable {
     //region [ - handleRequest(String request) - ]
     public void handleRequest(String request) {
         Gson gson = new Gson();
+        this.request = request;
         TypeToken<Request<Object>> responseTypeToken = new TypeToken<>() {
         };
         Request<Object> objectRequest = gson.fromJson(request, responseTypeToken.getType());
         switch (objectRequest.getType()) {
+            case "CheckExistingAccount":
+                CheckExistingAccount();
+                break;
             case "SignUp":
-                signUp(request);
+                signUp();
                 break;
             case "SignIn":
-                signIn(request);
+                signIn();
         }
     }
     //endregion
 
-//region [ - SignUp - ]
-
-    private void signUp(String request) {
+    //region [ - signUp() - ]
+    private void signUp() {
         Gson gson = new Gson();
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<User> response;
+
         User user = userRequest.getBody();
         databaseManager.insertUser(user);
-        Response<User> response = new Response<>(client, "SignUp", true, null);
+
+        response = new Response<>(client, "SignUp", true, "Signed up successfully");
         response.send(user);
     }
+    //endregion
 
-//endregion
-
-    //region [ - signIn - ]
-    private void signIn(String request) {
+    //region [ - signIn() - ]
+    private void signIn() {
         Gson gson = new Gson();
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<User> response;
+
+
         User requestedUser = userRequest.getBody();
         User user;
-
         if (requestedUser.getEmail().isEmpty()) {
             user = databaseManager.selectUserByUsername(requestedUser.getUsername());
         } else {
-            user = databaseManager.selectUserByUserEmail(requestedUser.getEmail());
+            user = databaseManager.selectUserByEmail(requestedUser.getEmail());
         }
-        Response<User> response;
+
         if (user != null) {
             if (requestedUser.getPassword().equals(user.getPassword())) {
                 response = new Response<>(client, "SignUp", true, "Signed in successfully");
@@ -126,6 +134,32 @@ public class ClientHandler implements Runnable {
             response = new Response<>(client, "SignIn", true, "User not found");
             response.send();
         }
+    }
+    //endregion
+
+    //region [ - CheckExistingAccount() - ]
+    private void CheckExistingAccount() {
+        Gson gson = new Gson();
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<User> response;
+
+        User requestedUser = userRequest.getBody();
+        User user = null;
+        if (requestedUser.getEmail().isEmpty()) {
+            user = databaseManager.selectUserByUsername(requestedUser.getUsername());
+        } else {
+            user = databaseManager.selectUserByEmail(requestedUser.getEmail());
+        }
+
+        if (user != null) {
+            response = new Response<>(client, "CheckExistingAccount", true, "User found");
+        } else {
+            response = new Response<>(client, "CheckExistingAccount", true, "User not found");
+        }
+
+        response.send(user);
     }
     //endregion
 
