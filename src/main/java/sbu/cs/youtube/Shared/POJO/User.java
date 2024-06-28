@@ -26,6 +26,11 @@ public class User {
         viewedVideos = new ArrayList<>();
     }
 
+    public User(String email, String username) {
+        this.email = email;
+        this.username = username;
+    }
+
     public User(String fullName, String email, String username, String password, String dateOfBirth) {
         Id = UUID.randomUUID();
         this.fullName = fullName;

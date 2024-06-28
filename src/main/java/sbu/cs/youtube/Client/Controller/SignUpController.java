@@ -181,13 +181,20 @@ public class SignUpController implements Initializable {
         if (emailMatcher.find()) {
             return true;
         }
+
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
+        userRequest.send(new User(email, null));
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {};
+        Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
+
         inputLog.setText("Invalid entry: please enter the correct email format");
         return false;
     }
     //endregion
 
     //region [ - changeToSignIn(ActionEvent event) - ]
-
     private void signIn(ActionEvent event) {
         if (validatePassword(inputField.getText())) {
             password = inputField.getText();

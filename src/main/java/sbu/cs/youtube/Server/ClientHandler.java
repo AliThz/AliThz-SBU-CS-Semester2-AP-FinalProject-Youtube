@@ -77,8 +77,8 @@ public class ClientHandler implements Runnable {
         };
         Request<Object> objectRequest = gson.fromJson(request, responseTypeToken.getType());
         switch (objectRequest.getType()) {
-            case "CheckExistingAccount":
-                CheckExistingAccount();
+            case "CheckExistingUser":
+                CheckExistingUser();
                 break;
             case "SignUp":
                 signUp();
@@ -137,8 +137,8 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
-    //region [ - CheckExistingAccount() - ]
-    private void CheckExistingAccount() {
+    //region [ - CheckExistingUser() - ]
+    private void CheckExistingUser() {
         Gson gson = new Gson();
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
@@ -154,9 +154,9 @@ public class ClientHandler implements Runnable {
         }
 
         if (user != null) {
-            response = new Response<>(client, "CheckExistingAccount", true, "User found");
+            response = new Response<>(client, "CheckExistingUser", true, "User found");
         } else {
-            response = new Response<>(client, "CheckExistingAccount", true, "User not found");
+            response = new Response<>(client, "CheckExistingUser", true, "User not found");
         }
 
         response.send(user);
