@@ -20,4 +20,6 @@ module sbu.cs.youtube {
     exports sbu.cs.youtube;
     exports sbu.cs.youtube.Client.Controller;
     opens sbu.cs.youtube.Client.Controller to javafx.fxml;
+    exports sbu.cs.youtube.Client;
+    opens sbu.cs.youtube.Client to javafx.fxml;
 }

@@ -30,7 +30,7 @@ public class Response<T> {
             this.type = type;
             this.isDone = isDone;
             this.message = message;
-            notification = new Notification();
+//            notification = new Notification();
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e);

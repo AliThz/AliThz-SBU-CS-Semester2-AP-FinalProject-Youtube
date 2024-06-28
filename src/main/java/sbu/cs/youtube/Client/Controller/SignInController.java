@@ -144,7 +144,6 @@ public class SignInController implements Initializable {
     //endregion
 
     //region [ - getSignUpPage(ActionEvent event) - ]
-
     @FXML
     private void getSignUpPage(ActionEvent event) {
         Stage stage;
@@ -157,7 +156,7 @@ public class SignInController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        scene = new Scene(root, nextBtn.getScene().getWidth(), nextBtn.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
     }

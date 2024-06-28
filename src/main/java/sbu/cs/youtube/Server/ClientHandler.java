@@ -94,7 +94,6 @@ public class ClientHandler implements Runnable {
         User user = userRequest.getBody();
         databaseManager.insertUser(user);
         Response<User> response = new Response<>(client, "SignUp", true, null);
-        new Response<User>(client, "SignUp", true, null).send();
         response.send(user);
     }
 

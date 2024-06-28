@@ -482,7 +482,6 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - getSignInPage(ActionEvent event) - ]
-
     protected void getSignInPage(ActionEvent event) {
         Stage stage;
         Scene scene;
@@ -494,12 +493,11 @@ public class LayoutController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
-
     }
-
     //endregion
 
     //region [ - sendNotification(String text) - ]

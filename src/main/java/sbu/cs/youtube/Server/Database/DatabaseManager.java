@@ -10,7 +10,7 @@ import java.util.UUID;
 public class DatabaseManager {
 
     //region [ - Fields - ]
-    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-development";
+    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-Development";
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
     //endregion
