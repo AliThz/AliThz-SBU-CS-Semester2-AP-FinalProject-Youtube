@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
@@ -32,6 +33,9 @@ public class SignInController implements Initializable {
 
     @FXML
     private TextField inputField;
+
+    @FXML
+    private PasswordField passField;
 
     @FXML
     private Text inputLog;
@@ -63,7 +67,7 @@ public class SignInController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inputError.getParent().setVisible(false);
-        nextBtn.setOnAction(this::checkEmail);
+        nextBtn.setOnAction(this::verifyCredentials);
     }
     //endregion
 
@@ -87,39 +91,46 @@ public class SignInController implements Initializable {
     }
     //endregion
 
+    private void verifyCredentials(ActionEvent event) {
+        Boolean isEmail = determineInput(inputField.getText());
+        if (isEmail == null) {
+
+        }
+        else if (isEmail) {
+
+        } else {
+
+        }
+    }
+
+    Boolean determineInput(String input) {
+        //email regex
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        Matcher emailMatcher = emailPattern.matcher(input);
+
+        //username regex
+        String usernameRegex = "^[A-Za-z0-9_]+$";
+        Pattern usernamePattern = Pattern.compile(usernameRegex);
+        Matcher usernameMatcher = usernamePattern.matcher(input);
+
+        if (emailMatcher.matches()) {
+            return true;
+        } else if (usernameMatcher.matches()) {
+            return false;
+        }
+
+        inputLog.setText("Invalid entry: please enter your username or password");
+        return null;
+    }
     //region [ - checkEmail(ActionEvent event) - ]
 
     @FXML
     private void checkEmail(ActionEvent event) {
-        String input = inputField.getText();
-        Boolean isEmail = null;
-
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
-        String usernameRegex = "^[A-Za-z0-9_]+$";
-        Pattern emailPattern = Pattern.compile(emailRegex);
-        Pattern usernamePattern = Pattern.compile(usernameRegex);
-        Matcher emailMatcher = emailPattern.matcher(input);
-        Matcher usernameMatcher = usernamePattern.matcher(input);
-
-        if (emailMatcher.matches()) {
-            isEmail = true;
-        } else if (usernameMatcher.matches()) {
-            isEmail = false;
-        }
-
-
 
 
         boolean emailIsValid = true; // ToDo needs connection to socket
 
-
-
-
-        if (emailIsValid) {
-            System.out.println("Email verified");
-            nextBtn.setOnAction(this::checkPassword);
-            inputField.setPromptText("Password");
-        }
 
     }
     //endregion

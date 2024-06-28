@@ -104,7 +104,7 @@ public class SignUpController implements Initializable {
     //region [ - changeToEmail(ActionEvent event) - ]
 
     private void changeToEmail(ActionEvent event) {
-        if (validateName(inputField.getText()) && validateBday(birthDatePicker.getValue())) {
+        if (validateName(inputField.getText()) && validateBirthday(birthDatePicker.getValue())) {
             fullName = inputField.getText();
             birthDate = birthDatePicker.getValue().atStartOfDay();
 
@@ -120,14 +120,17 @@ public class SignUpController implements Initializable {
     }
     //endregion
 
-    private boolean validateBday(LocalDate birthDay) {
+    //region [ - private boolean validateBirthday(LocalDate birthDay) - ]
+    private boolean validateBirthday(LocalDate birthDay) {
         if (birthDay == null) {
             inputLog.setText("Invalid entry: please complete the birthday field");
             return false;
         }
         return true;
     }
+    //endregion
 
+    //region [ - private boolean validateName(String fullName) - ]
     private boolean validateName(String fullName) {
         String usernameRegex = "^[A-Za-z]+(\\s[A-Za-z]+){0,2}[A-Za-z]{6,}$";
         Pattern usernamePattern = Pattern.compile(usernameRegex);
@@ -140,7 +143,7 @@ public class SignUpController implements Initializable {
         inputLog.setText("Invalid entry: full name should only contain alphabets and up to two spaces");
         return false;
     }
-
+    //endregion
 
     //region [ - changeToPassword(ActionEvent event) - ]
 
@@ -162,11 +165,14 @@ public class SignUpController implements Initializable {
 
     //endregion
 
+    //region [ - private void getUsername(String email) - ]
     private void getUsername(String email) {
         String[] parts = email.split("@");
         username = parts[0];
     }
+    //endregion
 
+    //region [ - private boolean validateEmail(String email) - ]
     private boolean validateEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
         Pattern emailPattern = Pattern.compile(emailRegex);
@@ -178,7 +184,7 @@ public class SignUpController implements Initializable {
         inputLog.setText("Invalid entry: please enter the correct email format");
         return false;
     }
-
+    //endregion
 
     //region [ - changeToSignIn(ActionEvent event) - ]
 
@@ -260,6 +266,5 @@ public class SignUpController implements Initializable {
     //endregion
 
     //endregion
-
 
 }
