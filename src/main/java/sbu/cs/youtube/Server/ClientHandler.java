@@ -144,7 +144,7 @@ public class ClientHandler implements Runnable {
         Response<User> response;
 
         User requestedUser = userRequest.getBody();
-        User user = null;
+        User user;
         if (requestedUser.getEmail().isEmpty()) {
             user = databaseManager.selectUserByUsername(requestedUser.getUsername());
         } else {
@@ -152,7 +152,7 @@ public class ClientHandler implements Runnable {
         }
 
         if (user != null) {
-            response = new Response<>(client, "CheckExistingUser", true, "User found");
+            response = new Response<>(client, "CheckExistingUser", true, "There is already a user with this email");
         } else {
             response = new Response<>(client, "CheckExistingUser", true, "User not found");
         }

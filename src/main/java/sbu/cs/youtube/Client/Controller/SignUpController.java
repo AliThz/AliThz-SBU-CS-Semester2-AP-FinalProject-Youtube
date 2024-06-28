@@ -124,7 +124,7 @@ public class SignUpController implements Initializable {
     //region [ - boolean validateBirthday(LocalDate birthDay) - ]
     private boolean validateBirthday(LocalDate birthDay) {
         if (birthDay == null) {
-            inputLog.setText("Invalid entry: please complete the birthday field");
+            inputLog.setText("Please complete the birthday field");
             return false;
         }
         return true;
@@ -141,7 +141,7 @@ public class SignUpController implements Initializable {
             return true;
         }
 
-        inputLog.setText("Invalid entry: full name should only contain alphabets and no consecutive spaces");
+        inputLog.setText("Full name should only contain alphabets and no consecutive spaces");
         return false;
     }
     //endregion
@@ -149,7 +149,7 @@ public class SignUpController implements Initializable {
     //region [ - changeToPassword(ActionEvent event) - ]
 
     private void changeToPassword(ActionEvent event) {
-        if (validateEmail(inputField.getText())) {
+        if (validateEmail(inputField.getText()) && checkEmail(inputField.getText())) {
             email = inputField.getText();
             getUsername(email);
 
@@ -165,6 +165,28 @@ public class SignUpController implements Initializable {
     }
 
     //endregion
+
+    private boolean checkEmail(String email) {
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
+        userRequest.send(new User(email, "", ""));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        User responseUser = userResponse.getBody();
+
+        if (responseUser != null) {
+            inputLog.setText(userResponse.getMessage());
+            return false;
+        } else {
+            System.out.println(userResponse.getMessage());
+            return true;
+        }
+
+    }
 
     //region [ - void getUsername(String email) - ]
     private void getUsername(String email) {
@@ -183,7 +205,7 @@ public class SignUpController implements Initializable {
             return true;
         }
 
-        inputLog.setText("Invalid entry: please enter the correct email format");
+        inputLog.setText("Please enter the correct email format");
         return false;
     }
     //endregion
@@ -201,9 +223,9 @@ public class SignUpController implements Initializable {
             TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {};
             Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
 
-            YouTubeApplication.user = userResponse.getBody(); //todo
+            YouTubeApplication.user = userResponse.getBody();
 
-            System.out.println("User created : " + YouTubeApplication.user.getUsername());
+            exitSignUp(event);
         }
         else {
             hbxLog.setVisible(true);
@@ -222,7 +244,7 @@ public class SignUpController implements Initializable {
             return true;
         }
 
-        inputLog.setText("Invalid entry: password can only contain alphabets and numbers and have at least 8 characters");
+        inputLog.setText("Password can only contain alphabets and numbers and have at least 8 characters");
         return false;
     }
     //endregion
