@@ -18,6 +18,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,7 +31,7 @@ public class LayoutController implements Initializable {
 
     protected boolean isExpanded = false;
 
-    protected boolean isSignedIn = false;
+    protected boolean isSignedIn;
 
     protected boolean isDarkMode = true;
 
@@ -63,6 +64,11 @@ public class LayoutController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (YouTubeApplication.user == null) {
+            isSignedIn = false;
+        } else {
+            isSignedIn = true;
+        }
         setRightNavBarHBox();
 
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
@@ -503,13 +509,7 @@ public class LayoutController implements Initializable {
     //region [ - sendNotification(String text) - ]
 
     protected void sendNotification(String text) {
-        Notifications.create()
-                .text(text)
-                .hideAfter(Duration.seconds(2))
-                .owner(hbxRightNavItem)
-                .position(Pos.BASELINE_RIGHT)
-                .threshold(3, Notifications.create().title("Notifications"))
-                .show();
+        Notifications.create().text(text).hideAfter(Duration.seconds(2)).owner(hbxRightNavItem).position(Pos.BASELINE_RIGHT).threshold(3, Notifications.create().title("Notifications")).show();
     }
 
 

@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.commons.codec.digest.DigestUtils;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
@@ -120,7 +121,7 @@ public class SignUpController implements Initializable {
     }
     //endregion
 
-    //region [ - private boolean validateBirthday(LocalDate birthDay) - ]
+    //region [ - boolean validateBirthday(LocalDate birthDay) - ]
     private boolean validateBirthday(LocalDate birthDay) {
         if (birthDay == null) {
             inputLog.setText("Invalid entry: please complete the birthday field");
@@ -130,9 +131,9 @@ public class SignUpController implements Initializable {
     }
     //endregion
 
-    //region [ - private boolean validateName(String fullName) - ]
+    //region [ - boolean validateName(String fullName) - ]
     private boolean validateName(String fullName) {
-        String usernameRegex = "^[A-Za-z]+(\\s[A-Za-z]+){0,2}[A-Za-z]{6,}$";
+        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{8,}$";
         Pattern usernamePattern = Pattern.compile(usernameRegex);
         Matcher usernameMatcher = usernamePattern.matcher(fullName);
 
@@ -140,7 +141,7 @@ public class SignUpController implements Initializable {
             return true;
         }
 
-        inputLog.setText("Invalid entry: full name should only contain alphabets and up to two spaces");
+        inputLog.setText("Invalid entry: full name should only contain alphabets and no consecutive spaces");
         return false;
     }
     //endregion
@@ -165,14 +166,14 @@ public class SignUpController implements Initializable {
 
     //endregion
 
-    //region [ - private void getUsername(String email) - ]
+    //region [ - void getUsername(String email) - ]
     private void getUsername(String email) {
         String[] parts = email.split("@");
         username = parts[0];
     }
     //endregion
 
-    //region [ - private boolean validateEmail(String email) - ]
+    //region [ - boolean validateEmail(String email) - ]
     private boolean validateEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
         Pattern emailPattern = Pattern.compile(emailRegex);
@@ -181,13 +182,6 @@ public class SignUpController implements Initializable {
         if (emailMatcher.find()) {
             return true;
         }
-
-        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
-        userRequest.send(new User(email, null));
-        String response = YouTubeApplication.receiveResponse();
-        Gson gson = new Gson();
-        TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {};
-        Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
 
         inputLog.setText("Invalid entry: please enter the correct email format");
         return false;
@@ -200,7 +194,7 @@ public class SignUpController implements Initializable {
             password = inputField.getText();
 
             Request<User> userRequest = new Request<>(YouTubeApplication.socket, "SignUp");
-            userRequest.send(new User(fullName, email, username, password, birthDate.toString()));
+            userRequest.send(new User(fullName, email, username, DigestUtils.sha256Hex(password), birthDate.toString()));
 
             String response = YouTubeApplication.receiveResponse();
             Gson gson = new Gson();

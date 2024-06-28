@@ -1,5 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +17,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.commons.codec.digest.DigestUtils;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.Response;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
@@ -92,15 +97,29 @@ public class SignInController implements Initializable {
     //endregion
 
     private void verifyCredentials(ActionEvent event) {
-        Boolean isEmail = determineInput(inputField.getText());
-        if (isEmail == null) {
+        String input = inputField.getText();
+        String password = DigestUtils.sha256Hex(passField.getText());
 
-        }
-        else if (isEmail) {
+        Boolean isEmail = determineInput(input);
 
+        User user;
+
+        if (isEmail == null || password.isEmpty()) {
+            inputLog.setText("Invalid entry: please complete all fields correctly");
+            inputLog.getParent().setVisible(true);
+            return;
+        } else if (isEmail) {
+            user = new User(input, "", password);
         } else {
-
+            user = new User("", input, password);
         }
+
+        if (signIn(user)) {
+            exitSignInSignUp(event);
+        } else {
+            inputLog.getParent().setVisible(true);
+        }
+
     }
 
     Boolean determineInput(String input) {
@@ -123,36 +142,38 @@ public class SignInController implements Initializable {
         inputLog.setText("Invalid entry: please enter your username or password");
         return null;
     }
+
+    private void openHomePage() {
+
+    }
     //region [ - checkEmail(ActionEvent event) - ]
 
-    @FXML
-    private void checkEmail(ActionEvent event) {
+    private boolean signIn(User user) {
 
 
-        boolean emailIsValid = true; // ToDo needs connection to socket
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "SignIn");
+        userRequest.send(user);
 
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
 
-    }
-    //endregion
+        User responseUser = userResponse.getBody();
 
-    //region [ - checkPassword(ActionEvent event) - ]
-
-    private void checkPassword(ActionEvent event) {
-        boolean passwordIsValid = true; // ToDo needs connection to socket
-        if (passwordIsValid) {
-            System.out.println("Password verified");
-            signIn();
+        if (responseUser != null) {
+            YouTubeApplication.user = responseUser;
+            System.out.println(userResponse.getMessage());
+            return true;
+        } else {
+            inputLog.setText(userResponse.getMessage());
+            return false;
         }
-    }
 
+    }
     //endregion
 
-    //region [ - signIn() - ]
-
-    private void signIn() {
-    }
-
-    //endregion
 
     //region [ - getSignUpPage(ActionEvent event) - ]
     @FXML

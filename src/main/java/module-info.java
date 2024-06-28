@@ -11,6 +11,7 @@ module sbu.cs.youtube {
     requires javafx.media;
     requires java.base;
     requires org.postgresql.jdbc;
+    requires org.apache.commons.codec;
 
 
     opens sbu.cs.youtube.Shared.POJO to com.google.gson;

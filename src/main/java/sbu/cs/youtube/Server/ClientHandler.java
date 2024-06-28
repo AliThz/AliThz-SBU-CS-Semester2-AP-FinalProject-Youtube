@@ -125,15 +125,13 @@ public class ClientHandler implements Runnable {
         if (user != null) {
             if (requestedUser.getPassword().equals(user.getPassword())) {
                 response = new Response<>(client, "SignUp", true, "Signed in successfully");
-                response.send(user);
             } else {
                 response = new Response<>(client, "SignIn", true, "Password is incorrect");
-                response.send();
             }
         } else {
             response = new Response<>(client, "SignIn", true, "User not found");
-            response.send();
         }
+        response.send(user);
     }
     //endregion
 

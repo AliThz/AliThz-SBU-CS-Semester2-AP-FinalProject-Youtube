@@ -337,8 +337,8 @@ public class DatabaseManager {
             stmt.setObject(1, username);
             ResultSet rs = stmt.executeQuery();
 
-            user = new User();
             if (rs.next()) {
+                user = new User();
                 user.setId(UUID.fromString(rs.getString("Id")));
                 user.setEmail(rs.getString("Email"));
                 user.setUsername(rs.getString("Username"));
@@ -374,8 +374,8 @@ public class DatabaseManager {
             stmt.setObject(1, email);
             ResultSet rs = stmt.executeQuery();
 
-            user = new User();
             if (rs.next()) {
+                user = new User();
                 user.setId(UUID.fromString(rs.getString("Id")));
                 user.setEmail(rs.getString("Email"));
                 user.setUsername(rs.getString("Username"));

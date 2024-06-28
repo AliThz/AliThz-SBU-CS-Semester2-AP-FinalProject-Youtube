@@ -26,9 +26,10 @@ public class User {
         viewedVideos = new ArrayList<>();
     }
 
-    public User(String email, String username) {
+    public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
+        this.password = password;
     }
 
     public User(String fullName, String email, String username, String password, String dateOfBirth) {
