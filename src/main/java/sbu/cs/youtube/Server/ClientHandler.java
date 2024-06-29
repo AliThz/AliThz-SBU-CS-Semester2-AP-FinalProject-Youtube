@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import sbu.cs.youtube.Server.Database.DatabaseManager;
 import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 
@@ -18,11 +19,13 @@ public class ClientHandler implements Runnable {
     private final Socket client;
     private BufferedReader bufferedReader;
     private DatabaseManager databaseManager;
-    private transient String request;
+    private String request;
+    private final Gson gson;
     //endregion
 
     //region [ - Constructor - ]
     public ClientHandler(Socket client) {
+        this.gson = new Gson();
         this.client = client;
         try {
             this.bufferedReader = new BufferedReader(new InputStreamReader((client.getInputStream())));
@@ -71,7 +74,6 @@ public class ClientHandler implements Runnable {
 
     //region [ - handleRequest(String request) - ]
     public void handleRequest(String request) {
-        Gson gson = new Gson();
         this.request = request;
         TypeToken<Request<Object>> responseTypeToken = new TypeToken<>() {
         };
@@ -85,13 +87,15 @@ public class ClientHandler implements Runnable {
                 break;
             case "SignIn":
                 signIn();
+            case "GetRecommendedVideos":
+                GetRecommendedVideos();
+                break;
         }
     }
     //endregion
 
     //region [ - signUp() - ]
     private void signUp() {
-        Gson gson = new Gson();
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
@@ -100,14 +104,13 @@ public class ClientHandler implements Runnable {
         User user = userRequest.getBody();
         databaseManager.insertUser(user);
 
-        response = new Response<>(client, "SignUp", true, "Signed up successfully");
+        response = new Response<>(client, userRequest.getType(), true, "Signed up successfully");
         response.send(user);
     }
     //endregion
 
     //region [ - signIn() - ]
     private void signIn() {
-        Gson gson = new Gson();
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
@@ -124,12 +127,12 @@ public class ClientHandler implements Runnable {
 
         if (user != null) {
             if (requestedUser.getPassword().equals(user.getPassword())) {
-                response = new Response<>(client, "SignUp", true, "Signed in successfully");
+                response = new Response<>(client, userRequest.getType(), true, "Signed in successfully");
             } else {
-                response = new Response<>(client, "SignIn", true, "Password is incorrect");
+                response = new Response<>(client, userRequest.getType(), true, "Password is incorrect");
             }
         } else {
-            response = new Response<>(client, "SignIn", true, "User not found");
+            response = new Response<>(client, userRequest.getType(), true, "User not found");
         }
         response.send(user);
     }
@@ -137,7 +140,6 @@ public class ClientHandler implements Runnable {
 
     //region [ - CheckExistingUser() - ]
     private void CheckExistingUser() {
-        Gson gson = new Gson();
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
@@ -152,12 +154,26 @@ public class ClientHandler implements Runnable {
         }
 
         if (user != null) {
-            response = new Response<>(client, "CheckExistingUser", true, "There is already a user with this email");
+            response = new Response<>(client, userRequest.getType(), true, "There is already a user with this email");
         } else {
-            response = new Response<>(client, "CheckExistingUser", true, "User not found");
+            response = new Response<>(client, userRequest.getType(), true, "User not found");
         }
 
         response.send(user);
+    }
+    //endregion
+
+    //region [ - GetRecommendedVideos() - ]
+    private void GetRecommendedVideos() {
+        TypeToken<Request<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<ArrayList<Video>> videosRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        ArrayList<Video> videos = databaseManager.selectVideos();
+
+        response = new Response<>(client, videosRequest.getType(), true, "Signed up successfully");
+        response.send(videos);
     }
     //endregion
 

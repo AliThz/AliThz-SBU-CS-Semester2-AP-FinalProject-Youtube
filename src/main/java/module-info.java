@@ -19,6 +19,7 @@ module sbu.cs.youtube {
 //    opens java.time to com.google.gson;
     opens sbu.cs.youtube to javafx.fxml;
     exports sbu.cs.youtube;
+    exports sbu.cs.youtube.Shared.POJO;
     exports sbu.cs.youtube.Client.Controller;
     opens sbu.cs.youtube.Client.Controller to javafx.fxml;
 }

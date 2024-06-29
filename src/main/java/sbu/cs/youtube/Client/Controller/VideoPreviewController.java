@@ -3,13 +3,17 @@ package sbu.cs.youtube.Client.Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.POJO.Video;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -50,6 +54,24 @@ public class VideoPreviewController implements Initializable {
     //region [ - addChannelProfile(String src) - ]
     public void addChannelProfile(String src) {
         imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(src))));
+    }
+    //endregion
+
+    //region [ - setAttributes(Video video) - ]
+    public void setVideo(Video video) {
+        txtVideoTitle.setText(video.getTitle());
+        txtChannelName.setText(video.getChannel().getTitle());
+        txtDate.setText(video.getUploadDate());
+        txtViews.setText(String.valueOf(video.getViews()));
+
+        ByteArrayInputStream bis;
+        bis = new ByteArrayInputStream(video.getThumbnailBytes());
+        Image videoThumbnail = new Image(bis);
+        imgThumbnail.setImage(videoThumbnail);
+
+        bis = new ByteArrayInputStream(video.getChannel().getProfileBytes());
+        Image channelProfile = new Image(bis);
+        imgThumbnail.setImage(channelProfile);
     }
     //endregion
 

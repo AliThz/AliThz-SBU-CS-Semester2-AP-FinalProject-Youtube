@@ -18,7 +18,7 @@ public class Response<T> {
     private final boolean isDone;
     private final String message;
     private T body;
-    private ArrayList<T> bodyList;
+//    private ArrayList<T> bodyList;
     private Notification notification;
     private transient final BufferedWriter bufferedWriter;
     //endregion
@@ -57,14 +57,14 @@ public class Response<T> {
     }
     //endregion
 
-    //region [ - send(ArrayList<T> bodyList) - ]
-    public void send(ArrayList<T> bodyList) {
-        Gson gson = new Gson();
-        this.bodyList = bodyList;
-        String jsonResponse = gson.toJson(this);
-        write(jsonResponse);
-    }
-    //endregion
+//    //region [ - send(ArrayList<T> bodyList) - ]
+//    public void send(ArrayList<T> bodyList) {
+//        Gson gson = new Gson();
+//        this.bodyList = bodyList;
+//        String jsonResponse = gson.toJson(this);
+//        write(jsonResponse);
+//    }
+//    //endregion
 
     //region [ - Getters - ]
 
@@ -98,11 +98,11 @@ public class Response<T> {
     }
     //endregion
 
-    //region [ - getBodyList() - ]
-    public ArrayList<T> getBodyList() {
-        return bodyList;
-    }
-    //endregion
+//    //region [ - getBodyList() - ]
+//    public ArrayList<T> getBodyList() {
+//        return bodyList;
+//    }
+//    //endregion
 
     //region [ - getNotification() - ]
     public Notification getNotification() {
