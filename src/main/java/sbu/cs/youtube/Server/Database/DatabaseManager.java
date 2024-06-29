@@ -20,7 +20,6 @@ public class DatabaseManager {
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
     //endregion
-
     public static void main(String[] args) {
 //        Playlist playlist = selectPlaylist(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
 //        System.out.println(playlist.getDateCreated());
@@ -557,6 +556,7 @@ public class DatabaseManager {
                 channel.setTitle(rs.getString("Title"));
                 channel.setProfilePath(rs.getString("ProfilePath"));
                 channel.setDescription(rs.getString("Description"));
+                channel.setProfileBytes(convertImageToByteArray("/Images/Arcane2.jpg", "png"));
                 channel.setId(Id);
             }
 
@@ -1389,7 +1389,9 @@ public class DatabaseManager {
                     """);
 
             videos = new ArrayList<>();
+            int i = 0 ;
             while (rs.next()) {
+                i++ ;
                 Video video = new Video();
                 video.setId(UUID.fromString(rs.getString("Id")));
                 video.setTitle(rs.getString("Title"));
@@ -1397,13 +1399,16 @@ public class DatabaseManager {
 //                video.setCategories(selectVideoCategories(video.getId()));
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
-                video.getChannel().setProfileBytes(convertImageToByteArray(video.getChannel().getProfilePath(), "png"));
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
+//                video.setThumbnailBytes(convertImageToByteArray("/Images/Arcane2.jpg", "jpg"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
 //                video.setViews(Integer.parseInt(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 videos.add(video);
+                if (i == 20){
+                    break;
+                }
             }
             rs.close();
             stmt.close();
@@ -1411,6 +1416,10 @@ public class DatabaseManager {
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        if (videos.get(1).getThumbnailBytes().equals(videos.get(2).getThumbnailBytes()))
+        {
+            System.out.println("dahan hammmmmmmatooooono gayidam");
         }
         return videos;
     }
@@ -3089,12 +3098,20 @@ public class DatabaseManager {
 
     //region [ - convertImageToByteArray(String imagePath, String type) - ]
     private byte[] convertImageToByteArray(String imagePath, String type) {
+        String path ;
+        if (imagePath == null){
+            path = "src/main/resources/Images/Arcane2.jpg";
+        } else {
+            path = "src/main/resources" + imagePath;
+        }
         System.out.println("In Convert Method");
         byte[] imageBytes = null;
         try {
             // Load the image
 //            BufferedImage bufferedImage = ImageIO.read(new File(String.valueOf(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)))));
-            BufferedImage bufferedImage = ImageIO.read(new File("E:\\Ali\\University\\Shahid Beheshti\\Semester-2\\AdvancedProgramming\\4_Project\\Final\\Youtube\\src\\main\\resources\\Images\\AvengersEndgame.jpg"));
+            BufferedImage bufferedImage = ImageIO.read(new File(path));
+//            BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/Images/Arcane2.jpg"));
+
 
             // Convert BufferedImage to byte array
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -3114,4 +3131,5 @@ public class DatabaseManager {
 
     //endregion
 
+    
 }

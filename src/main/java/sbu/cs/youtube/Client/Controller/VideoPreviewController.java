@@ -71,7 +71,7 @@ public class VideoPreviewController implements Initializable {
 
         bis = new ByteArrayInputStream(video.getChannel().getProfileBytes());
         Image channelProfile = new Image(bis);
-        imgThumbnail.setImage(channelProfile);
+        imgChannelProfile.setImage(channelProfile);
     }
     //endregion
 
