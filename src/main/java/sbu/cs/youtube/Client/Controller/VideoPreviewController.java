@@ -40,8 +40,14 @@ public class VideoPreviewController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        addThumbnail("E:\\Ali\\Picutres\\BG\\New folder\\New folder\\01.jpg");
-//        addChannelProfile("E:\\Ali\\Picutres\\BG\\Screenshot 2023-11-10 180736.png");
+        imgThumbnail.fitWidthProperty().bind(vbxVideoPreview.widthProperty());
+        imgThumbnail.fitHeightProperty().bind(vbxVideoPreview.heightProperty());
+        imgThumbnail.setPreserveRatio(true);
+
+        hbxVideoDetails.prefWidthProperty().bind(vbxVideoPreview.widthProperty());
+
+
+        vbxTextDetails.prefWidthProperty().bind(hbxVideoDetails.widthProperty().subtract(100));
     }
     //endregion
 

@@ -130,6 +130,7 @@ public class ClientHandler implements Runnable {
                 response = new Response<>(client, userRequest.getType(), true, "Signed in successfully");
             } else {
                 response = new Response<>(client, userRequest.getType(), true, "Password is incorrect");
+                user = null;
             }
         } else {
             response = new Response<>(client, userRequest.getType(), true, "User not found");

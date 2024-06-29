@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
@@ -55,9 +56,12 @@ public class HomeSectionController implements Initializable {
         }
         for (var video : recommendedVideos) {
             FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
-            Parent videoPreview;
+            VBox videoPreview;
             try {
+                layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
                 videoPreview = videoPreviewLoader.load();
+                videoPreview.prefWidthProperty().bind(mainPane.widthProperty().divide(6));
+                videoPreview.prefHeightProperty().bind(mainPane.heightProperty().divide(6));
                 VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
                 if (videoPreviewController != null) {
                     videoPreviewController.setVideo(video);
