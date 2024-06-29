@@ -115,7 +115,8 @@ public class SignInController implements Initializable {
         }
 
         if (signIn(user)) {
-            exitSignInSignUp(event);
+//            exitSignInSignUp(event);
+            System.out.println("Signed In");
         } else {
             inputLog.getParent().setVisible(true);
         }
@@ -146,6 +147,7 @@ public class SignInController implements Initializable {
     private void openHomePage() {
 
     }
+
     //region [ - checkEmail(ActionEvent event) - ]
 
     private boolean signIn(User user) {

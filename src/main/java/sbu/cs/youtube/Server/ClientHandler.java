@@ -170,7 +170,7 @@ public class ClientHandler implements Runnable {
         Request<ArrayList<Video>> videosRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Video>> response;
 
-        ArrayList<Video> videos = databaseManager.selectVideos();
+        ArrayList<Video> videos = databaseManager.selectVideosBriefly();
 
         response = new Response<>(client, videosRequest.getType(), true, "Signed up successfully");
         response.send(videos);

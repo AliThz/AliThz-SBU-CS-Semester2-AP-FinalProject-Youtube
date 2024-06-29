@@ -45,11 +45,14 @@ public class HomeSectionController implements Initializable {
 
         String response = YouTubeApplication.receiveResponse();
         Gson gson = new Gson();
-        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+        TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
         };
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Video> recommendedVideos = videoResponse.getBody();
+        if (recommendedVideos == null) {
+            return;
+        }
         for (var video : recommendedVideos) {
             FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
             Parent videoPreview;

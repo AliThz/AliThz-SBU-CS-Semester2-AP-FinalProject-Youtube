@@ -9,6 +9,7 @@ public class Video {
     private String title;
     private transient String thumbnailPath ;
     private byte[] thumbnailBytes;
+    private String path;
     private String description;
     private Channel channel;
     private UUID channelId;
@@ -139,6 +140,14 @@ public class Video {
 
     public void setThumbnailBytes(byte[] thumbnailBytes) {
         this.thumbnailBytes = thumbnailBytes;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public int getLikes() {
