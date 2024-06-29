@@ -15,10 +15,11 @@ public class Server {
             while (true) {
                 //Waiting for clients to connect
                 Socket socket = serverSocket.accept();
+                System.out.println("User with Local address :  " + socket.getLocalAddress() + " connected");
 
                 //Giving service to each client
                 ClientHandler clientHandler = new ClientHandler(socket);
-                Thread thread = new Thread(String.valueOf(clientHandler));
+                Thread thread = new Thread(clientHandler);
                 thread.start();
             }
         } catch (IOException ioe) {

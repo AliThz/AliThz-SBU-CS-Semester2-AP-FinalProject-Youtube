@@ -119,13 +119,16 @@
 }
 
 /* -------------------------------- Account Button -------------------------------- */
+
 .account-img {
     -fx-background-image: url("../Images/SrgtSajjad.jpg");
     -fx-background-repeat: no-repeat;
-    -fx-background-size: contain;
-    -fx-background-color : transparent;
-    -fx-pref-width: 23px;
-    -fx-pref-height: 23px;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+    -fx-pref-width: 23px; /* Double the width to ensure a proper circle */
+    -fx-pref-height: 23px; /* Double the height to ensure a proper circle */
+    -fx-background-radius: 50; /* This makes the background circular */
+    -fx-border-radius: 50; /* Ensure border (if any) is also circular */
 }
 
 /* -------------------------------- LoggedIn Button Group -------------------------------- */

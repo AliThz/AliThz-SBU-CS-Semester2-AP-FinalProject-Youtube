@@ -12,7 +12,7 @@ public class Channel {
     private String title;
     private String description;
     private int subscribers;
-    private LocalDateTime dateCreated;
+    private String dateCreated;
     private ArrayList<Subscription> subscriptions;
 
     public Channel() {
@@ -74,11 +74,11 @@ public class Channel {
         this.subscribers = subscribers;
     }
 
-    public LocalDateTime getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(LocalDateTime dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 

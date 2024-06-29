@@ -1,18 +1,73 @@
 package sbu.cs.youtube;
 
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalDateTimeStringConverter;
+import sbu.cs.youtube.Client.Controller.HomeSectionController;
+import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.Request;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class YouTubeApplication extends Application {
+
+    public static Socket socket;
+    public static User user;
+    private static BufferedReader bufferedReader;
+    private BufferedWriter bufferedWriter;
+
+
+    public YouTubeApplication() throws IOException {
+    }
+
+    public YouTubeApplication(Socket socket) throws IOException {
+        try {
+            YouTubeApplication.socket = socket;
+            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (IOException e) {
+            close(socket, bufferedReader, bufferedWriter);
+        }
+    }
+
+    public static String receiveResponse() {
+        String response = null;
+        try {
+            response = bufferedReader.readLine();
+        } catch (IOException ioe) {
+            System.out.println("!!Exception : " + ioe.getMessage());
+        }
+
+        return response;
+    }
+
+    private void close(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+            if (bufferedReader != null) {
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null) {
+                bufferedWriter.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
         FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/YoutubeIcon.png"))));
@@ -21,7 +76,32 @@ public class YouTubeApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    //region [ - write(String content) - ]
+    private void write(String content) {
+        try {
+            bufferedWriter.write(content);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch (IOException ioe) {
+            System.out.println("!!Exception : " + ioe.getMessage());
+        }
+    }
+    //endregion
+
+    public static void main(String[] args) throws IOException {
+//        ------------------------- Sign up Test ----------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<User> userRequest = new Request<>(socket, "SignUp");
+//        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "AliThz", "Ali123456", LocalDateTime.now().toString()));
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        receiveResponse();
+//        ------------------------- Sign in Test ----------------------------------
+        Socket socket = new Socket("localhost", 2345);
+//        Request<User> userRequest = new Request<>(socket, "SignIn");
+//        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "", "Ali123456", LocalDateTime.now().toString()));
+        YouTubeApplication client = new YouTubeApplication(socket);
+//        receiveResponse();
+
         launch();
     }
 }

@@ -3,18 +3,19 @@ package sbu.cs.youtube.Server.Database;
 import sbu.cs.youtube.Shared.POJO.*;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class DatabaseManager {
 
     //region [ - Fields - ]
-    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-development";
+    private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-Development";
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
     //endregion
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
 //        Playlist playlist = selectPlaylist(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
 //        System.out.println(playlist.getDateCreated());
 //        ------------------ Select Notification Test ------------------------
@@ -154,7 +155,7 @@ public class DatabaseManager {
     //region [ - User - ]
 
     //region [ - insertUser(User user) - ]
-    public static void insertUser(User user) {
+    public void insertUser(User user) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -164,14 +165,14 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (insertUser)");
 
             stmt = c.prepareStatement("""
-                    INSERT INTO UserManagement.User(\"Id\", FullName, email, DateOfBirth, Username, \"Password\")
+                    INSERT INTO UserManagement.User(\"Id\", FullName, Email, DateOfBirth, Username, \"Password\")
                     VALUES (?, ?, ?, ?, ?,?);
                     """);
 
             stmt.setObject(1, user.getId());
             stmt.setString(2, user.getFullName());
             stmt.setString(3, user.getEmail());
-            stmt.setObject(4, user.getDateOfBirth());
+            stmt.setObject(4, LocalDateTime.parse(user.getDateOfBirth()));
             stmt.setString(5, user.getUsername());
             stmt.setString(6, user.getPassword());
 
@@ -192,10 +193,11 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUserBriefly() - ]
-    public User selectUserBriefly() {
+    //region [ - selectUsersBriefly() - ]
+    public ArrayList<User> selectUsersBriefly() {
         Connection c;
         Statement stmt;
+        ArrayList<User> users = null ;
         User user = null;
         try {
 //            Class.forName("org.postgresql.Driver");
@@ -208,12 +210,14 @@ public class DatabaseManager {
                     SELECT "Id","Username", "Email", "Password" FROM UserManagement.User;
                     """);
 
-            user = new User();
+            users = new ArrayList<>();
             while (rs.next()) {
+                user = new User();
                 user.setId(UUID.fromString(rs.getString("Id")));
                 user.setEmail(rs.getString("Email"));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
+                users.add(user);
             }
             rs.close();
             stmt.close();
@@ -222,7 +226,7 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         System.out.println("Operation done successfully (selectUserBriefly)");
-        return user;
+        return users;
     }
     //endregion
 
@@ -251,9 +255,9 @@ public class DatabaseManager {
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
                 Timestamp timestamp = rs.getTimestamp("DateOfBirth");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 timestamp = rs.getTimestamp("JoinDate");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
                 users.add(user);
@@ -267,10 +271,10 @@ public class DatabaseManager {
         System.out.println("Operation done successfully (selectUsers)");
         return users;
     }
-    //endregion No    kl;asdf
+    //endregion No
 
     //region [ - selectUser(UUID Id) - ] Tested
-    public static User selectUser(UUID Id) {
+    public User selectUser(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         User user = null;
@@ -293,9 +297,9 @@ public class DatabaseManager {
                 user.setFullName(rs.getString("FullName"));
                 user.setEmail(rs.getString("Email"));
                 Timestamp timestamp = rs.getTimestamp("DateOfBirth");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 timestamp = rs.getTimestamp("JoinDate");
-                user.setDateOfBirth(timestamp.toLocalDateTime());
+                user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 user.setSubscriptions(selectSubscriptions(user.getId()));
                 user.setNotifications(selectNotifications(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
@@ -315,8 +319,82 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectUserByUsername(String Username) - ]
+    public User selectUserByUsername(String username) {
+        Connection c;
+        PreparedStatement stmt;
+        User user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUser)");
+
+            stmt = c.prepareStatement("""
+                    SELECT * FROM UserManagement.User 
+                    WHERE username = ?
+                    """);
+            stmt.setObject(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setId(UUID.fromString(rs.getString("Id")));
+                user.setEmail(rs.getString("Email"));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectUser)");
+        return user;
+    }
+    //endregion
+
+    //region [ - selectUserByEmail(String email) - ]
+    public User selectUserByEmail(String email) {
+        Connection c;
+        PreparedStatement stmt;
+        User user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUser)");
+
+            stmt = c.prepareStatement("""
+                    SELECT * FROM UserManagement.User 
+                    WHERE Email = ?
+                    """);
+            stmt.setObject(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setId(UUID.fromString(rs.getString("Id")));
+                user.setEmail(rs.getString("Email"));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        System.out.println("Operation done successfully (selectUser)");
+        return user;
+    }
+    //endregion
+
     //region [ - updateUser(User user) - ] Tested
-    public static void updateUser(User user) {
+    public void updateUser(User user) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -333,7 +411,7 @@ public class DatabaseManager {
 
             stmt.setString(1, user.getFullName());
             stmt.setString(2, user.getEmail());
-            stmt.setObject(3, user.getDateOfBirth());
+            stmt.setObject(3, LocalDateTime.parse(user.getDateOfBirth()));
             stmt.setString(4, user.getUsername());
             stmt.setString(5, user.getPassword());
             stmt.setObject(6, user.getAvatarPath());
@@ -351,7 +429,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteUser(UUID Id) - ] Not Exist
-    public static void deleteUser(UUID Id) {
+    public void deleteUser(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -381,7 +459,7 @@ public class DatabaseManager {
     //region [ - Channel - ]
 
     //region [ - insertChannel(Channel channel) - ] Tested
-    public static void insertChannel(Channel channel) {
+    public void insertChannel(Channel channel) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -433,7 +511,7 @@ public class DatabaseManager {
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                channel.setDateCreated(timestamp.toLocalDateTime());
+                channel.setDateCreated(timestamp.toLocalDateTime().toString().toString());
                 channels.add(channel);
             }
             rs.close();
@@ -448,7 +526,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - Channel selectChannelBriefly(UUID Id) - ] UnUsed
-    public static Channel selectChannelBriefly(UUID Id) {
+    public Channel selectChannelBriefly(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Channel channel = null;
@@ -497,7 +575,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - Channel selectChannel(UUID Id) - ] Tested
-    public static Channel selectChannel(UUID Id) {
+    public Channel selectChannel(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Channel channel = null;
@@ -523,7 +601,7 @@ public class DatabaseManager {
                 channel.setDescription(rs.getString("Description"));
                 if (rs.getString("DateCreated") != null) {
                     Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                    channel.setDateCreated(timestamp.toLocalDateTime());
+                    channel.setDateCreated(timestamp.toLocalDateTime().toString().toString());
                 }
                 channel.setId(UUID.fromString(rs.getString("Id")));
             }
@@ -541,7 +619,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - updateChannel(Channel channel) - ] Tested
-    public static void updateChannel(Channel channel) {
+    public void updateChannel(Channel channel) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -603,7 +681,7 @@ public class DatabaseManager {
     //region [ - Subscription - ]
 
     //region [ - insertSubscription(Subscription subscription) - ] Tested
-    public static void insertSubscription(Subscription subscription) {
+    public void insertSubscription(Subscription subscription) {
         System.out.println(subscription.getSubscriberId());
         Connection c;
         PreparedStatement stmt;
@@ -653,7 +731,7 @@ public class DatabaseManager {
                 subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
                 subscription.setChannel(selectChannel(subscription.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-                subscription.setJoinDate(timestamp.toLocalDateTime());
+                subscription.setJoinDate(timestamp.toLocalDateTime().toString());
                 subscriptions.add(subscription);
             }
             rs.close();
@@ -668,7 +746,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<Subscription> selectSubscriptions(UUID userId) - ] Test
-    public static ArrayList<Subscription> selectSubscriptions(UUID userId) {
+    public ArrayList<Subscription> selectSubscriptions(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Subscription> subscriptions = null;
@@ -690,7 +768,7 @@ public class DatabaseManager {
                 subscription.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 subscription.setChannel(selectChannel(subscription.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-                subscription.setJoinDate(timestamp.toLocalDateTime());
+                subscription.setJoinDate(timestamp.toLocalDateTime().toString());
                 subscriptions.add(subscription);
             }
             rs.close();
@@ -727,7 +805,7 @@ public class DatabaseManager {
             subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
             subscription.setChannel(selectChannel(subscription.getChannelId()));
             Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-            subscription.setJoinDate(timestamp.toLocalDateTime());
+            subscription.setJoinDate(timestamp.toLocalDateTime().toString());
 
             rs.close();
             stmt.close();
@@ -741,7 +819,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteSubscription(UUID SubscriberId, UUID channelId) - ] Tested
-    public static void deleteSubscription(UUID SubscriberId, UUID channelId) {
+    public void deleteSubscription(UUID SubscriberId, UUID channelId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -772,7 +850,7 @@ public class DatabaseManager {
     //region [ - Notification - ]
 
     //region [ - insertNotification(Notification notification) - ] Tested
-    public static void insertNotification(Notification notification) {
+    public void insertNotification(Notification notification) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -824,7 +902,7 @@ public class DatabaseManager {
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("Description")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime());
+                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
                 notifications.add(notification);
             }
             rs.close();
@@ -839,7 +917,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<Notification> selectNotifications(UUID userId) - ] test
-    public static ArrayList<Notification> selectNotifications(UUID userId) {
+    public ArrayList<Notification> selectNotifications(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Notification> notifications = null;
@@ -865,7 +943,7 @@ public class DatabaseManager {
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("isRead")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime());
+                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
 
                 notifications.add(notification);
             }
@@ -881,7 +959,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - Notification selectNotification(UUID Id) - ] Test
-    public static Notification selectNotification(UUID Id) {
+    public Notification selectNotification(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Notification notification = null;
@@ -906,7 +984,7 @@ public class DatabaseManager {
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("isRead")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime());
+                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
             }
 
             rs.close();
@@ -921,7 +999,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - updateNotification(Notification notification) - ] Tested
-    public static void updateNotification(Notification notification) {
+    public void updateNotification(Notification notification) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -951,7 +1029,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteNotification(UUID Id) - ] Tested
-    public static void deleteNotification(UUID Id) {
+    public void deleteNotification(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -984,7 +1062,7 @@ public class DatabaseManager {
     //region [ - Category - ]
 
     //region [ - insertCategory(Category category) - ] Tested
-    public static void insertCategory(Category category) {
+    public void insertCategory(Category category) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1047,7 +1125,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectCategory(UUID Id) - ] Tested
-    public static Category selectCategory(UUID Id) {
+    public Category selectCategory(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Category category = null;
@@ -1101,7 +1179,7 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 videoCategory.setVideo(video);
                 videoCategories.add(videoCategory);
@@ -1120,7 +1198,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - updateCategory(Category category) - ] Tested
-    public static void updateCategory(Category category) {
+    public void updateCategory(Category category) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1149,7 +1227,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteCategory(UUID Id) - ] Not Exist
-    public static void deleteCategory(UUID Id) {
+    public void deleteCategory(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1180,7 +1258,7 @@ public class DatabaseManager {
     //region [ - Video - ] To think
 
     //region [ - insertVideo(Video video) - ] Tested
-    public static void insertVideo(Video video) {
+    public void insertVideo(Video video) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1248,7 +1326,7 @@ public class DatabaseManager {
                 video.setComments(selectComments(video.getId()));
                 video.setViews(Integer.parseInt(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDateTime"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 videos.add(video);
                 //TODO
 //                ---------------------------- what should i do for handle likes and dislike in this method -------------------
@@ -1284,7 +1362,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectVideoBriefly(UUID Id) - ] Not test
-    public static Video selectVideoBriefly(UUID Id) {
+    public Video selectVideoBriefly(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Video video = null;
@@ -1312,7 +1390,7 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
             }
 
@@ -1328,7 +1406,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectVideo(UUID Id) - ] test
-    public static Video selectVideo(UUID Id) {
+    public Video selectVideo(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Video video = null;
@@ -1358,7 +1436,7 @@ public class DatabaseManager {
                 video.setChannel(selectChannel(video.getChannelId()));
                 video.setViews(Integer.valueOf(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setPath(rs.getString("Path"));
             }
@@ -1393,7 +1471,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - updateVideo(Video video) - ] Tested
-    public static void updateVideo(Video video) {
+    public void updateVideo(Video video) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1424,7 +1502,7 @@ public class DatabaseManager {
     //endregion
 
     //    region [ - deleteVideo(UUID videoid) - ] YES
-    public static void deleteVideo(UUID videoid) {
+    public void deleteVideo(UUID videoid) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1465,7 +1543,7 @@ public class DatabaseManager {
     //region [ - VideoCategory - ]
 
     //region [ - insertVideoCategory(VideoCategory videoCategory) - ] Tested
-    public static void insertVideoCategory(VideoCategory videoCategory) {
+    public void insertVideoCategory(VideoCategory videoCategory) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1526,7 +1604,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<VideoCategory> selectVideoCategories(UUID videoId) - ] Tested
-    public static ArrayList<VideoCategory> selectVideoCategories(UUID videoId) {
+    public ArrayList<VideoCategory> selectVideoCategories(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<VideoCategory> videoCategories = null;
@@ -1566,7 +1644,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) - ] Not Tested
-    public static ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) {
+    public ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<VideoCategory> videoCategories = null;
@@ -1639,7 +1717,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteVideoCategory(UUID videoId, UUID categoryId) - ] Tested
-    public static void deleteVideoCategory(UUID videoId, UUID categoryId) {
+    public void deleteVideoCategory(UUID videoId, UUID categoryId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1667,7 +1745,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteVideoCategory(UUID videoId) - ] Tested
-    public static void deleteVideoCategory(UUID videoId) {
+    public void deleteVideoCategory(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1698,7 +1776,7 @@ public class DatabaseManager {
     //region [ - UserVideo - ]
 
     //region [ - insertUserVideo (UserVideo UserVideo) - ] YES
-    public static void insertUserVideo(UserVideo userVideo) {
+    public void insertUserVideo(UserVideo userVideo) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1761,7 +1839,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<UserVideo> selectUserVideos(UUID userId) - ] Tested
-    public static ArrayList<UserVideo> selectUserVideos(UUID userId) {
+    public ArrayList<UserVideo> selectUserVideos(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<UserVideo> userVideos = null;
@@ -1801,7 +1879,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<UserVideo> selectVideoUsers(UUID userId) - ] Not Tested
-    public static ArrayList<UserVideo> selectVideoUsers(UUID videoId) {
+    public ArrayList<UserVideo> selectVideoUsers(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<UserVideo> videoUsers = null;
@@ -1879,7 +1957,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteUserVideo(UUID userId , UUID videoId) - ] YES
-    public static void deleteUserVideo(UUID userId, UUID videoId) {
+    public void deleteUserVideo(UUID userId, UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1908,7 +1986,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteUserVideo(UUID videoId) - ] Yes
-    public static void deleteUserVideo(UUID videoId) {
+    public void deleteUserVideo(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1940,7 +2018,7 @@ public class DatabaseManager {
     //region [ - Playlist - ]
 
     //region [ - insertPlaylist(Playlist playlist) - ] Tested
-    public static void insertPlaylist(Playlist playlist) {
+    public void insertPlaylist(Playlist playlist) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1973,7 +2051,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectPlaylists() - ] Not test
-    public static ArrayList<Playlist> selectPlaylists() {
+    public ArrayList<Playlist> selectPlaylists() {
         Connection c;
         Statement stmt;
         ArrayList<Playlist> playlists = null;
@@ -1996,7 +2074,7 @@ public class DatabaseManager {
                 playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                playlist.setDateCreated(timestamp.toLocalDateTime());
+                playlist.setDateCreated(timestamp.toLocalDateTime().toString());
 
                 playlists.add(playlist);
             }
@@ -2012,7 +2090,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectPlaylist(UUID Id) - ]
-    public static Playlist selectPlaylist(UUID Id) {
+    public Playlist selectPlaylist(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Playlist playlist = null;
@@ -2042,7 +2120,7 @@ public class DatabaseManager {
                 playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                playlist.setDateCreated(timestamp.toLocalDateTime());
+                playlist.setDateCreated(timestamp.toLocalDateTime().toString());
             }
 
             rs.close();
@@ -2070,7 +2148,7 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime());
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 playlistDetail.setVideo(video);
                 playlistDetails.add(playlistDetail);
@@ -2089,7 +2167,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
-    public static Playlist selectPlaylistBriefly(UUID Id) {
+    public Playlist selectPlaylistBriefly(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Playlist playlist = null;
@@ -2140,7 +2218,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - updatePlaylist(Playlist playlist) - ] Tested
-    public static void updatePlaylist(Playlist playlist) {
+    public void updatePlaylist(Playlist playlist) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2170,7 +2248,7 @@ public class DatabaseManager {
     //endregion
 
     //    region [ - deletePlaylist(UUID Id) - ] Tested
-    public static void deletePlaylist(UUID Id) {
+    public void deletePlaylist(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2204,7 +2282,7 @@ public class DatabaseManager {
     //region [ - PlaylistDetail - ]
 
     //region [ - insertPlaylistDetail(PlaylistDetail playlistDetail) - ] Tested
-    public static void insertPlaylistDetail(PlaylistDetail playlistDetail) {
+    public void insertPlaylistDetail(PlaylistDetail playlistDetail) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2258,7 +2336,7 @@ public class DatabaseManager {
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-                playlistDetail.setDateAdded(timestamp.toLocalDateTime());
+                playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
                 playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
                 playlistDetails.add(playlistDetail);
@@ -2276,7 +2354,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectPlaylistDetails(UUID playlistId) - ]
-    public static ArrayList<PlaylistDetail> selectPlaylistDetails(UUID playlistId) {
+    public ArrayList<PlaylistDetail> selectPlaylistDetails(UUID playlistId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<PlaylistDetail> playlistDetails = null;
@@ -2302,7 +2380,7 @@ public class DatabaseManager {
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-                playlistDetail.setDateAdded(timestamp.toLocalDateTime());
+                playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
                 playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
                 playlistDetails.add(playlistDetail);
@@ -2344,7 +2422,7 @@ public class DatabaseManager {
             playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
             playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
             Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-            playlistDetail.setDateAdded(timestamp.toLocalDateTime());
+            playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
             playlistDetail.setNumber(rs.getInt("SequenceNumber"));
 
             rs.close();
@@ -2359,7 +2437,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deletePlaylistDetail(UUID playlistId, UUID videoId) - ] Tested
-    public static void deletePlaylistDetail(UUID playlistId, UUID videoId) {
+    public void deletePlaylistDetail(UUID playlistId, UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2389,7 +2467,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deletePlaylistDetail(UUID videoId) - ] Tested
-    public static void deletePlaylistDetail(UUID videoId) {
+    public void deletePlaylistDetail(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2417,7 +2495,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deletePlaylistDetails(UUID playlistId) - ] Tested
-    public static void deletePlaylistDetails(UUID playlistId) {
+    public void deletePlaylistDetails(UUID playlistId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2450,7 +2528,7 @@ public class DatabaseManager {
     //region [ - Comment - ]
 
     //region [ - insertComment(Comment comment) - ] Tested
-    public static void insertComment(Comment comment) {
+    public void insertComment(Comment comment) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2511,7 +2589,7 @@ public class DatabaseManager {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
 
                 comments.add(comment);
             }
@@ -2528,7 +2606,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectComments(UUID videoId) - ] Tested
-    public static ArrayList<Comment> selectComments(UUID videoId) {
+    public ArrayList<Comment> selectComments(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Comment> comments = null;
@@ -2559,7 +2637,7 @@ public class DatabaseManager {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
                 comments.add(comment);
             }
             
@@ -2575,7 +2653,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectComment(UUID Id) - ] Tested
-    public static Comment selectComment(UUID Id) {
+    public Comment selectComment(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         Comment comment = null;
@@ -2605,7 +2683,7 @@ public class DatabaseManager {
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
             }
 
             stmt = c.prepareStatement("""
@@ -2638,7 +2716,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - updateComment(Comment comment) - ] Tested
-    public static void updateComment(Comment comment) {
+    public void updateComment(Comment comment) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2669,7 +2747,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteComment(UUID Id) - ] Not Tested
-    public static void deleteComment(UUID Id) {
+    public void deleteComment(UUID Id) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2703,7 +2781,7 @@ public class DatabaseManager {
     //region [ - UserComment - ]
 
     //region [ - insertUserComment (UserComment UserComment) - ] Yes
-    public static void insertUserComment(UserComment userVideo) {
+    public void insertUserComment(UserComment userVideo) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2772,7 +2850,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<UserComment> selectUserComments(UUID userID) - ] Tested
-    public static ArrayList<UserComment> selectUserComments(UUID userId) {
+    public ArrayList<UserComment> selectUserComments(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<UserComment> userComments = null;
@@ -2815,7 +2893,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - ArrayList<UserComment> selectCommentUsers(UUID commentId) - ] Not Tested
-    public static ArrayList<UserComment> selectCommentUsers(UUID commentId) {
+    public ArrayList<UserComment> selectCommentUsers(UUID commentId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<UserComment> userComments = null;
@@ -2894,7 +2972,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteUserComment(UUID userId , UUID commentID) - ] Yes (this method don't want to exist)
-    public static void deleteUserComment(UUID userId, UUID commentID) {
+    public void deleteUserComment(UUID userId, UUID commentID) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -2923,7 +3001,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - deleteUserComment(UUID commentID) - ] Yes
-    public static void deleteUserComment(UUID commentId) {
+    public void deleteUserComment(UUID commentId) {
         Connection c;
         PreparedStatement stmt;
         try {
