@@ -3099,11 +3099,11 @@ public class DatabaseManager {
     //region [ - convertImageToByteArray(String imagePath, String type) - ]
     private byte[] convertImageToByteArray(String imagePath, String type) {
         String path ;
-        if (imagePath == null){
+//        if (imagePath == null){
             path = "src/main/resources/Images/Arcane2.jpg";
-        } else {
-            path = "src/main/resources" + imagePath;
-        }
+//        } else {
+//            path = "src/main/resources" + imagePath;
+//        }
         System.out.println("In Convert Method");
         byte[] imageBytes = null;
         try {
