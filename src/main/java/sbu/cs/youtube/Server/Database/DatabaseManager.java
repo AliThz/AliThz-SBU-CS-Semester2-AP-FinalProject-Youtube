@@ -1389,9 +1389,7 @@ public class DatabaseManager {
                     """);
 
             videos = new ArrayList<>();
-            int i = 0 ;
             while (rs.next()) {
-                i++ ;
                 Video video = new Video();
                 video.setId(UUID.fromString(rs.getString("Id")));
                 video.setTitle(rs.getString("Title"));
@@ -1400,15 +1398,11 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
-//                video.setThumbnailBytes(convertImageToByteArray("/Images/Arcane2.jpg", "jpg"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
 //                video.setViews(Integer.parseInt(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 videos.add(video);
-                if (i == 20){
-                    break;
-                }
             }
             rs.close();
             stmt.close();
@@ -1416,10 +1410,6 @@ public class DatabaseManager {
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        if (videos.get(1).getThumbnailBytes().equals(videos.get(2).getThumbnailBytes()))
-        {
-            System.out.println("dahan hammmmmmmatooooono gayidam");
         }
         return videos;
     }
@@ -3099,19 +3089,17 @@ public class DatabaseManager {
     //region [ - convertImageToByteArray(String imagePath, String type) - ]
     private byte[] convertImageToByteArray(String imagePath, String type) {
         String path ;
-//        if (imagePath == null){
+        if (imagePath == null){
             path = "src/main/resources/Images/Arcane2.jpg";
-//        } else {
-//            path = "src/main/resources" + imagePath;
-//        }
+        } else {
+            path = "src/main/resources" + imagePath;
+        }
         System.out.println("In Convert Method");
         byte[] imageBytes = null;
         try {
             // Load the image
-//            BufferedImage bufferedImage = ImageIO.read(new File(String.valueOf(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)))));
-            BufferedImage bufferedImage = ImageIO.read(new File(path));
-//            BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/Images/Arcane2.jpg"));
-
+            File file = new File(path);
+            BufferedImage bufferedImage = ImageIO.read(file);
 
             // Convert BufferedImage to byte array
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
