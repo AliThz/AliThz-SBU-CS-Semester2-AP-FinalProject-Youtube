@@ -1,6 +1,7 @@
 package sbu.cs.youtube;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.LoadException;
@@ -10,13 +11,17 @@ import javafx.stage.Stage;
 import javafx.util.converter.LocalDateTimeStringConverter;
 import sbu.cs.youtube.Client.Controller.HomeSectionController;
 import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.Response;
 
+import javax.crypto.Cipher;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 public class YouTubeApplication extends Application {
 
@@ -96,12 +101,20 @@ public class YouTubeApplication extends Application {
 //        YouTubeApplication client = new YouTubeApplication(socket);
 //        receiveResponse();
 //        ------------------------- Sign in Test ----------------------------------
-        Socket socket = new Socket("localhost", 2345);
+//        Socket socket = new Socket("localhost", 2345);
 //        Request<User> userRequest = new Request<>(socket, "SignIn");
 //        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "", "Ali123456", LocalDateTime.now().toString()));
-        YouTubeApplication client = new YouTubeApplication(socket);
+//        YouTubeApplication client = new YouTubeApplication(socket);
 //        receiveResponse();
-
+//        ------------------------- get Video test --------------------------------
+        Socket socket = new Socket("localhost", 2345);
+        Request<Video> userRequest = new Request<>(socket, "GetVideo");
+        Video video = new Video("avengers" , "marvel video" , UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf") , 65 , LocalDateTime.now().toString());
+        video.setId(UUID.fromString("dece64c2-acd4-427a-a5d5-920905b1041b"));
+        userRequest.send(video);
+        YouTubeApplication client = new YouTubeApplication(socket);
+        String response = receiveResponse();
+        System.out.println(response);
         launch();
     }
 }
