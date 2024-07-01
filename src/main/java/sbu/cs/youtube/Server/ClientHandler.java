@@ -100,6 +100,8 @@ public class ClientHandler implements Runnable {
             case "GetRecommendedVideos":
                 GetRecommendedVideos();
                 break;
+            case "GetVideo":
+                getVideo();
         }
     }
     //endregion
@@ -186,6 +188,29 @@ public class ClientHandler implements Runnable {
         response = new Response<>(client, videosRequest.getType(), true, "Signed up successfully");
         response.send(videos);
     }
+    //endregion
+
+    //region [ - getVideo - ]
+    private void getVideo() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Video> response;
+
+
+        Video requestedVideo = userRequest.getBody();
+        Video video;
+
+        video = databaseManager.selectVideo(requestedVideo.getId());
+
+        if (video != null) {
+            response = new Response<>(client, userRequest.getType(), true, "Video received successfully");
+        } else {
+            response = new Response<>(client, userRequest.getType(), true, "Video not found");
+        }
+        response.send(video);
+    }
+
     //endregion
 
     //endregion

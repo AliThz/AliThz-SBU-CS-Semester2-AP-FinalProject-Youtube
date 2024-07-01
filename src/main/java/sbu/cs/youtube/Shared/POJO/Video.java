@@ -9,7 +9,8 @@ public class Video {
     private String title;
     private transient String thumbnailPath ;
     private byte[] thumbnailBytes;
-    private String path;
+    private transient String path;
+    private byte[] videoBytes ;
     private String description;
     private Channel channel;
     private UUID channelId;
@@ -18,6 +19,7 @@ public class Video {
     private ArrayList<VideoCategory> categories;
     private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
+
     private int likes = 0 ;
     private int dislikes = 0 ;
 
@@ -52,6 +54,14 @@ public class Video {
 
     public void setId(UUID id) {
         Id = id;
+    }
+
+    public byte[] getVideoBytes() {
+        return videoBytes;
+    }
+
+    public void setVideoBytes(byte[] videoBytes) {
+        this.videoBytes = videoBytes;
     }
 
     public String getTitle() {

@@ -4,13 +4,10 @@ import sbu.cs.youtube.Shared.POJO.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 
 public class DatabaseManager {
@@ -152,7 +149,6 @@ public class DatabaseManager {
 //    insertUserComment(userComment1);
 //    deleteUserComment(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
 //    deleteUserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
-        System.out.println(UUID.randomUUID());
     }
 
     //region [ - Methods - ]
@@ -336,7 +332,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement.User 
+                    SELECT "Id","username", "email", "Password" FROM UserManagement.User 
                     WHERE username = ?
                     """);
             stmt.setObject(1, username);
@@ -373,8 +369,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement.User 
-                    WHERE Email = ?
+                    SELECT "Id","username", "email", "Password" FROM UserManagement.User 
+                    WHERE email = ?
                     """);
             stmt.setObject(1, email);
             ResultSet rs = stmt.executeQuery();
@@ -382,8 +378,8 @@ public class DatabaseManager {
             if (rs.next()) {
                 user = new User();
                 user.setId(UUID.fromString(rs.getString("Id")));
-                user.setEmail(rs.getString("Email"));
-                user.setUsername(rs.getString("Username"));
+                user.setEmail(rs.getString("email"));
+                user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("Password"));
             }
             rs.close();
@@ -1276,7 +1272,7 @@ public class DatabaseManager {
 
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId, \"Views\" , \"UploadDate\" ) 
+                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" ) 
                     VALUES (?, ?, ?, ?, ?, ?);
                     """);
 
@@ -1284,8 +1280,7 @@ public class DatabaseManager {
             stmt.setString(2, video.getTitle());
             stmt.setString(3, video.getDescription());
             stmt.setObject(4, video.getChannelId());
-            stmt.setInt(5, video.getViews());
-            stmt.setObject(6, video.getUploadDate());
+            stmt.setObject(5, video.getUploadDate());
 
             stmt.executeUpdate();
             c.commit();
@@ -1334,7 +1329,6 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannel(video.getChannelId()));
                 video.setComments(selectComments(video.getId()));
-                video.setViews(Integer.parseInt(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDateTime"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 videos.add(video);
@@ -1399,7 +1393,6 @@ public class DatabaseManager {
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
-//                video.setViews(Integer.parseInt(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 videos.add(video);
@@ -1488,30 +1481,31 @@ public class DatabaseManager {
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setComments(selectComments(video.getId()));
                 video.setChannel(selectChannel(video.getChannelId()));
-                video.setViews(Integer.valueOf(rs.getString("Views")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
-                video.setThumbnailPath(rs.getString("Path"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+//                video.setPath(rs.getString("Path"));
+//                video.setVideoBytes(convertVideoToByteArray("salam"));
             }
 
-            stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS VideoLikes
-                    FROM ContentManagement.UserVideo
-                    WHERE VideoId = ? AND Like = true;
-                    """);
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
-            video.setLikes(rs.getInt("VideosLikes"));
-
-            stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS VideodisLikes
-                    FROM ContentManagement.UserVideo
-                    WHERE VideoId = ? AND Like = false;
-                    """);
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
-            video.setDislikes(rs.getInt("VideosDisikes"));
+//            stmt = c.prepareStatement("""
+//                    SELECT COUNT(UserId) AS VideoLikes
+//                    FROM ContentManagement.UserVideo
+//                    WHERE VideoId = ? AND Like = true;
+//                    """);
+//            stmt.setObject(1, Id);
+//            rs = stmt.executeQuery();
+//            video.setLikes(rs.getInt("VideosLikes"));
+//
+//            stmt = c.prepareStatement("""
+//                    SELECT COUNT(UserId) AS VideodisLikes
+//                    FROM ContentManagement.UserVideo
+//                    WHERE VideoId = ? AND Like = false;
+//                    """);
+//            stmt.setObject(1, Id);
+//            rs = stmt.executeQuery();
+//            video.setDislikes(rs.getInt("VideosDisikes"));
 
             rs.close();
             stmt.close();
@@ -1535,14 +1529,13 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (updateVideo)");
 
             stmt = c.prepareStatement("""
-                    UPDATE ContentManagement.Video SET Title = ?, Description = ?, \"Views\" = ? 
+                    UPDATE ContentManagement.Video SET Title = ?, Description = ? 
                     WHERE \"Id\" = ?;
                     """);
 
             stmt.setString(1, video.getTitle());
             stmt.setString(2, video.getDescription());
-            stmt.setInt(3, video.getViews());
-            stmt.setObject(4, video.getId());
+            stmt.setObject(3, video.getId());
 
             stmt.executeUpdate();
             c.commit();
@@ -3094,7 +3087,7 @@ public class DatabaseManager {
         } else {
             path = "src/main/resources" + imagePath;
         }
-        System.out.println("In Convert Method");
+        System.out.println("In ConvertImage Method");
         byte[] imageBytes = null;
         try {
             // Load the image
@@ -3110,14 +3103,37 @@ public class DatabaseManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("End of Convert Method");
+        System.out.println("End of ConvertImage Method");
         return imageBytes;
     }
     //endregion
 
-    //endregion
+    //region [ - convertVideoToByteArray - ]
+
+    public byte[] convertVideoToByteArray(String videoPath) {
+        videoPath = "D:\\university\\Term2\\AP\\Project\\FinalProject\\MainProject\\AliThz-SBU-CS-Semester2-AP-FinalProject-Youtube\\src\\main\\resources\\Videos\\AvengersInfinityWar.mp4";
+        System.out.println("In ConvertImage Method");
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(videoPath))) {
+            int videoSize = bis.available();
+            byte[] videoBytes = new byte[videoSize];
+            int byteRead;
+            int i = 0;
+            while ((byteRead = bis.read()) != -1) {
+                videoBytes[i++] = (byte) byteRead;
+            }
+            System.out.println("End of ConvertImage Method");
+            return videoBytes;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     //endregion
 
+    //endregion
+
+    //endregion
     
 }
