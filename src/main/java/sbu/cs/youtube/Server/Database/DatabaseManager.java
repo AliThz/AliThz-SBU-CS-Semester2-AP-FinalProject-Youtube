@@ -2,9 +2,15 @@ package sbu.cs.youtube.Server.Database;
 
 import sbu.cs.youtube.Shared.POJO.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 public class DatabaseManager {
@@ -14,8 +20,7 @@ public class DatabaseManager {
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
     //endregion
-
-    public void main(String[] args) {
+    public static void main(String[] args) {
 //        Playlist playlist = selectPlaylist(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
 //        System.out.println(playlist.getDateCreated());
 //        ------------------ Select Notification Test ------------------------
@@ -147,7 +152,7 @@ public class DatabaseManager {
 //    insertUserComment(userComment1);
 //    deleteUserComment(UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
 //    deleteUserComment(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb") ,UUID.fromString("5c30e06f-3e74-4465-9059-c808e5c75a68"));
-
+        System.out.println(UUID.randomUUID());
     }
 
     //region [ - Methods - ]
@@ -185,11 +190,11 @@ public class DatabaseManager {
 
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (insertUser)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertUser)");
     }
     //endregion
 
@@ -197,7 +202,7 @@ public class DatabaseManager {
     public ArrayList<User> selectUsersBriefly() {
         Connection c;
         Statement stmt;
-        ArrayList<User> users = null ;
+        ArrayList<User> users = null;
         User user = null;
         try {
 //            Class.forName("org.postgresql.Driver");
@@ -221,11 +226,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUserBriefly)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserBriefly)");
         return users;
     }
     //endregion
@@ -264,11 +269,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUsers)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUsers)");
         return users;
     }
     //endregion No
@@ -310,11 +315,11 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (selectUser)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUser)");
         return user;
     }
     //endregion
@@ -347,11 +352,11 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (selectUser)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUser)");
         return user;
     }
     //endregion
@@ -384,11 +389,11 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (selectUser)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUser)");
         return user;
     }
     //endregion
@@ -420,11 +425,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (updateUser)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (updateUser)");
     }
     //endregion
 
@@ -446,11 +451,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteUser)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteUser)");
     }
     //endregion
 
@@ -479,11 +484,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertChannel)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertChannel)");
     }
     //endregion
 
@@ -516,11 +521,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectChannels(ALL))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectChannels(ALL))");
         return channels;
     }
     //endregion
@@ -536,8 +541,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (selectChannelBriefly)");
 
+//                    SELECT "Title", "Description" , "CreatorId" FROM UserManagement.Channel
             stmt = c.prepareStatement("""
-                    SELECT "Title", "Description" , "CreatorId" FROM UserManagement.Channel 
+                    SELECT * FROM UserManagement.Channel 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -548,33 +554,35 @@ public class DatabaseManager {
             if (rs.next()) {
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
                 channel.setTitle(rs.getString("Title"));
+                channel.setProfilePath(rs.getString("ProfilePath"));
                 channel.setDescription(rs.getString("Description"));
+                channel.setProfileBytes(convertImageToByteArray("/Images/Arcane2.jpg", "png"));
                 channel.setId(Id);
             }
 
-            stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS Subscribers
-                    FROM UserManagement.Subscription
-                    WHERE ChannelId = ?;
-                    """);
-
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
-            channel.setSubscribers(rs.getInt("Subscribers"));
+//            stmt = c.prepareStatement("""
+//                    SELECT COUNT(UserId) AS Subscribers
+//                    FROM UserManagement.Subscription
+//                    WHERE ChannelId = ?;
+//                    """);
+//
+//            stmt.setObject(1, Id);
+//            rs = stmt.executeQuery();
+//            channel.setSubscribers(rs.getInt("Subscribers"));
 
             rs.close();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (selectChannelBriefly)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectChannelBriefly)");
         return channel;
     }
     //endregion
 
-    //region [ - Channel selectChannel(UUID Id) - ] Tested
+    //region [ - selectChannel(UUID Id) - ] Tested
     public Channel selectChannel(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -586,9 +594,9 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectChannel)");
 
             stmt = c.prepareStatement("""
-            SELECT * FROM UserManagement.Channel 
-            WHERE \"Id\" = ?;
-            """);
+                    SELECT * FROM UserManagement.Channel 
+                    WHERE \"Id\" = ?;
+                    """);
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
 
@@ -609,11 +617,11 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (selectChannel)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectChannel)");
         return channel;
     }
     //endregion
@@ -641,11 +649,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (updateChannel)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (updateChannel)");
     }
     //endregion
 
@@ -668,11 +676,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteChannel)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteChannel)");
     }
     //endregion
 
@@ -700,11 +708,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertSubscription)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertSubscription)");
     }
     //endregion
 
@@ -721,8 +729,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM UserManagement.Subscription;
-            """);
+                    SELECT * FROM UserManagement.Subscription;
+                    """);
             subscriptions = new ArrayList<>();
             while (rs.next()) {
                 Subscription subscription = new Subscription();
@@ -736,11 +744,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectSubscriptions(ALL))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectSubscriptions(ALL))");
         return subscriptions;
     }
     //endregion
@@ -773,11 +781,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectSubscriptions(base on UserId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectSubscriptions(base on UserId))");
         return subscriptions;
     }
     //endregion
@@ -809,11 +817,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectSubscription)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectSubscription)");
         return subscription;
     }
     //endregion
@@ -837,11 +845,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteSubscription)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteSubscription)");
     }
     //endregion
 
@@ -872,11 +880,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertNotification)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertNotification)");
     }
     //endregion
 
@@ -907,11 +915,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectNotifications)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectNotifications)");
         return notifications;
     }
     //endregion
@@ -949,11 +957,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (base on userId)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (base on userId)");
         return notifications;
     }
     //endregion
@@ -989,11 +997,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectNotification)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectNotification)");
         return notification;
     }
     //endregion
@@ -1020,11 +1028,11 @@ public class DatabaseManager {
 
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (updateNotification)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (updateNotification)");
     }
     //endregion
 
@@ -1049,11 +1057,11 @@ public class DatabaseManager {
             stmt.close();
             c.close();
 
+            System.out.println("Operation done successfully (deleteChannel)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteChannel)");
     }
     //endregion
 
@@ -1083,11 +1091,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (insertCategory)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertCategory)");
     }
     //endregion
 
@@ -1103,8 +1111,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM ContentManagement.Category;
-            """);
+                    SELECT * FROM ContentManagement.Category;
+                    """);
             categories = new ArrayList<>();
             while (rs.next()) {
                 Category category = new Category();
@@ -1115,11 +1123,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectCategories)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectCategories)");
         return categories;
     }
     //endregion
@@ -1129,7 +1137,7 @@ public class DatabaseManager {
         Connection c;
         PreparedStatement stmt;
         Category category = null;
-        VideoCategory videoCategory = null ;
+        VideoCategory videoCategory = null;
         ArrayList<VideoCategory> videoCategories = null;
         try {
 //            Class.forName("org.postgresql.Driver");
@@ -1147,7 +1155,7 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery();
             category = new Category();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 category.setId(UUID.fromString(rs.getString("Id")));
                 category.setTitle(rs.getString("Title"));
                 category.setVideoCategories(selectCategoryVideos(category.getId()));
@@ -1166,8 +1174,7 @@ public class DatabaseManager {
             rs = stmt.executeQuery();
 
             videoCategories = new ArrayList<>();
-            while (rs.next())
-            {
+            while (rs.next()) {
                 videoCategory = new VideoCategory();
                 videoCategory.setCategory(category);
                 videoCategory.setCategoryId(Id);
@@ -1188,11 +1195,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectCategory)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectCategory)");
         return category;
     }
     //endregion
@@ -1218,11 +1225,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (updateCategory)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (updateCategory)");
     }
     //endregion
 
@@ -1245,11 +1252,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteCategory)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteCategory)");
     }
     //endregion
 
@@ -1269,9 +1276,9 @@ public class DatabaseManager {
 
 
             stmt = c.prepareStatement("""
-                   INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId, \"Views\" , \"UploadDate\" ) 
-                   VALUES (?, ?, ?, ?, ?, ?);
-                   """);
+                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId, \"Views\" , \"UploadDate\" ) 
+                    VALUES (?, ?, ?, ?, ?, ?);
+                    """);
 
             stmt.setObject(1, video.getId());
             stmt.setString(2, video.getTitle());
@@ -1290,11 +1297,11 @@ public class DatabaseManager {
             }
 
             stmt.close();
+            System.out.println("Operation done successfully (insertVideo)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertVideo)");
     }
     //endregion
 
@@ -1311,7 +1318,10 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideos)");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.Video;");
+            ResultSet rs = stmt.executeQuery(
+                    """
+                            SELECT * FROM ContentManagement.Video;
+                            """);
 
             videos = new ArrayList<>();
             while (rs.next()) {
@@ -1352,11 +1362,55 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectVideos)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideos)");
+        return videos;
+    }
+    //endregion
+
+    //region [ - selectVideosBriefly() - ] Not Tested
+    public ArrayList<Video> selectVideosBriefly() {
+        Connection c;
+        Statement stmt;
+        PreparedStatement stmt1;
+        ArrayList<Video> videos = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideosBriefly)");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("""
+                    SELECT *  FROM ContentManagement.Video;
+                    """);
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+//                video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+//                video.setViews(Integer.parseInt(rs.getString("Views")));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideosBriefly)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
         return videos;
     }
     //endregion
@@ -1396,11 +1450,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectVideoBriefly)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoBriefly)");
         return video;
     }
     //endregion
@@ -1438,7 +1492,7 @@ public class DatabaseManager {
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
-                video.setPath(rs.getString("Path"));
+                video.setThumbnailPath(rs.getString("Path"));
             }
 
             stmt = c.prepareStatement("""
@@ -1461,11 +1515,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectVideo)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideo)");
         return video;
     }
     //endregion
@@ -1493,11 +1547,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (updateVideo)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (updateVideo)");
     }
     //endregion
 
@@ -1530,11 +1584,11 @@ public class DatabaseManager {
             stmt.close();
             c.close();
 
+            System.out.println("Operation done successfully (deleteVideo)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteVideo)");
     }
     //endregion
 
@@ -1562,11 +1616,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertVideoCategory)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertVideoCategory)");
     }
     //endregion
 
@@ -1594,11 +1648,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectVideoCategories(ALL))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoCategories(ALL))");
         return videoCategories;
     }
     //endregion
@@ -1615,9 +1669,9 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideoCategories (based on video))");
 
             stmt = c.prepareStatement("""
-                SELECT * FROM ContentManagement.VideoCategory 
-                WHERE VideoId = ?;
-                """);
+                    SELECT * FROM ContentManagement.VideoCategory 
+                    WHERE VideoId = ?;
+                    """);
 
             stmt.setObject(1, videoId);
             ResultSet rs = stmt.executeQuery();
@@ -1634,11 +1688,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectVideoCategories (based on video))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoCategories (based on video))");
         return videoCategories;
     }
     //endregion
@@ -1671,11 +1725,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectVideoCategories (selectVideoLikes(based on category))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoCategories (selectVideoLikes(based on category))");
         return videoCategories;
     }
     //endregion
@@ -1707,11 +1761,11 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (selectVideoCategory)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoCategory)");
         return videoCategory;
     }
     //endregion
@@ -1736,11 +1790,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteVideoCategory)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteVideoCategory)");
     }
     //endregion
 
@@ -1763,11 +1817,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteVideoCategory (based on videoId))");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteVideoCategory (based on videoId))");
     }
     //endregion
 
@@ -1796,11 +1850,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertUserVideo)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertUserVideo)");
     }
     //endregion
 
@@ -1829,11 +1883,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUserVideo(ALL))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserVideo(ALL))");
         return userVideos;
     }
     //endregion
@@ -1869,11 +1923,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUserVideos(based on User))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserVideos(based on User))");
         return userVideos;
     }
     //endregion
@@ -1909,11 +1963,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUserVideos(based on userId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserVideos(based on userId))");
         return videoUsers;
     }
     //endregion
@@ -1947,11 +2001,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUserVideo)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserVideo)");
         return userVideo;
     }
     //endregion
@@ -1977,11 +2031,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteUserVideo)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteUserVideo)");
     }
     //endregion
 
@@ -2005,11 +2059,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteUserVideo (based on videoId))");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteUserVideo (based on videoId))");
     }
     //endregion
 
@@ -2042,11 +2096,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertPlaylist)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertPlaylist)");
     }
     //endregion
 
@@ -2080,11 +2134,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectPlaylists)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectPlaylists)");
         return playlists;
     }
     //endregion
@@ -2157,11 +2211,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectPlaylist)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectPlaylist)");
         return playlist;
     }
     //endregion
@@ -2208,11 +2262,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectPlaylistBriefly)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectPlaylistBriefly)");
         return playlist;
     }
     //endregion
@@ -2239,11 +2293,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (updatePlaylist)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (updatePlaylist)");
     }
     //endregion
 
@@ -2269,11 +2323,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deletePlaylist)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deletePlaylist)");
     }
     //endregion
 
@@ -2303,11 +2357,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertPlaylistDetail)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertPlaylistDetail)");
     }
     //endregion
 
@@ -2324,8 +2378,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM ContentManagement.PlaylistDetail;
-            """);
+                    SELECT * FROM ContentManagement.PlaylistDetail;
+                    """);
 
             playlistDetails = new ArrayList<>();
             while (rs.next()) {
@@ -2344,11 +2398,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectPlaylistDetails)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectPlaylistDetails)");
         return playlistDetails;
     }
     //endregion
@@ -2388,11 +2442,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectPlaylistDetails)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectPlaylistDetails)");
         return playlistDetails;
     }
     //endregion
@@ -2427,11 +2481,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectPlaylistDetail)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectPlaylistDetail)");
         return playlistDetail;
     }
     //endregion
@@ -2458,11 +2512,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deletePlaylistDetail)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deletePlaylistDetail)");
     }
     //endregion
 
@@ -2486,11 +2540,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deletePlaylistDetail)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deletePlaylistDetail)");
     }
     //endregion
 
@@ -2515,11 +2569,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deletePlaylistDetail)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deletePlaylistDetail)");
     }
     //endregion
 
@@ -2551,11 +2605,11 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
             stmt.close();
+            System.out.println("Operation done successfully (insertComment)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertComment)");
     }
     //endregion
 
@@ -2596,11 +2650,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectComments(ALL))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectComments(ALL))");
         return comments;
     }
     //endregion
@@ -2640,14 +2694,14 @@ public class DatabaseManager {
                 comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
                 comments.add(comment);
             }
-            
+
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectComments(base on videoId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectComments(base on videoId))");
         return comments;
     }
     //endregion
@@ -2706,11 +2760,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectComment)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectComment)");
         return comment;
     }
     //endregion
@@ -2738,11 +2792,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (updateComment)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (updateComment)");
     }
     //endregion
 
@@ -2768,11 +2822,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteComment)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteComment)");
     }
     //endregion
 
@@ -2804,11 +2858,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (insertUserComment)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (insertUserComment)");
     }
     //endregion
 
@@ -2825,8 +2879,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM ContentManagement.UserComment;
-            """);
+                    SELECT * FROM ContentManagement.UserComment;
+                    """);
 
             userComments = new ArrayList<>();
             while (rs.next()) {
@@ -2840,11 +2894,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectVideoCategories)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectVideoCategories)");
         return userComments;
     }
     //endregion
@@ -2883,11 +2937,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUserComments(based on userId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserComments(based on userId))");
         return userComments;
     }
     //endregion
@@ -2924,11 +2978,11 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectCommentUsers(based on commentId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectCommentUsers(based on commentId))");
         return userComments;
     }
     //endregion
@@ -2962,11 +3016,11 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully (selectUserComment)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Operation done successfully (selectUserComment)");
         return userComment;
     }
     //endregion
@@ -2992,11 +3046,11 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteUserComment)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteUserComment)");
     }
     //endregion
 
@@ -3020,11 +3074,44 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
+            System.out.println("Operation done successfully (deleteUserComment (based on commentID))");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Operation done successfully (deleteUserComment (based on commentID))");
+    }
+    //endregion
+
+    //endregion
+
+    //region [ - Tools - ]
+
+    //region [ - convertImageToByteArray(String imagePath, String type) - ]
+    private byte[] convertImageToByteArray(String imagePath, String type) {
+        String path ;
+        if (imagePath == null){
+            path = "src/main/resources/Images/Arcane2.jpg";
+        } else {
+            path = "src/main/resources" + imagePath;
+        }
+        System.out.println("In Convert Method");
+        byte[] imageBytes = null;
+        try {
+            // Load the image
+            File file = new File(path);
+            BufferedImage bufferedImage = ImageIO.read(file);
+
+            // Convert BufferedImage to byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            baos.flush();
+            imageBytes = baos.toByteArray();
+            baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("End of Convert Method");
+        return imageBytes;
     }
     //endregion
 
@@ -3032,4 +3119,5 @@ public class DatabaseManager {
 
     //endregion
 
+    
 }

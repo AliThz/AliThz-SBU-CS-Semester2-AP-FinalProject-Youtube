@@ -12,6 +12,8 @@ public class Channel {
     private String title;
     private String description;
     private int subscribers;
+    private String profilePath;
+    private byte[] profileBytes;
     private String dateCreated;
     private ArrayList<Subscription> subscriptions;
 
@@ -72,6 +74,22 @@ public class Channel {
 
     public void setSubscribers(int subscribers) {
         this.subscribers = subscribers;
+    }
+
+    public String getProfilePath() {
+        return profilePath;
+    }
+
+    public void setProfilePath(String profilePath) {
+        this.profilePath = profilePath;
+    }
+
+    public byte[] getProfileBytes() {
+        return profileBytes;
+    }
+
+    public void setProfileBytes(byte[] profileBytes) {
+        this.profileBytes = profileBytes;
     }
 
     public String getDateCreated() {

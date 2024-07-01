@@ -7,8 +7,9 @@ import java.util.UUID;
 public class Video {
     private UUID Id;
     private String title;
-    private String thumbnailPath ;
-    private String Path ;
+    private transient String thumbnailPath ;
+    private byte[] thumbnailBytes;
+    private String path;
     private String description;
     private Channel channel;
     private UUID channelId;
@@ -133,12 +134,20 @@ public class Video {
         this.thumbnailPath = thumbnailPath;
     }
 
+    public byte[] getThumbnailBytes() {
+        return thumbnailBytes;
+    }
+
+    public void setThumbnailBytes(byte[] thumbnailBytes) {
+        this.thumbnailBytes = thumbnailBytes;
+    }
+
     public String getPath() {
-        return Path;
+        return path;
     }
 
     public void setPath(String path) {
-        Path = path;
+        this.path = path;
     }
 
     public int getLikes() {

@@ -1,22 +1,25 @@
 .vbx-video-preview {
     -fx-alignment : top-center;
     -fx-background-color : rgb(0,0,0);
-    -fx-padding: 0 10;
-    -fx-pref-width: 240;
+    /*-fx-background-color : white;*/
+    -fx-padding: 0;
+    -fx-pref-width: 260;
     -fx-pref-height: 220;
     -fx-spacing: 5;
 }
 
 .hbx-video-details {
     -fx-alignment : top-center;
-    -fx-pref-width: 240;
-    -fx-pref-height: 220 - 136;
-    -fx-spacing: 10;
+    /*-fx-background-color: white;*/
+    -fx-padding: 0 10;
+    /*-fx-pref-width: 240;*/
+    /*-fx-pref-height: 220 - 136;*/
+    -fx-spacing: 5;
 }
 
 .img-thumbnail {
-    -fx-pref-width: 240;
-    -fx-pref-height: 136;
+    /*-fx-pref-width: 240;*/
+    /*-fx-pref-height: 136;*/
 }
 
 .vbx-text-details {

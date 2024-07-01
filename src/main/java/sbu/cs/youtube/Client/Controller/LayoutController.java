@@ -66,7 +66,7 @@ public class LayoutController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (YouTubeApplication.user == null) {
-            isSignedIn = true;
+            isSignedIn = false;
         } else {
             isSignedIn = true;
         }

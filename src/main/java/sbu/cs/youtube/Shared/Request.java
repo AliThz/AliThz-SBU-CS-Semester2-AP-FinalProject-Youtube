@@ -65,7 +65,7 @@ public class Request<T> {
     }
     //endregion
 
-    //region [ - getObject() - ]
+    //region [ - getBody() - ]
     public T getBody() {
         return body;
     }

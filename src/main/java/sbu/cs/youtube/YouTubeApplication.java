@@ -23,17 +23,17 @@ public class YouTubeApplication extends Application {
     public static Socket socket;
     public static User user;
     private static BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
+    private static BufferedWriter bufferedWriter;
 
 
-    public YouTubeApplication() throws IOException {
+    public YouTubeApplication() {
     }
 
-    public YouTubeApplication(Socket socket) throws IOException {
+    public YouTubeApplication(Socket socket){
         try {
             YouTubeApplication.socket = socket;
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         } catch (IOException e) {
             close(socket, bufferedReader, bufferedWriter);
         }
@@ -50,7 +50,7 @@ public class YouTubeApplication extends Application {
         return response;
     }
 
-    private void close(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+    private static void close(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
         try {
             if (socket != null) {
                 socket.close();
