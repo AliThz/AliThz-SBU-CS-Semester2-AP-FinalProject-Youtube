@@ -1,21 +1,31 @@
 package sbu.cs.youtube.Client.Controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.ResourceBundle;
+
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class VideoPageController implements Initializable {
@@ -23,19 +33,49 @@ public class VideoPageController implements Initializable {
     //region [ - Fields - ]
 
     @FXML
-    private HBox hbxVideoPage, hbxControls;
+    private AnchorPane anchrpnVideoPage;
+
+    @FXML
+    private ScrollPane scrllpnVideo;
+
+    @FXML
+    private Button btnNext;
+
+    @FXML
+    private Button btnPause;
+
+    @FXML
+    private Button btnPlay;
+
+    @FXML
+    private Button btnVolume;
+
+    @FXML
+    private HBox hbx;
+
+    @FXML
+    private HBox hbxChannel;
+
+    @FXML
+    private HBox hbxControls;
+
+    @FXML
+    private HBox hbxVideoDetails;
+
+    @FXML
+    private ImageView imgChannelProfile;
+
+    @FXML
+    private Text txtVideoDetail;
+
+    @FXML
+    private Text txtVideoTitle;
 
     @FXML
     private VBox vbxLeft;
 
     @FXML
-    private VBox vbxRight;
-
-    @FXML
-    private VBox vbxVideo;
-
-    @FXML
-    private Button btnVolume, btnPause, btnNext;
+    private VBox vbxVideoDetails;
 
     //endregion
 
@@ -44,25 +84,29 @@ public class VideoPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        String videoPath = "src/main/resources/Videos/Arcane2.mp4";
-        String videoPath = "file:///C:/Users/Admin/Desktop/Project/AliThz-SBU-CS-Semester2-AP-FinalProject-Youtube/src/main/resources/Videos/Arcane2.mp4";
+
+        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
+
+        //region [ - Media View - ]
+        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
 
         Media media = new Media(videoPath);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mediaPlayer);
-//        mediaView1.setMediaPlayer(mediaPlayer);
-
         mediaView.setPreserveRatio(true);
         mediaView.setSmooth(true);
-//
-        mediaView.fitWidthProperty().bind(vbxVideo.widthProperty());
-        mediaView.fitHeightProperty().bind(vbxVideo.heightProperty());
+        //endregion
 
-        VBox.setVgrow(mediaView, Priority.ALWAYS);
+//        anchrpnVideoPage.getChildren().add(mediaView);
+//        mediaView.fitWidthProperty().bind(Bindings.divide(anchrpnVideoPage.widthProperty(), 1.4));
+        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 5.0 / 7.0));
+//        scrllpnVideo.prefWidthProperty().bind(Bindings.multiply(vbxLeft.widthProperty(), 5.0 / 7.0));
+//        scrllpnVideo.prefHeightProperty().bind(vbxLeft.heightProperty());
 
-        // Playback controls
+        //region [ - Playback Controls - ]
         Button playButton = new Button("Play");
         playButton.setOnAction(e -> mediaPlayer.play());
+        btnPlay.setOnAction(e -> mediaPlayer.play());
 
         Button pauseButton = new Button("Pause");
         pauseButton.setOnAction(e -> mediaPlayer.pause());
@@ -90,21 +134,13 @@ public class VideoPageController implements Initializable {
             }
         });
 
-        vbxVideo.getChildren().addFirst(mediaView);
 
-        HBox hbxControls = new HBox(10, playButton, pauseButton, stopButton);
-//        HBox.setHgrow(mediaView, Priority.ALWAYS);
-
-        vbxVideo.getChildren().add(timeSlider);
-        vbxVideo.getChildren().add(hbxControls);
-
+        hbxControls.getChildren().add(timeSlider);
         mediaPlayer.play();
+        //endregion
 
-
-
-
-
-
+        //region [ - Recommended Videos - ]
+        VBox vbxRecommendedVideos = new VBox();
         for (int i = 0; i < 4; i++) {
             FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
             Parent videoPreview;
@@ -118,9 +154,18 @@ public class VideoPageController implements Initializable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            vbxRight.getChildren().add(videoPreview);
+            vbxRecommendedVideos.getChildren().add(videoPreview);
+            VBox.setVgrow(videoPreview, Priority.ALWAYS);
         }
+        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 2.0 / 7.0));
+        vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        vbxRecommendedVideos.setAlignment(Pos.BASELINE_CENTER);
+        vbxRecommendedVideos.getStyleClass().add("vbxRecommendedVideos");
+//        anchrpnVideoPage.getChildren().add(vbxRecommendedVideos);
+        //endregion
 
+        vbxLeft.getChildren().addFirst(mediaView);
+        hbx.getChildren().addAll(vbxRecommendedVideos);
     }
     //endregion
 
