@@ -40,23 +40,20 @@
                         <Insets bottom="3.0" />
                      </VBox.margin>
                   </Text>
-                  <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel Name">
-                     <font>
-                        <Font size="10.0" />
-                     </font></Text>
+                  <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel Name" />
                   <HBox fx:id="hbxViewsAndDate" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                      <children>
                         <Text fx:id="txtViews" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Views">
                            <font>
-                              <Font size="8.0" />
+                              <Font size="10.0" />
                            </font></Text>
                         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="·">
                            <font>
-                              <Font size="8.0" />
+                              <Font size="10.0" />
                            </font></Text>
                         <Text fx:id="txtDate" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Date">
                            <font>
-                              <Font size="8.0" />
+                              <Font size="10.0" />
                            </font></Text>
                      </children>
                   </HBox>

@@ -65,8 +65,6 @@ public class HomeSectionController implements Initializable {
                 VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
                 if (videoPreviewController != null) {
                     videoPreviewController.setVideo(video);
-//                    videoPreviewController.addThumbnail("/Images/Thumbnail.jpg");
-//                    videoPreviewController.addChannelProfile("/Images/ChannelProfile.png");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

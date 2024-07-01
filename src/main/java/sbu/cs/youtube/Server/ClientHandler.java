@@ -43,7 +43,7 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             try {
-                while (client.isConnected()) {
+                while (!client.isClosed()) {
                     receiveRequest();
                 }
             } catch (Exception e) {
@@ -62,12 +62,21 @@ public class ClientHandler implements Runnable {
     //endregion
 
     //region [ - receiveRequest() - ]
-    public void receiveRequest() {
+    public void receiveRequest() throws IOException {
         try {
             String request = bufferedReader.readLine();
             handleRequest(request);
         } catch (IOException ioe) {
-            System.out.println("!!Exception : " + ioe.getMessage());
+            try {
+                if (client != null) {
+                    client.close();
+                }
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            } catch (IOException e) {
+                System.out.println("!!Exception : " + e.getMessage());
+            }
         }
     }
     //endregion

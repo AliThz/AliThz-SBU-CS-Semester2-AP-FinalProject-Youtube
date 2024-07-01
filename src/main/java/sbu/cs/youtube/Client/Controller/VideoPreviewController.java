@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -33,6 +34,7 @@ public class VideoPreviewController implements Initializable {
     private Text txtVideoTitle, txtChannelName, txtViews, txtDate;
     @FXML
     private VBox vbxVideoPreview, vbxTextDetails;
+    private final int TITLE_MAX_LENGTH = 50;
     //endregion
 
     //region [ - Methods - ]
@@ -65,9 +67,15 @@ public class VideoPreviewController implements Initializable {
 
     //region [ - setAttributes(Video video) - ]
     public void setVideo(Video video) {
-        txtVideoTitle.setText(video.getTitle());
+        String summarizedTitle = video.getTitle();
+        if (summarizedTitle.length() > TITLE_MAX_LENGTH) {
+            summarizedTitle = summarizedTitle.substring(0, TITLE_MAX_LENGTH);
+            summarizedTitle += " ...";
+        }
+        txtVideoTitle.setText(summarizedTitle);
         txtChannelName.setText(video.getChannel().getTitle());
-        txtDate.setText(video.getUploadDate());
+        LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
+        txtDate.setText(date.getDayOfMonth() + " " + date.getMonth());
         txtViews.setText(String.valueOf(video.getViews()));
 
         ByteArrayInputStream bis;
