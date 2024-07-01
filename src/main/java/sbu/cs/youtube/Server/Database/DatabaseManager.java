@@ -1485,8 +1485,8 @@ public class DatabaseManager {
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
-//                video.setPath(rs.getString("Path"));
-//                video.setVideoBytes(convertVideoToByteArray("salam"));
+                video.setPath(rs.getString("Path"));
+                video.setVideoBytes(convertVideoToByteArray("salam"));
             }
 
 //            stmt = c.prepareStatement("""
