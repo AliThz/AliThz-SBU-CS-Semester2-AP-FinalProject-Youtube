@@ -18,7 +18,7 @@
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
-      <HBox fx:id="hbx" layoutX="10.0" layoutY="10.0" prefHeight="456.0" prefWidth="850.0">
+      <HBox fx:id="hbx" layoutX="-2.0" prefHeight="466.0" prefWidth="850.0">
          <children>
             <VBox fx:id="vbxLeft" prefHeight="386.0" prefWidth="850.0" styleClass="left-vbox" HBox.hgrow="ALWAYS">
                <children>
@@ -46,26 +46,35 @@
                         </Button>
                      </children>
                   </HBox>
-                  <VBox fx:id="vbxVideoDetails" prefHeight="170.0" prefWidth="830.0">
+                  <VBox fx:id="vbxVideoDetails" prefHeight="170.0" prefWidth="830.0" spacing="10.0">
                      <children>
                         <Text fx:id="txtVideoTitle" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Arcane Season 2 | Official Teaser Trailer" VBox.vgrow="ALWAYS">
                            <font>
-                              <Font size="25.0" />
+                              <Font name="System Bold" size="25.0" />
                            </font>
                         </Text>
                         <HBox fx:id="hbxVideoDetails" alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="830.0" spacing="10.0">
                            <children>
-                              <HBox fx:id="hbxChannel" alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="344.0" spacing="20.0" HBox.hgrow="ALWAYS">
+                              <HBox fx:id="hbxChannel" alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="195.0" spacing="20.0" HBox.hgrow="NEVER">
                                  <children>
                                     <ImageView fx:id="imgChannelProfile" fitHeight="40.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true" />
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Name">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Text>
+                                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Text fx:id="txtChannelName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Name">
+                                             <font>
+                                                <Font name="System Bold" size="15.0" />
+                                             </font>
+                                          </Text>
+                                          <Text fx:id="txtChannelSubscribres" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Name">
+                                             <font>
+                                                <Font size="10.0" />
+                                             </font>
+                                          </Text>
+                                       </children>
+                                    </VBox>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER" prefHeight="57.0" prefWidth="171.0" styleClass="button-group">
+                              <HBox alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="363.0" styleClass="button-group" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="170.0" styleClass="button-subscription">
                                        <graphic>
@@ -129,14 +138,14 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </HBox>
-                              <HBox alignment="CENTER" prefHeight="57.0" prefWidth="131.0" styleClass="button-group">
+                              <HBox alignment="CENTER" prefHeight="57.0" prefWidth="151.0" styleClass="button-group">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="122.0" styleClass="button-subscription">
+                                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="126.0" styleClass="button-subscription">
                                        <graphic>
-                                          <HBox alignment="CENTER" prefHeight="26.0" prefWidth="118.0" spacing="10.0">
+                                          <HBox alignment="CENTER" prefHeight="26.0" prefWidth="96.0" spacing="10.0">
                                              <children>
                                                 <SVGPath content="M18 4v15.06l-5.42-3.87-.58-.42-.58.42L6 19.06V4h12m1-1H5v18l7-5 7 5V3z" styleClass="svg" />
-                                                <ComboBox prefHeight="26.0" prefWidth="70.0" promptText="Save" styleClass="combo-box" />
+                                                <ComboBox prefHeight="26.0" prefWidth="69.0" promptText="Save" styleClass="combo-box" />
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" right="5.0" />
@@ -175,7 +184,7 @@
                                     </Text>
                                  </children>
                               </HBox>
-                              <Text fx:id="txtVideoDetail" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="The hunt is on. Arcane, the final season coming this November to Netflix." wrappingWidth="427.9454345703125">
+                              <Text fx:id="txtVideoDescription" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="The hunt is on. Arcane, the final season coming this November to Netflix." wrappingWidth="427.9454345703125">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -185,7 +194,7 @@
                               </Text>
                            </children>
                            <padding>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </padding>
                         </VBox>
                      </children>
@@ -208,6 +217,9 @@
                </children>
             </VBox>
          </children>
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
       </HBox>
    </children>
 </AnchorPane>
