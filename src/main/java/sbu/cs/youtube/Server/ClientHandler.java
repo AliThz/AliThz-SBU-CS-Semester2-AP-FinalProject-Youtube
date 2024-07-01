@@ -43,7 +43,7 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             try {
-                while (!client.isClosed()) {
+                while (client.isConnected()) {
                     receiveRequest();
                 }
             } catch (Exception e) {
@@ -96,6 +96,7 @@ public class ClientHandler implements Runnable {
                 break;
             case "SignIn":
                 signIn();
+                break;
             case "GetRecommendedVideos":
                 GetRecommendedVideos();
                 break;

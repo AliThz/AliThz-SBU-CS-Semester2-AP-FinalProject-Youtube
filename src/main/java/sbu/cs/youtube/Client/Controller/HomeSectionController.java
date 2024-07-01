@@ -41,7 +41,7 @@ public class HomeSectionController implements Initializable {
 
 
 
-        Request<Video> userRequest = new Request<>(YouTubeApplication.socket, "GetRecommendedVideos");
+        Request<ArrayList<Video>> userRequest = new Request<>(YouTubeApplication.socket, "GetRecommendedVideos");
         userRequest.send();
 
         String response = YouTubeApplication.receiveResponse();

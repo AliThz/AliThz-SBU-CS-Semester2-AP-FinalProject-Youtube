@@ -115,12 +115,12 @@ public class SignInController implements Initializable {
         }
 
         if (signIn(user)) {
-//            exitSignInSignUp(event);
+            exitSignInSignUp(event);
             System.out.println("Signed In");
-        } else {
+        }
+        else {
             inputLog.getParent().setVisible(true);
         }
-
     }
 
     Boolean determineInput(String input) {
