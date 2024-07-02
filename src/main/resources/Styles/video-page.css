@@ -1,11 +1,103 @@
 /* -------------------------------- Background -------------------------------- */
 .background {
-    -fx-background-color : black;
-    -fx-border-color : black;
+    -fx-background-color: black;
+    -fx-border-color: black;
 }
 
 /* -------------------------------- Video -------------------------------- */
 .left-vbox {
+    -fx-padding: 0 10;
+    -fx-alignment: top-center;
+}
+
+.vbxRecommendedVideos {
     -fx-padding: 10;
     -fx-alignment: top-center;
+}
+
+.text {
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-fill: rgb(255, 255, 255);
+    /*-fx-text-fill: rgb(0, 0, 0);*/
+    /*-fx-fill: rgb(0, 0, 0);*/
+}
+
+.scroll-pane {
+    -fx-background-color: black;
+}
+
+.button {
+    -fx-background-color: transparent;
+}
+
+.button-group {
+    /*-fx-background-color: rgb(33, 33, 33);*/
+    /*-fx-background-radius: 20;*/
+}
+
+.svg {
+    -fx-fill: rgb(255, 255, 255);
+}
+
+.separator-vertical .line {
+    -fx-border-color: rgb(72, 71, 71);
+    -fx-border-width: 0.5;
+}
+
+.separator-horizontal .line {
+    -fx-border-color: rgb(33, 33, 33);
+    -fx-border-width: 1;
+}
+
+.button-like {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 20 0 0 20;
+}
+
+.button-subscription {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 20;
+}
+
+.button-dislike {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 0 20 20 0;
+}
+
+.combo-box {
+    -fx-background-color: rgb(33, 33, 33);
+}
+
+.vbxDescription {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 20;
+}
+
+.timeSlider .track {
+    -fx-background-color: transparent;
+
+}
+
+.timeSlider {
+    -fx-background-color: transparent;
+    -fx-pref-height: 4;
+}
+
+.timeSlider .thumb {
+    -fx-background-color: red;
+}
+
+.progress-bar .bar {
+    -fx-background-color: red;
+    -fx-border-radius: 10;
+    -fx-pref-height: 10;
+    -fx-background-insets: 3;
+}
+
+.progress-bar .track {
+    -fx-background-color: rgb(33, 33, 33);
+}
+
+.stack-pane {
+    -fx-alignment: center;
 }
