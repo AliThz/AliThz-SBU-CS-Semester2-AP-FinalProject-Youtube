@@ -11,27 +11,26 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="295.0" styleClass="background" stylesheets="@../../../Styles/video-recommendation.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="400.0" styleClass="background" stylesheets="@../../../Styles/video-recommendation.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="imgThumbnail" fitHeight="67.0" fitWidth="139.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgThumbnail" fitHeight="103.0" fitWidth="181.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../Images/Thumbnail.jpg" />
          </image>
       </ImageView>
-      <VBox prefHeight="78.0" prefWidth="162.0">
+      <VBox prefHeight="96.0" prefWidth="211.0">
          <children>
             <HBox prefHeight="70.0" prefWidth="174.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox prefHeight="70.0" prefWidth="184.0">
+                  <VBox prefHeight="86.0" prefWidth="196.0" spacing="5.0">
                      <children>
-                        <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="A title for a video in youtube" wrappingWidth="138.13691759109497">
+                        <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="A title for a video in youtube in youtube" wrappingWidth="183.73689317703247" VBox.vgrow="ALWAYS">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font>
                         </Text>
                         <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel Name" />
-                        <HBox fx:id="hbxViewsAndDate" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                        <HBox fx:id="hbxViewsAndDate" alignment="BOTTOM_LEFT" prefHeight="10.0" prefWidth="188.0" spacing="5.0">
                            <children>
                               <Text fx:id="txtViews" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Views">
                                  <font>

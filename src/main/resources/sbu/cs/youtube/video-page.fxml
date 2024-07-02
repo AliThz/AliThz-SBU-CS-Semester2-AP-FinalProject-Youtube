@@ -15,7 +15,7 @@
 
 <AnchorPane fx:id="anchrpnVideoPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="850.0" styleClass="background" stylesheets="@../../../Styles/video-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.VideoPageController">
    <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" />
    </padding>
    <children>
       <HBox fx:id="hbx" layoutX="-2.0" prefHeight="466.0" prefWidth="850.0">
@@ -215,10 +215,13 @@
                      </padding>
                   </VBox>
                </children>
+               <HBox.margin>
+                  <Insets top="-10.0" />
+               </HBox.margin>
             </VBox>
          </children>
          <padding>
-            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+            <Insets bottom="5.0" left="10.0" right="10.0" />
          </padding>
       </HBox>
    </children>

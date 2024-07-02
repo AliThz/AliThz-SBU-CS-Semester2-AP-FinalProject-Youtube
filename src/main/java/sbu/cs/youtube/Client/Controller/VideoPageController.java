@@ -207,10 +207,11 @@ public class VideoPageController implements Initializable {
             VBox.setVgrow(videoPreview, Priority.ALWAYS);
         }
 //        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 2.0 / 7.0));
+        hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
+//        vbxRecommendedVideos.prefWidthProperty().bind(hbx.widthProperty());
         vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
         vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
         vbxRecommendedVideos.setSpacing(20);
-        vbxRecommendedVideos.setAlignment(Pos.CENTER);
         vbxRecommendedVideos.getStyleClass().add("vbxRecommendedVideos");
 //        anchrpnVideoPage.getChildren().add(vbxRecommendedVideos);
         //endregion
