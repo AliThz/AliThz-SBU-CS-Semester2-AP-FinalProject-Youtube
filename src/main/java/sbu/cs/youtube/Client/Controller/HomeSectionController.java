@@ -89,7 +89,7 @@ public class HomeSectionController implements Initializable {
         Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideo");
         videoRequest.send(new Video(video.getId()));
 
-        //getVideoPage(event); todo
+//        getVideoPage(event); //todo
     }
 
     private void getVideoPage(ActionEvent event) {

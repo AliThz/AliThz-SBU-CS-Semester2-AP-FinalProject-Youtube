@@ -87,6 +87,9 @@ public class VideoPageController implements Initializable {
     private Text txtViews;
 
     @FXML
+    private Text txtChannelSubscribres;
+
+    @FXML
     private VBox vbxCommentSection;
 
     @FXML
@@ -106,14 +109,14 @@ public class VideoPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        Gson gson = new Gson();
-//        String response = YouTubeApplication.receiveResponse();
-//        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
-//        };
-//        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
-//
-//        Video responseVideo = videoResponse.getBody();
-//        setVideo(responseVideo);
+        Gson gson = new Gson();
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        Video responseVideo = videoResponse.getBody();
+        setVideo(responseVideo);
 
         imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
 
@@ -226,6 +229,7 @@ public class VideoPageController implements Initializable {
         txtVideoTitle.setText(video.getTitle());
         txtVideoDescription.setText(video.getDescription());
         txtChannelName.setText(video.getChannel().getTitle());
+        txtChannelSubscribres.setText(String.valueOf(video.getChannel().getSubscribers()));
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear());
         txtViews.setText(String.valueOf(video.getViews()));
