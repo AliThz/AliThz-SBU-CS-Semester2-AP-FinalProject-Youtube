@@ -109,14 +109,14 @@ public class VideoPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Gson gson = new Gson();
-        String response = YouTubeApplication.receiveResponse();
-        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
-        };
-        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
-
-        Video responseVideo = videoResponse.getBody();
-        setVideo(responseVideo);
+//        Gson gson = new Gson();
+//        String response = YouTubeApplication.receiveResponse();
+//        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+//        };
+//        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+//
+//        Video responseVideo = videoResponse.getBody();
+//        setVideo(responseVideo);
 
         imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
 
@@ -209,18 +209,62 @@ public class VideoPageController implements Initializable {
             vbxRecommendedVideos.getChildren().add(videoPreview);
             VBox.setVgrow(videoPreview, Priority.ALWAYS);
         }
+
+        ScrollPane recommendedVideosScrollPane = new ScrollPane();
 //        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 2.0 / 7.0));
         hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
 //        vbxRecommendedVideos.prefWidthProperty().bind(hbx.widthProperty());
         vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
+        recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
         vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
         vbxRecommendedVideos.setSpacing(20);
-        vbxRecommendedVideos.getStyleClass().add("vbxRecommendedVideos");
+        vbxRecommendedVideos.getStyleClass().add("vbx-recommended-videos");
 //        anchrpnVideoPage.getChildren().add(vbxRecommendedVideos);
         //endregion
 
+
+        recommendedVideosScrollPane.getStyleClass().add("scroll-pane");
+//        recommendedVideosScrollPane.setVvalue(0.5);
+//        recommendedVideosScrollPane.setHvalue(0.5);
+        recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
         vbxLeft.getChildren().addFirst(mediaView);
-        hbx.getChildren().addAll(vbxRecommendedVideos);
+//        hbx.getChildren().addAll(vbxRecommendedVideos);
+        ScrollPane videoScrollPane = new ScrollPane();
+        videoScrollPane.getStyleClass().add("scroll-pane");
+        videoScrollPane.setFitToWidth(true);
+        videoScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
+        videoScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        videoScrollPane.setContent(vbxLeft);
+        videoScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        videoScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        hbx.getChildren().addAll(videoScrollPane, recommendedVideosScrollPane);
+        hbx.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+
+
+
+        //region [ - Comments - ]
+        for (int i = 0; i < 8; i++) {
+            FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
+            Parent commentPreview;
+            try {
+                commentPreview = commentPreviewLoader.load();
+//                VideoPreviewController commentPreviewController = commentPreviewLoader.getController();
+                VideoRecommendationController commentPreviewController = commentPreviewLoader.getController();
+//                if (commentPreviewController != null) {
+//                    commentPreviewController.addThumbnail("/Images/Thumbnail.jpg");
+//                    commentPreviewController.addChannelProfile("/Images/ChannelProfile.png");
+//                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            vbxCommentSection.getChildren().add(commentPreview);
+        }
+        //endregion
+
+
     }
     //endregion
 
