@@ -17,6 +17,7 @@ public class DatabaseManager {
     private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-Development";
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
+
     //endregion
     public static void main(String[] args) {
 //        Playlist playlist = selectPlaylist(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
@@ -1906,8 +1907,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
@@ -1949,8 +1949,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
@@ -1993,8 +1992,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
@@ -2034,11 +2032,10 @@ public class DatabaseManager {
             stmt.setObject(1, userID);
             stmt.setObject(2, videoId);
             ResultSet rs = stmt.executeQuery();
-            userVideo = new UserVideo();
-            if (rs.next()){
+            if (rs.next()) {
+                userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(videoId);
@@ -2074,10 +2071,9 @@ public class DatabaseManager {
             stmt.setObject(1, userID);
             stmt.setObject(2, videoId);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(videoId);
@@ -2256,6 +2252,7 @@ public class DatabaseManager {
         }
         return playlists;
     }
+
     //endregion
     //region [ - selectPlaylist(UUID Id) - ]
     public Playlist selectPlaylist(UUID Id) {
@@ -3122,7 +3119,7 @@ public class DatabaseManager {
             stmt.setObject(2, commentID);
             ResultSet rs = stmt.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 userComment = new UserComment();
                 userComment.setLike(rs.getBoolean("Like"));
                 userComment.setUserId(UUID.fromString(rs.getString("UserId")));
@@ -3235,8 +3232,8 @@ public class DatabaseManager {
 
     //region [ - convertImageToByteArray(String imagePath, String type) - ]
     private byte[] convertImageToByteArray(String imagePath, String type) {
-        String path ;
-        if (imagePath == null){
+        String path;
+        if (imagePath == null) {
             path = "src/main/resources/Images/Arcane2.jpg";
         } else {
             path = "src/main/resources" + imagePath;
@@ -3265,8 +3262,8 @@ public class DatabaseManager {
     //region [ - convertVideoToByteArray - ]
 
     public byte[] convertVideoToByteArray(String videoPath) {
-        String path ;
-        if (videoPath == null){
+        String path;
+        if (videoPath == null) {
             path = "src/main/resources/Videos/AvengersInfinityWar.mp4";
         } else {
             path = "src/main/resources" + videoPath;
@@ -3295,5 +3292,5 @@ public class DatabaseManager {
     //endregion
 
     //endregion
-    
+
 }
