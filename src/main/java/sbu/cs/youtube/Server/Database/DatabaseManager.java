@@ -2075,7 +2075,13 @@ public class DatabaseManager {
             stmt.setObject(2, videoId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                userVideo = new UserVideo();
+                userVideo.setLike(rs.getBoolean("Like"));
+                if (rs.wasNull())
+                {
+                    userVideo.setLike(null);
+                }
+                userVideo.setVideoId(videoId);
+                userVideo.setUserId(userID);
             }
             rs.close();
             stmt.close();

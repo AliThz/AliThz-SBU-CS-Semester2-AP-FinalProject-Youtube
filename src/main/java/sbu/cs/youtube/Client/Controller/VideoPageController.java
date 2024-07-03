@@ -32,6 +32,7 @@ import javafx.util.Duration;
 import org.apache.commons.codec.digest.DigestUtils;
 import sbu.cs.youtube.Shared.POJO.Subscription;
 import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.POJO.UserVideo;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
@@ -130,7 +131,7 @@ public class VideoPageController implements Initializable {
     @FXML
     private SVGPath svgDislike;
 
-    Boolean hasLiked;
+    Boolean hasLiked = null;
 
     MediaPlayer mediaPlayer;
     MediaView mediaView;
@@ -143,16 +144,32 @@ public class VideoPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        Gson gson = new Gson();
-//        String response = YouTubeApplication.receiveResponse();
-//        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
-//        };
-//        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
-//
-//        Video responseVideo = videoResponse.getBody();
-//        setVideo(responseVideo);
+        Gson gson = new Gson();
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
-//        hasLiked = ....
+        video = videoResponse.getBody();
+
+
+        Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "CheckViewVideoExistence");
+        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
+
+        response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<UserVideo>> viewResponseTypeToken = new TypeToken<>() {
+        };
+        Response<UserVideo> userVideoResponse = gson.fromJson(response, viewResponseTypeToken.getType());
+        UserVideo userVideo = userVideoResponse.getBody();
+
+        System.out.println(userVideoResponse.getMessage());
+
+        if(userVideo != null)
+            hasLiked = userVideo.getLike();
+
+        setVideo();
+
+//        hasLiked = .... todo
 
         imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
 
@@ -307,7 +324,7 @@ public class VideoPageController implements Initializable {
 
     private void restart(ActionEvent event) {
         mediaPlayer.stop();
-        mediaPlayer.play();
+        pause(event);
     }
 
     private void pause(ActionEvent event) {
@@ -327,7 +344,7 @@ public class VideoPageController implements Initializable {
 
 
     //region [ - setVideo(Video video) - ]
-    public void setVideo(Video video) {
+    public void setVideo() {
         txtVideoTitle.setText(video.getTitle());
         txtVideoDescription.setText(video.getDescription());
         txtChannelName.setText(video.getChannel().getTitle());
@@ -335,6 +352,14 @@ public class VideoPageController implements Initializable {
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear());
         txtViews.setText(String.valueOf(video.getViews()));
+        txtLikes.setText(String.valueOf(video.getLikes()));
+
+        if (hasLiked == null) {
+        } else if (hasLiked) {
+            svgLike.setContent("M3,11h3v10H3V11z M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11v10h10.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z");
+        } else if (!hasLiked) {
+            svgDislike.setContent("M18,4h3v10h-3V4z M5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21c0.58,0,1.14-0.24,1.52-0.65L17,14V4H6.57 C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14z");
+        }
     }
     //endregion
 
@@ -342,7 +367,7 @@ public class VideoPageController implements Initializable {
     private void updateSub(ActionEvent event) {
         SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
 
-        Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "SignUp");
+        Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "CheckSubscriptionExistence");
         subscriptionRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
 
         String response = YouTubeApplication.receiveResponse();
@@ -355,13 +380,19 @@ public class VideoPageController implements Initializable {
         if (subscription != null) {
             svgPath.setContent("m3.85 3.15-.7.7 3.48 3.48C6.22 8.21 6 9.22 6 10.32v5.15l-2 1.88V19h14.29l1.85 1.85.71-.71-17-16.99zM5 18v-.23l2-1.88v-5.47c0-.85.15-1.62.41-2.3L17.29 18H5zm5 2h4c0 1.1-.9 2-2 2s-2-.9-2-2zM9.28 5.75l-.7-.7c.43-.29.9-.54 1.42-.7v-.39c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v4.14l-1-1v-3.05c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03-.27.11-.51.24-.75.4z");
             btnSub.setText("Unsubscribed");
-            //todo update sub
+            Request<Subscription> unsubRequest = new Request<>(YouTubeApplication.socket, "Unsubscribe");
+            unsubRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
+
         } else {
             svgPath.setContent("M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z");
             btnSub.setText("Subscribed");
-            //todo update sub
+            Request<Subscription> subRequest = new Request<>(YouTubeApplication.socket, "Subscribe");
+            subRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
         }
 
+        response = YouTubeApplication.receiveResponse();
+        subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
+        System.out.println(subscriptionResponse.getMessage());
     }
 
     @FXML
@@ -370,15 +401,26 @@ public class VideoPageController implements Initializable {
         String emptiedDislike = "M17,4h-1H6.57C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21 c0.58,0,1.14-0.24,1.52-0.65L17,14h4V4H17z M10.4,19.67C10.21,19.88,9.92,20,9.62,20c-0.26,0-0.5-0.11-0.63-0.3 c-0.07-0.1-0.15-0.26-0.09-0.47l1.52-4.94l0.4-1.29H9.46H5.23c-0.41,0-0.8-0.17-1.03-0.46c-0.12-0.15-0.25-0.4-0.18-0.72l1.34-6 C5.46,5.35,5.97,5,6.57,5H16v8.61L10.4,19.67z M20,13h-3V5h3V13z";
         String emptiedLike = "M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11H3v10h4h1h9.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z M7,20H4v-8h3V20z M19.98,13.17l-1.34,6 C18.54,19.65,18.03,20,17.43,20H8v-8.61l5.6-6.06C13.79,5.12,14.08,5,14.38,5c0.26,0,0.5,0.11,0.63,0.3 c0.07,0.1,0.15,0.26,0.09,0.47l-1.52,4.94L13.18,12h1.35h4.23c0.41,0,0.8,0.17,1.03,0.46C19.92,12.61,20.05,12.86,19.98,13.17z";
 
+
         if (hasLiked == null || !hasLiked) {
             svgLike.setContent(filledLike);
             svgDislike.setContent(emptiedDislike);
             hasLiked = true;
-            // todo update
         } else if (hasLiked) {
             svgLike.setContent(emptiedLike);
             hasLiked = null;
         }
+
+        Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "LikeVideo");
+        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<UserVideo>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
+        System.out.println(userVideoResponse.getMessage());
+
     }
 
     @FXML
@@ -391,12 +433,20 @@ public class VideoPageController implements Initializable {
             hasLiked = false;
             svgLike.setContent(emptiedLike);
             svgDislike.setContent(filledDislike);
-            // todo update
         } else if (!hasLiked) {
             svgDislike.setContent(emptiedDislike);
             hasLiked = null;
         }
 
+        Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "DislikeVideo");
+        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<UserVideo>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
+        System.out.println(userVideoResponse.getMessage());
     }
 
     @FXML

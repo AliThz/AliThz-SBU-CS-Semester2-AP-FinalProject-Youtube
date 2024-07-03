@@ -73,7 +73,7 @@ public class YouTubeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 //        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
-        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("video-page.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
 //        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("test.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/YoutubeIcon.png"))));
@@ -183,15 +183,15 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
 //        ------------------------- LikeComment and DislikeComment Test ---------------------------------------------
-//        Socket socket = new Socket("localhost", 2345);
+        Socket socket = new Socket("localhost", 2345);
 //        Request<UserComment> userRequest = new Request<>(socket, "DislikeComment");
 //        UserComment userComment = new UserComment();
 //        userComment.setUserId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
 //        userComment.setCommentId(UUID.fromString("e667f49f-ffb8-4f28-a8e2-caeaa33e59c6")    );
 //        userRequest.send(userComment);
-//        YouTubeApplication client = new YouTubeApplication(socket);
+        YouTubeApplication client = new YouTubeApplication(socket);
 //        String response = receiveResponse();
 //        System.out.println(response);
-//        launch();
+        launch();
     }
 }

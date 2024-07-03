@@ -269,7 +269,7 @@ public class ClientHandler implements Runnable {
         UserVideo requestedUserVideo = userVideoRequest.getBody();
 
         Response<UserVideo> response;
-        UserVideo userVideo = databaseManager.userVideoExistence(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
+        UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
         if (userVideo != null) {
             response = new Response<>(client, userVideoRequest.getType(), true, "Video has already viewed");
         } else {
@@ -290,12 +290,13 @@ public class ClientHandler implements Runnable {
         Response<UserVideo> response;
         UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
 
-        if (userVideo.getLike()) {
-            requestedUserVideo.setLike(null);
-            response = new Response<>(client, userVideoRequest.getType(), true, "Video unliked");
-        } else {
+        if (userVideo.getLike() == null || !userVideo.getLike()) {
             requestedUserVideo.setLike(true);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video liked");
+        }
+        else {
+            requestedUserVideo.setLike(null);
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video unliked");
         }
         databaseManager.updateUserVideo(requestedUserVideo);
 
@@ -313,13 +314,10 @@ public class ClientHandler implements Runnable {
         Response<UserVideo> response;
         UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
 
-        if (userVideo.getLike() == null) {
+        if (userVideo.getLike() == null || userVideo.getLike()) {
             requestedUserVideo.setLike(false);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
-        } else if (userVideo.getLike()){
-            requestedUserVideo.setLike(false);
-            response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
-        } else {
+        } else{
             requestedUserVideo.setLike(null);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video undisliked");
         }

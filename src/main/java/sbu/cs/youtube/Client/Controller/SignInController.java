@@ -125,7 +125,7 @@ public class SignInController implements Initializable {
 
     Boolean determineInput(String input) {
         //email regex
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        String emailRegex = "^[A-Za-z0-9+_]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
         Pattern emailPattern = Pattern.compile(emailRegex);
         Matcher emailMatcher = emailPattern.matcher(input);
 
