@@ -48,6 +48,10 @@ public class Video {
         this.uploadDate = uploadDate;
     }
 
+    public Video(UUID id) {
+        Id = id;
+    }
+
     public UUID getId() {
         return Id;
     }

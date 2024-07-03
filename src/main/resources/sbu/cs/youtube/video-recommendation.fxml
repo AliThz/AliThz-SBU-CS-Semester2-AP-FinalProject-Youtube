@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="400.0" styleClass="background" stylesheets="@../../../Styles/video-recommendation.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="imgThumbnail" fitHeight="103.0" fitWidth="181.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../Images/Thumbnail.jpg" />
+         </image>
+      </ImageView>
+      <VBox prefHeight="96.0" prefWidth="211.0">
+         <children>
+            <HBox prefHeight="70.0" prefWidth="174.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox prefHeight="86.0" prefWidth="196.0" spacing="5.0">
+                     <children>
+                        <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="A title for a video in youtube in youtube" wrappingWidth="183.73689317703247" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel Name" />
+                        <HBox fx:id="hbxViewsAndDate" alignment="BOTTOM_LEFT" prefHeight="10.0" prefWidth="188.0" spacing="5.0">
+                           <children>
+                              <Text fx:id="txtViews" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Views">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Text>
+                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="·">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="txtDate" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Date">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <Button fx:id="btnVideoPreviewOptions" mnemonicParsing="false" prefHeight="31.0" prefWidth="0.0" styleClass="add-btn" textFill="WHITE">
+                     <graphic>
+                        <SVGPath fx:id="svgpthVideoPreviewOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" />
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" top="5.0" />
+         </padding>
+      </VBox>
+   </children>
+</FlowPane>

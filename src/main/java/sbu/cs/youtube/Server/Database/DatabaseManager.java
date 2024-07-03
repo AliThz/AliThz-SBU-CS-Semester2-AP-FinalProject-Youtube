@@ -787,7 +787,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - Subscription selectSubscription(UUID Id) - ] Not Exist
-    public Subscription selectSubscription(UUID Id) {
+    public Subscription selectSubscription(UUID subscriberId, UUID channelId) {
         Connection c;
         PreparedStatement stmt;
         Subscription subscription = null;
@@ -798,9 +798,10 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectSubscription)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement.Subscription WHERE \"Id\" = ?
+                    SELECT * FROM UserManagement.Subscription WHERE "subscriberid" = ? AND "channelid" = ? 
                     """);
-            stmt.setObject(1, Id);
+            stmt.setObject(1, subscriberId);
+            stmt.setObject(1, channelId);
             ResultSet rs = stmt.executeQuery();
             subscription = new Subscription();
 
@@ -2000,6 +2001,37 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return userVideo;
+    }
+    //endregion
+
+    //region [ - updateUserVideo(UserVideo userVideo) - ] YES
+    public void updateUserVideo(UserVideo userVideo) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updateUserVideo)");
+
+            stmt = c.prepareStatement("""
+                    UPDATE ContentManagement.UserVideo
+                    SET "Like" = ?
+                    WHERE UserId = ? AND VideoId = ?;
+                    """);
+
+            stmt.setObject(1, userVideo.getUserId());
+            stmt.setObject(2, userVideo.getVideoId());
+            stmt.setObject(3, userVideo.getLike());
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (updateUserVideo)");
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
     }
     //endregion
 

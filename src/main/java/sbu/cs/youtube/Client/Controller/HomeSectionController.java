@@ -2,12 +2,19 @@ package sbu.cs.youtube.Client.Controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import org.apache.commons.codec.digest.DigestUtils;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
@@ -39,8 +46,6 @@ public class HomeSectionController implements Initializable {
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
 
 
-
-
         Request<ArrayList<Video>> userRequest = new Request<>(YouTubeApplication.socket, "GetRecommendedVideos");
         userRequest.send();
 
@@ -57,6 +62,7 @@ public class HomeSectionController implements Initializable {
         for (var video : recommendedVideos) {
             FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
             VBox videoPreview;
+
             try {
 //                layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
                 videoPreview = videoPreviewLoader.load();
@@ -69,7 +75,36 @@ public class HomeSectionController implements Initializable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            layoutController.addToFlowPane(videoPreview);
+
+            Button button = new Button();
+            button.getStyleClass().add("btn-video");
+            button.setGraphic(videoPreview);
+
+            button.setOnAction(event -> getVideo(event, video));
+            layoutController.addToFlowPane(button);
         }
+    }
+
+    private void getVideo(ActionEvent event, Video video) {
+        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideo");
+        videoRequest.send(new Video(video.getId()));
+
+//        getVideoPage(event); //todo
+    }
+
+    private void getVideoPage(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, mainPane.getScene().getWidth(), mainPane.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
 }

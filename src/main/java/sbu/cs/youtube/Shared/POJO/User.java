@@ -10,6 +10,7 @@ public class User {
     private String email;
     private String dateOfBirth;
     private String avatarPath;
+    private byte[] avatarBytes;
     private String username;
     private String password;
     private String joinDate;
@@ -128,6 +129,14 @@ public class User {
     }
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
+    }
+
+    public byte[] getAvatarBytes() {
+        return avatarBytes;
+    }
+
+    public void setAvatarBytes(byte[] avatarBytes) {
+        this.avatarBytes = avatarBytes;
     }
 
     public ArrayList<UserComment> getViewedComments() {
