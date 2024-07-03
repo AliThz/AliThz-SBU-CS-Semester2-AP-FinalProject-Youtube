@@ -46,6 +46,9 @@ public class LayoutController implements Initializable {
     protected Button btnYou;
 
     @FXML
+    protected Button btnBurger;
+
+    @FXML
     protected HBox hbxContent;
 
     @FXML
@@ -520,6 +523,12 @@ public class LayoutController implements Initializable {
     //region [ - addToFlowPane(Parent parent) - ]
     public void addToFlowPane(Parent parent) {
         flowPane.getChildren().add(parent);
+    }
+    //endregion
+
+    //region [ -  - ]
+    public boolean getIsExpanded() {
+        return isExpanded;
     }
     //endregion
 

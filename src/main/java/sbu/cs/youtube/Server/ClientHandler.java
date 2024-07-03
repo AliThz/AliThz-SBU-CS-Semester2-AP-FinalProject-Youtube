@@ -1,7 +1,6 @@
 package sbu.cs.youtube.Server;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import sbu.cs.youtube.Server.Database.DatabaseManager;
 import sbu.cs.youtube.Shared.POJO.*;
@@ -103,7 +102,12 @@ public class ClientHandler implements Runnable {
             case "GetSubscription":
                 getSubscription();
                 break;
-
+            case "Subscribe":
+                subscribe();
+                break;
+            case "Unsubscribe":
+                unsubscribe();
+                break;
             case "ViewVideo":
                 viewVideo();
                 break;
@@ -222,6 +226,36 @@ public class ClientHandler implements Runnable {
         Response<Subscription> response;
         response = new Response<>(client, subscriptionRequest.getType(), true, "Subscription checked");
         response.send(subscription);
+    }
+    //endregion
+
+    //region [ - subscribe() - ]
+    public void subscribe() {
+        TypeToken<Request<Subscription>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Subscription> subscriptionRequest = gson.fromJson(request, responseTypeToken.getType());
+        Subscription subscription = subscriptionRequest.getBody();
+
+        databaseManager.insertSubscription(subscription);
+
+        Response<Subscription> response;
+        response = new Response<>(client, subscriptionRequest.getType(), true, "Channel subscribed");
+        response.send();
+    }
+    //endregion
+
+    //region [ - unsubscribe() - ]
+    public void unsubscribe() {
+        TypeToken<Request<Subscription>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Subscription> subscriptionRequest = gson.fromJson(request, responseTypeToken.getType());
+        Subscription subscription = subscriptionRequest.getBody();
+
+        databaseManager.deleteSubscription(subscription.getSubscriberId(), subscription.getChannelId());
+
+        Response<Subscription> response;
+        response = new Response<>(client, subscriptionRequest.getType(), true, "Channel unsubscribed");
+        response.send();
     }
     //endregion
 
