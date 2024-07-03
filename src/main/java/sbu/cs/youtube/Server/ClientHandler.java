@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import sbu.cs.youtube.Server.Database.DatabaseManager;
-import sbu.cs.youtube.Shared.POJO.User;
-import sbu.cs.youtube.Shared.POJO.UserComment;
-import sbu.cs.youtube.Shared.POJO.UserVideo;
-import sbu.cs.youtube.Shared.POJO.Video;
+import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 
@@ -45,7 +42,7 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             try {
-                while (client.isConnected()) {
+                while (!client.isClosed()) {
                     receiveRequest();
                 }
             } catch (Exception e) {
@@ -53,6 +50,7 @@ public class ClientHandler implements Runnable {
             } finally {
                 try {
                     bufferedReader.close();
+                    client.close();
                 } catch (IOException ioe) {
                     System.out.println("!!Exception : " + ioe.getMessage());
                 }
@@ -116,6 +114,9 @@ public class ClientHandler implements Runnable {
                 break;
             case "DislikeComment":
                 dislikeComment();
+                break;
+            case "Comment":
+                comment();
                 break;
         }
     }
@@ -308,6 +309,19 @@ public class ClientHandler implements Runnable {
             response = new Response<>(client, userCommentRequest.getType(), true, "Comment disliked");
         }
 
+        response.send();
+    }
+    //endregion
+
+    //region [ - comment() - ]
+    private void comment() {
+        TypeToken<Request<Comment>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Comment> commentRequest = gson.fromJson(request, responseTypeToken.getType());
+        Comment comment = commentRequest.getBody();
+
+        databaseManager.insertComment(comment);
+        Response<Comment> response = new Response<>(client, commentRequest.getType(), true, "Comment posted");
         response.send();
     }
     //endregion
