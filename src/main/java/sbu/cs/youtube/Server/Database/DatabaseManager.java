@@ -8,6 +8,7 @@ import java.io.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 public class DatabaseManager {
@@ -1888,7 +1889,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserVideo> selectUserVideos() - ] Not Tested
+    //region [ - selectUserVideos() - ] Not Tested
     public ArrayList<UserVideo> selectUserVideos() {
         Connection c;
         Statement stmt;
@@ -1922,7 +1923,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserVideo> selectUserVideos(UUID userId) - ] Tested
+    //region [ - selectUserVideos(UUID userId) - ] Tested
     public ArrayList<UserVideo> selectUserVideos(UUID userId) {
         Connection c;
         PreparedStatement stmt;
@@ -1962,7 +1963,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserVideo> selectVideoUsers(UUID userId) - ] Not Tested
+    //region [ - selectVideoUsers(UUID userId) - ] Not Tested
     public ArrayList<UserVideo> selectVideoUsers(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
@@ -2002,7 +2003,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - UserVideo selectUserVideo(UUID userID , UUID videoId) - ] Not Test
+    //region [ - selectUserVideo(UUID userID , UUID videoId) - ] Not Test
     public UserVideo selectUserVideo(UUID userID, UUID videoId) {
         Connection c;
         PreparedStatement stmt;
@@ -2022,13 +2023,48 @@ public class DatabaseManager {
             stmt.setObject(2, videoId);
             ResultSet rs = stmt.executeQuery();
             userVideo = new UserVideo();
+            if (rs.next()){
+                userVideo.setLike(rs.getBoolean("Like"));
+                if (rs.wasNull())
+                {
+                    userVideo.setLike(null);
+                }
+                userVideo.setVideoId(videoId);
+                userVideo.setUserId(userID);
+            }
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectUserVideo)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return userVideo;
+    }
+    //endregion
 
-            userVideo.setLike(rs.getBoolean("Like"));
-            userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
-            userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
-            userVideo.setVideo(selectVideo(userVideo.getVideoId()));
-            userVideo.setUser(selectUser(userVideo.getUserId()));
+    //region [ - userVideoExistence(UUID userID , UUID videoId) - ] Not Test
+    public UserVideo userVideoExistence(UUID userID, UUID videoId) {
+        Connection c;
+        PreparedStatement stmt;
+        UserVideo userVideo = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUserVideo)");
 
+            stmt = c.prepareStatement("""
+                    SELECT * FROM ContentManagement.UserVideo 
+                    WHERE UserId = ? AND VideoId = ?;
+                    """);
+
+            stmt.setObject(1, userID);
+            stmt.setObject(2, videoId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){
+                userVideo = new UserVideo();
+            }
             rs.close();
             stmt.close();
             System.out.println("Operation done successfully (selectUserVideo)");
@@ -2055,11 +2091,11 @@ public class DatabaseManager {
                     SET "Like" = ?
                     WHERE UserId = ? AND VideoId = ?;
                     """);
-
-            stmt.setObject(1, userVideo.getUserId());
-            stmt.setObject(2, userVideo.getVideoId());
-            stmt.setObject(3, userVideo.getLike());
+            stmt.setObject(1, userVideo.getLike());
+            stmt.setObject(2, userVideo.getUserId());
+            stmt.setObject(3, userVideo.getVideoId());
             stmt.executeUpdate();
+
             c.commit();
             stmt.close();
             c.close();
