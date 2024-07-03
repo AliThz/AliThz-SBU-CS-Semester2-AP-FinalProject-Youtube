@@ -44,6 +44,18 @@ public class VideoPageController implements Initializable {
     private Video video;
 
     @FXML
+    private Button btnLike;
+
+    @FXML
+    private Button btnDislike;
+
+    @FXML
+    private Text txtLikes;
+
+    @FXML
+    private Button btnSave;
+
+    @FXML
     private AnchorPane anchrpnVideoPage;
 
     @FXML
@@ -112,6 +124,14 @@ public class VideoPageController implements Initializable {
     @FXML
     private VBox vbxVideoDetails;
 
+    @FXML
+    private SVGPath svgLike;
+
+    @FXML
+    private SVGPath svgDislike;
+
+    Boolean hasLiked;
+
     MediaPlayer mediaPlayer;
     MediaView mediaView;
 
@@ -131,6 +151,8 @@ public class VideoPageController implements Initializable {
 //
 //        Video responseVideo = videoResponse.getBody();
 //        setVideo(responseVideo);
+
+//        hasLiked = ....
 
         imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
 
@@ -194,7 +216,6 @@ public class VideoPageController implements Initializable {
         hbx.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
 
 
-
         //region [ - Comments - ]
 //        for (var comment : video.getComments()) {
         for (int i = 0; i < 8; i++) {
@@ -222,6 +243,7 @@ public class VideoPageController implements Initializable {
         btnPlayPause.setOnAction(this::pause);
         btnBack.setOnAction(this::restart);
         btnNext.setOnAction(this::next);
+        btnVolume.setOnAction(this::volumeOff);
 
         Slider timeSlider = new Slider();
         timeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty());
@@ -264,6 +286,20 @@ public class VideoPageController implements Initializable {
 
     }
 
+    private void volumeOff(ActionEvent event) {
+        btnVolume.setOnAction(this::volumeOn);
+        mediaPlayer.setVolume(0);
+        SVGPath svgPath = (SVGPath) btnVolume.getChildrenUnmodifiable().getFirst();
+        svgPath.setContent("m 21.48,17.98 c 0,-1.77 -1.02,-3.29 -2.5,-4.03 v 2.21 l 2.45,2.45 c .03,-0.2 .05,-0.41 .05,-0.63 z m 2.5,0 c 0,.94 -0.2,1.82 -0.54,2.64 l 1.51,1.51 c .66,-1.24 1.03,-2.65 1.03,-4.15 0,-4.28 -2.99,-7.86 -7,-8.76 v 2.05 c 2.89,.86 5,3.54 5,6.71 z M 9.25,8.98 l -1.27,1.26 4.72,4.73 H 7.98 v 6 H 11.98 l 5,5 v -6.73 l 4.25,4.25 c -0.67,.52 -1.42,.93 -2.25,1.18 v 2.06 c 1.38,-0.31 2.63,-0.95 3.69,-1.81 l 2.04,2.05 1.27,-1.27 -9,-9 -7.72,-7.72 z m 7.72,.99 -2.09,2.08 2.09,2.09 V 9.98 z");
+    }
+
+    private void volumeOn(ActionEvent event) {
+        btnVolume.setOnAction(this::volumeOff);
+        mediaPlayer.setVolume(100);
+        SVGPath svgPath = (SVGPath) btnVolume.getChildrenUnmodifiable().getFirst();
+        svgPath.setContent("M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z");
+    }
+
     private void next(ActionEvent event) {
         //todo
     }
@@ -304,23 +340,23 @@ public class VideoPageController implements Initializable {
 
     @FXML
     private void updateSub(ActionEvent event) {
+        SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
+
         Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "SignUp");
         subscriptionRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
 
         String response = YouTubeApplication.receiveResponse();
         Gson gson = new Gson();
-        TypeToken<Response<Subscription>> responseTypeToken = new TypeToken<>() {};
+        TypeToken<Response<Subscription>> responseTypeToken = new TypeToken<>() {
+        };
         Response<Subscription> subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
         Subscription subscription = subscriptionResponse.getBody();
 
         if (subscription != null) {
-            SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
             svgPath.setContent("m3.85 3.15-.7.7 3.48 3.48C6.22 8.21 6 9.22 6 10.32v5.15l-2 1.88V19h14.29l1.85 1.85.71-.71-17-16.99zM5 18v-.23l2-1.88v-5.47c0-.85.15-1.62.41-2.3L17.29 18H5zm5 2h4c0 1.1-.9 2-2 2s-2-.9-2-2zM9.28 5.75l-.7-.7c.43-.29.9-.54 1.42-.7v-.39c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v4.14l-1-1v-3.05c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03-.27.11-.51.24-.75.4z");
             btnSub.setText("Unsubscribed");
             //todo update sub
-        }
-        else {
-            SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
+        } else {
             svgPath.setContent("M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z");
             btnSub.setText("Subscribed");
             //todo update sub
@@ -328,5 +364,43 @@ public class VideoPageController implements Initializable {
 
     }
 
+    @FXML
+    private void updateLike(ActionEvent event) {
+        String filledLike = "M3,11h3v10H3V11z M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11v10h10.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z";
+        String emptiedDislike = "M17,4h-1H6.57C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21 c0.58,0,1.14-0.24,1.52-0.65L17,14h4V4H17z M10.4,19.67C10.21,19.88,9.92,20,9.62,20c-0.26,0-0.5-0.11-0.63-0.3 c-0.07-0.1-0.15-0.26-0.09-0.47l1.52-4.94l0.4-1.29H9.46H5.23c-0.41,0-0.8-0.17-1.03-0.46c-0.12-0.15-0.25-0.4-0.18-0.72l1.34-6 C5.46,5.35,5.97,5,6.57,5H16v8.61L10.4,19.67z M20,13h-3V5h3V13z";
+        String emptiedLike = "M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11H3v10h4h1h9.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z M7,20H4v-8h3V20z M19.98,13.17l-1.34,6 C18.54,19.65,18.03,20,17.43,20H8v-8.61l5.6-6.06C13.79,5.12,14.08,5,14.38,5c0.26,0,0.5,0.11,0.63,0.3 c0.07,0.1,0.15,0.26,0.09,0.47l-1.52,4.94L13.18,12h1.35h4.23c0.41,0,0.8,0.17,1.03,0.46C19.92,12.61,20.05,12.86,19.98,13.17z";
+
+        if (hasLiked == null || !hasLiked) {
+            svgLike.setContent(filledLike);
+            svgDislike.setContent(emptiedDislike);
+            hasLiked = true;
+            // todo update
+        } else if (hasLiked) {
+            svgLike.setContent(emptiedLike);
+            hasLiked = null;
+        }
+    }
+
+    @FXML
+    private void updateDislike(ActionEvent event) {
+        String filledDislike = "M18,4h3v10h-3V4z M5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21c0.58,0,1.14-0.24,1.52-0.65L17,14V4H6.57 C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14z";
+        String emptiedDislike = "M17,4h-1H6.57C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21 c0.58,0,1.14-0.24,1.52-0.65L17,14h4V4H17z M10.4,19.67C10.21,19.88,9.92,20,9.62,20c-0.26,0-0.5-0.11-0.63-0.3 c-0.07-0.1-0.15-0.26-0.09-0.47l1.52-4.94l0.4-1.29H9.46H5.23c-0.41,0-0.8-0.17-1.03-0.46c-0.12-0.15-0.25-0.4-0.18-0.72l1.34-6 C5.46,5.35,5.97,5,6.57,5H16v8.61L10.4,19.67z M20,13h-3V5h3V13z";
+        String emptiedLike = "M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11H3v10h4h1h9.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z M7,20H4v-8h3V20z M19.98,13.17l-1.34,6 C18.54,19.65,18.03,20,17.43,20H8v-8.61l5.6-6.06C13.79,5.12,14.08,5,14.38,5c0.26,0,0.5,0.11,0.63,0.3 c0.07,0.1,0.15,0.26,0.09,0.47l-1.52,4.94L13.18,12h1.35h4.23c0.41,0,0.8,0.17,1.03,0.46C19.92,12.61,20.05,12.86,19.98,13.17z";
+
+        if (hasLiked == null || hasLiked) {
+            hasLiked = false;
+            svgLike.setContent(emptiedLike);
+            svgDislike.setContent(filledDislike);
+            // todo update
+        } else if (!hasLiked) {
+            svgDislike.setContent(emptiedDislike);
+            hasLiked = null;
+        }
+
+    }
+
+    @FXML
+    private void updateSave(ActionEvent event) {
+    }
     //endregion
 }

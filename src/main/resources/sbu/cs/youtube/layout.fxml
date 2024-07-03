@@ -20,7 +20,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="253.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
+                  <Button fx:id="btnBurger" mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
                      <tooltip>
                         <Tooltip text="Expand">
                            <font>

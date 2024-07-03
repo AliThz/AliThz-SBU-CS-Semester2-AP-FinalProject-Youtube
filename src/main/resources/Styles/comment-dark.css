@@ -54,6 +54,7 @@
 .btn-replies {
     -fx-text-fill: rgb(62,166,255);
     -fx-background-color: transparent;
+    -fx-background-radius: 100;
     -fx-font-weight: bold;
 }
 

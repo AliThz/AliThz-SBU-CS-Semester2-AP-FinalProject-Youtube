@@ -46,9 +46,12 @@
     -fx-background-radius: 20 0 0 20;
 }
 
-.button-subscription {
-    -fx-background-color: rgb(33, 33, 33);
-    -fx-background-radius: 20;
+.button-like:hover {
+    -fx-background-color: rgb(41, 41, 41);
+}
+
+.button-like:pressed {
+    -fx-background-color: rgb(60, 60, 60);
 }
 
 .button-dislike {
@@ -56,8 +59,24 @@
     -fx-background-radius: 0 20 20 0;
 }
 
-.combo-box {
+.button-dislike:hover {
+    -fx-background-color: rgb(41, 41, 41);
+}
+
+.button-dislike:pressed {
+    -fx-background-color: rgb(60, 60, 60);
+}
+
+.button-subscription {
     -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 20;
+}
+
+.button-subscription:hover {
+    -fx-background-color: rgb(41, 41, 41);
+}
+.button-subscription:pressed {
+    -fx-background-color: rgb(60, 60, 60);
 }
 
 .vbxDescription {
@@ -135,3 +154,18 @@
     -fx-background-color: #000;
 }
 
+
+.field-comment {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent rgb(33,33,33) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.field-comment:hover {
+    -fx-border-color: transparent transparent rgb(41,41,41) transparent;
+}
+
+.field-comment:focused {
+    -fx-border-color: transparent transparent white transparent;
+}

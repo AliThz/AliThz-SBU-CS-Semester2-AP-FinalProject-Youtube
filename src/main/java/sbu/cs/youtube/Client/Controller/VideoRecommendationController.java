@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 
@@ -20,6 +21,12 @@ public class VideoRecommendationController implements Initializable {
 
     @FXML
     private HBox hbxViewsAndDate;
+
+    @FXML
+    private HBox hbxVideoRecommendation;
+
+    @FXML
+    private VBox vbxDetails;
 
     @FXML
     private ImageView imgThumbnail;
@@ -38,9 +45,14 @@ public class VideoRecommendationController implements Initializable {
 
     @FXML
     private Text txtViews;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+//        if (hbxVideoRecommendation.getWidth() < 10) {
+//            vbxDetails.setVisible(false);
+//        } else {
+//            vbxDetails.setVisible(true);
+//        }
     }
 
     //region [ - addThumbnail(String src) - ]
