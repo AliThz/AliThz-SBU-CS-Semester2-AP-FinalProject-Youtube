@@ -10,9 +10,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalDateTimeStringConverter;
 import sbu.cs.youtube.Client.Controller.HomeSectionController;
-import sbu.cs.youtube.Shared.POJO.User;
-import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Response;
 
 import javax.crypto.Cipher;
@@ -109,11 +108,43 @@ public class YouTubeApplication extends Application {
 //        YouTubeApplication client = new YouTubeApplication(socket);
 //        receiveResponse();
 //        ------------------------- get Video test --------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Video> userRequest = new Request<>(socket, "GetVideo");
+//        Video video = new Video("avengers" , "marvel video" , UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf") , 65 , LocalDateTime.now().toString());
+//        video.setId(UUID.fromString("dece64c2-acd4-427a-a5d5-920905b1041b"));
+//        userRequest.send(video);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- get Playlist test ----------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Playlist> userRequest = new Request<>(socket, "GetPlaylist");
+//        Playlist playlist = new Playlist();
+//        playlist.setId(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
+//        userRequest.send(playlist);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- CheckSubscriptionExistence Test ----------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Subscription> userRequest = new Request<>(socket, "CheckSubscriptionExistence");
+//        Subscription subscription = new Subscription();
+//        subscription.setChannelId(UUID.fromString("e0ce92d5-f8ff-40eb-8d46-31c7a19ecc1a"));
+//        subscription.setSubscriberId(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        userRequest.send(subscription);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- Subscribe Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<Video> userRequest = new Request<>(socket, "GetVideo");
-        Video video = new Video("avengers" , "marvel video" , UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf") , 65 , LocalDateTime.now().toString());
-        video.setId(UUID.fromString("dece64c2-acd4-427a-a5d5-920905b1041b"));
-        userRequest.send(video);
+        Request<Subscription> userRequest = new Request<>(socket, "Subscribe");
+        Subscription subscription = new Subscription();
+        subscription.setChannelId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+        subscription.setSubscriberId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
+        userRequest.send(subscription);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
         System.out.println(response);

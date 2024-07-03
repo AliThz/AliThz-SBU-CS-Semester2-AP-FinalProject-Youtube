@@ -203,7 +203,7 @@ public class VideoPageController implements Initializable {
             try {
                 commentPreview = commentPreviewLoader.load();
 //                VideoPreviewController commentPreviewController = commentPreviewLoader.getController();
-                VideoRecommendationController commentPreviewController = commentPreviewLoader.getController();
+//                VideoRecommendationController commentPreviewController = commentPreviewLoader.getController();
 //                if (commentPreviewController != null) {
 //                    commentPreviewController.addThumbnail("/Images/Thumbnail.jpg");
 //                    commentPreviewController.addChannelProfile("/Images/ChannelProfile.png");

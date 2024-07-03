@@ -600,12 +600,11 @@ public class DatabaseManager {
 
             if (rs.next()) {
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-//                channel.setCreator(selectUser(channel.getCreatorId()));
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
                 if (rs.getString("DateCreated") != null) {
                     Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                    channel.setDateCreated(timestamp.toLocalDateTime().toString().toString());
+                    channel.setDateCreated(timestamp.toLocalDateTime().toString());
                 }
                 channel.setId(UUID.fromString(rs.getString("Id")));
             }
@@ -686,7 +685,7 @@ public class DatabaseManager {
 
     //region [ - insertSubscription(Subscription subscription) - ] Tested
     public void insertSubscription(Subscription subscription) {
-        System.out.println(subscription.getSubscriberId());
+
         Connection c;
         PreparedStatement stmt;
         try {
@@ -712,7 +711,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Subscription> selectSubscriptions() - ] Not Test
+    //region [ - selectSubscriptions() - ] Not Test
     public ArrayList<Subscription> selectSubscriptions() {
         Connection c;
         Statement stmt;
@@ -749,7 +748,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Subscription> selectSubscriptions(UUID userId) - ] Test
+    //region [ - selectSubscriptions(UUID userId) - ] Test
     public ArrayList<Subscription> selectSubscriptions(UUID userId) {
         Connection c;
         PreparedStatement stmt;
@@ -786,7 +785,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Subscription selectSubscription(UUID Id) - ] Not Exist
+    //region [ - selectSubscription(UUID Id) - ] Not Exist
     public Subscription selectSubscription(UUID subscriberId, UUID channelId) {
         Connection c;
         PreparedStatement stmt;
@@ -801,16 +800,18 @@ public class DatabaseManager {
                     SELECT * FROM UserManagement.Subscription WHERE "subscriberid" = ? AND "channelid" = ? 
                     """);
             stmt.setObject(1, subscriberId);
-            stmt.setObject(1, channelId);
+            stmt.setObject(2, channelId);
             ResultSet rs = stmt.executeQuery();
             subscription = new Subscription();
 
-            subscription.setSubscriberId(UUID.fromString(rs.getString("Id")));
-            subscription.setChannelId(UUID.fromString(rs.getString("Id")));
-            subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
-            subscription.setChannel(selectChannel(subscription.getChannelId()));
-            Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-            subscription.setJoinDate(timestamp.toLocalDateTime().toString());
+            if (rs.next()) {
+                subscription.setSubscriberId(UUID.fromString(rs.getString("subscriberid")));
+                subscription.setChannelId(UUID.fromString(rs.getString("channelid")));
+//                subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
+                subscription.setChannel(selectChannel(subscription.getChannelId()));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
+                subscription.setJoinDate(timestamp.toLocalDateTime().toString());
+            }
 
             rs.close();
             stmt.close();
@@ -821,6 +822,41 @@ public class DatabaseManager {
         }
         return subscription;
     }
+    //endregion
+
+    //region [ - subscriptionExistence - ]
+
+    public Subscription subscriptionExistence(UUID subscriberId, UUID channelId) {
+        Connection c;
+        PreparedStatement stmt;
+        Subscription subscription = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectSubscription)");
+
+            stmt = c.prepareStatement("""
+                    SELECT * FROM UserManagement.Subscription WHERE "subscriberid" = ? AND "channelid" = ? 
+                    """);
+            stmt.setObject(1, subscriberId);
+            stmt.setObject(2, channelId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                subscription = new Subscription();
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectSubscription)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return subscription;
+    }
+
     //endregion
 
     //region [ - deleteSubscription(UUID SubscriberId, UUID channelId) - ] Tested
@@ -1162,10 +1198,10 @@ public class DatabaseManager {
             stmt.close();
 
             stmt = c.prepareStatement("""
-                    SELECT vc.CategoryId, pd.VideoId, v.Title, v.Description, v.ChannelId , v.UploadDate , v.ThumbnailPath 
+                    SELECT vc.CategoryId,pd."videoId, v.Title, v.Description, v.ChannelId , v."UploadDate" , v.ThumbnailPath 
                     FROM ContentManagement.VideoCategory vc
-                    INNER JOIN ContentManagment.Video v ON vc.VideoId = v.Id
-                    WHERE pd.CategoryId = ? ;
+                    INNER JOIN ContentManagment.Video v ON vc.VideoId = v."Id"
+                    WHERE pd.CategoryId = ? ;   
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -1487,7 +1523,7 @@ public class DatabaseManager {
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
                 video.setPath(rs.getString("Path"));
-                video.setVideoBytes(convertVideoToByteArray("salam"));
+                video.setVideoBytes(convertVideoToByteArray(video.getPath()));
             }
 
 //            stmt = c.prepareStatement("""
@@ -2167,7 +2203,6 @@ public class DatabaseManager {
         return playlists;
     }
     //endregion
-
     //region [ - selectPlaylist(UUID Id) - ]
     public Playlist selectPlaylist(UUID Id) {
         Connection c;
@@ -2206,9 +2241,9 @@ public class DatabaseManager {
             stmt.close();
 
             stmt = c.prepareStatement("""
-                    SELECT pd.PlaylistId, pd.VideoId, v.Title, v.Description, v.ChannelId , v.UploadDate , v.ThumbnailPath 
+                    SELECT pd.PlaylistId, pd."videoid", v.Title, v.Description, v.ChannelId , v."UploadDate" , v.ThumbnailPath 
                     FROM ContentManagement.PlaylistDetail pd
-                    INNER JOIN ContentManagment.Video v ON pd.VideoId = v.Id
+                    INNER JOIN ContentManagement.Video v ON pd.videoid = v."Id"
                     WHERE pd.PlaylistId = ? ;
                     """);
             stmt.setObject(1, Id);
@@ -2244,6 +2279,7 @@ public class DatabaseManager {
         return playlist;
     }
     //endregion
+
 
     //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
     public Playlist selectPlaylistBriefly(UUID Id) {
@@ -3143,7 +3179,13 @@ public class DatabaseManager {
     //region [ - convertVideoToByteArray - ]
 
     public byte[] convertVideoToByteArray(String videoPath) {
-        videoPath = "D:\\university\\Term2\\AP\\Project\\FinalProject\\MainProject\\AliThz-SBU-CS-Semester2-AP-FinalProject-Youtube\\src\\main\\resources\\Videos\\AvengersInfinityWar.mp4";
+        String path ;
+        if (videoPath == null){
+            path = "src/main/resources/Videos/AvengersInfinityWar.mp4";
+        } else {
+            path = "src/main/resources" + videoPath;
+        }
+        videoPath = path;
         System.out.println("In ConvertImage Method");
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(videoPath))) {
             int videoSize = bis.available();

@@ -99,8 +99,8 @@ public class ClientHandler implements Runnable {
             case "GetRecommendedVideos":
                 GetRecommendedVideos();
                 break;
-            case "GetSubscription":
-                getSubscription();
+            case "CheckSubscriptionExistence":
+                checkSubscriptionExistence();
                 break;
             case "Subscribe":
                 subscribe();
@@ -126,6 +126,8 @@ public class ClientHandler implements Runnable {
             case "Comment":
                 comment();
                 break;
+            case "GetVideo" :
+                getVideo();
         }
     }
     //endregion
@@ -215,13 +217,13 @@ public class ClientHandler implements Runnable {
     //endregion
 
     //region [ - getSubscription() - ]
-    public void getSubscription() {
+    public void checkSubscriptionExistence() {
         TypeToken<Request<Subscription>> responseTypeToken = new TypeToken<>() {
         };
         Request<Subscription> subscriptionRequest = gson.fromJson(request, responseTypeToken.getType());
         Subscription requestedSubscription = subscriptionRequest.getBody();
 
-        Subscription subscription = databaseManager.selectSubscription(requestedSubscription.getSubscriberId(), requestedSubscription.getChannelId());
+        Subscription subscription = databaseManager.subscriptionExistence(requestedSubscription.getSubscriberId(), requestedSubscription.getChannelId());
 
         Response<Subscription> response;
         response = new Response<>(client, subscriptionRequest.getType(), true, "Subscription checked");
@@ -376,6 +378,29 @@ public class ClientHandler implements Runnable {
         databaseManager.insertComment(comment);
         Response<Comment> response = new Response<>(client, commentRequest.getType(), true, "Comment posted");
         response.send();
+    }
+    //endregion
+
+
+    //region [ - getPlaylist - ]
+    private void getVideo() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Video> response;
+
+
+        Video requestedVideo = userRequest.getBody();
+        Video video;
+
+        video = databaseManager.selectVideo(requestedVideo.getId());
+
+        if (video != null) {
+            response = new Response<>(client, userRequest.getType(), true, "video received successfully");
+        } else {
+            response = new Response<>(client, userRequest.getType(), true, "video not found");
+        }
+        response.send(video);
     }
     //endregion
 
