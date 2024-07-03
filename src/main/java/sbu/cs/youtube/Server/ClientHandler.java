@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import sbu.cs.youtube.Server.Database.DatabaseManager;
 import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.POJO.UserComment;
+import sbu.cs.youtube.Shared.POJO.UserVideo;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
@@ -62,7 +64,7 @@ public class ClientHandler implements Runnable {
     //endregion
 
     //region [ - receiveRequest() - ]
-    public void receiveRequest() throws IOException {
+    public void receiveRequest() {
         try {
             String request = bufferedReader.readLine();
             handleRequest(request);
@@ -99,6 +101,21 @@ public class ClientHandler implements Runnable {
                 break;
             case "GetRecommendedVideos":
                 GetRecommendedVideos();
+                break;
+            case "ViewVideo":
+                viewVideo();
+                break;
+            case "LikeVideo":
+                likeVideo();
+                break;
+            case "DislikeVideo":
+                dislikeVideo();
+                break;
+            case "LikeComment":
+                likeComment();
+                break;
+            case "DislikeComment":
+                dislikeComment();
                 break;
         }
     }
@@ -185,6 +202,113 @@ public class ClientHandler implements Runnable {
 
         response = new Response<>(client, videosRequest.getType(), true, "Signed up successfully");
         response.send(videos);
+    }
+    //endregion
+
+    //region [ - viewVideo() - ]
+    private void viewVideo() {
+        TypeToken<Request<UserVideo>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<UserVideo> userVideoRequest = gson.fromJson(request, responseTypeToken.getType());
+        UserVideo requestedUserVideo = userVideoRequest.getBody();
+
+        Response<UserVideo> response;
+        UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
+        if (userVideo == null) {
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video has already viewed");
+        } else {
+            databaseManager.insertUserVideo(requestedUserVideo);
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video has just viewed");
+        }
+        response.send(userVideo);
+    }
+    //endregion
+
+    //region [ - likeVideo() - ]
+    private void likeVideo() {
+        TypeToken<Request<UserVideo>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<UserVideo> userVideoRequest = gson.fromJson(request, responseTypeToken.getType());
+        UserVideo requestedUserVideo = userVideoRequest.getBody();
+
+        Response<UserVideo> response;
+        UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
+
+        if (userVideo.getLike()) {
+            requestedUserVideo.setLike(null);
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video unliked");
+        } else {
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video liked");
+        }
+        databaseManager.insertUserVideo(requestedUserVideo);
+
+        response.send();
+    }
+    //endregion
+
+    //region [ - dislikeVideo() - ]
+    private void dislikeVideo() {
+        TypeToken<Request<UserVideo>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<UserVideo> userVideoRequest = gson.fromJson(request, responseTypeToken.getType());
+        UserVideo requestedUserVideo = userVideoRequest.getBody();
+
+        Response<UserVideo> response;
+        UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
+
+        if (!userVideo.getLike() && userVideo.getLike() != null) {
+            requestedUserVideo.setLike(null);
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video undisliked");
+        } else {
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
+        }
+        databaseManager.insertUserVideo(requestedUserVideo);
+
+        response.send();
+    }
+    //endregion
+
+    //region [ - likeComment() - ]
+    private void likeComment() {
+        TypeToken<Request<UserComment>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<UserComment> userCommentRequest = gson.fromJson(request, responseTypeToken.getType());
+        UserComment requestedUserComment = userCommentRequest.getBody();
+
+        Response<UserComment> response;
+        UserComment userComment = databaseManager.selectUserComment(requestedUserComment.getUserId(), requestedUserComment.getCommentId());
+
+        if (userComment.getLike()) {
+            databaseManager.deleteUserComment(userComment.getUserId(), userComment.getCommentId());
+            response = new Response<>(client, userCommentRequest.getType(), true, "Comment unliked");
+        } else {
+            databaseManager.insertUserComment(requestedUserComment);
+            response = new Response<>(client, userCommentRequest.getType(), true, "Comment liked");
+        }
+
+        response.send();
+    }
+    //endregion
+
+    //region [ - dislikeComment() - ]
+    private void dislikeComment() {
+        TypeToken<Request<UserComment>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<UserComment> userCommentRequest = gson.fromJson(request, responseTypeToken.getType());
+        UserComment requestedUserComment = userCommentRequest.getBody();
+
+        Response<UserComment> response;
+        UserComment userComment = databaseManager.selectUserComment(requestedUserComment.getUserId(), requestedUserComment.getCommentId());
+
+        if (!userComment.getLike() && userComment.getLike() != null) {
+            databaseManager.deleteUserComment(userComment.getUserId(), userComment.getCommentId());
+            response = new Response<>(client, userCommentRequest.getType(), true, "Comment undisliked");
+        } else {
+            databaseManager.insertUserComment(requestedUserComment);
+            response = new Response<>(client, userCommentRequest.getType(), true, "Comment disliked");
+        }
+
+        response.send();
     }
     //endregion
 

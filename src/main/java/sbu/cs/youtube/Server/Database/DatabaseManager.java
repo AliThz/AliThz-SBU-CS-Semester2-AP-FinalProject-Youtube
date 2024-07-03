@@ -2010,6 +2010,37 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - updateUserVideo(UserVideo userVideo) - ] YES
+    public void updateUserVideo(UserVideo userVideo) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updateUserVideo)");
+
+            stmt = c.prepareStatement("""
+                    UPDATE ContentManagement.UserVideo
+                    SET "Like" = ?
+                    WHERE UserId = ? AND VideoId = ?;
+                    """);
+
+            stmt.setObject(1, userVideo.getUserId());
+            stmt.setObject(2, userVideo.getVideoId());
+            stmt.setObject(3, userVideo.getLike());
+            stmt.executeUpdate();
+            c.commit();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (updateUserVideo)");
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
+    //endregion
+
     //region [ - deleteUserVideo(UUID userId , UUID videoId) - ] YES
     public void deleteUserVideo(UUID userId, UUID videoId) {
         Connection c;
