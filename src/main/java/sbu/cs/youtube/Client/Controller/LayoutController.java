@@ -37,6 +37,15 @@ public class LayoutController implements Initializable {
     protected boolean isDarkMode = true;
 
     @FXML
+    protected SVGPath svgHome;
+
+    @FXML
+    protected SVGPath svgYou;
+
+    @FXML
+    protected SVGPath svgSubs;
+
+    @FXML
     protected VBox vbxSideBar;
 
     @FXML
@@ -74,7 +83,7 @@ public class LayoutController implements Initializable {
             isSignedIn = true;
         }
         setRightNavBarHBox();
-
+        svgHome.setContent("M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z");
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
         flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
     }
@@ -358,24 +367,28 @@ public class LayoutController implements Initializable {
 
     //region [ - getCategory(ActionEvent event) - ]
     private void getCategory(ActionEvent event) {
+        setDefaultSvgs();
     }
     //endregion
 
     //region [ - getPlaylist(ActionEvent event) - ]
 
     private void getPlaylist(ActionEvent event) {
+        setDefaultSvgs();
     }
     //endregion
 
     //region [ - getHistoryPage(ActionEvent event) - ]
 
     private void getHistoryPage(ActionEvent event) {
+        setDefaultSvgs();
     }
     //endregion
 
     //region [ - getYourChannelPage(ActionEvent event) - ]
 
     private void getYourChannelPage(ActionEvent event) {
+        setDefaultSvgs();
     }
     //endregion
 
@@ -453,27 +466,33 @@ public class LayoutController implements Initializable {
     //region [ - setHomeSection - ]
     @FXML
     void setHomeSection(ActionEvent event) {
-        System.out.println("This is home section");
+        setDefaultSvgs();
+        svgHome.setContent("M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z");
     }
+
     //endregion
+
 
     //region [ - setSubscriptionsSection(ActionEvent event) - ]
     @FXML
     void setSubscriptionsSection(ActionEvent event) {
-
+        setDefaultSvgs();
+        svgSubs.setContent("M20 7H4V6h16v1zm2 2v12H2V9h20zm-7 6-5-3v6l5-3zm2-12H7v1h10V3z");
     }
     //endregion
 
     //region [ - setYouSection(ActionEvent event) - ]
     @FXML
     void setYouSection(ActionEvent event) {
-
+        setDefaultSvgs();
+        svgYou.setContent("M4 20h14v1H3V6h1v14zM21 3v15H6V3h15zm-4 7.5L11 7v7l6-3.5z");
     }
     //endregion
 
     //region [ - getDashboard(ActionEvent event) - ]
 
     protected void getDashboard(ActionEvent event) {
+        setDefaultSvgs();
     }
 
     //endregion
@@ -481,6 +500,7 @@ public class LayoutController implements Initializable {
     //region [ - getNotificationsScene(ActionEvent event) - ]
 
     protected void getNotificationsScene(ActionEvent event) {
+        setDefaultSvgs();
     }
 
     //endregion
@@ -488,6 +508,7 @@ public class LayoutController implements Initializable {
     //region [ - getCreatePage(ActionEvent event) - ]
 
     protected void getCreatePage(ActionEvent event) {
+        setDefaultSvgs();
     }
 
     //endregion
@@ -531,6 +552,13 @@ public class LayoutController implements Initializable {
         return isExpanded;
     }
     //endregion
+
+    private void setDefaultSvgs() {
+        svgHome.setContent("m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z");
+        svgSubs.setContent("M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z");
+        svgYou.setContent("m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z");
+    }
+
 
     //endregion
 

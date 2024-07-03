@@ -60,7 +60,7 @@
     -fx-background-color : rgb(33, 33, 33);
 }
 
-.side-btn:focused {
+.side-btn:pressed {
     -fx-background-color : rgb(41, 41, 41);
 }
 
