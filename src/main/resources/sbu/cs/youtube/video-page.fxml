@@ -3,7 +3,6 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,27 +23,30 @@
                <children>
                   <HBox fx:id="hbxControls" alignment="CENTER" prefHeight="22.0" prefWidth="578.0" style="-fx-alignment: center;">
                      <children>
-                        <Button fx:id="btnPause" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                        <Button fx:id="btnBack" mnemonicParsing="false" style="-fx-fill: white;">
                            <graphic>
-                              <SVGPath content="M 12,26 16,26 16,10 12,10 z M 21,26 25,26 25,10 21,10 z" style="-fx-fill: white;" />
+                              <SVGPath content="m 12,12 h 2 v 12 h -2 z m 3.5,6 8.5,6 V 12 z" fill="WHITE" styleClass="svg" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnPlay" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                        <Button fx:id="btnPlayPause" mnemonicParsing="false" style="-fx-background-color: transparent;">
                            <graphic>
-                              <SVGPath content="M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z" style="-fx-fill: white;" />
+                              <SVGPath content="M 12,26 16,26 16,10 12,10 z M 21,26 25,26 25,10 21,10 z" styleClass="svg" />
                            </graphic>
                         </Button>
                         <Button fx:id="btnNext" mnemonicParsing="false" style="-fx-background-color: transparent;">
                            <graphic>
-                              <SVGPath content="M 12,24 20.5,18 12,12 V 24 z M 22,12 v 12 h 2 V 12 h -2 z" style="-fx-fill: white;" />
+                              <SVGPath content="M 12,24 20.5,18 12,12 V 24 z M 22,12 v 12 h 2 V 12 h -2 z" styleClass="svg" />
                            </graphic>
                         </Button>
                         <Button fx:id="btnVolume" mnemonicParsing="false" style="-fx-background-color: transparent;">
                            <graphic>
-                              <SVGPath content="M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z" style="-fx-fill: white;" />
+                              <SVGPath content="M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z" styleClass="svg" />
                            </graphic>
                         </Button>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="-20.0" left="-20.0" right="-20.0" top="-20.0" />
+                     </VBox.margin>
                   </HBox>
                   <VBox fx:id="vbxVideoDetails" prefHeight="170.0" prefWidth="830.0" spacing="10.0">
                      <children>
@@ -76,21 +78,13 @@
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="363.0" styleClass="button-group" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="170.0" styleClass="button-subscription">
-                                       <graphic>
-                                          <HBox alignment="CENTER" prefHeight="26.0" prefWidth="103.0" spacing="5.0">
-                                             <children>
-                                                <SVGPath content="M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z" styleClass="svg" />
-                                                <ComboBox prefHeight="26.0" prefWidth="118.0" promptText="Unsubscribed" styleClass="combo-box" />
-                                             </children>
-                                             <padding>
-                                                <Insets left="5.0" right="5.0" />
-                                             </padding>
-                                          </HBox>
-                                       </graphic>
+                                    <Button fx:id="btnSub" mnemonicParsing="false" onAction="#updateSub" prefHeight="42.0" prefWidth="126.0" styleClass="button-subscription" text="Unsubscribed">
                                        <padding>
                                           <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                                        </padding>
+                                       <graphic>
+                                          <SVGPath content="m3.85 3.15-.7.7 3.48 3.48C6.22 8.21 6 9.22 6 10.32v5.15l-2 1.88V19h14.29l1.85 1.85.71-.71-17-16.99zM5 18v-.23l2-1.88v-5.47c0-.85.15-1.62.41-2.3L17.29 18H5zm5 2h4c0 1.1-.9 2-2 2s-2-.9-2-2zM9.28 5.75l-.7-.7c.43-.29.9-.54 1.42-.7v-.39c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v4.14l-1-1v-3.05c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03-.27.11-.51.24-.75.4z" styleClass="svg" />
+                                       </graphic>
                                     </Button>
                                  </children>
                                  <padding>
@@ -140,21 +134,13 @@
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="57.0" prefWidth="151.0" styleClass="button-group">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="126.0" styleClass="button-subscription">
-                                       <graphic>
-                                          <HBox alignment="CENTER" prefHeight="26.0" prefWidth="96.0" spacing="10.0">
-                                             <children>
-                                                <SVGPath content="M18 4v15.06l-5.42-3.87-.58-.42-.58.42L6 19.06V4h12m1-1H5v18l7-5 7 5V3z" styleClass="svg" />
-                                                <ComboBox prefHeight="26.0" prefWidth="69.0" promptText="Save" styleClass="combo-box" />
-                                             </children>
-                                             <padding>
-                                                <Insets left="5.0" right="5.0" />
-                                             </padding>
-                                          </HBox>
-                                       </graphic>
+                                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="94.0" styleClass="button-subscription" text="Save">
                                        <padding>
                                           <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                                        </padding>
+                                       <graphic>
+                                          <SVGPath content="M18 4v15.06l-5.42-3.87-.58-.42-.58.42L6 19.06V4h12m1-1H5v18l7-5 7 5V3z" styleClass="svg" />
+                                       </graphic>
                                     </Button>
                                  </children>
                                  <padding>
