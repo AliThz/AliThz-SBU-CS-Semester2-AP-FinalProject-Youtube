@@ -100,6 +100,10 @@ public class ClientHandler implements Runnable {
             case "GetRecommendedVideos":
                 GetRecommendedVideos();
                 break;
+            case "GetSubscription":
+                getSubscription();
+                break;
+
             case "ViewVideo":
                 viewVideo();
                 break;
@@ -203,6 +207,21 @@ public class ClientHandler implements Runnable {
 
         response = new Response<>(client, videosRequest.getType(), true, "Signed up successfully");
         response.send(videos);
+    }
+    //endregion
+
+    //region [ - getSubscription() - ]
+    public void getSubscription() {
+        TypeToken<Request<Subscription>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Subscription> subscriptionRequest = gson.fromJson(request, responseTypeToken.getType());
+        Subscription requestedSubscription = subscriptionRequest.getBody();
+
+        Subscription subscription = databaseManager.selectSubscription(requestedSubscription.getSubscriberId(), requestedSubscription.getChannelId());
+
+        Response<Subscription> response;
+        response = new Response<>(client, subscriptionRequest.getType(), true, "Subscription checked");
+        response.send(subscription);
     }
     //endregion
 

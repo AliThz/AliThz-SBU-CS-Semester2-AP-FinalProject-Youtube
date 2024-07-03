@@ -791,7 +791,7 @@ public class DatabaseManager {
     //endregion
 
     //region [ - Subscription selectSubscription(UUID Id) - ] Not Exist
-    public Subscription selectSubscription(UUID Id) {
+    public Subscription selectSubscription(UUID subscriberId, UUID channelId) {
         Connection c;
         PreparedStatement stmt;
         Subscription subscription = null;
@@ -802,9 +802,10 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectSubscription)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement.Subscription WHERE \"Id\" = ?
+                    SELECT * FROM UserManagement.Subscription WHERE "subscriberid" = ? AND "channelid" = ? 
                     """);
-            stmt.setObject(1, Id);
+            stmt.setObject(1, subscriberId);
+            stmt.setObject(1, channelId);
             ResultSet rs = stmt.executeQuery();
             subscription = new Subscription();
 
