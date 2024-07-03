@@ -139,15 +139,26 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
 //        ------------------------- Subscribe Test ---------------------------------------------
-        Socket socket = new Socket("localhost", 2345);
-        Request<Subscription> userRequest = new Request<>(socket, "Subscribe");
-        Subscription subscription = new Subscription();
-        subscription.setChannelId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
-        subscription.setSubscriberId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
-        userRequest.send(subscription);
-        YouTubeApplication client = new YouTubeApplication(socket);
-        String response = receiveResponse();
-        System.out.println(response);
-        launch();
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Subscription> userRequest = new Request<>(socket, "Subscribe");
+//        Subscription subscription = new Subscription();
+//        subscription.setChannelId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+//        subscription.setSubscriberId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
+//        userRequest.send(subscription);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- UnSubscribe Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Subscription> userRequest = new Request<>(socket, "Unsubscribe");
+//        Subscription subscription = new Subscription();
+//        subscription.setChannelId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+//        subscription.setSubscriberId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
+//        userRequest.send(subscription);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
     }
 }
