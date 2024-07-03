@@ -83,7 +83,6 @@ public class LayoutController implements Initializable {
             isSignedIn = true;
         }
         setRightNavBarHBox();
-        svgHome.setContent("M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z");
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
         flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
     }
@@ -349,10 +348,7 @@ public class LayoutController implements Initializable {
 
         } else {
             if (btnYou.getChildrenUnmodifiable().getFirst() instanceof FlowPane) {
-                SVGPath youSvg = new SVGPath();
-                youSvg.setContent("m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z");
-                youSvg.getStyleClass().add("you-svg");
-                ((FlowPane) btnYou.getChildrenUnmodifiable().getFirst()).getChildren().addFirst(youSvg);
+                ((FlowPane) btnYou.getChildrenUnmodifiable().getFirst()).getChildren().addFirst(svgYou);
                 ((FlowPane) btnYou.getChildrenUnmodifiable().getFirst()).getChildren().remove(2);
             }
             vbxSideBar.getChildren().remove(2);
@@ -468,6 +464,20 @@ public class LayoutController implements Initializable {
     void setHomeSection(ActionEvent event) {
         setDefaultSvgs();
         svgHome.setContent("M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z");
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/home-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
 
     //endregion

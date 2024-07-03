@@ -42,6 +42,7 @@ public class HomeSectionController implements Initializable {
         mainPane.getChildren().add(layout);
         LayoutController layoutController = loader.getController();
 
+        layoutController.svgHome.setContent("M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z");
         layoutController.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
 

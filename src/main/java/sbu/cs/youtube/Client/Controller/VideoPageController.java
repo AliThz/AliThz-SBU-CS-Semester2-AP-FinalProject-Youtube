@@ -247,6 +247,9 @@ public class VideoPageController implements Initializable {
 
 
     }
+    //endregion
+
+    //region [ - displayComments() - ]
 
     private void displayComments() {
         Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoComments");
@@ -260,8 +263,7 @@ public class VideoPageController implements Initializable {
         video.setComments(commentsResponse.getBody());
         System.out.println(commentsResponse.getMessage());
 
-        vbxCommentSection.getChildren().removeAll();
-        System.out.println("Hameeeeeeeeeeeeeeeed   " + vbxCommentSection.getChildren().size());
+        vbxCommentSection.getChildren().remove(2,vbxCommentSection.getChildren().size());
         for (var comment : video.getComments()) {
             FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
             Parent commentPreview;
@@ -280,6 +282,9 @@ public class VideoPageController implements Initializable {
             vbxCommentSection.getChildren().add(commentPreview);
         }
     }
+    //endregion
+
+    //region [ - setPlaybackButtons() - ]
 
     private void setPlaybackButtons() {
         btnPlayPause.setOnAction(this::pause);
@@ -327,6 +332,9 @@ public class VideoPageController implements Initializable {
         mediaPlayer.play();
 
     }
+    //endregion
+
+    //region [ - volumeOff(ActionEvent event) - ]
 
     private void volumeOff(ActionEvent event) {
         btnVolume.setOnAction(this::volumeOn);
@@ -334,6 +342,9 @@ public class VideoPageController implements Initializable {
         SVGPath svgPath = (SVGPath) btnVolume.getChildrenUnmodifiable().getFirst();
         svgPath.setContent("m 21.48,17.98 c 0,-1.77 -1.02,-3.29 -2.5,-4.03 v 2.21 l 2.45,2.45 c .03,-0.2 .05,-0.41 .05,-0.63 z m 2.5,0 c 0,.94 -0.2,1.82 -0.54,2.64 l 1.51,1.51 c .66,-1.24 1.03,-2.65 1.03,-4.15 0,-4.28 -2.99,-7.86 -7,-8.76 v 2.05 c 2.89,.86 5,3.54 5,6.71 z M 9.25,8.98 l -1.27,1.26 4.72,4.73 H 7.98 v 6 H 11.98 l 5,5 v -6.73 l 4.25,4.25 c -0.67,.52 -1.42,.93 -2.25,1.18 v 2.06 c 1.38,-0.31 2.63,-0.95 3.69,-1.81 l 2.04,2.05 1.27,-1.27 -9,-9 -7.72,-7.72 z m 7.72,.99 -2.09,2.08 2.09,2.09 V 9.98 z");
     }
+    //endregion
+
+    //region [ - volumeOn(ActionEvent event) - ]
 
     private void volumeOn(ActionEvent event) {
         btnVolume.setOnAction(this::volumeOff);
@@ -341,16 +352,24 @@ public class VideoPageController implements Initializable {
         SVGPath svgPath = (SVGPath) btnVolume.getChildrenUnmodifiable().getFirst();
         svgPath.setContent("M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z");
     }
+    //endregion
+
+    //region [ - next(ActionEvent event) - ]
 
     private void next(ActionEvent event) {
         //todo
     }
     //endregion
 
+    //region [ - restart(ActionEvent event) - ]
+
     private void restart(ActionEvent event) {
         mediaPlayer.stop();
         pause(event);
     }
+    //endregion
+
+    //region [ - pause(ActionEvent event) - ]
 
     private void pause(ActionEvent event) {
         btnPlayPause.setOnAction(this::play);
@@ -359,6 +378,9 @@ public class VideoPageController implements Initializable {
         svgPath.setContent("M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z");
 
     }
+    //endregion
+
+    //region [ - play(ActionEvent event) - ]
 
     private void play(ActionEvent event) {
         btnPlayPause.setOnAction(this::pause);
@@ -366,9 +388,9 @@ public class VideoPageController implements Initializable {
         SVGPath svgPath = (SVGPath) btnPlayPause.getChildrenUnmodifiable().getFirst();
         svgPath.setContent("M 12,26 16,26 16,10 12,10 z M 21,26 25,26 25,10 21,10 z");
     }
+    //endregion
 
-
-    //region [ - setVideo(Video video) - ]
+    //region [ - setVideo - ]
     public void setVideo() {
         txtVideoTitle.setText(video.getTitle());
         txtVideoDescription.setText(video.getDescription());
@@ -387,6 +409,8 @@ public class VideoPageController implements Initializable {
         }
     }
     //endregion
+
+    //region [ - updateSub(ActionEvent event) - ]
 
     @FXML
     private void updateSub(ActionEvent event) {
@@ -419,6 +443,9 @@ public class VideoPageController implements Initializable {
         subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(subscriptionResponse.getMessage());
     }
+    //endregion
+
+    //region [ - updateLike(ActionEvent event) - ]
 
     @FXML
     private void updateLike(ActionEvent event) {
@@ -431,9 +458,11 @@ public class VideoPageController implements Initializable {
             svgLike.setContent(filledLike);
             svgDislike.setContent(emptiedDislike);
             hasLiked = true;
+            txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) + 1));
         } else if (hasLiked) {
             svgLike.setContent(emptiedLike);
             hasLiked = null;
+            txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) - 1));
         }
 
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "LikeVideo");
@@ -447,6 +476,9 @@ public class VideoPageController implements Initializable {
         System.out.println(userVideoResponse.getMessage());
 
     }
+    //endregion
+
+    //region [ - updateDislike(ActionEvent event) - ]
 
     @FXML
     private void updateDislike(ActionEvent event) {
@@ -455,9 +487,11 @@ public class VideoPageController implements Initializable {
         String emptiedLike = "M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11H3v10h4h1h9.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z M7,20H4v-8h3V20z M19.98,13.17l-1.34,6 C18.54,19.65,18.03,20,17.43,20H8v-8.61l5.6-6.06C13.79,5.12,14.08,5,14.38,5c0.26,0,0.5,0.11,0.63,0.3 c0.07,0.1,0.15,0.26,0.09,0.47l-1.52,4.94L13.18,12h1.35h4.23c0.41,0,0.8,0.17,1.03,0.46C19.92,12.61,20.05,12.86,19.98,13.17z";
 
         if (hasLiked == null || hasLiked) {
-            hasLiked = false;
             svgLike.setContent(emptiedLike);
             svgDislike.setContent(filledDislike);
+            if (hasLiked != null && hasLiked)
+                txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) - 1));
+            hasLiked = false;
         } else if (!hasLiked) {
             svgDislike.setContent(emptiedDislike);
             hasLiked = null;
@@ -473,12 +507,16 @@ public class VideoPageController implements Initializable {
         Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
     }
+    //endregion
+
+    //region [ - updateSave(ActionEvent event) - ]
 
     @FXML
     private void updateSave(ActionEvent event) {
     }
+    //endregion
 
-    //region [ -  - ]
+    //region [ - comment(ActionEvent event) - ]
     @FXML
     private void comment(ActionEvent event) {
         Request<Comment> commentRequest = new Request<>(YouTubeApplication.socket, "Comment");
