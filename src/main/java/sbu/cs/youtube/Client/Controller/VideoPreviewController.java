@@ -65,7 +65,7 @@ public class VideoPreviewController implements Initializable {
     }
     //endregion
 
-    //region [ - setAttributes(Video video) - ]
+    //region [ - setVideo(Video video) - ]
     public void setVideo(Video video) {
         String summarizedTitle = video.getTitle();
         if (summarizedTitle.length() > TITLE_MAX_LENGTH) {

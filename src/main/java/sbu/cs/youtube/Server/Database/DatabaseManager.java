@@ -17,6 +17,7 @@ public class DatabaseManager {
     private static final String URL = "jdbc:postgresql://localhost:5432/Youtube-Development";
     private static final String USER = "postgres";
     private static final String PASSWORD = "musketeers";
+
     //endregion
     public static void main(String[] args) {
 //        Playlist playlist = selectPlaylist(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
@@ -308,6 +309,43 @@ public class DatabaseManager {
                 user.setViewedComments(selectUserComments(user.getId()));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectUser)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return user;
+    }
+    //endregion
+
+    //region [ - selectUserBriefly(UUID Id) - ] Tested
+    public User selectUserBriefly(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        User user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUser)");
+
+            stmt = c.prepareStatement("""
+                    SELECT "Id", "username", "AvatarPath" FROM UserManagement.User 
+                    WHERE "Id" = ?
+                    """);
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+
+            user = new User();
+            if (rs.next()) {
+                user.setId(Id);
+                user.setUsername(rs.getString("Username"));
+                user.setAvatarPath(rs.getString("AvatarPath"));
+                user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath(), "jpg"));
             }
             rs.close();
             stmt.close();
@@ -1517,7 +1555,7 @@ public class DatabaseManager {
                 video.setCategories(selectVideoCategories(video.getId()));
                 video.setViewers(selectUserVideos(video.getId()));
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-                video.setComments(selectComments(video.getId()));
+//                video.setComments(selectComments(video.getId()));
                 video.setChannel(selectChannel(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
@@ -1906,8 +1944,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
@@ -1949,8 +1986,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
@@ -1993,8 +2029,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
@@ -2034,11 +2069,10 @@ public class DatabaseManager {
             stmt.setObject(1, userID);
             stmt.setObject(2, videoId);
             ResultSet rs = stmt.executeQuery();
-            userVideo = new UserVideo();
-            if (rs.next()){
+            if (rs.next()) {
+                userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(videoId);
@@ -2074,10 +2108,9 @@ public class DatabaseManager {
             stmt.setObject(1, userID);
             stmt.setObject(2, videoId);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull())
-                {
+                if (rs.wasNull()) {
                     userVideo.setLike(null);
                 }
                 userVideo.setVideoId(videoId);
@@ -2256,6 +2289,7 @@ public class DatabaseManager {
         }
         return playlists;
     }
+
     //endregion
     //region [ - selectPlaylist(UUID Id) - ]
     public Playlist selectPlaylist(UUID Id) {
@@ -2797,16 +2831,17 @@ public class DatabaseManager {
                 Comment comment = new Comment();
                 comment.setId(UUID.fromString(rs.getString("Id")));
                 comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                comment.setContent(rs.getString("Message"));
 //                comment.setVideo(selectVideo(comment.getVideoId()));
                 comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
-//                comment.setSender(selectUser(comment.getSenderId()));
+                comment.setSender(selectUserBriefly(comment.getSenderId()));
 
                 if (rs.getString("ParentCommentId") != null) {
                     comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString());
                 comments.add(comment);
             }
 
@@ -3122,7 +3157,7 @@ public class DatabaseManager {
             stmt.setObject(2, commentID);
             ResultSet rs = stmt.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 userComment = new UserComment();
                 userComment.setLike(rs.getBoolean("Like"));
                 userComment.setUserId(UUID.fromString(rs.getString("UserId")));
@@ -3235,8 +3270,8 @@ public class DatabaseManager {
 
     //region [ - convertImageToByteArray(String imagePath, String type) - ]
     private byte[] convertImageToByteArray(String imagePath, String type) {
-        String path ;
-        if (imagePath == null){
+        String path;
+        if (imagePath == null) {
             path = "src/main/resources/Images/Arcane2.jpg";
         } else {
             path = "src/main/resources" + imagePath;
@@ -3265,8 +3300,8 @@ public class DatabaseManager {
     //region [ - convertVideoToByteArray - ]
 
     public byte[] convertVideoToByteArray(String videoPath) {
-        String path ;
-        if (videoPath == null){
+        String path;
+        if (videoPath == null) {
             path = "src/main/resources/Videos/AvengersInfinityWar.mp4";
         } else {
             path = "src/main/resources" + videoPath;
@@ -3295,5 +3330,5 @@ public class DatabaseManager {
     //endregion
 
     //endregion
-    
+
 }

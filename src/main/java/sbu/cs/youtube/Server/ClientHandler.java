@@ -126,8 +126,12 @@ public class ClientHandler implements Runnable {
             case "Comment":
                 comment();
                 break;
-            case "GetVideo" :
+            case "GetVideoComments":
+                getVideoComments();
+                break;
+            case "GetVideo":
                 getVideo();
+                break;
         }
     }
     //endregion
@@ -381,6 +385,21 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
+    //region [ - getVideoComments() - ]
+    private void getVideoComments() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videosRequest = gson.fromJson(request, responseTypeToken.getType());
+        Video video = videosRequest.getBody();
+
+        ArrayList<Comment> comments = databaseManager.selectComments(video.getId());
+
+        Response<ArrayList<Comment>> response;
+        response = new Response<>(client, videosRequest.getType(), true, "Video Comments fetched");
+        response.send(comments);
+    }
+    //endregion
+
     //region [ - comment() - ]
     private void comment() {
         TypeToken<Request<Comment>> responseTypeToken = new TypeToken<>() {
@@ -393,7 +412,6 @@ public class ClientHandler implements Runnable {
         response.send();
     }
     //endregion
-
 
     //region [ - getPlaylist - ]
     private void getVideo() {
