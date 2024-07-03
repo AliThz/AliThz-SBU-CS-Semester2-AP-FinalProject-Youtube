@@ -8,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -20,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -30,10 +28,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.apache.commons.codec.digest.DigestUtils;
-import sbu.cs.youtube.Shared.POJO.Subscription;
-import sbu.cs.youtube.Shared.POJO.User;
-import sbu.cs.youtube.Shared.POJO.UserVideo;
-import sbu.cs.youtube.Shared.POJO.Video;
+import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
@@ -46,6 +41,9 @@ public class VideoPageController implements Initializable {
 
     @FXML
     private Button btnLike;
+
+    @FXML
+    private Button btnComment;
 
     @FXML
     private Button btnDislike;
@@ -114,6 +112,9 @@ public class VideoPageController implements Initializable {
     private Text txtChannelSubscribres;
 
     @FXML
+    private TextField txtComment;
+
+    @FXML
     private VBox vbxCommentSection;
 
     @FXML
@@ -144,15 +145,17 @@ public class VideoPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        //region [ - Video API - ]
         Gson gson = new Gson();
         String response = YouTubeApplication.receiveResponse();
         TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
         };
         Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
-
         video = videoResponse.getBody();
+        //endregion
 
-
+        //region [ - Check Video View API  - ]
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "CheckViewVideoExistence");
         userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
 
@@ -161,11 +164,16 @@ public class VideoPageController implements Initializable {
         };
         Response<UserVideo> userVideoResponse = gson.fromJson(response, viewResponseTypeToken.getType());
         UserVideo userVideo = userVideoResponse.getBody();
-
         System.out.println(userVideoResponse.getMessage());
 
-        if(userVideo != null)
+        if (userVideo != null)
             hasLiked = userVideo.getLike();
+        //endregion
+
+        //region [ - Comments API - ]
+//        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoComments");
+//        videoRequest.send(new Video(video.getId()));
+        //endregion
 
         setVideo();
 
@@ -234,13 +242,33 @@ public class VideoPageController implements Initializable {
 
 
         //region [ - Comments - ]
-//        for (var comment : video.getComments()) {
-        for (int i = 0; i < 8; i++) {
+        displayComments();
+        //endregion
+
+
+    }
+
+    private void displayComments() {
+        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoComments");
+        videoRequest.send(new Video(video.getId()));
+
+        Gson gson = new Gson();
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<ArrayList<Comment>>> viewResponseTypeToken = new TypeToken<>() {
+        };
+        Response<ArrayList<Comment>> commentsResponse = gson.fromJson(response, viewResponseTypeToken.getType());
+        video.setComments(commentsResponse.getBody());
+        System.out.println(commentsResponse.getMessage());
+
+        vbxCommentSection.getChildren().removeAll();
+        System.out.println("Hameeeeeeeeeeeeeeeed   " + vbxCommentSection.getChildren().size());
+        for (var comment : video.getComments()) {
             FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
             Parent commentPreview;
             try {
                 commentPreview = commentPreviewLoader.load();
-//                VideoPreviewController commentPreviewController = commentPreviewLoader.getController();
+                CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
+                commentPreviewController.setComment(comment);
 //                VideoRecommendationController commentPreviewController = commentPreviewLoader.getController();
 //                if (commentPreviewController != null) {
 //                    commentPreviewController.addThumbnail("/Images/Thumbnail.jpg");
@@ -251,9 +279,6 @@ public class VideoPageController implements Initializable {
             }
             vbxCommentSection.getChildren().add(commentPreview);
         }
-        //endregion
-
-
     }
 
     private void setPlaybackButtons() {
@@ -452,5 +477,25 @@ public class VideoPageController implements Initializable {
     @FXML
     private void updateSave(ActionEvent event) {
     }
+
+    //region [ -  - ]
+    @FXML
+    private void comment(ActionEvent event) {
+        Request<Comment> commentRequest = new Request<>(YouTubeApplication.socket, "Comment");
+        Comment comment = new Comment(txtComment.getText(), video.getId(), YouTubeApplication.user.getId(), null);
+        commentRequest.send(comment);
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<UserVideo>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Comment> commentResponse = gson.fromJson(response, responseTypeToken.getType());
+        System.out.println(commentResponse.getMessage());
+
+        displayComments();
+    }
     //endregion
+
+    //endregion
+
 }

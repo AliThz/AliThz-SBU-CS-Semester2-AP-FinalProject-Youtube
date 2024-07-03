@@ -197,14 +197,15 @@
                               <Font size="20.0" />
                            </font>
                         </Text>
-                        <HBox prefHeight="38.0" prefWidth="786.0">
+                        <HBox prefHeight="38.0" prefWidth="786.0" spacing="10.0">
                            <children>
                               <ImageView fitHeight="41.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../Images/SrgtSajjad.jpg" />
                                  </image>
                               </ImageView>
-                              <TextField prefHeight="32.0" prefWidth="754.0" promptText="Add a comment" styleClass="field-comment" />
+                              <TextField fx:id="txtComment" prefHeight="32.0" prefWidth="708.0" promptText="Add a comment" styleClass="field-comment" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="btnComment" mnemonicParsing="false" onAction="#comment" prefHeight="31.0" prefWidth="141.0" styleClass="button-subscription" text="Comment" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                      </children>

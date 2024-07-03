@@ -322,6 +322,43 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectUserBriefly(UUID Id) - ] Tested
+    public User selectUserBriefly(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        User user = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectUser)");
+
+            stmt = c.prepareStatement("""
+                    SELECT "Id", "username", "AvatarPath" FROM UserManagement.User 
+                    WHERE "Id" = ?
+                    """);
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+
+            user = new User();
+            if (rs.next()) {
+                user.setId(Id);
+                user.setUsername(rs.getString("Username"));
+                user.setAvatarPath(rs.getString("AvatarPath"));
+                user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath(), "jpg"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectUser)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return user;
+    }
+    //endregion
+
     //region [ - selectUserByUsername(String Username) - ]
     public User selectUserByUsername(String username) {
         Connection c;
@@ -1518,7 +1555,7 @@ public class DatabaseManager {
                 video.setCategories(selectVideoCategories(video.getId()));
                 video.setViewers(selectUserVideos(video.getId()));
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-                video.setComments(selectComments(video.getId()));
+//                video.setComments(selectComments(video.getId()));
                 video.setChannel(selectChannel(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
@@ -2794,16 +2831,17 @@ public class DatabaseManager {
                 Comment comment = new Comment();
                 comment.setId(UUID.fromString(rs.getString("Id")));
                 comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
+                comment.setContent(rs.getString("Message"));
 //                comment.setVideo(selectVideo(comment.getVideoId()));
                 comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
-//                comment.setSender(selectUser(comment.getSenderId()));
+                comment.setSender(selectUserBriefly(comment.getSenderId()));
 
                 if (rs.getString("ParentCommentId") != null) {
                     comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
                 }
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime().toString().toString());
+                comment.setDateCommented(timestamp.toLocalDateTime().toString());
                 comments.add(comment);
             }
 
