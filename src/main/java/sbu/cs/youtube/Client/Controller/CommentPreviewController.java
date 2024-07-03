@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import sbu.cs.youtube.Shared.POJO.Comment;
+import sbu.cs.youtube.Shared.POJO.UserComment;
 import sbu.cs.youtube.Shared.POJO.UserVideo;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
@@ -60,6 +61,8 @@ public class CommentPreviewController implements Initializable {
     private Text txtUsername;
 
     private Boolean hasLiked = null;
+    private Comment comment;
+
     //endregion
 
     //region [ - Methods - ]
@@ -69,6 +72,7 @@ public class CommentPreviewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 //        todo setComment
 //        hasLiked = ....
+//        comment = ...
     }
     //endregion
 
@@ -130,15 +134,15 @@ public class CommentPreviewController implements Initializable {
             hasLiked = null;
         }
 
-//        Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "LikeVideo");
-//        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
+//        Request<UserComment> userCommentRequest = new Request<>(YouTubeApplication.socket, "LikeComment");
+//        userCommentRequest.send(new UserComment(YouTubeApplication.user.getId(), comment.getId()));
 //
 //        String response = YouTubeApplication.receiveResponse();
 //        Gson gson = new Gson();
-//        TypeToken<Response<UserVideo>> responseTypeToken = new TypeToken<>() {
+//        TypeToken<Response<UserComment>> responseTypeToken = new TypeToken<>() {
 //        };
-//        Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
-//        System.out.println(userVideoResponse.getMessage());
+//        Response<UserComment> userCommentResponse = gson.fromJson(response, responseTypeToken.getType());
+//        System.out.println(userCommentResponse.getMessage());
 
     }
     //endregion
@@ -162,15 +166,15 @@ public class CommentPreviewController implements Initializable {
             hasLiked = null;
         }
 
-//        Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "DislikeVideo");
-//        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
+//        Request<UserComment> userCommentRequest = new Request<>(YouTubeApplication.socket, "DislikeComment");
+//        userCommentRequest.send(new UserComment(YouTubeApplication.user.getId(), comment.getId()));
 //
 //        String response = YouTubeApplication.receiveResponse();
 //        Gson gson = new Gson();
-//        TypeToken<Response<UserVideo>> responseTypeToken = new TypeToken<>() {
+//        TypeToken<Response<UserComment>> responseTypeToken = new TypeToken<>() {
 //        };
-//        Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
-//        System.out.println(userVideoResponse.getMessage());
+//        Response<UserComment> userCommentResponse = gson.fromJson(response, responseTypeToken.getType());
+//        System.out.println(userCommentResponse.getMessage());
     }
     //endregion
 
