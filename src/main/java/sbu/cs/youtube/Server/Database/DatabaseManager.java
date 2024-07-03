@@ -1906,6 +1906,10 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
+                if (rs.wasNull())
+                {
+                    userVideo.setLike(null);
+                }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
                 userVideo.setVideo(selectVideo(userVideo.getVideoId()));
@@ -1945,6 +1949,10 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
+                if (rs.wasNull())
+                {
+                    userVideo.setLike(null);
+                }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
                 userVideo.setVideo(selectVideo(userVideo.getVideoId()));
@@ -1985,6 +1993,10 @@ public class DatabaseManager {
             while (rs.next()) {
                 UserVideo userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
+                if (rs.wasNull())
+                {
+                    userVideo.setLike(null);
+                }
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
                 userVideo.setVideo(selectVideo(userVideo.getVideoId()));
@@ -2963,7 +2975,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserComment> selectUserComments() - ] Not Tested
+    //region [ - selectUserComments() - ] Not Tested
     public ArrayList<UserComment> selectUserComments() {
         Connection c;
         Statement stmt;
@@ -3000,7 +3012,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserComment> selectUserComments(UUID userID) - ] Tested
+    //region [ - selectUserComments(UUID userID) - ] Tested
     public ArrayList<UserComment> selectUserComments(UUID userId) {
         Connection c;
         PreparedStatement stmt;
@@ -3043,7 +3055,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<UserComment> selectCommentUsers(UUID commentId) - ] Not Tested
+    //region [ - selectCommentUsers(UUID commentId) - ] Not Tested
     public ArrayList<UserComment> selectCommentUsers(UUID commentId) {
         Connection c;
         PreparedStatement stmt;
@@ -3104,12 +3116,12 @@ public class DatabaseManager {
             stmt.setObject(2, commentID);
             ResultSet rs = stmt.executeQuery();
 
-            userComment = new UserComment();
-            userComment.setLike(rs.getBoolean("Like"));
-            userComment.setUserId(UUID.fromString(rs.getString("UserId")));
-            userComment.setCommentId(UUID.fromString(rs.getString("CommentId")));
-            userComment.setComment(selectComment(userComment.getCommentId()));
-            userComment.setUser(selectUser(userComment.getUserId()));
+            if(rs.next()) {
+                userComment = new UserComment();
+                userComment.setLike(rs.getBoolean("Like"));
+                userComment.setUserId(UUID.fromString(rs.getString("UserId")));
+                userComment.setCommentId(UUID.fromString(rs.getString("CommentId")));
+            }
 
             rs.close();
             stmt.close();
@@ -3121,6 +3133,38 @@ public class DatabaseManager {
         return userComment;
     }
     //endregion
+
+    //region [ - updateUserComment(UserCommnet userVideo) - ] YES
+    public void updateUserComment(UserComment userComment) {
+        Connection c;
+        PreparedStatement stmt;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (updateUserComment)");
+
+            stmt = c.prepareStatement("""
+                    UPDATE ContentManagement.UserComment
+                    SET "Like" = ?
+                    WHERE UserId = ? AND CommentId = ?;
+                    """);
+            stmt.setObject(1, userComment.getLike());
+            stmt.setObject(2, userComment.getUserId());
+            stmt.setObject(3, userComment.getCommentId());
+            stmt.executeUpdate();
+
+            c.commit();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (updateUserComment)");
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
+    //endregion
+
 
     //region [ - deleteUserComment(UUID userId , UUID commentID) - ] Yes (this method don't want to exist)
     public void deleteUserComment(UUID userId, UUID commentID) {

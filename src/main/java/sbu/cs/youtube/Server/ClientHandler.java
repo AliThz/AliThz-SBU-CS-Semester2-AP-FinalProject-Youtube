@@ -108,8 +108,8 @@ public class ClientHandler implements Runnable {
             case "Unsubscribe":
                 unsubscribe();
                 break;
-            case "ViewVideo":
-                viewVideo();
+            case "CheckViewVideoExistence":
+                checkViewVideoExistence();
                 break;
             case "LikeVideo":
                 likeVideo();
@@ -261,16 +261,16 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
-    //region [ - viewVideo() - ]
-    private void viewVideo() {
+    //region [ - checkViewVideoExistence() - ]
+    private void checkViewVideoExistence() {
         TypeToken<Request<UserVideo>> responseTypeToken = new TypeToken<>() {
         };
         Request<UserVideo> userVideoRequest = gson.fromJson(request, responseTypeToken.getType());
         UserVideo requestedUserVideo = userVideoRequest.getBody();
 
         Response<UserVideo> response;
-        UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
-        if (userVideo == null) {
+        UserVideo userVideo = databaseManager.userVideoExistence(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
+        if (userVideo != null) {
             response = new Response<>(client, userVideoRequest.getType(), true, "Video has already viewed");
         } else {
             databaseManager.insertUserVideo(requestedUserVideo);
@@ -294,9 +294,10 @@ public class ClientHandler implements Runnable {
             requestedUserVideo.setLike(null);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video unliked");
         } else {
+            requestedUserVideo.setLike(true);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video liked");
         }
-        databaseManager.insertUserVideo(requestedUserVideo);
+        databaseManager.updateUserVideo(requestedUserVideo);
 
         response.send();
     }
@@ -312,13 +313,17 @@ public class ClientHandler implements Runnable {
         Response<UserVideo> response;
         UserVideo userVideo = databaseManager.selectUserVideo(requestedUserVideo.getUserId(), requestedUserVideo.getVideoId());
 
-        if (!userVideo.getLike() && userVideo.getLike() != null) {
+        if (userVideo.getLike() == null) {
+            requestedUserVideo.setLike(false);
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
+        } else if (userVideo.getLike()){
+            requestedUserVideo.setLike(false);
+            response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
+        } else {
             requestedUserVideo.setLike(null);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video undisliked");
-        } else {
-            response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
         }
-        databaseManager.insertUserVideo(requestedUserVideo);
+        databaseManager.updateUserVideo(requestedUserVideo);
 
         response.send();
     }
@@ -334,12 +339,17 @@ public class ClientHandler implements Runnable {
         Response<UserComment> response;
         UserComment userComment = databaseManager.selectUserComment(requestedUserComment.getUserId(), requestedUserComment.getCommentId());
 
-        if (userComment.getLike()) {
+        if (userComment == null) {
+            requestedUserComment.setLike(true);
+            databaseManager.insertUserComment(requestedUserComment);
+            response = new Response<>(client, userCommentRequest.getType(), true, "Comment liked");
+        } else if (userComment.getLike()) {
             databaseManager.deleteUserComment(userComment.getUserId(), userComment.getCommentId());
             response = new Response<>(client, userCommentRequest.getType(), true, "Comment unliked");
         } else {
-            databaseManager.insertUserComment(requestedUserComment);
+            requestedUserComment.setLike(true);
             response = new Response<>(client, userCommentRequest.getType(), true, "Comment liked");
+            databaseManager.updateUserComment(requestedUserComment);
         }
 
         response.send();
@@ -356,12 +366,17 @@ public class ClientHandler implements Runnable {
         Response<UserComment> response;
         UserComment userComment = databaseManager.selectUserComment(requestedUserComment.getUserId(), requestedUserComment.getCommentId());
 
-        if (!userComment.getLike() && userComment.getLike() != null) {
+        if (userComment == null) {
+            requestedUserComment.setLike(false);
+            databaseManager.insertUserComment(requestedUserComment);
+            response = new Response<>(client, userCommentRequest.getType(), true, "Comment disliked");
+        } else if (!userComment.getLike()) {
             databaseManager.deleteUserComment(userComment.getUserId(), userComment.getCommentId());
             response = new Response<>(client, userCommentRequest.getType(), true, "Comment undisliked");
         } else {
-            databaseManager.insertUserComment(requestedUserComment);
+            requestedUserComment.setLike(false);
             response = new Response<>(client, userCommentRequest.getType(), true, "Comment disliked");
+            databaseManager.updateUserComment(requestedUserComment);
         }
 
         response.send();

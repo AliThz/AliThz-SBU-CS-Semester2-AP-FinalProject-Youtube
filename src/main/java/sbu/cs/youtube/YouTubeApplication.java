@@ -149,13 +149,46 @@ public class YouTubeApplication extends Application {
 //        String response = receiveResponse();
 //        System.out.println(response);
 //        launch();
-        //        ------------------------- UnSubscribe Test ---------------------------------------------
+//        ------------------------- UnSubscribe Test ---------------------------------------------
 //        Socket socket = new Socket("localhost", 2345);
 //        Request<Subscription> userRequest = new Request<>(socket, "Unsubscribe");
 //        Subscription subscription = new Subscription();
 //        subscription.setChannelId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
 //        subscription.setSubscriberId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
 //        userRequest.send(subscription);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- checkViewVideoExistence Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<UserVideo> userRequest = new Request<>(socket, "CheckViewVideoExistence");
+//        UserVideo userVideo = new UserVideo();
+//        userVideo.setUserId(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        userVideo.setVideoId(UUID.fromString("be7d7d84-c089-4c71-8492-572627494874"));
+//        userRequest.send(userVideo);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- likeVideo and dislikeVideo Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<UserVideo> userRequest = new Request<>(socket, "DislikeVideo");
+//        UserVideo userVideo = new UserVideo();
+//        userVideo.setUserId(UUID.fromString("13d11d94-e385-4e29-9c68-38d8c97a0429"));
+//        userVideo.setVideoId(UUID.fromString("be7d7d84-c089-4c71-8492-572627494875")    );
+//        userRequest.send(userVideo);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- LikeComment and DislikeComment Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<UserComment> userRequest = new Request<>(socket, "DislikeComment");
+//        UserComment userComment = new UserComment();
+//        userComment.setUserId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
+//        userComment.setCommentId(UUID.fromString("e667f49f-ffb8-4f28-a8e2-caeaa33e59c6")    );
+//        userRequest.send(userComment);
 //        YouTubeApplication client = new YouTubeApplication(socket);
 //        String response = receiveResponse();
 //        System.out.println(response);
