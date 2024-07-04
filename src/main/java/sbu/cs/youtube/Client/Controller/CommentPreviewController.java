@@ -88,21 +88,21 @@ public class CommentPreviewController implements Initializable {
         Duration duration = Duration.between(localDateTime, LocalDateTime.now());
         long days = duration.toDays();
         long hours = duration.toHours();
-        long minutes = duration.toMinutesPart();
-        long seconds = duration.toSecondsPart();
-        long time ;
+        long minutes = duration.toMinutes();
+        long seconds = duration.toSeconds();
+        String time ;
         if (seconds < 60) {
-            time = seconds;
+            time = seconds + "s";
         } else if (minutes < 60) {
-            time = seconds;
+            time = minutes + "m";
         } else if (hours < 24) {
-            time = hours;
+            time = hours + "h";
         } else if (days < 31) {
-            time = days;
+            time = days + "d";
         } else {
-            time = days % 31;
+            time = days % 31 + "d";
         }
-        txtTime.setText(String.valueOf(time));
+        txtTime.setText(time);
         //endregion
 
         //region [ - Avatar - ]
