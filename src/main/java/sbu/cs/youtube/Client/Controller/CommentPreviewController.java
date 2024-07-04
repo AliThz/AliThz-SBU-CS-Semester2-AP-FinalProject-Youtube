@@ -78,6 +78,7 @@ public class CommentPreviewController implements Initializable {
 
     //region [ - setComment(Comment comment) - ]
     public void setComment(Comment comment) {
+        this.comment = comment;
         txtUsername.setText(comment.getSender().getUsername());
         txtContent.setText(comment.getContent());
         txtLikes.setText(String.valueOf(comment.getLikes()));
@@ -134,15 +135,15 @@ public class CommentPreviewController implements Initializable {
             hasLiked = null;
         }
 
-//        Request<UserComment> userCommentRequest = new Request<>(YouTubeApplication.socket, "LikeComment");
-//        userCommentRequest.send(new UserComment(YouTubeApplication.user.getId(), comment.getId()));
-//
-//        String response = YouTubeApplication.receiveResponse();
-//        Gson gson = new Gson();
-//        TypeToken<Response<UserComment>> responseTypeToken = new TypeToken<>() {
-//        };
-//        Response<UserComment> userCommentResponse = gson.fromJson(response, responseTypeToken.getType());
-//        System.out.println(userCommentResponse.getMessage());
+        Request<UserComment> userCommentRequest = new Request<>(YouTubeApplication.socket, "LikeComment");
+        userCommentRequest.send(new UserComment(YouTubeApplication.user.getId(), comment.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<UserComment>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<UserComment> userCommentResponse = gson.fromJson(response, responseTypeToken.getType());
+        System.out.println(userCommentResponse.getMessage());
 
     }
     //endregion
@@ -166,15 +167,15 @@ public class CommentPreviewController implements Initializable {
             hasLiked = null;
         }
 
-//        Request<UserComment> userCommentRequest = new Request<>(YouTubeApplication.socket, "DislikeComment");
-//        userCommentRequest.send(new UserComment(YouTubeApplication.user.getId(), comment.getId()));
-//
-//        String response = YouTubeApplication.receiveResponse();
-//        Gson gson = new Gson();
-//        TypeToken<Response<UserComment>> responseTypeToken = new TypeToken<>() {
-//        };
-//        Response<UserComment> userCommentResponse = gson.fromJson(response, responseTypeToken.getType());
-//        System.out.println(userCommentResponse.getMessage());
+        Request<UserComment> userCommentRequest = new Request<>(YouTubeApplication.socket, "DislikeComment");
+        userCommentRequest.send(new UserComment(YouTubeApplication.user.getId(), comment.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<UserComment>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<UserComment> userCommentResponse = gson.fromJson(response, responseTypeToken.getType());
+        System.out.println(userCommentResponse.getMessage());
     }
     //endregion
 

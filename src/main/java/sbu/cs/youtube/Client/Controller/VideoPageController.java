@@ -522,6 +522,7 @@ public class VideoPageController implements Initializable {
         Request<Comment> commentRequest = new Request<>(YouTubeApplication.socket, "Comment");
         Comment comment = new Comment(txtComment.getText(), video.getId(), YouTubeApplication.user.getId(), null);
         commentRequest.send(comment);
+        txtComment.clear();
 
         String response = YouTubeApplication.receiveResponse();
         Gson gson = new Gson();
