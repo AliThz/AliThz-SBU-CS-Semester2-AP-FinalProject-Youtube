@@ -39,6 +39,11 @@ public class VideoPageController implements Initializable {
 
     private Video video;
 
+    private final ScrollPane recommendedVideosScrollPane = new ScrollPane();
+    private final VBox vbxRecommendedVideos = new VBox();
+
+    private final ScrollPane videoScrollPane = new ScrollPane();
+
     @FXML
     private Button btnLike;
 
@@ -170,66 +175,15 @@ public class VideoPageController implements Initializable {
             hasLiked = userVideo.getLike();
         //endregion
 
-        //region [ - Comments API - ]
-//        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoComments");
-//        videoRequest.send(new Video(video.getId()));
-        //endregion
-
         setVideo();
 
 //        hasLiked = .... todo
 
-        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
-
-        //region [ - Media View - ]
-        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
-
-        Media media = new Media(videoPath);
-        mediaPlayer = new MediaPlayer(media);
-        mediaView = new MediaView(mediaPlayer);
-        mediaView.setPreserveRatio(true);
-        mediaView.setSmooth(true);
-        //endregion
-
-        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
-
+        displayMedia();
         setPlaybackButtons();
+        displayRecommendedVideos();
 
-        //region [ - Recommended Videos - ]
-        VBox vbxRecommendedVideos = new VBox();
-        for (int i = 0; i < 8; i++) {
-            FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
-            Parent videoPreview;
-            try {
-                videoPreview = videoPreviewLoader.load();
-                VideoRecommendationController videoPreviewController = videoPreviewLoader.getController();
-                if (videoPreviewController != null) {
-                    videoPreviewController.addThumbnail("/Images/Thumbnail.jpg");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            vbxRecommendedVideos.getChildren().add(videoPreview);
-            VBox.setVgrow(videoPreview, Priority.ALWAYS);
-        }
-
-        ScrollPane recommendedVideosScrollPane = new ScrollPane();
-        hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
-        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
-        recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
-        vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        vbxRecommendedVideos.setSpacing(20);
-        vbxRecommendedVideos.getStyleClass().add("vbx-recommended-videos");
-        //endregion
-
-
-        recommendedVideosScrollPane.getStyleClass().add("scroll-pane");
-        recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
-        vbxLeft.getChildren().addFirst(mediaView);
-        ScrollPane videoScrollPane = new ScrollPane();
+        //region [ - videoScrollPane - ]
         videoScrollPane.getStyleClass().add("scroll-pane");
         videoScrollPane.setFitToWidth(true);
         videoScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
@@ -239,18 +193,72 @@ public class VideoPageController implements Initializable {
         videoScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         hbx.getChildren().addAll(videoScrollPane, recommendedVideosScrollPane);
         hbx.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-
-
-        //region [ - Comments - ]
-        displayComments();
         //endregion
 
+        displayComments();
+    }
+    //endregion
 
+    //region [ - displayMedia() - ]
+    private void displayMedia() {
+        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
+        Media media = new Media(videoPath);
+        mediaPlayer = new MediaPlayer(media);
+        mediaView = new MediaView(mediaPlayer);
+        mediaView.setPreserveRatio(true);
+        mediaView.setSmooth(true);
+        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
+        vbxLeft.getChildren().addFirst(mediaView);
+    }
+    //endregion
+
+    //region [ - displayRecommendedVideos() - ]
+    private void displayRecommendedVideos() {
+        Request<ArrayList<Video>> userRequest = new Request<>(YouTubeApplication.socket, "GetRecommendedVideos");
+        userRequest.send();
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        ArrayList<Video> recommendedVideos = videoResponse.getBody();
+        if (recommendedVideos != null) {
+            for (var v : recommendedVideos) {
+                FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
+                HBox videoRecommendation;
+                try {
+                    videoRecommendation = videoRecommendationLoader.load();
+                    VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
+                    if (videoRecommendationController != null) {
+                        videoRecommendationController.setVideo(v);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                vbxRecommendedVideos.getChildren().add(videoRecommendation);
+                VBox.setVgrow(videoRecommendation, Priority.ALWAYS);
+            }
+        }
+
+        hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
+        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
+        recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
+        vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        vbxRecommendedVideos.setSpacing(20);
+        vbxRecommendedVideos.getStyleClass().add("vbx-recommended-videos");
+
+
+        recommendedVideosScrollPane.getStyleClass().add("scroll-pane");
+        recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
     }
     //endregion
 
     //region [ - displayComments() - ]
-
     private void displayComments() {
         Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoComments");
         videoRequest.send(new Video(video.getId()));
@@ -263,7 +271,7 @@ public class VideoPageController implements Initializable {
         video.setComments(commentsResponse.getBody());
         System.out.println(commentsResponse.getMessage());
 
-        vbxCommentSection.getChildren().remove(2,vbxCommentSection.getChildren().size());
+        vbxCommentSection.getChildren().remove(2, vbxCommentSection.getChildren().size());
         for (var comment : video.getComments()) {
             FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
             Parent commentPreview;
@@ -271,11 +279,6 @@ public class VideoPageController implements Initializable {
                 commentPreview = commentPreviewLoader.load();
                 CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
                 commentPreviewController.setComment(comment);
-//                VideoRecommendationController commentPreviewController = commentPreviewLoader.getController();
-//                if (commentPreviewController != null) {
-//                    commentPreviewController.addThumbnail("/Images/Thumbnail.jpg");
-//                    commentPreviewController.addChannelProfile("/Images/ChannelProfile.png");
-//                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -285,7 +288,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - setPlaybackButtons() - ]
-
     private void setPlaybackButtons() {
         btnPlayPause.setOnAction(this::pause);
         btnBack.setOnAction(this::restart);
@@ -335,7 +337,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - volumeOff(ActionEvent event) - ]
-
     private void volumeOff(ActionEvent event) {
         btnVolume.setOnAction(this::volumeOn);
         mediaPlayer.setVolume(0);
@@ -345,7 +346,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - volumeOn(ActionEvent event) - ]
-
     private void volumeOn(ActionEvent event) {
         btnVolume.setOnAction(this::volumeOff);
         mediaPlayer.setVolume(100);
@@ -355,14 +355,12 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - next(ActionEvent event) - ]
-
     private void next(ActionEvent event) {
         //todo
     }
     //endregion
 
     //region [ - restart(ActionEvent event) - ]
-
     private void restart(ActionEvent event) {
         mediaPlayer.stop();
         pause(event);
@@ -370,7 +368,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - pause(ActionEvent event) - ]
-
     private void pause(ActionEvent event) {
         btnPlayPause.setOnAction(this::play);
         mediaPlayer.pause();
@@ -381,7 +378,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - play(ActionEvent event) - ]
-
     private void play(ActionEvent event) {
         btnPlayPause.setOnAction(this::pause);
         mediaPlayer.play();
@@ -401,6 +397,8 @@ public class VideoPageController implements Initializable {
         txtViews.setText(String.valueOf(video.getViews()));
         txtLikes.setText(String.valueOf(video.getLikes()));
 
+        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
+
         if (hasLiked == null) {
         } else if (hasLiked) {
             svgLike.setContent("M3,11h3v10H3V11z M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11v10h10.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z");
@@ -411,7 +409,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - updateSub(ActionEvent event) - ]
-
     @FXML
     private void updateSub(ActionEvent event) {
         SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
@@ -446,7 +443,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - updateLike(ActionEvent event) - ]
-
     @FXML
     private void updateLike(ActionEvent event) {
         String filledLike = "M3,11h3v10H3V11z M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11v10h10.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z";
@@ -479,7 +475,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - updateDislike(ActionEvent event) - ]
-
     @FXML
     private void updateDislike(ActionEvent event) {
         String filledDislike = "M18,4h3v10h-3V4z M5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21c0.58,0,1.14-0.24,1.52-0.65L17,14V4H6.57 C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14z";
@@ -510,7 +505,6 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - updateSave(ActionEvent event) - ]
-
     @FXML
     private void updateSave(ActionEvent event) {
     }
