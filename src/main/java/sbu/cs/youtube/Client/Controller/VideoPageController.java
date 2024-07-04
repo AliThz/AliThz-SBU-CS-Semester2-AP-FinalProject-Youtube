@@ -232,6 +232,9 @@ public class VideoPageController implements Initializable {
         ArrayList<Video> recommendedVideos = videoResponse.getBody();
         if (recommendedVideos != null) {
             for (var v : recommendedVideos) {
+                if (video.getId().equals(v.getId())){
+                    continue;
+                }
                 FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
                 HBox videoRecommendation;
                 try {
