@@ -135,7 +135,7 @@ public class ClientHandler implements Runnable {
             case "GetVideoLikesStatus":
                 getVideoLikesStatus();
                 break;
-            case "GetVideoLikesStatus":
+            case "GetCommentLikesStatus":
                 getCommentLikesStatus();
                 break;
         }

@@ -183,15 +183,27 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
 //        ------------------------- LikeComment and DislikeComment Test ---------------------------------------------
-        Socket socket = new Socket("localhost", 2345);
-//        Request<UserComment> userRequest = new Request<>(socket, "DislikeComment");
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<UserComment> userRequest = new Request<>(socket, "GetCommentLikesStatus");
 //        UserComment userComment = new UserComment();
 //        userComment.setUserId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
 //        userComment.setCommentId(UUID.fromString("e667f49f-ffb8-4f28-a8e2-caeaa33e59c6")    );
 //        userRequest.send(userComment);
-        YouTubeApplication client = new YouTubeApplication(socket);
+//        YouTubeApplication client = new YouTubeApplication(socket);
 //        String response = receiveResponse();
 //        System.out.println(response);
+//        launch();
+        //        ------------------------- LikeComment and DislikeComment Test ---------------------------------------------
+        Socket socket = new Socket("localhost", 2345);
+        Request<Comment> userRequest = new Request<>(socket, "GetCommentLikesStatus");
+        Comment comment = new Comment();
+        comment.setId(UUID.fromString("5b16a1da-1d90-4e0d-a901-37a50ba0fe22"));
+        userRequest.send(comment);
+        YouTubeApplication client = new YouTubeApplication(socket);
+        String response = receiveResponse();
+        System.out.println(response);
         launch();
+
+
     }
 }

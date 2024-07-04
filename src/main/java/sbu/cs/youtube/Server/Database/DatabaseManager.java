@@ -2070,7 +2070,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ -  - ]
 
     //    region [ - selectVideoLikesStatus(UUID Id) - ] test
     public Video selectVideoLikesStatus(UUID Id) {
@@ -2095,7 +2094,7 @@ public class DatabaseManager {
             stmt = c.prepareStatement("""
                     SELECT COUNT(UserId) AS VideoDislikes
                     FROM ContentManagement.UserVideo
-                    WHERE videoid = ? AND \"Like\" = true;
+                    WHERE videoid = ? AND \"Like\" = false;
                     """);
 
             stmt.setObject(1, Id);
@@ -2114,8 +2113,6 @@ public class DatabaseManager {
     }
     //endregion
 
-
-    //endregion
 
     //region [ - userVideoExistence(UUID userID , UUID videoId) - ] Not Test
     public UserVideo userVideoExistence(UUID userID, UUID videoId) {
@@ -3162,6 +3159,48 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return userComments;
+    }
+    //endregion
+
+    //    region [ - selectCommentLikesStatus(UUID Id) - ] test
+    public Comment selectCommentLikesStatus(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Comment comment = new Comment();
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (getCommentLikes)");
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS CommentLikes
+                    FROM ContentManagement.UserComment
+                    WHERE commentid = ? AND \"Like\" = true;
+                    """);
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){comment.setLikes(rs.getInt("CommentLikes"));}
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS CommentDislikes
+                    FROM ContentManagement.UserComment
+                    WHERE commentid = ? AND \"Like\" = false;
+                    """);
+
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            if(rs.next()) {
+                comment.setDislikes(rs.getInt("CommentDislikes"));}
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectComment)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return comment;
     }
     //endregion
 
