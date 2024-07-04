@@ -20,8 +20,8 @@ public class Video {
     private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
 
-    private int likes = 0 ;
-    private int dislikes = 0 ;
+    private int likes;
+    private int dislikes;
 
     public Video() {
         Id = UUID.randomUUID();
