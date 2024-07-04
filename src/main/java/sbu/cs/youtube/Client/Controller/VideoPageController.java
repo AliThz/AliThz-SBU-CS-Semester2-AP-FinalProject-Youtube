@@ -209,6 +209,7 @@ public class VideoPageController implements Initializable {
         mediaView.setSmooth(true);
         mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
         vbxLeft.getChildren().addFirst(mediaView);
+        mediaPlayer.play();
     }
     //endregion
 
