@@ -1,6 +1,7 @@
 package sbu.cs.youtube;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.LoadException;
@@ -9,14 +10,17 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalDateTimeStringConverter;
 import sbu.cs.youtube.Client.Controller.HomeSectionController;
-import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.POJO.*;
+import sbu.cs.youtube.Shared.Response;
 
+import javax.crypto.Cipher;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 public class YouTubeApplication extends Application {
 
@@ -68,7 +72,9 @@ public class YouTubeApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+//        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
         FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("home-section.fxml"));
+//        FXMLLoader fxmlLoader = new FXMLLoader(YouTubeApplication.class.getResource("test.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/YoutubeIcon.png"))));
         stage.setTitle("Youtube");
@@ -96,12 +102,108 @@ public class YouTubeApplication extends Application {
 //        YouTubeApplication client = new YouTubeApplication(socket);
 //        receiveResponse();
 //        ------------------------- Sign in Test ----------------------------------
-        Socket socket = new Socket("localhost", 2345);
+//        Socket socket = new Socket("localhost", 2345);
 //        Request<User> userRequest = new Request<>(socket, "SignIn");
 //        userRequest.send(new User("Ali Taherzadeh", "Ali.Thz@gmail.com", "", "Ali123456", LocalDateTime.now().toString()));
-        YouTubeApplication client = new YouTubeApplication(socket);
+//        YouTubeApplication client = new YouTubeApplication(socket);
 //        receiveResponse();
-
+//        ------------------------- get Video test --------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Video> userRequest = new Request<>(socket, "GetVideo");
+//        Video video = new Video("avengers" , "marvel video" , UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf") , 65 , LocalDateTime.now().toString());
+//        video.setId(UUID.fromString("dece64c2-acd4-427a-a5d5-920905b1041b"));
+//        userRequest.send(video);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- get Playlist test ----------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Playlist> userRequest = new Request<>(socket, "GetPlaylist");
+//        Playlist playlist = new Playlist();
+//        playlist.setId(UUID.fromString("05b6fd7d-279c-4cd2-8374-b4a8fdd63e1b"));
+//        userRequest.send(playlist);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- CheckSubscriptionExistence Test ----------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Subscription> userRequest = new Request<>(socket, "CheckSubscriptionExistence");
+//        Subscription subscription = new Subscription();
+//        subscription.setChannelId(UUID.fromString("e0ce92d5-f8ff-40eb-8d46-31c7a19ecc1a"));
+//        subscription.setSubscriberId(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        userRequest.send(subscription);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- Subscribe Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Subscription> userRequest = new Request<>(socket, "Subscribe");
+//        Subscription subscription = new Subscription();
+//        subscription.setChannelId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+//        subscription.setSubscriberId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
+//        userRequest.send(subscription);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- UnSubscribe Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Subscription> userRequest = new Request<>(socket, "Unsubscribe");
+//        Subscription subscription = new Subscription();
+//        subscription.setChannelId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+//        subscription.setSubscriberId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
+//        userRequest.send(subscription);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- checkViewVideoExistence Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<UserVideo> userRequest = new Request<>(socket, "CheckViewVideoExistence");
+//        UserVideo userVideo = new UserVideo();
+//        userVideo.setUserId(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        userVideo.setVideoId(UUID.fromString("be7d7d84-c089-4c71-8492-572627494874"));
+//        userRequest.send(userVideo);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- likeVideo and dislikeVideo Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<UserVideo> userRequest = new Request<>(socket, "DislikeVideo");
+//        UserVideo userVideo = new UserVideo();
+//        userVideo.setUserId(UUID.fromString("13d11d94-e385-4e29-9c68-38d8c97a0429"));
+//        userVideo.setVideoId(UUID.fromString("be7d7d84-c089-4c71-8492-572627494875")    );
+//        userRequest.send(userVideo);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+//        ------------------------- LikeComment and DislikeComment Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<UserComment> userRequest = new Request<>(socket, "GetCommentLikesStatus");
+//        UserComment userComment = new UserComment();
+//        userComment.setUserId(UUID.fromString("5479f070-5f9b-47f3-b762-629d22c1dffc"));
+//        userComment.setCommentId(UUID.fromString("e667f49f-ffb8-4f28-a8e2-caeaa33e59c6")    );
+//        userRequest.send(userComment);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- LikeComment and DislikeComment Test ---------------------------------------------
+        Socket socket = new Socket("localhost", 2345);
+        Request<Comment> userRequest = new Request<>(socket, "GetCommentLikesStatus");
+        Comment comment = new Comment();
+        comment.setId(UUID.fromString("5b16a1da-1d90-4e0d-a901-37a50ba0fe22"));
+        userRequest.send(comment);
+        YouTubeApplication client = new YouTubeApplication(socket);
+        String response = receiveResponse();
+        System.out.println(response);
         launch();
+
+
     }
 }

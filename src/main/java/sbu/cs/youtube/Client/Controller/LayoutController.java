@@ -37,6 +37,15 @@ public class LayoutController implements Initializable {
     protected boolean isDarkMode = true;
 
     @FXML
+    protected SVGPath svgHome;
+
+    @FXML
+    protected SVGPath svgYou;
+
+    @FXML
+    protected SVGPath svgSubs;
+
+    @FXML
     protected VBox vbxSideBar;
 
     @FXML
@@ -44,6 +53,9 @@ public class LayoutController implements Initializable {
 
     @FXML
     protected Button btnYou;
+
+    @FXML
+    protected Button btnBurger;
 
     @FXML
     protected HBox hbxContent;
@@ -71,7 +83,6 @@ public class LayoutController implements Initializable {
             isSignedIn = true;
         }
         setRightNavBarHBox();
-
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
         flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
     }
@@ -171,7 +182,7 @@ public class LayoutController implements Initializable {
             watchLaterBtn.setGraphic(watchLaterPane);
             watchLaterBtn.getStyleClass().add("side-btn");
             watchLaterBtn.setTooltip(new Tooltip("Watch Later"));
-            watchLaterBtn.setOnAction(this::getPlaylist); // ToDo needs change of attribute
+            watchLaterBtn.setOnAction(event1 -> getPlaylist(event1, "WatchLater"));
             //endregion
 
             //region [ - LikedVideos Button - ]
@@ -186,7 +197,7 @@ public class LayoutController implements Initializable {
             likedVideosBtn.setGraphic(likedVideosPane);
             likedVideosBtn.getStyleClass().add("side-btn");
             likedVideosBtn.setTooltip(new Tooltip("Liked Videos"));
-            likedVideosBtn.setOnAction(this::getPlaylist); // ToDo needs change of attribute
+            likedVideosBtn.setOnAction(event -> getPlaylist(event, "LikedVideos"));
             //endregion
 
             Label exploreLbl = new Label("Explore");
@@ -216,7 +227,7 @@ public class LayoutController implements Initializable {
             trendingPane.getStyleClass().add("flow-pane");
             trendingBtn.setGraphic(trendingPane);
             trendingBtn.getStyleClass().add("side-btn");
-            trendingBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            trendingBtn.setOnAction(event -> getCategory(event, "Trending"));
             //endregion
 
             //region [ - Music Button - ]
@@ -230,7 +241,7 @@ public class LayoutController implements Initializable {
             musicPane.getStyleClass().add("flow-pane");
             musicBtn.setGraphic(musicPane);
             musicBtn.getStyleClass().add("side-btn");
-            musicBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            musicBtn.setOnAction(event -> getCategory(event, "Music"));
             //endregion
 
             //region [ - Movies&TV Button - ]
@@ -244,7 +255,7 @@ public class LayoutController implements Initializable {
             moviesPane.getStyleClass().add("flow-pane");
             moviesBtn.setGraphic(moviesPane);
             moviesBtn.getStyleClass().add("side-btn");
-            moviesBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            moviesBtn.setOnAction(event -> getCategory(event, "Movies"));
             //endregion
 
             //region [ - Gaming Button - ]
@@ -258,7 +269,7 @@ public class LayoutController implements Initializable {
             gamingPane.getStyleClass().add("flow-pane");
             gamingBtn.setGraphic(gamingPane);
             gamingBtn.getStyleClass().add("side-btn");
-            gamingBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            gamingBtn.setOnAction(event -> getCategory(event, "Gaming"));
             //endregion
 
             //region [ - News Button - ]
@@ -272,7 +283,7 @@ public class LayoutController implements Initializable {
             newsPane.getStyleClass().add("flow-pane");
             newsBtn.setGraphic(newsPane);
             newsBtn.getStyleClass().add("side-btn");
-            newsBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            newsBtn.setOnAction(event -> getCategory(event, "News"));
             //endregion
 
             //region [ - Sports Button - ]
@@ -286,7 +297,7 @@ public class LayoutController implements Initializable {
             sportsPane.getStyleClass().add("flow-pane");
             sportsBtn.setGraphic(sportsPane);
             sportsBtn.getStyleClass().add("side-btn");
-            sportsBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            sportsBtn.setOnAction(event -> getCategory(event, "Sports"));
             //endregion
 
             //region [ - Learning Button - ]
@@ -300,7 +311,7 @@ public class LayoutController implements Initializable {
             learningPane.getStyleClass().add("flow-pane");
             learningBtn.setGraphic(learningPane);
             learningBtn.getStyleClass().add("side-btn");
-            learningBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            learningBtn.setOnAction(event -> getCategory(event, "Learning"));
             //endregion
 
             //region [ - Fashion&Beauty Button - ]
@@ -314,7 +325,7 @@ public class LayoutController implements Initializable {
             fashionPane.getStyleClass().add("flow-pane");
             fashionBtn.setGraphic(fashionPane);
             fashionBtn.getStyleClass().add("side-btn");
-            fashionBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            fashionBtn.setOnAction(event -> getCategory(event, "Fashion"));
             //endregion
 
             //region [ - Podcasts Button - ]
@@ -328,7 +339,7 @@ public class LayoutController implements Initializable {
             podcastsPane.getStyleClass().add("flow-pane");
             podcastsBtn.setGraphic(podcastsPane);
             podcastsBtn.getStyleClass().add("side-btn");
-            podcastsBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            podcastsBtn.setOnAction(event -> getCategory(event, "Podcasts"));
             //endregion
 
             sideVbx.getChildren().addAll(trendingBtn, musicBtn, moviesBtn, gamingBtn, newsBtn, sportsBtn, learningBtn, fashionBtn, podcastsBtn);
@@ -337,10 +348,7 @@ public class LayoutController implements Initializable {
 
         } else {
             if (btnYou.getChildrenUnmodifiable().getFirst() instanceof FlowPane) {
-                SVGPath youSvg = new SVGPath();
-                youSvg.setContent("m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z");
-                youSvg.getStyleClass().add("you-svg");
-                ((FlowPane) btnYou.getChildrenUnmodifiable().getFirst()).getChildren().addFirst(youSvg);
+                ((FlowPane) btnYou.getChildrenUnmodifiable().getFirst()).getChildren().addFirst(svgYou);
                 ((FlowPane) btnYou.getChildrenUnmodifiable().getFirst()).getChildren().remove(2);
             }
             vbxSideBar.getChildren().remove(2);
@@ -354,25 +362,29 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - getCategory(ActionEvent event) - ]
-    private void getCategory(ActionEvent event) {
+    private void getCategory(ActionEvent event, String category) {
+        setDefaultSvgs();
     }
     //endregion
 
     //region [ - getPlaylist(ActionEvent event) - ]
 
-    private void getPlaylist(ActionEvent event) {
+    private void getPlaylist(ActionEvent event, String playlistName) {
+        setDefaultSvgs();
     }
     //endregion
 
     //region [ - getHistoryPage(ActionEvent event) - ]
 
     private void getHistoryPage(ActionEvent event) {
+        setDefaultSvgs();
     }
     //endregion
 
     //region [ - getYourChannelPage(ActionEvent event) - ]
 
     private void getYourChannelPage(ActionEvent event) {
+        setDefaultSvgs();
     }
     //endregion
 
@@ -450,27 +462,47 @@ public class LayoutController implements Initializable {
     //region [ - setHomeSection - ]
     @FXML
     void setHomeSection(ActionEvent event) {
-        System.out.println("This is home section");
+        setDefaultSvgs();
+        svgHome.setContent("M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z");
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/home-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
+
     //endregion
+
 
     //region [ - setSubscriptionsSection(ActionEvent event) - ]
     @FXML
     void setSubscriptionsSection(ActionEvent event) {
-
+        setDefaultSvgs();
+        svgSubs.setContent("M20 7H4V6h16v1zm2 2v12H2V9h20zm-7 6-5-3v6l5-3zm2-12H7v1h10V3z");
     }
     //endregion
 
     //region [ - setYouSection(ActionEvent event) - ]
     @FXML
     void setYouSection(ActionEvent event) {
-
+        setDefaultSvgs();
+        svgYou.setContent("M4 20h14v1H3V6h1v14zM21 3v15H6V3h15zm-4 7.5L11 7v7l6-3.5z");
     }
     //endregion
 
     //region [ - getDashboard(ActionEvent event) - ]
 
     protected void getDashboard(ActionEvent event) {
+        setDefaultSvgs();
     }
 
     //endregion
@@ -478,6 +510,7 @@ public class LayoutController implements Initializable {
     //region [ - getNotificationsScene(ActionEvent event) - ]
 
     protected void getNotificationsScene(ActionEvent event) {
+        setDefaultSvgs();
     }
 
     //endregion
@@ -485,6 +518,7 @@ public class LayoutController implements Initializable {
     //region [ - getCreatePage(ActionEvent event) - ]
 
     protected void getCreatePage(ActionEvent event) {
+        setDefaultSvgs();
     }
 
     //endregion
@@ -522,6 +556,19 @@ public class LayoutController implements Initializable {
         flowPane.getChildren().add(parent);
     }
     //endregion
+
+    //region [ -  - ]
+    public boolean getIsExpanded() {
+        return isExpanded;
+    }
+    //endregion
+
+    private void setDefaultSvgs() {
+        svgHome.setContent("m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z");
+        svgSubs.setContent("M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z");
+        svgYou.setContent("m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z");
+    }
+
 
     //endregion
 

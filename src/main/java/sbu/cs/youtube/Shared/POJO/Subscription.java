@@ -12,6 +12,8 @@ public class Subscription {
     private String joinDate ;
 
     public Subscription() {
+        channel = new Channel();
+        subscriber = new User();
     }
 
     public Subscription(UUID subscriberId, UUID channelId) {

@@ -20,7 +20,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="253.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
+                  <Button fx:id="btnBurger" mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
                      <tooltip>
                         <Tooltip text="Expand">
                            <font>
@@ -110,7 +110,7 @@
                      <graphic>
                         <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" prefHeight="42.0" prefWidth="114.0" styleClass="flow-pane" vgap="2.0">
                            <children>
-                              <SVGPath content="m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z" fill="WHITE" styleClass="home-svg" />
+                              <SVGPath fx:id="svgHome" content="m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z" fill="WHITE" styleClass="home-svg" />
                               <Label alignment="CENTER" prefHeight="22.0" prefWidth="42.0" styleClass="home-lbl" text="Home" textFill="WHITE">
                                  <FlowPane.margin>
                                     <Insets />
@@ -130,11 +130,11 @@
                         </Tooltip>
                      </tooltip>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="127.0" styleClass="side-btn">
+                  <Button mnemonicParsing="false" onAction="#setSubscriptionsSection" prefHeight="46.0" prefWidth="127.0" styleClass="side-btn">
                      <graphic>
-                        <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" onDragDetected="#setSubscriptionsSection" prefHeight="0.0" prefWidth="0.0" styleClass="flow-pane" vgap="10.0">
+                        <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" prefHeight="0.0" prefWidth="0.0" styleClass="flow-pane" vgap="10.0">
                            <children>
-                              <SVGPath content="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z" styleClass="subscriptions-svg" />
+                              <SVGPath fx:id="svgSubs" content="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z" styleClass="subscriptions-svg" />
                               <Label alignment="CENTER" prefHeight="22.0" prefWidth="84.0" styleClass="subscriptions-lbl" text="Subscriptions" textFill="WHITE">
                                  <FlowPane.margin>
                                     <Insets />
@@ -158,7 +158,7 @@
                      <graphic>
                         <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="40.0" prefHeight="56.0" prefWidth="111.0" styleClass="flow-pane" vgap="2.0">
                            <children>
-                              <SVGPath content="m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z" styleClass="you-svg" />
+                              <SVGPath fx:id="svgYou" content="m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z" styleClass="you-svg" />
                               <Label alignment="CENTER" prefHeight="22.0" prefWidth="25.0" styleClass="you-lbl" text="You" textFill="WHITE">
                                  <FlowPane.margin>
                                     <Insets />

@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -13,9 +12,6 @@
 <VBox fx:id="vbxVideoPreview" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="352.0" spacing="5.0" styleClass="vbx-video-preview" stylesheets="@../../../Styles/video-preview.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.VideoPreviewController">
    <children>
       <ImageView fx:id="imgThumbnail" fitHeight="160.0" fitWidth="262.0" pickOnBounds="true" preserveRatio="true" styleClass="img-thumbnail" VBox.vgrow="ALWAYS">
-         <image>
-            <Image url="@../../../../../../../../../../../../../Picutres/BG/New%20folder/New%20folder/01.jpg" />
-         </image>
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -23,9 +19,6 @@
       <HBox fx:id="hbxVideoDetails" alignment="TOP_CENTER" prefHeight="0.0" prefWidth="250.0" spacing="5.0" style="-fx-alignment: top-center;" styleClass="hbx-video-details" VBox.vgrow="NEVER">
          <children>
             <ImageView fx:id="imgChannelProfile" fitHeight="43.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
-               <image>
-                  <Image url="@../../../../../../../../../../../../../Picutres/BG/Screenshot%202023-11-10%20180736.png" />
-               </image>
                <HBox.margin>
                   <Insets top="15.0" />
                </HBox.margin>
@@ -59,7 +52,7 @@
                   </HBox>
                </children>
             </VBox>
-            <Button fx:id="btnVideoPreviewOptions" mnemonicParsing="false" prefHeight="31.0" prefWidth="19.0" style="-fx-background-color: transparent;" textFill="WHITE" HBox.hgrow="ALWAYS">
+            <Button fx:id="btnVideoPreviewOptions" mnemonicParsing="false" prefHeight="31.0" prefWidth="19.0" styleClass="add-btn" textFill="WHITE" HBox.hgrow="ALWAYS">
                <graphic>
                   <SVGPath fx:id="svgpthVideoPreviewOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" />
                </graphic>

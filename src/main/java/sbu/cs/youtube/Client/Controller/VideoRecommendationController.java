@@ -4,55 +4,57 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
-import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.POJO.Video;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class VideoPreviewController implements Initializable {
-
-    //region [ - Fields - ]
+public class VideoRecommendationController implements Initializable {
 
     private Video video;
     @FXML
     private Button btnVideoPreviewOptions;
+
     @FXML
-    private HBox hbxVideoDetails, hbxViewsAndDate;
+    private HBox hbxViewsAndDate;
+
     @FXML
-    private ImageView imgThumbnail, imgChannelProfile;
+    private HBox hbxVideoRecommendation;
+
+    @FXML
+    private VBox vbxDetails;
+
+    @FXML
+    private ImageView imgThumbnail;
+
     @FXML
     private SVGPath svgpthVideoPreviewOptions;
+
     @FXML
-    private Text txtVideoTitle, txtChannelName, txtViews, txtDate;
+    private Text txtChannelName;
+
     @FXML
-    private VBox vbxVideoPreview, vbxTextDetails;
+    private Text txtDate;
+
+    @FXML
+    private Text txtVideoTitle;
+
+    @FXML
+    private Text txtViews;
+
     private final int TITLE_MAX_LENGTH = 50;
-    //endregion
 
-    //region [ - Methods - ]
-
-    //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        imgThumbnail.fitWidthProperty().bind(vbxVideoPreview.widthProperty());
-        imgThumbnail.fitHeightProperty().bind(vbxVideoPreview.heightProperty());
-        imgThumbnail.setPreserveRatio(true);
-
-        hbxVideoDetails.prefWidthProperty().bind(vbxVideoPreview.widthProperty());
-
-
-        vbxTextDetails.prefWidthProperty().bind(hbxVideoDetails.widthProperty().subtract(100));
 
         btnVideoPreviewOptions.setOnAction(event -> {
             event.consume();
@@ -63,7 +65,6 @@ public class VideoPreviewController implements Initializable {
     private void save(ActionEvent event) {
         //todo
     }
-    //endregion
 
     //region [ - addThumbnail(String src) - ]
     public void addThumbnail(String src) {
@@ -71,15 +72,9 @@ public class VideoPreviewController implements Initializable {
     }
     //endregion
 
-    //region [ - addChannelProfile(String src) - ]
-    public void addChannelProfile(String src) {
-        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(src))));
-    }
-    //endregion
-
     //region [ - setVideo(Video video) - ]
     public void setVideo(Video video) {
-        this.video= video;
+        this.video = video;
         String summarizedTitle = video.getTitle();
         if (summarizedTitle.length() > TITLE_MAX_LENGTH) {
             summarizedTitle = summarizedTitle.substring(0, TITLE_MAX_LENGTH);
@@ -95,13 +90,6 @@ public class VideoPreviewController implements Initializable {
         bis = new ByteArrayInputStream(video.getThumbnailBytes());
         Image videoThumbnail = new Image(bis);
         imgThumbnail.setImage(videoThumbnail);
-
-        bis = new ByteArrayInputStream(video.getChannel().getProfileBytes());
-        Image channelProfile = new Image(bis);
-        imgChannelProfile.setImage(channelProfile);
     }
     //endregion
-
-    //endregion
-
 }

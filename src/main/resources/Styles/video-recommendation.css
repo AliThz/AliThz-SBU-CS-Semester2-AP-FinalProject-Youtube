@@ -1,0 +1,16 @@
+.background {
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
+
+.add-btn {
+    -fx-background-color : transparent;
+    -fx-background-radius : 100;
+}
+
+.add-btn:hover {
+    -fx-background-color : rgb(33, 33, 33);
+}
+.add-btn:pressed {
+    -fx-background-color : rgb(41, 41, 41);
+}
