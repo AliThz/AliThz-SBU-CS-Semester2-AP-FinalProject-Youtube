@@ -182,7 +182,7 @@ public class LayoutController implements Initializable {
             watchLaterBtn.setGraphic(watchLaterPane);
             watchLaterBtn.getStyleClass().add("side-btn");
             watchLaterBtn.setTooltip(new Tooltip("Watch Later"));
-            watchLaterBtn.setOnAction(this::getPlaylist); // ToDo needs change of attribute
+            watchLaterBtn.setOnAction(event1 -> getPlaylist(event1, "WatchLater"));
             //endregion
 
             //region [ - LikedVideos Button - ]
@@ -197,7 +197,7 @@ public class LayoutController implements Initializable {
             likedVideosBtn.setGraphic(likedVideosPane);
             likedVideosBtn.getStyleClass().add("side-btn");
             likedVideosBtn.setTooltip(new Tooltip("Liked Videos"));
-            likedVideosBtn.setOnAction(this::getPlaylist); // ToDo needs change of attribute
+            likedVideosBtn.setOnAction(event -> getPlaylist(event, "LikedVideos"));
             //endregion
 
             Label exploreLbl = new Label("Explore");
@@ -227,7 +227,7 @@ public class LayoutController implements Initializable {
             trendingPane.getStyleClass().add("flow-pane");
             trendingBtn.setGraphic(trendingPane);
             trendingBtn.getStyleClass().add("side-btn");
-            trendingBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            trendingBtn.setOnAction(event -> getCategory(event, "Trending"));
             //endregion
 
             //region [ - Music Button - ]
@@ -241,7 +241,7 @@ public class LayoutController implements Initializable {
             musicPane.getStyleClass().add("flow-pane");
             musicBtn.setGraphic(musicPane);
             musicBtn.getStyleClass().add("side-btn");
-            musicBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            musicBtn.setOnAction(event -> getCategory(event, "Music"));
             //endregion
 
             //region [ - Movies&TV Button - ]
@@ -255,7 +255,7 @@ public class LayoutController implements Initializable {
             moviesPane.getStyleClass().add("flow-pane");
             moviesBtn.setGraphic(moviesPane);
             moviesBtn.getStyleClass().add("side-btn");
-            moviesBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            moviesBtn.setOnAction(event -> getCategory(event, "Movies"));
             //endregion
 
             //region [ - Gaming Button - ]
@@ -269,7 +269,7 @@ public class LayoutController implements Initializable {
             gamingPane.getStyleClass().add("flow-pane");
             gamingBtn.setGraphic(gamingPane);
             gamingBtn.getStyleClass().add("side-btn");
-            gamingBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            gamingBtn.setOnAction(event -> getCategory(event, "Gaming"));
             //endregion
 
             //region [ - News Button - ]
@@ -283,7 +283,7 @@ public class LayoutController implements Initializable {
             newsPane.getStyleClass().add("flow-pane");
             newsBtn.setGraphic(newsPane);
             newsBtn.getStyleClass().add("side-btn");
-            newsBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            newsBtn.setOnAction(event -> getCategory(event, "News"));
             //endregion
 
             //region [ - Sports Button - ]
@@ -297,7 +297,7 @@ public class LayoutController implements Initializable {
             sportsPane.getStyleClass().add("flow-pane");
             sportsBtn.setGraphic(sportsPane);
             sportsBtn.getStyleClass().add("side-btn");
-            sportsBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            sportsBtn.setOnAction(event -> getCategory(event, "Sports"));
             //endregion
 
             //region [ - Learning Button - ]
@@ -311,7 +311,7 @@ public class LayoutController implements Initializable {
             learningPane.getStyleClass().add("flow-pane");
             learningBtn.setGraphic(learningPane);
             learningBtn.getStyleClass().add("side-btn");
-            learningBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            learningBtn.setOnAction(event -> getCategory(event, "Learning"));
             //endregion
 
             //region [ - Fashion&Beauty Button - ]
@@ -325,7 +325,7 @@ public class LayoutController implements Initializable {
             fashionPane.getStyleClass().add("flow-pane");
             fashionBtn.setGraphic(fashionPane);
             fashionBtn.getStyleClass().add("side-btn");
-            fashionBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            fashionBtn.setOnAction(event -> getCategory(event, "Fashion"));
             //endregion
 
             //region [ - Podcasts Button - ]
@@ -339,7 +339,7 @@ public class LayoutController implements Initializable {
             podcastsPane.getStyleClass().add("flow-pane");
             podcastsBtn.setGraphic(podcastsPane);
             podcastsBtn.getStyleClass().add("side-btn");
-            podcastsBtn.setOnAction(this::getCategory); // ToDo needs change of attribute
+            podcastsBtn.setOnAction(event -> getCategory(event, "Podcasts"));
             //endregion
 
             sideVbx.getChildren().addAll(trendingBtn, musicBtn, moviesBtn, gamingBtn, newsBtn, sportsBtn, learningBtn, fashionBtn, podcastsBtn);
@@ -362,14 +362,14 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - getCategory(ActionEvent event) - ]
-    private void getCategory(ActionEvent event) {
+    private void getCategory(ActionEvent event, String category) {
         setDefaultSvgs();
     }
     //endregion
 
     //region [ - getPlaylist(ActionEvent event) - ]
 
-    private void getPlaylist(ActionEvent event) {
+    private void getPlaylist(ActionEvent event, String playlistName) {
         setDefaultSvgs();
     }
     //endregion

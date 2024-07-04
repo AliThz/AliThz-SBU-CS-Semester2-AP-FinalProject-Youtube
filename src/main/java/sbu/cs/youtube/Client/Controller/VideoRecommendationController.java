@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Client.Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -19,6 +20,7 @@ import java.util.ResourceBundle;
 
 public class VideoRecommendationController implements Initializable {
 
+    private Video video;
     @FXML
     private Button btnVideoPreviewOptions;
 
@@ -53,11 +55,15 @@ public class VideoRecommendationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        if (hbxVideoRecommendation.getWidth() < 10) {
-//            vbxDetails.setVisible(false);
-//        } else {
-//            vbxDetails.setVisible(true);
-//        }
+
+        btnVideoPreviewOptions.setOnAction(event -> {
+            event.consume();
+            save(event);
+        });
+    }
+
+    private void save(ActionEvent event) {
+        //todo
     }
 
     //region [ - addThumbnail(String src) - ]
@@ -68,6 +74,7 @@ public class VideoRecommendationController implements Initializable {
 
     //region [ - setVideo(Video video) - ]
     public void setVideo(Video video) {
+        this.video = video;
         String summarizedTitle = video.getTitle();
         if (summarizedTitle.length() > TITLE_MAX_LENGTH) {
             summarizedTitle = summarizedTitle.substring(0, TITLE_MAX_LENGTH);

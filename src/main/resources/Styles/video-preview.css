@@ -1,6 +1,6 @@
 .vbx-video-preview {
     -fx-alignment : top-center;
-    -fx-background-color : transparent;
+    -fx-background-color : black;
     -fx-padding: 0;
     -fx-pref-width: 260;
     -fx-pref-height: 220;

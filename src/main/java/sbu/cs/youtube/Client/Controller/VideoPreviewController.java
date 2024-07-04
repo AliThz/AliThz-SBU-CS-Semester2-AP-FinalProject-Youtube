@@ -1,5 +1,6 @@
 package sbu.cs.youtube.Client.Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,6 +23,8 @@ import java.util.ResourceBundle;
 public class VideoPreviewController implements Initializable {
 
     //region [ - Fields - ]
+
+    private Video video;
     @FXML
     private Button btnVideoPreviewOptions;
     @FXML
@@ -50,6 +53,15 @@ public class VideoPreviewController implements Initializable {
 
 
         vbxTextDetails.prefWidthProperty().bind(hbxVideoDetails.widthProperty().subtract(100));
+
+        btnVideoPreviewOptions.setOnAction(event -> {
+            event.consume();
+            save(event);
+        });
+    }
+
+    private void save(ActionEvent event) {
+        //todo
     }
     //endregion
 
@@ -67,6 +79,7 @@ public class VideoPreviewController implements Initializable {
 
     //region [ - setVideo(Video video) - ]
     public void setVideo(Video video) {
+        this.video= video;
         String summarizedTitle = video.getTitle();
         if (summarizedTitle.length() > TITLE_MAX_LENGTH) {
             summarizedTitle = summarizedTitle.substring(0, TITLE_MAX_LENGTH);
