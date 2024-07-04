@@ -1528,7 +1528,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectVideo(UUID Id) - ] test
+    //    region [ - selectVideo(UUID Id) - ] test
     public Video selectVideo(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -1555,7 +1555,6 @@ public class DatabaseManager {
                 video.setCategories(selectVideoCategories(video.getId()));
                 video.setViewers(selectUserVideos(video.getId()));
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-//                video.setComments(selectComments(video.getId()));
                 video.setChannel(selectChannel(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
@@ -1564,24 +1563,6 @@ public class DatabaseManager {
                 video.setPath(rs.getString("Path"));
                 video.setVideoBytes(convertVideoToByteArray(video.getPath()));
             }
-
-//            stmt = c.prepareStatement("""
-//                    SELECT COUNT(UserId) AS VideoLikes
-//                    FROM ContentManagement.UserVideo
-//                    WHERE VideoId = ? AND Like = true;
-//                    """);
-//            stmt.setObject(1, Id);
-//            rs = stmt.executeQuery();
-//            video.setLikes(rs.getInt("VideosLikes"));
-//
-//            stmt = c.prepareStatement("""
-//                    SELECT COUNT(UserId) AS VideodisLikes
-//                    FROM ContentManagement.UserVideo
-//                    WHERE VideoId = ? AND Like = false;
-//                    """);
-//            stmt.setObject(1, Id);
-//            rs = stmt.executeQuery();
-//            video.setDislikes(rs.getInt("VideosDisikes"));
 
             rs.close();
             stmt.close();
@@ -2087,6 +2068,53 @@ public class DatabaseManager {
         }
         return userVideo;
     }
+    //endregion
+
+    //region [ -  - ]
+
+    //    region [ - selectVideoLikesStatus(UUID Id) - ] test
+    public Video selectVideoLikesStatus(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Video video = new Video();
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (getVideoLikes)");
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS VideoLikes
+                    FROM ContentManagement.UserVideo
+                    WHERE videoid = ? AND \"Like\" = true;
+                    """);
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){video.setLikes(rs.getInt("VideoLikes"));}
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS VideoDislikes
+                    FROM ContentManagement.UserVideo
+                    WHERE videoid = ? AND \"Like\" = true;
+                    """);
+
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            if(rs.next()) {
+                video.setDislikes(rs.getInt("VideoDislikes"));}
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideo)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return video;
+    }
+    //endregion
+
+
     //endregion
 
     //region [ - userVideoExistence(UUID userID , UUID videoId) - ] Not Test
