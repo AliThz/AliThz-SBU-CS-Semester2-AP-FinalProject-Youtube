@@ -132,6 +132,12 @@ public class ClientHandler implements Runnable {
             case "GetVideo":
                 getVideo();
                 break;
+            case "GetVideoLikesStatus":
+                getVideoLikesStatus();
+                break;
+            case "GetVideoLikesStatus":
+                getCommentLikesStatus();
+                break;
         }
     }
     //endregion
@@ -432,6 +438,36 @@ public class ClientHandler implements Runnable {
             response = new Response<>(client, userRequest.getType(), true, "video not found");
         }
         response.send(video);
+    }
+    //endregion
+
+    //region [ - getVideoLikesStatus() - ]
+    private void getVideoLikesStatus() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Video requestedVideo = videoRequest.getBody();
+
+        Video videoLikesStatus = databaseManager.selectVideoLikesStatus(requestedVideo.getId());
+
+        Response<Video> response;
+        response = new Response<>(client, videoRequest.getType(), true, "Video likes status fetched");
+        response.send(videoLikesStatus);
+    }
+    //endregion
+
+    //region [ - getCommentLikesStatus() - ]
+    private void getCommentLikesStatus() {
+        TypeToken<Request<Comment>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Comment> commentRequest = gson.fromJson(request, responseTypeToken.getType());
+        Comment requestedComment = commentRequest.getBody();
+
+        Comment commentLikesStatus = databaseManager.selectCommentLikesStatus(requestedComment.getId());
+
+        Response<Comment> response;
+        response = new Response<>(client, commentRequest.getType(), true, "Comment likes status fetched");
+        response.send(commentLikesStatus);
     }
     //endregion
 
