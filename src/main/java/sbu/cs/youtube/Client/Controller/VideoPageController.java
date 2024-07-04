@@ -7,7 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,6 +31,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.commons.codec.digest.DigestUtils;
 import sbu.cs.youtube.Shared.POJO.*;
@@ -41,6 +44,8 @@ public class VideoPageController implements Initializable {
     //region [ - Fields - ]
 
     private Video video;
+
+    private ArrayList<Video> recommendedVideos;
 
     private Media media;
 
@@ -229,7 +234,7 @@ public class VideoPageController implements Initializable {
         };
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
-        ArrayList<Video> recommendedVideos = videoResponse.getBody();
+        recommendedVideos = videoResponse.getBody();
         if (recommendedVideos != null) {
             for (var v : recommendedVideos) {
                 if (video.getId().equals(v.getId())){
@@ -246,7 +251,13 @@ public class VideoPageController implements Initializable {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                vbxRecommendedVideos.getChildren().add(videoRecommendation);
+                Button button = new Button();
+                button.getStyleClass().add("btn-video");
+                button.setGraphic(videoRecommendation);
+
+                button.setOnAction(event -> getVideo(event, v));
+//                vbxRecommendedVideos.getChildren().add(videoRecommendation);
+                vbxRecommendedVideos.getChildren().add(button);
                 VBox.setVgrow(videoRecommendation, Priority.ALWAYS);
             }
         }
@@ -264,6 +275,34 @@ public class VideoPageController implements Initializable {
         recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
+    }
+    //endregion
+
+    //region [ - getVideo(ActionEvent event, Video video) - ]
+    private void getVideo(ActionEvent event, Video video) {
+        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideo");
+        videoRequest.send(new Video(video.getId()));
+
+        getVideoPage(event);
+    }
+    //endregion
+
+    //region [ - getVideoPage(ActionEvent event) - ]
+    private void getVideoPage(ActionEvent event) {
+        mediaPlayer.stop();
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, anchrpnVideoPage.getScene().getWidth(), anchrpnVideoPage.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 
@@ -365,7 +404,7 @@ public class VideoPageController implements Initializable {
 
     //region [ - next(ActionEvent event) - ]
     private void next(ActionEvent event) {
-        //todo
+        getVideo(event, recommendedVideos.getFirst());
     }
     //endregion
 

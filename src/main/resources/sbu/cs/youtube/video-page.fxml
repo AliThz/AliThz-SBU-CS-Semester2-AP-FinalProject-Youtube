@@ -190,7 +190,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbxCommentSection" prefHeight="242.0" prefWidth="830.0" spacing="10.0">
+                  <VBox fx:id="vbxCommentSection" prefHeight="242.0" prefWidth="830.0" spacing="10.0" styleClass="background">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Comments">
                            <font>
