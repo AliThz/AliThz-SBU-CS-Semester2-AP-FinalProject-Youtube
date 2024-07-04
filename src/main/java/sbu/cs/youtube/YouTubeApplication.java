@@ -255,6 +255,26 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
 
+        //        ------------------------- SelectLikedVideos Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<User> userRequest = new Request<>(socket, "GetLikedVideos");
+//        User user = new User();
+//        user.setId(UUID.fromString("62cb0ff4-4501-4eff-9637-3fab17fbd1bb"));
+//        userRequest.send(user);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
 
+        //        ------------------------- SelectLikedVideos Test ---------------------------------------------
+        Socket socket = new Socket("localhost", 2345);
+        Request<User> userRequest = new Request<>(socket, "GetUserVideos");
+        User user = new User();
+        user.setId(UUID.fromString("77918c91-b6ed-4b81-890a-770e2a4c79b2"));
+        userRequest.send(user);
+        YouTubeApplication client = new YouTubeApplication(socket);
+        String response = receiveResponse();
+        System.out.println(response);
+        launch();
     }
 }

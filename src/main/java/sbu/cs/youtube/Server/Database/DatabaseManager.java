@@ -1488,8 +1488,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectVideoBrieflyByChannel(UUID channelId) - ] Not test
-    public ArrayList<Video> selectVideoBrieflyByChannel(UUID channelId) {
+    //region [ - selectVideosByChannel(UUID channelId) - ] Not test
+    public ArrayList<Video> selectVideosByChannel(UUID channelId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Video> videos = null;
@@ -1516,6 +1516,148 @@ public class DatabaseManager {
                 video.setDescription(rs.getString("Description"));
 //                video.setCategories(selectVideoCategories(video.getId()));
                 video.setChannelId(channelId);
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideoBriefly)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
+
+    //region [ - selectVideosByCreator(UUID creatorId) - ] Not test
+    public ArrayList<Video> selectVideosByCreator(UUID creatorId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoBriefly)");
+
+            stmt = c.prepareStatement("""
+                    SELECT v."title" , v."Id" , v."UploadDate" , v."thumbnailpath" , v."description" , v."channelid"\s
+                    FROM ContentManagement.Video v INNER JOIN UserManagement.Channel c\s
+                    ON v."channelid" = c."Id"
+                    WHERE "creatorid" = ?;
+                    """);
+
+            stmt.setObject(1, creatorId);
+            ResultSet rs = stmt.executeQuery();
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+//                video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("channelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideoBriefly)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
+
+
+    //region [ - selectLikedVideos (UUID userId) - ]
+    public ArrayList<Video> selectLikedVideos (UUID userId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoBriefly)");
+
+            stmt = c.prepareStatement("""
+                    SELECT v."title" , v."Id" , v."UploadDate" , v."thumbnailpath" , v."description" ,v."channelid" ,uv."videoid"
+                    FROM ContentManagement.Video v JOIN ContentManagement.UserVideo uv
+                    ON v."Id" = uv."videoid"\s
+                    WHERE uv.userid = ? AND uv."Like" = true;
+                    """);
+
+            stmt.setObject(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+//                video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("channelid")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideoBriefly)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
+
+    //region [ - selectHistory (UUID userId) - ]
+    public ArrayList<Video> selectHistory (UUID userId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoBriefly)");
+
+            stmt = c.prepareStatement("""
+                    SELECT v."title" , v."Id" , v."UploadDate" , v."thumbnailpath" , v."description" ,v."channelid" ,uv."videoid"
+                    FROM ContentManagement.Video v JOIN ContentManagement.UserVideo uv
+                    ON v."Id" = uv."videoid"\s
+                    WHERE uv.userid = ?;
+                    """);
+
+            stmt.setObject(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+//                video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("channelid")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
