@@ -186,10 +186,6 @@ public class VideoPageController implements Initializable {
         //endregion
 
         setVideo();
-
-//        hasLiked = .... todo
-
-//        displayMedia();
         setPlaybackButtons();
         displayRecommendedVideos();
 
@@ -217,7 +213,7 @@ public class VideoPageController implements Initializable {
         mediaView = new MediaView(mediaPlayer);
         mediaView.setPreserveRatio(true);
         mediaView.setSmooth(true);
-        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
+        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
         vbxLeft.getChildren().addFirst(mediaView);
         mediaPlayer.play();
     }
@@ -263,7 +259,7 @@ public class VideoPageController implements Initializable {
         }
 
         hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
-        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
+        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0).add(30));
         recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
         vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
         recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
