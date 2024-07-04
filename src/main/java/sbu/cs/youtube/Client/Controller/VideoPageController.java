@@ -13,6 +13,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -38,6 +41,8 @@ public class VideoPageController implements Initializable {
     //region [ - Fields - ]
 
     private Video video;
+
+    private Media media;
 
     private final ScrollPane recommendedVideosScrollPane = new ScrollPane();
     private final VBox vbxRecommendedVideos = new VBox();
@@ -179,7 +184,7 @@ public class VideoPageController implements Initializable {
 
 //        hasLiked = .... todo
 
-        displayMedia();
+//        displayMedia();
         setPlaybackButtons();
         displayRecommendedVideos();
 
@@ -200,9 +205,9 @@ public class VideoPageController implements Initializable {
     //endregion
 
     //region [ - displayMedia() - ]
-    private void displayMedia() {
-        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
-        Media media = new Media(videoPath);
+    private void displayMedia(Media media) {
+//        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
+//        media = new Media(videoPath);
         mediaPlayer = new MediaPlayer(media);
         mediaView = new MediaView(mediaPlayer);
         mediaView.setPreserveRatio(true);
@@ -406,6 +411,33 @@ public class VideoPageController implements Initializable {
         } else if (!hasLiked) {
             svgDislike.setContent("M18,4h3v10h-3V4z M5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21c0.58,0,1.14-0.24,1.52-0.65L17,14V4H6.57 C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14z");
         }
+
+
+
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("video", ".mp4");
+            tempFile.deleteOnExit();
+
+            // Write the byte array to the temporary file
+            try (FileOutputStream fos = new FileOutputStream(tempFile);
+                 ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = bais.read(buffer)) != -1) {
+                    fos.write(buffer, 0, length);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Create a Media object from the temporary file
+        Media media = new Media(tempFile.toURI().toString());
+        displayMedia(media);
+
     }
     //endregion
 
