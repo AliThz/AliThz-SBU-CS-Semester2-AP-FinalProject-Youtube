@@ -194,11 +194,51 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
         //        ------------------------- LikeComment and DislikeComment Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Comment> userRequest = new Request<>(socket, "GetCommentLikesStatus");
+//        Comment comment = new Comment();
+//        comment.setId(UUID.fromString("5b16a1da-1d90-4e0d-a901-37a50ba0fe22"));
+//        userRequest.send(comment);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- Select channelVideos Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Channel> userRequest = new Request<>(socket, "GetChannelVideos");
+//        Channel channel = new Channel();
+//        channel.setId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+//        userRequest.send(channel);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- Select channel Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Channel> userRequest = new Request<>(socket, "GetChannel");
+//        Channel channel = new Channel();
+//        channel.setId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+//        userRequest.send(channel);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- Select channel Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Channel> userRequest = new Request<>(socket, "GetChannel");
+//        Channel channel = new Channel();
+//        channel.setId(UUID.fromString("a03df34b-5370-461c-8206-1c4ac95c94cf"));
+//        userRequest.send(channel);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- Select UserPlaulists Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<Comment> userRequest = new Request<>(socket, "GetCommentLikesStatus");
-        Comment comment = new Comment();
-        comment.setId(UUID.fromString("5b16a1da-1d90-4e0d-a901-37a50ba0fe22"));
-        userRequest.send(comment);
+        Request<User> userRequest = new Request<>(socket, "GetUserPlaylists");
+        User user = new User();
+        user.setId(UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f"));
+        userRequest.send(user);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
         System.out.println(response);

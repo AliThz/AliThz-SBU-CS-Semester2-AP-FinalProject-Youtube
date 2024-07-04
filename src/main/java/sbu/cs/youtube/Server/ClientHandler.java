@@ -10,6 +10,7 @@ import sbu.cs.youtube.Shared.Response;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ClientHandler implements Runnable {
 
@@ -137,6 +138,15 @@ public class ClientHandler implements Runnable {
                 break;
             case "GetCommentLikesStatus":
                 getCommentLikesStatus();
+                break;
+            case "GetChannelVideos":
+                getChannelVideos();
+                break;
+            case "GetChannel":
+                getChannel();
+                break;
+            case "GetUserPlaylists":
+                getUserPlaylists();
                 break;
         }
     }
@@ -419,7 +429,7 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
-    //region [ - getPlaylist - ]
+    //region [ - getVideo() - ]
     private void getVideo() {
         TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
         };
@@ -470,6 +480,60 @@ public class ClientHandler implements Runnable {
         response.send(commentLikesStatus);
     }
     //endregion
+
+    //region [ - getChannelVideos() - ]
+
+    private void getChannelVideos(){
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        Channel channel = channelRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideoBrieflyByChannel(channel.getId());
+
+        response = new Response<>(client, channelRequest.getType(), true, "ChannelVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getChannel() - ]
+    private void getChannel() {
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Channel> response;
+
+        Channel requestedChannel = userRequest.getBody();
+        Channel channel;
+
+        channel = databaseManager.selectChannel(requestedChannel.getId());
+
+        if (channel != null) {
+            response = new Response<>(client, userRequest.getType(), true, "channel received successfully");
+        } else {
+            response = new Response<>(client, userRequest.getType(), true, "channel not found");
+        }
+        response.send(channel);
+    }
+    //endregion
+
+    //region [ - getUserPlaylists() - ]
+    private void getUserPlaylists() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Playlist>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsBrieflyByUser(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "userPlaylists received successfully");
+        response.send(playlists);
+    }
+    //endregion
+
+
 
     //endregion
 

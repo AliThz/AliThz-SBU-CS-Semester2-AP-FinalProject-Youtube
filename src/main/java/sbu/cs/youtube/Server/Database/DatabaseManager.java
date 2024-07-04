@@ -371,7 +371,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Id","username", "email", "Password" FROM UserManagement.User 
+                    SELECT "Id","username", "email", "Password" , "avatarPath" FROM UserManagement.User 
                     WHERE username = ?
                     """);
             stmt.setObject(1, username);
@@ -383,6 +383,8 @@ public class DatabaseManager {
                 user.setEmail(rs.getString("Email"));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
+                user.setAvatarPath(rs.getString("avatarPath"));
+                user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath() , "jpg"));
             }
             rs.close();
             stmt.close();
@@ -408,7 +410,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Id","username", "email", "Password" FROM UserManagement.User 
+                    SELECT "Id","username", "email", "Password","avatarPath"  FROM UserManagement.User 
                     WHERE email = ?
                     """);
             stmt.setObject(1, email);
@@ -420,6 +422,8 @@ public class DatabaseManager {
                 user.setEmail(rs.getString("email"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("Password"));
+                user.setAvatarPath(rs.getString("avatarPath"));
+                user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath() , "jpg"));
             }
             rs.close();
             stmt.close();
@@ -641,11 +645,11 @@ public class DatabaseManager {
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
+                channel.setId(UUID.fromString(rs.getString("Id")));
                 if (rs.getString("DateCreated") != null) {
                     Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                     channel.setDateCreated(timestamp.toLocalDateTime().toString());
                 }
-                channel.setId(UUID.fromString(rs.getString("Id")));
             }
 
             rs.close();
@@ -1484,6 +1488,53 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectVideoBrieflyByChannel(UUID channelId) - ] Not test
+    public ArrayList<Video> selectVideoBrieflyByChannel(UUID channelId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoBriefly)");
+
+            stmt = c.prepareStatement("""
+                    SELECT "title" , "Id" , "UploadDate" , "thumbnailpath" , "description"   
+                    FROM ContentManagement.Video 
+                    WHERE \"channelid\" = ?;
+                    """)
+            ;
+
+            stmt.setObject(1, channelId);
+            ResultSet rs = stmt.executeQuery();
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+//                video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(channelId);
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideoBriefly)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
+
     //region [ - selectVideoBriefly(UUID Id) - ] Not test
     public Video selectVideoBriefly(UUID Id) {
         Connection c;
@@ -2070,7 +2121,6 @@ public class DatabaseManager {
     }
     //endregion
 
-
     //    region [ - selectVideoLikesStatus(UUID Id) - ] test
     public Video selectVideoLikesStatus(UUID Id) {
         Connection c;
@@ -2112,7 +2162,6 @@ public class DatabaseManager {
         return video;
     }
     //endregion
-
 
     //region [ - userVideoExistence(UUID userID , UUID videoId) - ] Not Test
     public UserVideo userVideoExistence(UUID userID, UUID videoId) {
@@ -2316,6 +2365,7 @@ public class DatabaseManager {
     }
 
     //endregion
+
     //region [ - selectPlaylist(UUID Id) - ]
     public Playlist selectPlaylist(UUID Id) {
         Connection c;
@@ -2393,7 +2443,6 @@ public class DatabaseManager {
     }
     //endregion
 
-
     //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
     public Playlist selectPlaylistBriefly(UUID Id) {
         Connection c;
@@ -2442,6 +2491,50 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return playlist;
+    }
+    //endregion
+
+    //region [ - selectPlaylistsBrieflyByUser(UUID Id) - ] Not Test
+    public ArrayList<Playlist> selectPlaylistsBrieflyByUser(UUID creatorId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Playlist> playlists = null;
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectPlaylistBriefly)");
+
+            stmt = c.prepareStatement("""
+                 SELECT "title", "description", "Id", "thumbnailpath", 
+                        (SELECT COUNT(videoid) FROM ContentManagement.PlaylistDetail WHERE playlistid = p."Id") AS Videos
+                 FROM ContentManagement.Playlist p
+                 WHERE "creatorid" = ?;
+                 """);
+
+            stmt.setObject(1, creatorId);
+            ResultSet rs = stmt.executeQuery();
+
+            playlists = new ArrayList<>();
+            while (rs.next()) {
+                Playlist playlist = new Playlist();
+                playlist.setId(UUID.fromString(rs.getString("Id")));
+                playlist.setTitle(rs.getString("Title"));
+                playlist.setDescription(rs.getString("Description"));
+                playlist.setCreatorId(creatorId);
+                playlist.setThumbnailPath(rs.getString("thumbnailPath"));
+                playlist.setVideos(rs.getInt("Videos"));
+                playlists.add(playlist);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectPlaylistBriefly)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return playlists;
     }
     //endregion
 
