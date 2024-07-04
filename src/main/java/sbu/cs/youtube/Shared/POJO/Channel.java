@@ -28,6 +28,10 @@ public class Channel {
         subscriptions = new ArrayList<>();
     }
 
+    public Channel(UUID id) {
+        this.Id = id ;
+    }
+
     public UUID getId() {
         return Id;
     }

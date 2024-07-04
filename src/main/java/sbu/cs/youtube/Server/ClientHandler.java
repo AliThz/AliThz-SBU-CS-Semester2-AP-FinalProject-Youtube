@@ -10,6 +10,7 @@ import sbu.cs.youtube.Shared.Response;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ClientHandler implements Runnable {
 
@@ -137,6 +138,27 @@ public class ClientHandler implements Runnable {
                 break;
             case "GetCommentLikesStatus":
                 getCommentLikesStatus();
+                break;
+            case "GetChannelVideos":
+                getChannelVideos();
+                break;
+            case "GetChannel":
+                getChannel();
+                break;
+            case "GetUserPlaylists":
+                getUserPlaylists();
+                break;
+            case "AddVideoToPlaylist":
+                addVideoToPlaylist();
+                break;
+            case "GetLikedVideos":
+                getLikedVideos();
+                break;
+            case "GetHistory":
+                getHistory();
+                break;
+            case "GetUserVideos":
+                getUserVideos();
                 break;
         }
     }
@@ -419,7 +441,7 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
-    //region [ - getPlaylist - ]
+    //region [ - getVideo() - ]
     private void getVideo() {
         TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
         };
@@ -468,6 +490,121 @@ public class ClientHandler implements Runnable {
         Response<Comment> response;
         response = new Response<>(client, commentRequest.getType(), true, "Comment likes status fetched");
         response.send(commentLikesStatus);
+    }
+    //endregion
+
+    //region [ - getChannelVideos() - ]
+
+    private void getChannelVideos(){
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        Channel channel = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByChannel(channel.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "ChannelVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getChannel() - ]
+    private void getChannel() {
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Channel> response;
+
+        Channel requestedChannel = userRequest.getBody();
+        Channel channel;
+
+        channel = databaseManager.selectChannel(requestedChannel.getId());
+
+        if (channel != null) {
+            response = new Response<>(client, userRequest.getType(), true, "channel received successfully");
+        } else {
+            response = new Response<>(client, userRequest.getType(), true, "channel not found");
+        }
+        response.send(channel);
+    }
+    //endregion
+
+    //region [ - getUserPlaylists() - ]
+    private void getUserPlaylists() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Playlist>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsBrieflyByUser(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "userPlaylists received successfully");
+        response.send(playlists);
+    }
+    //endregion
+
+    //region [ - addVideoToPlaylist() - ]
+    public void addVideoToPlaylist() {
+        TypeToken<Request<PlaylistDetail>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<PlaylistDetail> playlistDetailRequest = gson.fromJson(request, responseTypeToken.getType());
+        PlaylistDetail playlistDetail = playlistDetailRequest.getBody();
+
+        databaseManager.insertPlaylistDetail(playlistDetail);
+
+        Response<PlaylistDetail> response;
+        response = new Response<>(client, playlistDetailRequest.getType(), true, "Video Added");
+        response.send();
+    }
+    //endregion
+
+    //region [ - getLikedVideos() - ]
+
+    private void getLikedVideos(){
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectLikedVideos(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "LikedVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getHistory() - ]
+
+    private void getHistory(){
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectHistory(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "History Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getUserVideos() - ]
+    private void getUserVideos()
+    {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByCreator(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "UserVideos Received Successfully");
+        response.send(videos);
     }
     //endregion
 
