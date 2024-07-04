@@ -45,7 +45,7 @@
                      </font>
                   </Text>
                   <Region prefHeight="37.0" prefWidth="640.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnViewAllHistory" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" styleClass="btn-view-all" text="View All">
+                  <Button fx:id="btnViewAllHistory" mnemonicParsing="false" prefHeight="30.0" prefWidth="86.0" styleClass="btn-view-all" text="View All">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
