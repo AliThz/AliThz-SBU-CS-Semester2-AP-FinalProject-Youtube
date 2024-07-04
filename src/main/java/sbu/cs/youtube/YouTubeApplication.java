@@ -233,16 +233,27 @@ public class YouTubeApplication extends Application {
 //        String response = receiveResponse();
 //        System.out.println(response);
 //        launch();
-        //        ------------------------- Select UserPlaulists Test ---------------------------------------------
-        Socket socket = new Socket("localhost", 2345);
-        Request<User> userRequest = new Request<>(socket, "GetUserPlaylists");
-        User user = new User();
-        user.setId(UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f"));
-        userRequest.send(user);
-        YouTubeApplication client = new YouTubeApplication(socket);
-        String response = receiveResponse();
-        System.out.println(response);
-        launch();
+        //        ------------------------- Select UserPlaylists Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<User> userRequest = new Request<>(socket, "GetUserPlaylists");
+//        User user = new User();
+//        user.setId(UUID.fromString("bc44ef5f-4f4a-4300-af39-c6972a9ac73f"));
+//        userRequest.send(user);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- AddVideoToPlaylist Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<PlaylistDetail> userRequest = new Request<>(socket, "AddVideoToPlaylist");
+//        PlaylistDetail playlistDetail = new PlaylistDetail();
+//        playlistDetail.setVideoId(UUID.fromString("230f32f1-824e-4a51-b040-e2e5dde39dc5"));
+//        playlistDetail.setPlaylistId(UUID.fromString("80790d65-faca-4084-89b1-bafa6b7520bd"));
+//        userRequest.send(playlistDetail);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
 
 
     }

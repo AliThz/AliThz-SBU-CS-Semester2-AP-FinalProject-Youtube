@@ -148,6 +148,9 @@ public class ClientHandler implements Runnable {
             case "GetUserPlaylists":
                 getUserPlaylists();
                 break;
+            case "AddVideoToPlaylist":
+                addVideoToPlaylist();
+                break;
         }
     }
     //endregion
@@ -533,7 +536,20 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
+    //region [ - addVideoToPlaylist() - ]
+    public void addVideoToPlaylist() {
+        TypeToken<Request<PlaylistDetail>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<PlaylistDetail> playlistDetailRequest = gson.fromJson(request, responseTypeToken.getType());
+        PlaylistDetail playlistDetail = playlistDetailRequest.getBody();
 
+        databaseManager.insertPlaylistDetail(playlistDetail);
+
+        Response<PlaylistDetail> response;
+        response = new Response<>(client, playlistDetailRequest.getType(), true, "Video Added");
+        response.send();
+    }
+    //endregion
 
     //endregion
 
