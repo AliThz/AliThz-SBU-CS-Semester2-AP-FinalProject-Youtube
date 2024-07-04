@@ -27,9 +27,15 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomeSectionController implements Initializable {
+
+    //region [ - Field - ]
     @FXML
     AnchorPane mainPane;
+    //endregion
 
+    //region [ - Methods - ]
+
+    //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/layout.fxml"));
@@ -85,14 +91,18 @@ public class HomeSectionController implements Initializable {
             layoutController.addToFlowPane(button);
         }
     }
+    //endregion
 
+    //region [ - getVideo(ActionEvent event, Video video) - ]
     private void getVideo(ActionEvent event, Video video) {
         Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideo");
         videoRequest.send(new Video(video.getId()));
 
         getVideoPage(event);
     }
+    //endregion
 
+    //region [ - getVideoPage(ActionEvent event) - ]
     private void getVideoPage(ActionEvent event) {
         Stage stage;
         Scene scene;
@@ -108,4 +118,8 @@ public class HomeSectionController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    //endregion
+
+    //endregion
+
 }
