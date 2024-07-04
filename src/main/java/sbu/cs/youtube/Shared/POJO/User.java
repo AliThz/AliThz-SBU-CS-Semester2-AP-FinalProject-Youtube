@@ -45,6 +45,10 @@ public class User {
         viewedVideos = new ArrayList<>();
     }
 
+    public User(UUID id) {
+        this.Id = id;
+    }
+
     public UUID getId() {
         return Id;
     }

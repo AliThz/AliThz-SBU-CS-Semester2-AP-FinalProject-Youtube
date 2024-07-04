@@ -1,0 +1,33 @@
+.background {
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
+
+.text {
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-fill: rgb(255, 255, 255);
+    /*-fx-text-fill: rgb(0, 0, 0);*/
+    /*-fx-fill: rgb(0, 0, 0);*/
+}
+
+.btn-view-all {
+    -fx-background-color: transparent;
+    -fx-border-color: rgb(41, 41, 41);
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+}
+
+.scroll-pane {
+    -fx-background-color: black;
+    -fx-alignment: center;
+}
+
+.btn-view-channel {
+    -fx-background-color: transparent;
+}
+
+.btn-video {
+    -fx-background-color: black;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}

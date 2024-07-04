@@ -482,7 +482,6 @@ public class LayoutController implements Initializable {
 
     //endregion
 
-
     //region [ - setSubscriptionsSection(ActionEvent event) - ]
     @FXML
     void setSubscriptionsSection(ActionEvent event) {
@@ -493,9 +492,23 @@ public class LayoutController implements Initializable {
 
     //region [ - setYouSection(ActionEvent event) - ]
     @FXML
-    void setYouSection(ActionEvent event) {
+    protected void setYouSection(ActionEvent event) {
         setDefaultSvgs();
         svgYou.setContent("M4 20h14v1H3V6h1v14zM21 3v15H6V3h15zm-4 7.5L11 7v7l6-3.5z");
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/you-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 
