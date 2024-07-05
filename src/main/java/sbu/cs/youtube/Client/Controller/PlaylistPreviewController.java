@@ -12,6 +12,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import sbu.cs.youtube.Shared.POJO.Playlist;
 import sbu.cs.youtube.Shared.POJO.Playlist;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
@@ -97,6 +98,7 @@ public class PlaylistPreviewController implements Initializable {
             summarizedTitle += " ...";
         }
         txtPlaylistTitle.setText(summarizedTitle);
+        txtChannelName.setText(YouTubeApplication.user.getFullName());
         txtPrivatePublic.setText(playlist.isPublic() ? "Public" : "Private");
         txtVideoCount.setText(String.valueOf(playlist.getVideos()));
 

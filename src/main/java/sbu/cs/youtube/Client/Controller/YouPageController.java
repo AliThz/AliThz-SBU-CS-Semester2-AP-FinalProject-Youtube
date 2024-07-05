@@ -173,10 +173,10 @@ public class YouPageController implements Initializable {
         txtFullName.setText(user.getFullName());
         btnViewChannel.setText("@" + user.getUsername() + " • " + "View Channel");
 
-//        ByteArrayInputStream bis;
-//        bis = new ByteArrayInputStream(user.getAvatarBytes());
-//        Image videoThumbnail = new Image(bis);
-//        imgAvatar.setImage(videoThumbnail);
+        ByteArrayInputStream bis;
+        bis = new ByteArrayInputStream(user.getAvatarBytes());
+        Image avatar = new Image(bis);
+        imgAvatar.setImage(avatar);
     }
     //endregion
 

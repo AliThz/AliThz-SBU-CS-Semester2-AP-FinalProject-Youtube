@@ -2,6 +2,7 @@ package sbu.cs.youtube.Client.Controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -161,6 +162,36 @@ public class VideoPageController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        //region [ - Bindings - ]
+        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.prefViewportWidthProperty());
+        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.prefViewportHeightProperty());
+
+        hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
+        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0).add(30));
+        recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
+        vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        vbxRecommendedVideos.setSpacing(20);
+        vbxRecommendedVideos.getStyleClass().add("vbx-recommended-videos");
+        recommendedVideosScrollPane.getStyleClass().add("scroll-pane");
+        recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
+
+        //region [ - videoScrollPane - ]
+        videoScrollPane.getStyleClass().add("scroll-pane");
+        videoScrollPane.setFitToWidth(true);
+        videoScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
+        videoScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        videoScrollPane.setContent(vbxLeft);
+        videoScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        videoScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        hbx.getChildren().addAll(videoScrollPane, recommendedVideosScrollPane);
+        hbx.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        //endregion
+
+        //endregion
+
         //region [ - Video API - ]
         Gson gson = new Gson();
         String response = YouTubeApplication.receiveResponse();
@@ -186,36 +217,64 @@ public class VideoPageController implements Initializable {
         //endregion
 
         setVideo();
-        setPlaybackButtons();
-        displayRecommendedVideos();
-
-        //region [ - videoScrollPane - ]
-        videoScrollPane.getStyleClass().add("scroll-pane");
-        videoScrollPane.setFitToWidth(true);
-        videoScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
-        videoScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        videoScrollPane.setContent(vbxLeft);
-        videoScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        videoScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        hbx.getChildren().addAll(videoScrollPane, recommendedVideosScrollPane);
-        hbx.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        //endregion
-
-        displayComments();
+        new Thread(this::displayMedia).start();
+//        setPlaybackButtons();
+        new Thread(this::displayRecommendedVideos).start();
+//        displayRecommendedVideos();
+        new Thread(this::displayComments).start();
+//        displayComments();
     }
     //endregion
 
     //region [ - displayMedia() - ]
-    private void displayMedia(Media media) {
+    private void displayMedia() {
 //        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
 //        media = new Media(videoPath);
-        mediaPlayer = new MediaPlayer(media);
-        mediaView = new MediaView(mediaPlayer);
-        mediaView.setPreserveRatio(true);
-        mediaView.setSmooth(true);
-        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
-        vbxLeft.getChildren().addFirst(mediaView);
-        mediaPlayer.play();
+
+        File tempFile;
+        try {
+            tempFile = File.createTempFile("video", ".mp4");
+            tempFile.deleteOnExit();
+
+            // Write the byte array to the temporary file
+            try (FileOutputStream fos = new FileOutputStream(tempFile);
+                 ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = bais.read(buffer)) != -1) {
+                    fos.write(buffer, 0, length);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Create a Media object from the temporary file
+        Media media = new Media(tempFile.toURI().toString());
+
+        //region [ - Without Thread - ]
+//         mediaPlayer = new MediaPlayer(media);
+//        mediaView = new MediaView(mediaPlayer);
+//        mediaView.setPreserveRatio(true);
+//        mediaView.setSmooth(true);
+//        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
+//        vbxLeft.getChildren().addFirst(mediaView);
+//        mediaPlayer.play();
+        //endregion
+
+        Platform.runLater(() -> {
+            mediaPlayer = new MediaPlayer(media);
+            mediaView = new MediaView(mediaPlayer);
+            mediaView.setPreserveRatio(true);
+            mediaView.setSmooth(true);
+            mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
+            vbxLeft.getChildren().addFirst(mediaView);
+            mediaPlayer.play();
+
+            setPlaybackButtons();
+        });
     }
     //endregion
 
@@ -231,46 +290,35 @@ public class VideoPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         recommendedVideos = videoResponse.getBody();
-        if (recommendedVideos != null) {
-            for (var v : recommendedVideos) {
-                if (video.getId().equals(v.getId())){
-                    continue;
-                }
-                FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
-                HBox videoRecommendation;
-                try {
-                    videoRecommendation = videoRecommendationLoader.load();
-                    VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
-                    if (videoRecommendationController != null) {
-                        videoRecommendationController.setVideo(v);
+        Platform.runLater(() -> {
+            if (recommendedVideos != null) {
+                for (var v : recommendedVideos) {
+                    if (video.getId().equals(v.getId())) {
+                        continue;
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(videoRecommendation);
+                    FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
+                    HBox videoRecommendation;
+                    try {
+                        videoRecommendation = videoRecommendationLoader.load();
+                        VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
+                        if (videoRecommendationController != null) {
+                            videoRecommendationController.setVideo(v);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Button button = new Button();
+                    button.getStyleClass().add("btn-video");
+                    button.setGraphic(videoRecommendation);
 
-                button.setOnAction(event -> getVideo(event, v));
+                    button.setOnAction(event -> getVideo(event, v));
 //                vbxRecommendedVideos.getChildren().add(videoRecommendation);
-                vbxRecommendedVideos.getChildren().add(button);
-                VBox.setVgrow(videoRecommendation, Priority.ALWAYS);
+                    vbxRecommendedVideos.getChildren().add(button);
+                    VBox.setVgrow(videoRecommendation, Priority.ALWAYS);
+                }
             }
-        }
+        });
 
-        hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
-        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0).add(30));
-        recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
-        vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        vbxRecommendedVideos.setSpacing(20);
-        vbxRecommendedVideos.getStyleClass().add("vbx-recommended-videos");
-
-
-        recommendedVideosScrollPane.getStyleClass().add("scroll-pane");
-        recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
     }
     //endregion
 
@@ -315,19 +363,40 @@ public class VideoPageController implements Initializable {
         video.setComments(commentsResponse.getBody());
         System.out.println(commentsResponse.getMessage());
 
-        vbxCommentSection.getChildren().remove(2, vbxCommentSection.getChildren().size());
-        for (var comment : video.getComments()) {
-            FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
-            Parent commentPreview;
-            try {
-                commentPreview = commentPreviewLoader.load();
-                CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
-                commentPreviewController.setComment(comment);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        //region [ - Without Thread - ]
+//        vbxCommentSection.getChildren().remove(2, vbxCommentSection.getChildren().size());
+//        for (var comment : video.getComments()) {
+//            FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
+//            Parent commentPreview;
+//            try {
+//                commentPreview = commentPreviewLoader.load();
+//                CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
+//                commentPreviewController.setComment(comment);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            vbxCommentSection.getChildren().add(commentPreview);
+//        }
+        //endregion
+
+//        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.prefViewportWidthProperty());
+//        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.prefViewportHeightProperty());
+
+        Platform.runLater(() -> {
+            vbxCommentSection.getChildren().remove(2, vbxCommentSection.getChildren().size());
+            for (var comment : video.getComments()) {
+                FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
+                Parent commentPreview;
+                try {
+                    commentPreview = commentPreviewLoader.load();
+                    CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
+                    commentPreviewController.setComment(comment);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                vbxCommentSection.getChildren().add(commentPreview);
             }
-            vbxCommentSection.getChildren().add(commentPreview);
-        }
+        });
     }
     //endregion
 
@@ -441,7 +510,12 @@ public class VideoPageController implements Initializable {
         txtViews.setText(String.valueOf(video.getViews()));
         txtLikes.setText(String.valueOf(video.getLikes()));
 
-        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
+//        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
+        ByteArrayInputStream bis;
+        bis = new ByteArrayInputStream(video.getChannel().getCreator().getAvatarBytes());
+        Image videoThumbnail = new Image(bis);
+        imgChannelProfile.setImage(videoThumbnail);
+
 
         if (hasLiked == null) {
         } else if (hasLiked) {
@@ -451,30 +525,30 @@ public class VideoPageController implements Initializable {
         }
 
 
-
-        File tempFile = null;
-        try {
-            tempFile = File.createTempFile("video", ".mp4");
-            tempFile.deleteOnExit();
-
-            // Write the byte array to the temporary file
-            try (FileOutputStream fos = new FileOutputStream(tempFile);
-                 ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = bais.read(buffer)) != -1) {
-                    fos.write(buffer, 0, length);
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        // Create a Media object from the temporary file
-        Media media = new Media(tempFile.toURI().toString());
-        displayMedia(media);
+//        File tempFile;
+//        try {
+//            tempFile = File.createTempFile("video", ".mp4");
+//            tempFile.deleteOnExit();
+//
+//            // Write the byte array to the temporary file
+//            try (FileOutputStream fos = new FileOutputStream(tempFile);
+//                 ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
+//                byte[] buffer = new byte[1024];
+//                int length;
+//                while ((length = bais.read(buffer)) != -1) {
+//                    fos.write(buffer, 0, length);
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//
+//        // Create a Media object from the temporary file
+//        Media media = new Media(tempFile.toURI().toString());
+//        displayMedia(media);
+//        displayMedia();
 
     }
     //endregion

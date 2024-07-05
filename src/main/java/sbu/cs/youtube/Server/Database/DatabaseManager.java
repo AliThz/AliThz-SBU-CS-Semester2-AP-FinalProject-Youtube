@@ -373,7 +373,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Id","username", "email", "Password" , "AvatarPath" FROM UserManagement.User 
+                    SELECT "Id", "fullname", "username", "email", "Password" , "AvatarPath"
+                    FROM UserManagement.User 
                     WHERE username = ?
                     """);
             stmt.setObject(1, username);
@@ -382,6 +383,7 @@ public class DatabaseManager {
             if (rs.next()) {
                 user = new User();
                 user.setId(UUID.fromString(rs.getString("Id")));
+                user.setFullName(rs.getString("FullName"));
                 user.setEmail(rs.getString("Email"));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
@@ -412,7 +414,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Id","username", "email", "Password","AvatarPath"  FROM UserManagement.User 
+                    SELECT "Id", "fullname", "username", "email", "Password","AvatarPath" 
+                    FROM UserManagement.User 
                     WHERE email = ?
                     """);
             stmt.setObject(1, email);
@@ -421,6 +424,7 @@ public class DatabaseManager {
             if (rs.next()) {
                 user = new User();
                 user.setId(UUID.fromString(rs.getString("Id")));
+                user.setFullName(rs.getString("FullName"));
                 user.setEmail(rs.getString("email"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("Password"));
@@ -584,7 +588,8 @@ public class DatabaseManager {
 
 //                    SELECT "Title", "Description" , "CreatorId" FROM UserManagement.Channel
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement.Channel 
+                    SELECT "creatorid", "title", "description", "ProfilePath"
+                    FROM UserManagement.Channel 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -593,12 +598,13 @@ public class DatabaseManager {
             channel = new Channel();
 
             if (rs.next()) {
-                channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-                channel.setTitle(rs.getString("Title"));
-                channel.setProfilePath(rs.getString("ProfilePath"));
-                channel.setDescription(rs.getString("Description"));
-                channel.setProfileBytes(convertImageToByteArray("/Images/Arcane2.jpg", "png"));
                 channel.setId(Id);
+                channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                channel.setCreator(selectUserBriefly(channel.getCreatorId()));
+                channel.setTitle(rs.getString("Title"));
+                channel.setDescription(rs.getString("Description"));
+                channel.setProfilePath(rs.getString("ProfilePath"));
+                channel.setProfileBytes(convertImageToByteArray(channel.getCreator().getAvatarPath(), "jpg"));
             }
 
 //            stmt = c.prepareStatement("""
@@ -1747,10 +1753,10 @@ public class DatabaseManager {
                 video.setId(UUID.fromString(rs.getString("Id")));
                 video.setTitle(rs.getString("Title"));
                 video.setDescription(rs.getString("Description"));
-                video.setCategories(selectVideoCategories(video.getId()));
-                video.setViewers(selectUserVideos(video.getId()));
+//                video.setCategories(selectVideoCategories(video.getId()));
+//                video.setViewers(selectUserVideos(video.getId()));
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-                video.setChannel(selectChannel(video.getChannelId()));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
