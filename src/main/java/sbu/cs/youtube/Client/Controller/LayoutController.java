@@ -105,11 +105,13 @@ public class LayoutController implements Initializable {
 
     //endregion
 
+    //region [ - disableButtons() - ]
     private void disableButtons() {
         btnBurger.setDisable(true);
         hbxContent.getChildren().getFirst().setDisable(true);
         searchHbx.setDisable(true);
     }
+    //endregion
 
     //region [ - openSesame() - ]
 
@@ -380,7 +382,6 @@ public class LayoutController implements Initializable {
             }
         }
     }
-
 
     //endregion
 
