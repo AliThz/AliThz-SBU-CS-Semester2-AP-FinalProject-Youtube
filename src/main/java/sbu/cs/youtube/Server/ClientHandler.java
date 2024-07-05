@@ -463,19 +463,19 @@ public class ClientHandler implements Runnable {
     private void getVideo() {
         TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Video> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Video> response;
 
 
-        Video requestedVideo = userRequest.getBody();
+        Video requestedVideo = videoRequest.getBody();
         Video video;
 
         video = databaseManager.selectVideo(requestedVideo.getId());
 
         if (video != null) {
-            response = new Response<>(client, userRequest.getType(), true, "video received successfully");
+            response = new Response<>(client, videoRequest.getType(), true, "video received successfully");
         } else {
-            response = new Response<>(client, userRequest.getType(), true, "video not found");
+            response = new Response<>(client, videoRequest.getType(), true, "video not found");
         }
         response.send(video);
     }
@@ -516,13 +516,13 @@ public class ClientHandler implements Runnable {
     private void getChannelVideos() {
         TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Video>> response;
 
-        Channel channel = userRequest.getBody();
+        Channel channel = channelRequest.getBody();
         ArrayList<Video> videos = databaseManager.selectVideosByChannel(channel.getId());
 
-        response = new Response<>(client, userRequest.getType(), true, "ChannelVideos Received Successfully");
+        response = new Response<>(client, channelRequest.getType(), true, "ChannelVideos Received Successfully");
         response.send(videos);
     }
     //endregion
@@ -531,18 +531,18 @@ public class ClientHandler implements Runnable {
     private void getChannel() {
         TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Channel> response;
 
-        Channel requestedChannel = userRequest.getBody();
+        Channel requestedChannel = channelRequest.getBody();
         Channel channel;
 
         channel = databaseManager.selectChannel(requestedChannel.getId());
 
         if (channel != null) {
-            response = new Response<>(client, userRequest.getType(), true, "channel received successfully");
+            response = new Response<>(client, channelRequest.getType(), true, "channel received successfully");
         } else {
-            response = new Response<>(client, userRequest.getType(), true, "channel not found");
+            response = new Response<>(client, channelRequest.getType(), true, "channel not found");
         }
         response.send(channel);
     }
@@ -552,16 +552,16 @@ public class ClientHandler implements Runnable {
     private void GetPlaylist() {
         TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Playlist> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Playlist> response;
 
 
-        Playlist requestedPlaylist = userRequest.getBody();
+        Playlist requestedPlaylist = playlistRequest.getBody();
         Playlist playlist;
 
         playlist = databaseManager.selectPlaylist(requestedPlaylist.getId());
 
-        response = new Response<>(client, userRequest.getType(), true, "Playlist received successfully");
+        response = new Response<>(client, playlistRequest.getType(), true, "Playlist received successfully");
 
         response.send(playlist);
     }
@@ -664,7 +664,6 @@ public class ClientHandler implements Runnable {
         };
         Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Video> response;
-
 
         Video video = videoRequest.getBody();
         String videoPath = "/Videos/" + video.getFileName() ;
