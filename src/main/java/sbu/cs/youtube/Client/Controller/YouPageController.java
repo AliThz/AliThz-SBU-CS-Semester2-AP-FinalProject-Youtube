@@ -2,6 +2,7 @@ package sbu.cs.youtube.Client.Controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -158,13 +159,13 @@ public class YouPageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         gson = new Gson();
         this.user = YouTubeApplication.user;
-        setUser();
-        displayHistory();
-        displayPlaylists();
-        displayWatchLater();
-        displayLikedVideos();
-        displayYourClips();
-        bindItems();
+        new Thread(this::setUser).start();
+        new Thread(this::displayHistory).start();
+        new Thread(this::displayPlaylists).start();
+        new Thread(this::displayWatchLater).start();
+        new Thread(this::displayLikedVideos).start();
+        new Thread(this::displayYourClips).start();
+        new Thread(this::bindItems).start();
     }
     //endregion
 
@@ -191,8 +192,9 @@ public class YouPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Video> videos = videoResponse.getBody();
-         videos.sort(Comparator.comparing(d -> LocalDateTime.parse(d.getUploadDate())));
-        if (videos != null) {
+        videos.sort(Comparator.comparing(d -> LocalDateTime.parse(d.getUploadDate())));
+        Platform.runLater(() -> {
+            if (videos != null) {
                 for (var v : videos) {
 
                     FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
@@ -215,7 +217,8 @@ public class YouPageController implements Initializable {
                     hbxHistoryVideos.getChildren().add(button);
                     VBox.setVgrow(videoPreview, Priority.ALWAYS);
                 }
-        }
+            }
+        });
     }
     //endregion
 
@@ -230,6 +233,7 @@ public class YouPageController implements Initializable {
         Response<ArrayList<Playlist>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Playlist> playlists = videoResponse.getBody();
+        Platform.runLater(() -> {
         if (playlists != null) {
             for (var p : playlists) {
 
@@ -254,6 +258,7 @@ public class YouPageController implements Initializable {
                 VBox.setVgrow(playlistPreview, Priority.ALWAYS);
             }
         }
+        });
     }
     //endregion
 
@@ -268,30 +273,32 @@ public class YouPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Video> videos = videoResponse.getBody();
-        if (videos != null) {
-            for (var v : videos) {
+        Platform.runLater(() -> {
+            if (videos != null) {
+                for (var v : videos) {
 
-                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
-                VBox videoPreview;
-                try {
-                    videoPreview = videoPreviewLoader.load();
-                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
-                    if (videoPreviewController != null) {
-                        videoPreviewController.setVideo(v);
+                    FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+                    VBox videoPreview;
+                    try {
+                        videoPreview = videoPreviewLoader.load();
+                        VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                        if (videoPreviewController != null) {
+                            videoPreviewController.setVideo(v);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+
+                    Button button = new Button();
+                    button.getStyleClass().add("btn-video");
+                    button.setGraphic(videoPreview);
+
+                    button.setOnAction(event -> getVideo(event, v));
+                    hbxWatchLaterVideos.getChildren().add(button);
+                    VBox.setVgrow(videoPreview, Priority.ALWAYS);
                 }
-
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(videoPreview);
-
-                button.setOnAction(event -> getVideo(event, v));
-                hbxWatchLaterVideos.getChildren().add(button);
-                VBox.setVgrow(videoPreview, Priority.ALWAYS);
             }
-        }
+        });
     }
     //endregion
 
@@ -306,30 +313,32 @@ public class YouPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Video> videos = videoResponse.getBody();
-        if (videos != null) {
-            for (var v : videos) {
+        Platform.runLater(() -> {
+            if (videos != null) {
+                for (var v : videos) {
 
-                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
-                VBox videoPreview;
-                try {
-                    videoPreview = videoPreviewLoader.load();
-                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
-                    if (videoPreviewController != null) {
-                        videoPreviewController.setVideo(v);
+                    FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+                    VBox videoPreview;
+                    try {
+                        videoPreview = videoPreviewLoader.load();
+                        VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                        if (videoPreviewController != null) {
+                            videoPreviewController.setVideo(v);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+
+                    Button button = new Button();
+                    button.getStyleClass().add("btn-video");
+                    button.setGraphic(videoPreview);
+
+                    button.setOnAction(event -> getVideo(event, v));
+                    hbxLikedVideos.getChildren().add(button);
+                    VBox.setVgrow(videoPreview, Priority.ALWAYS);
                 }
-
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(videoPreview);
-
-                button.setOnAction(event -> getVideo(event, v));
-                hbxLikedVideos.getChildren().add(button);
-                VBox.setVgrow(videoPreview, Priority.ALWAYS);
             }
-        }
+        });
     }
     //endregion
 
@@ -344,30 +353,32 @@ public class YouPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Video> videos = videoResponse.getBody();
-        if (videos != null) {
-            for (var v : videos) {
+        Platform.runLater(() -> {
+            if (videos != null) {
+                for (var v : videos) {
 
-                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
-                VBox videoPreview;
-                try {
-                    videoPreview = videoPreviewLoader.load();
-                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
-                    if (videoPreviewController != null) {
-                        videoPreviewController.setVideo(v);
+                    FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+                    VBox videoPreview;
+                    try {
+                        videoPreview = videoPreviewLoader.load();
+                        VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                        if (videoPreviewController != null) {
+                            videoPreviewController.setVideo(v);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+
+                    Button button = new Button();
+                    button.getStyleClass().add("btn-video");
+                    button.setGraphic(videoPreview);
+
+                    button.setOnAction(event -> getVideo(event, v));
+                    hbxYourClips.getChildren().add(button);
+                    VBox.setVgrow(videoPreview, Priority.ALWAYS);
                 }
-
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(videoPreview);
-
-                button.setOnAction(event -> getVideo(event, v));
-                hbxYourClips.getChildren().add(button);
-                VBox.setVgrow(videoPreview, Priority.ALWAYS);
             }
-        }
+        });
     }
     //endregion
 
