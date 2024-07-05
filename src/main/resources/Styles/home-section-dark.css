@@ -61,6 +61,22 @@
     -fx-background-color: rgb(41,41,41);
 }
 
+.vbx-welcome {
+    -fx-background-color: rgb(33,33,33);
+    -fx-background-radius: 10;
+    -fx-border-color: rgb(100,100,100);
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+}
 
+.lbl-welcome {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.lbl-guide {
+    -fx-text-fill: rgb(150,150,150);
+}
 
 

@@ -172,7 +172,7 @@ public class VideoPageController implements Initializable {
 
         //region [ - Check Video View API  - ]
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "CheckViewVideoExistence");
-        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
+        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId() , video.getId()));
 
         response = YouTubeApplication.receiveResponse();
         TypeToken<Response<UserVideo>> viewResponseTypeToken = new TypeToken<>() {
@@ -183,6 +183,9 @@ public class VideoPageController implements Initializable {
 
         if (userVideo != null)
             hasLiked = userVideo.getLike();
+
+        //todo set subscribe
+
         //endregion
 
         setVideo();
