@@ -28,7 +28,10 @@ import sbu.cs.youtube.YouTubeApplication;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 public class YouPageController implements Initializable {
@@ -188,6 +191,7 @@ public class YouPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Video> videos = videoResponse.getBody();
+         videos.sort(Comparator.comparing(d -> LocalDateTime.parse(d.getUploadDate())));
         if (videos != null) {
                 for (var v : videos) {
 
