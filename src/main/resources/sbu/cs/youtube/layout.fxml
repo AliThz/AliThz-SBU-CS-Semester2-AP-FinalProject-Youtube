@@ -61,14 +61,14 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="476.0" spacing="10.0" styleClass="search-bar" HBox.hgrow="ALWAYS">
+            <HBox fx:id="searchHbx" alignment="CENTER" prefHeight="45.0" prefWidth="476.0" spacing="10.0" styleClass="search-bar" HBox.hgrow="ALWAYS">
                <children>
-                  <TextField prefHeight="37.0" prefWidth="335.0" promptText="Search" styleClass="search-field" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="searchField" prefHeight="37.0" prefWidth="335.0" promptText="Search" styleClass="search-field" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" styleClass="search-btn" HBox.hgrow="ALWAYS">
+                  <Button fx:id="searchBtn" mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" styleClass="search-btn" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="6.0" />
                      </font>
@@ -190,7 +190,19 @@
             </Separator>
             <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="466.0" prefWidth="718.0" stylesheets="@../../../Styles/home-section-dark.css" HBox.hgrow="ALWAYS">
                <content>
-                  <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="850.0" styleClass="flwpane" />
+                  <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="850.0" styleClass="flwpane">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="94.0" prefWidth="406.0" styleClass="vbx-welcome">
+                           <children>
+                              <Label prefHeight="58.0" prefWidth="262.0" styleClass="lbl-welcome" text="Try signing in to get started" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label styleClass="lbl-guide" text="Then start watching videos to help us build a feed of videos you'll love." textFill="WHITE" />
+                           </children>
+                        </VBox>
+                     </children></FlowPane>
                </content>
             </ScrollPane>
          </children>

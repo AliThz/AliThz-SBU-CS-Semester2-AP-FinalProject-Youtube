@@ -53,6 +53,10 @@ public class HomeSectionController implements Initializable {
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
 
 
+        if (YouTubeApplication.user == null) {
+            return;
+        }
+
         Request<ArrayList<Video>> userRequest = new Request<>(YouTubeApplication.socket, "GetRecommendedVideos");
         userRequest.send();
 

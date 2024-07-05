@@ -163,6 +163,9 @@ public class ClientHandler implements Runnable {
             case "GetUserVideos":
                 getUserVideos();
                 break;
+            case "GetVideoViewCount":
+                getVideoViewCount();
+                break;
         }
     }
     //endregion
@@ -624,6 +627,21 @@ public class ClientHandler implements Runnable {
 
         response = new Response<>(client, userRequest.getType(), true, "UserVideos Received Successfully");
         response.send(videos);
+    }
+    //endregion
+
+    //region [ - getVideoViewCount() - ]
+    private void getVideoViewCount() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Video requestedVideo = videoRequest.getBody();
+
+        Video videoViewCount = databaseManager.selectVideoViewCount(requestedVideo.getId());
+
+        Response<Video> response;
+        response = new Response<>(client, videoRequest.getType(), true, "Video View Count fetched");
+        response.send(videoViewCount);
     }
     //endregion
 

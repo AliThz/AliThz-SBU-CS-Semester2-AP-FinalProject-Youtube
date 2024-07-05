@@ -14,12 +14,11 @@ public class Video {
     private String description;
     private Channel channel;
     private UUID channelId;
-    private int views;
     private String uploadDate;
     private ArrayList<VideoCategory> categories;
     private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
-
+    private int viewcount;
     private int likes;
     private int dislikes;
 
@@ -39,12 +38,12 @@ public class Video {
         this.comments = new ArrayList<>();
     }
 
-    public Video(String title, String description, UUID channelId, int views, String uploadDate) {
+    public Video(String title, String description, UUID channelId, int viewcount, String uploadDate) {
         Id = UUID.randomUUID();
         this.title = title;
         this.description = description;
         this.channelId = channelId;
-        this.views = views;
+        this.viewcount = viewcount;
         this.uploadDate = uploadDate;
     }
 
@@ -100,12 +99,12 @@ public class Video {
         this.channelId = channelId;
     }
 
-    public int getViews() {
-        return views;
+    public int getViewcount() {
+        return viewcount;
     }
 
-    public void setViews(int views) {
-        this.views = views;
+    public void setViewcount(int viewcount) {
+        this.viewcount = viewcount;
     }
 
     public String getUploadDate() {
