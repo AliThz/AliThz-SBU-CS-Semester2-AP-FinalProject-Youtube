@@ -19,6 +19,7 @@ import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -267,14 +268,45 @@ public class YouTubeApplication extends Application {
 //        launch();
 
         //        ------------------------- selectVideoViewCount Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Video> userRequest = new Request<>(socket, "GetVideoViewCount");
+//        Video video = new Video();
+//        video.setId(UUID.fromString("ee7f655a-a0ca-48c5-b796-29009608aa2c"));
+//        userRequest.send(video);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- getCategories Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<ArrayList<Category>> userRequest = new Request<>(socket, "GetCategories");
+//        ArrayList<Category> categories = new ArrayList<Category>();
+//        userRequest.send(categories);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- Select categoryVideos Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Category> userRequest = new Request<>(socket, "GetCategoryVideos");
+//        Category category = new Category();
+//        category.setId(UUID.fromString("3d967083-bdd6-4016-b412-b7a2d9576d28"));
+//        userRequest.send(category);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- Select VidoeCategories Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<Video> userRequest = new Request<>(socket, "GetVideoViewCount");
-        Video video = new Video();
-        video.setId(UUID.fromString("ee7f655a-a0ca-48c5-b796-29009608aa2c"));
-        userRequest.send(video);
+        Request<Category> userRequest = new Request<>(socket, "GetVideoCategories");
+        Category category = new Category();
+        category.setId(UUID.fromString("a6592c17-0cef-4fa3-a0ae-9fc1844d1971"));
+        userRequest.send(category);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
         System.out.println(response);
         launch();
+
+
     }
 }

@@ -166,6 +166,19 @@ public class ClientHandler implements Runnable {
             case "GetVideoViewCount":
                 getVideoViewCount();
                 break;
+            case "CreatVideo":
+                createVideo();
+                break;
+            case "GetCategories":
+                getCategories();
+                break;
+            case "GetCategoryVideos":
+                getCategoryVideos();
+                break;
+            case "GetVideoCategories":
+                getVideoCategories();
+                break;
+
         }
     }
     //endregion
@@ -450,19 +463,19 @@ public class ClientHandler implements Runnable {
     private void getVideo() {
         TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Video> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Video> response;
 
 
-        Video requestedVideo = userRequest.getBody();
+        Video requestedVideo = videoRequest.getBody();
         Video video;
 
         video = databaseManager.selectVideo(requestedVideo.getId());
 
         if (video != null) {
-            response = new Response<>(client, userRequest.getType(), true, "video received successfully");
+            response = new Response<>(client, videoRequest.getType(), true, "video received successfully");
         } else {
-            response = new Response<>(client, userRequest.getType(), true, "video not found");
+            response = new Response<>(client, videoRequest.getType(), true, "video not found");
         }
         response.send(video);
     }
@@ -503,13 +516,13 @@ public class ClientHandler implements Runnable {
     private void getChannelVideos() {
         TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Video>> response;
 
-        Channel channel = userRequest.getBody();
+        Channel channel = channelRequest.getBody();
         ArrayList<Video> videos = databaseManager.selectVideosByChannel(channel.getId());
 
-        response = new Response<>(client, userRequest.getType(), true, "ChannelVideos Received Successfully");
+        response = new Response<>(client, channelRequest.getType(), true, "ChannelVideos Received Successfully");
         response.send(videos);
     }
     //endregion
@@ -518,18 +531,18 @@ public class ClientHandler implements Runnable {
     private void getChannel() {
         TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Channel> response;
 
-        Channel requestedChannel = userRequest.getBody();
+        Channel requestedChannel = channelRequest.getBody();
         Channel channel;
 
         channel = databaseManager.selectChannel(requestedChannel.getId());
 
         if (channel != null) {
-            response = new Response<>(client, userRequest.getType(), true, "channel received successfully");
+            response = new Response<>(client, channelRequest.getType(), true, "channel received successfully");
         } else {
-            response = new Response<>(client, userRequest.getType(), true, "channel not found");
+            response = new Response<>(client, channelRequest.getType(), true, "channel not found");
         }
         response.send(channel);
     }
@@ -539,16 +552,16 @@ public class ClientHandler implements Runnable {
     private void GetPlaylist() {
         TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Playlist> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Playlist> response;
 
 
-        Playlist requestedPlaylist = userRequest.getBody();
+        Playlist requestedPlaylist = playlistRequest.getBody();
         Playlist playlist;
 
         playlist = databaseManager.selectPlaylist(requestedPlaylist.getId());
 
-        response = new Response<>(client, userRequest.getType(), true, "Playlist received successfully");
+        response = new Response<>(client, playlistRequest.getType(), true, "Playlist received successfully");
 
         response.send(playlist);
     }
@@ -644,6 +657,83 @@ public class ClientHandler implements Runnable {
         response.send(videoViewCount);
     }
     //endregion
+
+    //region [ - createVideo() - ]
+    private void createVideo() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Video> response;
+
+        Video video = videoRequest.getBody();
+        String videoPath = "/Videos/" + video.getFileName() ;
+        try (FileOutputStream fos = new FileOutputStream(videoPath)) {
+            video.setPath(videoPath);
+            fos.write(video.getVideoBytes());
+            System.out.println("Video saved successfully to " + videoPath);
+        } catch (IOException e) {
+            System.err.println("Error while saving the video: " + e.getMessage());
+        }
+
+        String thumbnailPath = "/Images/" + video.getFileName().substring(0 , video.getFileName().length()-4) + "jpg" ;
+        try (FileOutputStream fos = new FileOutputStream(thumbnailPath)) {
+            video.setThumbnailPath(thumbnailPath);
+            fos.write(video.getThumbnailBytes());
+            System.out.println("Video saved successfully to " + thumbnailPath);
+        } catch (IOException e) {
+            System.err.println("Error while saving the video: " + e.getMessage());
+        }
+
+        databaseManager.insertVideo(video);
+        response = new Response<>(client, videoRequest.getType(), true, "Signed up successfully");
+        response.send(video);
+    }
+    //endregion
+
+    //region [ - getCategories() - ]
+    private void getCategories() {
+        TypeToken<Request<ArrayList<Category>>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<ArrayList<Category>> categoriesRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Category>> response;
+
+        ArrayList<Category> categories = databaseManager.selectCategories();
+
+        response = new Response<>(client, categoriesRequest.getType(), true, "categories received successfully");
+        response.send(categories);
+    }
+    //endregion
+
+    //region [ - getUserVideos() - ]
+    private void getCategoryVideos() {
+        TypeToken<Request<Category>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Category> categoryRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        Category category = categoryRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByCategory(category.getId());
+
+        response = new Response<>(client, categoryRequest.getType(), true, "CategoryVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getVideoCategories() - ]
+    private void getVideoCategories() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Category>> response;
+
+        Video video = videoRequest.getBody();
+        ArrayList<Category> videos = databaseManager.selectCategoriesByVideo(video.getId());
+
+        response = new Response<>(client, videoRequest.getType(), true, "VideoVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
 
     //endregion
 

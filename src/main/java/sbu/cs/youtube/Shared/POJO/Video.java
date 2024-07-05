@@ -21,6 +21,7 @@ public class Video {
     private int viewcount;
     private int likes;
     private int dislikes;
+    private String fileName ;
 
     public Video() {
         Id = UUID.randomUUID();
@@ -177,5 +178,13 @@ public class Video {
 
     public void setDislikes(int dislikes) {
         this.dislikes = dislikes;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

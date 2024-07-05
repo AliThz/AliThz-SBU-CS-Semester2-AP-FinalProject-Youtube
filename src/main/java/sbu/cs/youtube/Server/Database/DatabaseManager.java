@@ -1202,7 +1202,6 @@ public class DatabaseManager {
                 Category category = new Category();
                 category.setId(UUID.fromString(rs.getString("Id")));
                 category.setTitle(rs.getString("Title"));
-                category.setVideoCategories(selectCategoryVideos(category.getId()));
                 categories.add(category);
             }
             rs.close();
@@ -1288,6 +1287,45 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectCategoriesByVideo(UUID videoId) - ] Not test
+    public ArrayList<Category> selectCategoriesByVideo(UUID videoId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Category> categories = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectCategoriesByVideo)");
+
+            stmt = c.prepareStatement("""
+                    SELECT c."Id" , c."title"
+                    FROM ContentManagement.Category c INNER JOIN ContentManagement.VideoCategory vc
+                    ON c."Id" = vc."categoryid"
+                    WHERE vc."videoid" = ?;
+                    """);
+
+            stmt.setObject(1, videoId);
+            ResultSet rs = stmt.executeQuery();
+
+            categories = new ArrayList<>();
+            while (rs.next()) {
+                Category category = new Category();
+                category.setId(UUID.fromString(rs.getString("Id")));
+                category.setTitle(rs.getString("Title"));
+                categories.add(category);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectCategoriesByVideo)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return categories;
+    }
+    //endregion
+
     //region [ - updateCategory(Category category) - ] Tested
     public void updateCategory(Category category) {
         Connection c;
@@ -1360,7 +1398,7 @@ public class DatabaseManager {
 
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" ) 
+                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" , path , thumbnailpath ,  ) 
                     VALUES (?, ?, ?, ?, ?, ?);
                     """);
 
@@ -1369,6 +1407,8 @@ public class DatabaseManager {
             stmt.setString(3, video.getDescription());
             stmt.setObject(4, video.getChannelId());
             stmt.setObject(5, video.getUploadDate());
+            stmt.setObject(6, video.getPath());
+            stmt.setObject(7, video.getThumbnailPath());
 
             stmt.executeUpdate();
             c.commit();
@@ -1590,6 +1630,52 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectVideosByCategory(UUID categoryId) - ] Not test
+    public ArrayList<Video> selectVideosByCategory(UUID categoryId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideosByCategory)");
+
+            stmt = c.prepareStatement("""
+                    SELECT v."title" , v."Id" , v."UploadDate" , v."thumbnailpath" , v."description" , v."channelid"
+                    FROM ContentManagement.Video v INNER JOIN ContentManagement.VideoCategory vc
+                    ON v."Id" = vc."videoid"
+                    WHERE vc."categoryid" = ?;
+                    """);
+
+            stmt.setObject(1, categoryId);
+            ResultSet rs = stmt.executeQuery();
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+//                video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("channelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideosByCategory)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
 
     //region [ - selectLikedVideos (UUID userId) - ]
     public ArrayList<Video> selectLikedVideos(UUID userId) {
@@ -1970,8 +2056,6 @@ public class DatabaseManager {
                 VideoCategory videoCategory = new VideoCategory();
                 videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 videoCategory.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
-                videoCategory.setVideo(selectVideo(videoCategory.getVideoId()));
-                videoCategory.setCategory(selectCategory(videoCategory.getCategoryId()));
                 videoCategories.add(videoCategory);
             }
             rs.close();
