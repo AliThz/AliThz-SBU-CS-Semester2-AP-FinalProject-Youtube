@@ -172,6 +172,9 @@ public class ClientHandler implements Runnable {
             case "GetCategories":
                 getCategories();
                 break;
+            case "GetCategoryVideos":
+                getCategoryVideos();
+                break;
 
         }
     }
@@ -696,6 +699,21 @@ public class ClientHandler implements Runnable {
 
         response = new Response<>(client, categoriesRequest.getType(), true, "categories received successfully");
         response.send(categories);
+    }
+    //endregion
+
+    //region [ - getUserVideos() - ]
+    private void getCategoryVideos() {
+        TypeToken<Request<Category>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Category> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        Category channel = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByCategory(channel.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "CategoryVideos Received Successfully");
+        response.send(videos);
     }
     //endregion
 

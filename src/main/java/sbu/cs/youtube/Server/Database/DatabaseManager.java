@@ -1591,6 +1591,52 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectVideosByCategory(UUID categoryId) - ] Not test
+    public ArrayList<Video> selectVideosByCategory(UUID categoryId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideosByCreator)");
+
+            stmt = c.prepareStatement("""
+                    SELECT v."title" , v."Id" , v."UploadDate" , v."thumbnailpath" , v."description" , v."channelid"
+                    FROM ContentManagement.Video v INNER JOIN ContentManagement.VideoCategory vc
+                    ON v."Id" = vc."videoid"
+                    WHERE vc."categoryid" = ?;
+                    """);
+
+            stmt.setObject(1, categoryId);
+            ResultSet rs = stmt.executeQuery();
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+//                video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("channelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath(), "jpg"));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideosByCreator)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
 
     //region [ - selectLikedVideos (UUID userId) - ]
     public ArrayList<Video> selectLikedVideos(UUID userId) {
