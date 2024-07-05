@@ -266,12 +266,12 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
 
-        //        ------------------------- SelectLikedVideos Test ---------------------------------------------
+        //        ------------------------- selectVideoViewCount Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<User> userRequest = new Request<>(socket, "GetUserVideos");
-        User user = new User();
-        user.setId(UUID.fromString("77918c91-b6ed-4b81-890a-770e2a4c79b2"));
-        userRequest.send(user);
+        Request<Video> userRequest = new Request<>(socket, "GetVideoViewCount");
+        Video video = new Video();
+        video.setId(UUID.fromString("ee7f655a-a0ca-48c5-b796-29009608aa2c"));
+        userRequest.send(video);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
         System.out.println(response);

@@ -441,7 +441,7 @@ public class VideoPageController implements Initializable {
         txtChannelSubscribres.setText(String.valueOf(video.getChannel().getSubscribers()));
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear());
-        txtViews.setText(String.valueOf(video.getViews()));
+        txtViews.setText(String.valueOf(video.getViewcount()));
         txtLikes.setText(String.valueOf(video.getLikes()));
 
         imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
