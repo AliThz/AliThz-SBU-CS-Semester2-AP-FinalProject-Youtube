@@ -77,7 +77,7 @@ public class VideoPreviewController implements Initializable {
         txtChannelName.setText(video.getChannel().getTitle());
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth());
-        txtViews.setText(String.valueOf(video.getViews()));
+        txtViews.setText(String.valueOf(video.getViewcount()));
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(video.getThumbnailBytes());

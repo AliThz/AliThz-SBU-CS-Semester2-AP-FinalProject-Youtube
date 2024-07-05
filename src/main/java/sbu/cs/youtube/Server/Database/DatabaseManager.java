@@ -2310,6 +2310,39 @@ public class DatabaseManager {
     }
     //endregion
 
+    //    region [ - selectVideoLikesStatus(UUID Id) - ] test
+    public Video selectVideoViewCount(UUID Id) {
+        Connection c;
+        PreparedStatement stmt;
+        Video video = new Video();
+        try {
+//            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideoViewCount)");
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT(UserId) AS VideoViewCount
+                    FROM ContentManagement.UserVideo
+                    WHERE videoid = ?;
+                    """);
+            stmt.setObject(1, Id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                video.setViewcount(rs.getInt("VideoViewCount"));
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectVideoViewCount)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return video;
+    }
+    //endregion
+
     //region [ - userVideoExistence(UUID userID , UUID videoId) - ] Not Test
     public UserVideo userVideoExistence(UUID userID, UUID videoId) {
         Connection c;
