@@ -1398,8 +1398,8 @@ public class DatabaseManager {
 
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" , path , thumbnailpath ,  ) 
-                    VALUES (?, ?, ?, ?, ?, ?);
+                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" , "Path" , "thumbnailPath") 
+                    VALUES (?, ?, ?, ?, ?, ?, ?);
                     """);
 
             stmt.setObject(1, video.getId());
