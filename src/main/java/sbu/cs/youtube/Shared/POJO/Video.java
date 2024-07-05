@@ -48,6 +48,18 @@ public class Video {
         this.uploadDate = uploadDate;
     }
 
+    public Video(String title, byte[] thumbnailBytes, byte[] videoBytes, String description, UUID creatorId, ArrayList<VideoCategory> categories, String fileName) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.thumbnailBytes = thumbnailBytes;
+        this.videoBytes = videoBytes;
+        this.description = description;
+        this.channel = new Channel();
+        this.channel.setCreatorId(creatorId);
+        this.categories = categories;
+        this.fileName = fileName;
+    }
+
     public Video(UUID id) {
         Id = id;
     }
