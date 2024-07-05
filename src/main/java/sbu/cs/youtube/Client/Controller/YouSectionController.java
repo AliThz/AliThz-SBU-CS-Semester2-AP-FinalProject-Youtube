@@ -56,7 +56,6 @@ public class YouSectionController implements Initializable {
 //        youPage.prefWidthProperty().bind(layoutController.scrollPane.prefWidthProperty());
         youPage.prefWidthProperty().bind(layoutController.scrollPane.viewportBoundsProperty().map(bounds -> bounds.getWidth()));
         YouPageController youPageController = youPageLoader.getController();
-        youPageController.setUser(YouTubeApplication.user);
     }
     //endregion
 

@@ -110,7 +110,7 @@ public class CommentPreviewController implements Initializable {
         bis = new ByteArrayInputStream(comment.getSender().getAvatarBytes());
         Image videoThumbnail = new Image(bis);
         imgProfile.setImage(videoThumbnail);
-       //endregion
+        //endregion
 
     }
     //endregion

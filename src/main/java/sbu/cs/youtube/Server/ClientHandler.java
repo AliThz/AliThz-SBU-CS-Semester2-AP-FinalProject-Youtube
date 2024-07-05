@@ -145,6 +145,9 @@ public class ClientHandler implements Runnable {
             case "GetChannel":
                 getChannel();
                 break;
+            case "GetPlaylist":
+                GetPlaylist();
+                break;
             case "GetUserPlaylists":
                 getUserPlaylists();
                 break;
@@ -325,8 +328,7 @@ public class ClientHandler implements Runnable {
         if (userVideo.getLike() == null || !userVideo.getLike()) {
             requestedUserVideo.setLike(true);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video liked");
-        }
-        else {
+        } else {
             requestedUserVideo.setLike(null);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video unliked");
         }
@@ -349,7 +351,7 @@ public class ClientHandler implements Runnable {
         if (userVideo.getLike() == null || userVideo.getLike()) {
             requestedUserVideo.setLike(false);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
-        } else{
+        } else {
             requestedUserVideo.setLike(null);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video undisliked");
         }
@@ -495,7 +497,7 @@ public class ClientHandler implements Runnable {
 
     //region [ - getChannelVideos() - ]
 
-    private void getChannelVideos(){
+    private void getChannelVideos() {
         TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
         };
         Request<Channel> userRequest = gson.fromJson(request, responseTypeToken.getType());
@@ -527,6 +529,25 @@ public class ClientHandler implements Runnable {
             response = new Response<>(client, userRequest.getType(), true, "channel not found");
         }
         response.send(channel);
+    }
+    //endregion
+
+    //region [ - GetPlaylist() - ]
+    private void GetPlaylist() {
+        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Playlist> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Playlist> response;
+
+
+        Playlist requestedPlaylist = userRequest.getBody();
+        Playlist playlist;
+
+        playlist = databaseManager.selectPlaylist(requestedPlaylist.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "Playlist received successfully");
+
+        response.send(playlist);
     }
     //endregion
 
@@ -562,7 +583,7 @@ public class ClientHandler implements Runnable {
 
     //region [ - getLikedVideos() - ]
 
-    private void getLikedVideos(){
+    private void getLikedVideos() {
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
@@ -577,8 +598,7 @@ public class ClientHandler implements Runnable {
     //endregion
 
     //region [ - getHistory() - ]
-
-    private void getHistory(){
+    private void getHistory() {
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
@@ -593,8 +613,7 @@ public class ClientHandler implements Runnable {
     //endregion
 
     //region [ - getUserVideos() - ]
-    private void getUserVideos()
-    {
+    private void getUserVideos() {
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());

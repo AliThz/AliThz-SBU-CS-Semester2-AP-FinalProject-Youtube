@@ -6,16 +6,20 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Playlist {
-    private UUID Id ;
-    private String thumbnailPath ;
-    private String title ;
-    private String description ;
-    private User creator ;
-    private UUID creatorId ;
-    private boolean isPublic ;
-    private String dateCreated ;
+    private UUID Id;
+    private String thumbnailPath;
+    private byte[] thumbnailBytes;
+    private String title;
+    private String description;
+    private User creator;
+    private UUID creatorId;
+    private boolean isPublic;
+    private String dateCreated;
     private ArrayList<PlaylistDetail> playlistDetails;
-    private int videos ;
+    private int videos;
+
+    public Playlist(UUID id) {
+    }
 
     public int getVideos() {
         return videos;
@@ -109,5 +113,13 @@ public class Playlist {
 
     public void setThumbnailPath(String thumbnailPath) {
         this.thumbnailPath = thumbnailPath;
+    }
+
+    public byte[] getThumbnailBytes() {
+        return thumbnailBytes;
+    }
+
+    public void setThumbnailBytes(byte[] thumbnailBytes) {
+        this.thumbnailBytes = thumbnailBytes;
     }
 }

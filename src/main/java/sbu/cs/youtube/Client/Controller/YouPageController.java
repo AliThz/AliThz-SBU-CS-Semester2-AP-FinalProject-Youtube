@@ -18,6 +18,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sbu.cs.youtube.Shared.POJO.Playlist;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
@@ -153,6 +154,8 @@ public class YouPageController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gson = new Gson();
+        this.user = YouTubeApplication.user;
+        setUser();
         displayHistory();
         displayPlaylists();
         displayWatchLater();
@@ -162,9 +165,8 @@ public class YouPageController implements Initializable {
     }
     //endregion
 
-    //region [ - setUser(User user) - ]
-    public void setUser(User user) {
-        this.user = user;
+    //region [ - setUser() - ]
+    public void setUser() {
         txtFullName.setText(user.getFullName());
         btnViewChannel.setText("@" + user.getUsername() + " • " + "View Channel");
 
@@ -177,10 +179,8 @@ public class YouPageController implements Initializable {
 
     //region [ - displayHistory() - ]
     private void displayHistory() {
-//        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetHistory");
-        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetRecommendedVideos");
-//        userRequest.send(new User(user.getId()));
-        userRequest.send();
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetHistory");
+        userRequest.send(new User(user.getId()));
 
         String response = YouTubeApplication.receiveResponse();
         TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
@@ -189,7 +189,6 @@ public class YouPageController implements Initializable {
 
         ArrayList<Video> videos = videoResponse.getBody();
         if (videos != null) {
-            for (int i = 0; i < 3; i++) {
                 for (var v : videos) {
 
                     FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
@@ -211,31 +210,160 @@ public class YouPageController implements Initializable {
                     button.setOnAction(event -> getVideo(event, v));
                     hbxHistoryVideos.getChildren().add(button);
                     VBox.setVgrow(videoPreview, Priority.ALWAYS);
-
                 }
-            }
         }
-
     }
     //endregion
 
     //region [ - displayPlaylists() - ]
     private void displayPlaylists() {
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetUserPlaylists");
+        userRequest.send(new User(user.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<ArrayList<Playlist>>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<ArrayList<Playlist>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        ArrayList<Playlist> playlists = videoResponse.getBody();
+        if (playlists != null) {
+            for (var p : playlists) {
+
+                FXMLLoader playlistPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-preview.fxml"));
+                VBox playlistPreview;
+                try {
+                    playlistPreview = playlistPreviewLoader.load();
+                    PlaylistPreviewController playlistPreviewController = playlistPreviewLoader.getController();
+                    if (playlistPreviewController != null) {
+                        playlistPreviewController.setPlaylist(p);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Button button = new Button();
+                button.getStyleClass().add("btn-video");
+                button.setGraphic(playlistPreview);
+
+                button.setOnAction(event -> getPlaylist(event, p));
+                hbxPlaylistsVideos.getChildren().add(button);
+                VBox.setVgrow(playlistPreview, Priority.ALWAYS);
+            }
+        }
     }
     //endregion
 
     //region [ - displayWatchLater() - ]
     private void displayWatchLater() {
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetHistory");
+        userRequest.send(new User(user.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        ArrayList<Video> videos = videoResponse.getBody();
+        if (videos != null) {
+            for (var v : videos) {
+
+                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+                VBox videoPreview;
+                try {
+                    videoPreview = videoPreviewLoader.load();
+                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                    if (videoPreviewController != null) {
+                        videoPreviewController.setVideo(v);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Button button = new Button();
+                button.getStyleClass().add("btn-video");
+                button.setGraphic(videoPreview);
+
+                button.setOnAction(event -> getVideo(event, v));
+                hbxWatchLaterVideos.getChildren().add(button);
+                VBox.setVgrow(videoPreview, Priority.ALWAYS);
+            }
+        }
     }
     //endregion
 
     //region [ - displayLikedVideos() - ]
     private void displayLikedVideos() {
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetLikedVideos");
+        userRequest.send(new User(user.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        ArrayList<Video> videos = videoResponse.getBody();
+        if (videos != null) {
+            for (var v : videos) {
+
+                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+                VBox videoPreview;
+                try {
+                    videoPreview = videoPreviewLoader.load();
+                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                    if (videoPreviewController != null) {
+                        videoPreviewController.setVideo(v);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Button button = new Button();
+                button.getStyleClass().add("btn-video");
+                button.setGraphic(videoPreview);
+
+                button.setOnAction(event -> getVideo(event, v));
+                hbxLikedVideos.getChildren().add(button);
+                VBox.setVgrow(videoPreview, Priority.ALWAYS);
+            }
+        }
     }
     //endregion
 
     //region [ - displayYourClips() - ]
     private void displayYourClips() {
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetUserVideos");
+        userRequest.send(new User(user.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        ArrayList<Video> videos = videoResponse.getBody();
+        if (videos != null) {
+            for (var v : videos) {
+
+                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+                VBox videoPreview;
+                try {
+                    videoPreview = videoPreviewLoader.load();
+                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                    if (videoPreviewController != null) {
+                        videoPreviewController.setVideo(v);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Button button = new Button();
+                button.getStyleClass().add("btn-video");
+                button.setGraphic(videoPreview);
+
+                button.setOnAction(event -> getVideo(event, v));
+                hbxYourClips.getChildren().add(button);
+                VBox.setVgrow(videoPreview, Priority.ALWAYS);
+            }
+        }
     }
     //endregion
 
@@ -244,6 +372,14 @@ public class YouPageController implements Initializable {
         Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideo");
         videoRequest.send(new Video(video.getId()));
 
+        getVideoPage(event);
+    }
+    //endregion
+
+    //region [ - getPlaylist(ActionEvent event, Playlist video) - ]
+    private void getPlaylist(ActionEvent event, Playlist playlist) {
+        Request<Playlist> playlistRequest = new Request<>(YouTubeApplication.socket, "GetPlaylist");
+        playlistRequest.send(new Playlist(playlist.getId()));
         getVideoPage(event);
     }
     //endregion

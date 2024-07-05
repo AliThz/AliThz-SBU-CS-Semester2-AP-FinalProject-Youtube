@@ -57,15 +57,6 @@ public class Response<T> {
     }
     //endregion
 
-//    //region [ - send(ArrayList<T> bodyList) - ]
-//    public void send(ArrayList<T> bodyList) {
-//        Gson gson = new Gson();
-//        this.bodyList = bodyList;
-//        String jsonResponse = gson.toJson(this);
-//        write(jsonResponse);
-//    }
-//    //endregion
-
     //region [ - Getters - ]
 
     //region [ - getClient() - ]

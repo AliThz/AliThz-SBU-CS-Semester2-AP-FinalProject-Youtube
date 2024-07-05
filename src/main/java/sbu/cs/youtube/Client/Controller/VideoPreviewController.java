@@ -65,18 +65,6 @@ public class VideoPreviewController implements Initializable {
     }
     //endregion
 
-    //region [ - addThumbnail(String src) - ]
-    public void addThumbnail(String src) {
-        imgThumbnail.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(src))));
-    }
-    //endregion
-
-    //region [ - addChannelProfile(String src) - ]
-    public void addChannelProfile(String src) {
-        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(src))));
-    }
-    //endregion
-
     //region [ - setVideo(Video video) - ]
     public void setVideo(Video video) {
         this.video= video;
