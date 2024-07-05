@@ -332,7 +332,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUser)");
+            System.out.println("Opened database successfully (selectUserBriefly)");
 
             stmt = c.prepareStatement("""
                     SELECT "Id", "username", "fullname", "AvatarPath" FROM UserManagement.User 
@@ -352,7 +352,7 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
-            System.out.println("Operation done successfully (selectUser)");
+            System.out.println("Operation done successfully (selectUserBriefly)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -370,7 +370,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUser)");
+            System.out.println("Opened database successfully (selectUserByUsername)");
 
             stmt = c.prepareStatement("""
                     SELECT "Id","username", "email", "Password" , "AvatarPath" FROM UserManagement.User 
@@ -391,7 +391,7 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
-            System.out.println("Operation done successfully (selectUser)");
+            System.out.println("Operation done successfully (selectUserByUsername)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -409,7 +409,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUser)");
+            System.out.println("Opened database successfully (selectUserByEmail)");
 
             stmt = c.prepareStatement("""
                     SELECT "Id","username", "email", "Password","AvatarPath"  FROM UserManagement.User 
@@ -430,7 +430,7 @@ public class DatabaseManager {
             rs.close();
             stmt.close();
             c.close();
-            System.out.println("Operation done successfully (selectUser)");
+            System.out.println("Operation done successfully (selectUserByEmail)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -879,7 +879,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectSubscription)");
+            System.out.println("Opened database successfully (subscriptionExistence)");
 
             stmt = c.prepareStatement("""
                     SELECT * FROM UserManagement.Subscription WHERE "subscriberid" = ? AND "channelid" = ? 
@@ -894,7 +894,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectSubscription)");
+            System.out.println("Operation done successfully (subscriptionExistence)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -993,7 +993,7 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectNotifications)");
+            System.out.println("Operation done successfully (selectNotifications(ALL))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -1035,7 +1035,7 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (base on userId)");
+            System.out.println("Operation done successfully (selectNotifications(base on userId)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -1135,7 +1135,7 @@ public class DatabaseManager {
             stmt.close();
             c.close();
 
-            System.out.println("Operation done successfully (deleteChannel)");
+            System.out.println("Operation done successfully (deleteNotification)");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -1498,7 +1498,7 @@ public class DatabaseManager {
         try {
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideoBriefly)");
+            System.out.println("Opened database successfully (selectVideosByChannel)");
 
             stmt = c.prepareStatement("""
                     SELECT "title" , "Id" , "UploadDate" , "thumbnailpath" , "description"   
@@ -1528,7 +1528,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectVideoBriefly)");
+            System.out.println("Operation done successfully (selectVideosByChannel)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -1878,7 +1878,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideoCategories)");
+            System.out.println("Opened database successfully (selectVideoCategories(ALL))");
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM ContentManagement.VideoCategory;");
@@ -1911,7 +1911,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideoCategories (based on video))");
+            System.out.println("Opened database successfully (selectVideoCategories (based on videoId))");
 
             stmt = c.prepareStatement("""
                     SELECT * FROM ContentManagement.VideoCategory 
@@ -1933,7 +1933,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectVideoCategories (based on video))");
+            System.out.println("Operation done successfully (selectVideoCategories (based on videoId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2149,7 +2149,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUserVideos(based on User))");
+            System.out.println("Opened database successfully (selectUserVideos(based on UserID))");
 
             stmt = c.prepareStatement("""
                     SELECT * FROM ContentManagement.UserVideo 
@@ -2174,7 +2174,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectUserVideos(based on User))");
+            System.out.println("Operation done successfully (selectUserVideos(based on UserId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2192,7 +2192,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUserVideos(based on userId))");
+            System.out.println("Opened database successfully (selectVideoUsers)");
 
             stmt = c.prepareStatement("""
                     SELECT * FROM ContentManagement.UserVideo 
@@ -2217,7 +2217,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectUserVideos(based on userId))");
+            System.out.println("Operation done successfully (selectVideoUsers)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2274,7 +2274,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (getVideoLikes)");
+            System.out.println("Opened database successfully (selectVideoLikesStatus)");
 
             stmt = c.prepareStatement("""
                     SELECT COUNT(UserId) AS VideoLikes
@@ -2301,7 +2301,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectVideo)");
+            System.out.println("Operation done successfully (selectVideoLikesStatus)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2352,7 +2352,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUserVideo)");
+            System.out.println("Opened database successfully (userVideoExistence)");
 
             stmt = c.prepareStatement("""
                     SELECT * FROM ContentManagement.UserVideo 
@@ -2372,7 +2372,7 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectUserVideo)");
+            System.out.println("Operation done successfully (userVideoExistence)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2870,7 +2870,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectPlaylistDetails)");
+            System.out.println("Opened database successfully (selectPlaylistDetails(base on playlistId))");
 
             stmt = c.prepareStatement("""
                     SELECT * FROM ContentManagement.PlaylistDetail 
@@ -2896,7 +2896,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectPlaylistDetails)");
+            System.out.println("Operation done successfully (selectPlaylistDetails(base on playlistId))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2914,7 +2914,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectPlaylistDetail)");
+            System.out.println("Opened database successfully (selectPlaylistDetail(base on Id))");
 
             stmt = c.prepareStatement("""
                     SELECT * FROM ContentManagement.PlaylistDetail 
@@ -2935,7 +2935,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectPlaylistDetail)");
+            System.out.println("Operation done successfully (selectPlaylistDetail(base on Id))");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2982,7 +2982,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (deletePlaylistDetail)");
+            System.out.println("Opened database successfully (deletePlaylistDetail(base on videoId))");
 
             stmt = c.prepareStatement("""
                     DELETE FROM ContentManagement.PlaylistDetail WHERE VideoId = ?;
@@ -2994,7 +2994,7 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
-            System.out.println("Operation done successfully (deletePlaylistDetail)");
+            System.out.println("Operation done successfully (deletePlaylistDetail(base on videoId))");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -3010,7 +3010,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (deletePlaylistDetail)");
+            System.out.println("Opened database successfully (deletePlaylistDetail(base on playlistId))");
 
             stmt = c.prepareStatement("""
                     DELETE FROM ContentManagement.PlaylistDetail 
@@ -3023,7 +3023,7 @@ public class DatabaseManager {
             c.commit();
             stmt.close();
             c.close();
-            System.out.println("Operation done successfully (deletePlaylistDetail)");
+            System.out.println("Operation done successfully (deletePlaylistDetail(base on playlistId))");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -3330,7 +3330,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideoCategories)");
+            System.out.println("Opened database successfully (selectUserComments)");
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
@@ -3349,7 +3349,7 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectVideoCategories)");
+            System.out.println("Operation done successfully (selectUserComments)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -3451,7 +3451,7 @@ public class DatabaseManager {
 //            Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (getCommentLikes)");
+            System.out.println("Opened database successfully (selectCommentLikesStatus)");
 
             stmt = c.prepareStatement("""
                     SELECT COUNT(UserId) AS CommentLikes
@@ -3478,7 +3478,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectComment)");
+            System.out.println("Operation done successfully (selectCommentLikesStatus)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
