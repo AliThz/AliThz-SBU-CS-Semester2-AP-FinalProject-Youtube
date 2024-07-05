@@ -6,14 +6,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
@@ -52,23 +51,40 @@ public class CreateSectionController implements Initializable {
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
 
         layoutController.hbxContent.getChildren().remove(2);
+        FlowPane flwPane = new FlowPane();
+        flwPane.getStyleClass().add("flwpane");
+        flwPane.setAlignment(Pos.CENTER);
+        layoutController.hbxContent.getChildren().add(2, flwPane);
+        HBox.setHgrow(flwPane, Priority.ALWAYS);
 
-
-        loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/create-page.fxml"));
-        AnchorPane createPage;
+        loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/create-upload.fxml"));
+        VBox createUpload;
         try {
-            createPage = loader.load();
+            createUpload = loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        layoutController.hbxContent.getChildren().add(2, createPage);
-        HBox.setHgrow(createPage, Priority.ALWAYS);
 
-        createPage.prefWidthProperty().bind(layoutController.hbxContent.widthProperty().subtract(90));
-        createPage.prefHeightProperty().bind(layoutController.hbxContent.heightProperty());
+        flwPane.getChildren().add(createUpload);
+        CreateUploadController createUploadController = loader.getController();
+        createUploadController.setParentController(layoutController);
+        createUpload.prefWidthProperty().bind(flwPane.widthProperty().subtract(70));
+        createUpload.prefHeightProperty().bind(flwPane.heightProperty().subtract(70));
 
-        //todo responsivity has problems
-
+//        layoutController.hbxContent.getChildren().remove(2);
+//
+//        loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/create-upload.fxml"));
+//        VBox createUpload;
+//        try {
+//            createUpload = loader.load();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        CreateUploadController createUploadController = loader.getController();
+//        createUploadController.setParentController(layoutController);
+//        layoutController.hbxContent.getChildren().add(createUpload);
+//        HBox.setHgrow(createUpload, Priority.ALWAYS);
     }
     //endregion
 
