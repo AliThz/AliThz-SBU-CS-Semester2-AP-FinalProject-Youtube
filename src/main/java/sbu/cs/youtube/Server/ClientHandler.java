@@ -166,7 +166,7 @@ public class ClientHandler implements Runnable {
             case "GetVideoViewCount":
                 getVideoViewCount();
                 break;
-            case "CreatVideo":
+            case "CreateVideo":
                 createVideo();
                 break;
             case "GetCategories":
@@ -667,7 +667,7 @@ public class ClientHandler implements Runnable {
 
         Video video = videoRequest.getBody();
         String videoPath = "/Videos/" + video.getFileName() ;
-        try (FileOutputStream fos = new FileOutputStream(videoPath)) {
+        try (FileOutputStream fos = new FileOutputStream("src/main/resources" + videoPath)) {
             video.setPath(videoPath);
             fos.write(video.getVideoBytes());
             System.out.println("Video saved successfully to " + videoPath);
@@ -675,8 +675,8 @@ public class ClientHandler implements Runnable {
             System.err.println("Error while saving the video: " + e.getMessage());
         }
 
-        String thumbnailPath = "/Images/" + video.getFileName().substring(0 , video.getFileName().length()-4) + "jpg" ;
-        try (FileOutputStream fos = new FileOutputStream(thumbnailPath)) {
+        String thumbnailPath = "/Images/" + video.getFileName().substring(0 , video.getFileName().length()-3) + "jpg" ;
+        try (FileOutputStream fos = new FileOutputStream("src/main/resources" + thumbnailPath)) {
             video.setThumbnailPath(thumbnailPath);
             fos.write(video.getThumbnailBytes());
             System.out.println("Video saved successfully to " + thumbnailPath);
@@ -685,8 +685,8 @@ public class ClientHandler implements Runnable {
         }
 
         databaseManager.insertVideo(video);
-        response = new Response<>(client, videoRequest.getType(), true, "Signed up successfully");
-        response.send(video);
+        response = new Response<>(client, videoRequest.getType(), true, "Video created successfully");
+        response.send();
     }
     //endregion
 
