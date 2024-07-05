@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" stylesheets="@../../../Styles/create-section-dark.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.CreatePageController">
+    <children>
+      <VBox fx:id="vbxUpload" alignment="TOP_CENTER" prefHeight="540.0" prefWidth="960.0" spacing="5.0" styleClass="vbxUpload" visible="false">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <children>
+            <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload Video" wrappingWidth="934.9366075992584" VBox.vgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Text>
+            <Separator prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <HBox prefHeight="60.0" prefWidth="939.0" VBox.vgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#selectFiles" prefHeight="215.0" prefWidth="215.0" styleClass="btnUpload">
+               <graphic>
+                  <SVGPath content="M17 18v1H6v-1ZM6.49 9l.71.71 3.8-3.8V16h1V5.91l3.8 3.81.71-.72-5-5Z" scaleX="10.0" scaleY="10.0" styleClass="svgUpload" />
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label text="Select video files to upload" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label styleClass="lblFormat" text="Your videos should be in .mp4 format" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#selectFiles" styleClass="btnSelect" text="Select Files">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <HBox prefHeight="40.0" prefWidth="939.0" VBox.vgrow="ALWAYS" />
+            <TextFlow prefHeight="22.0" prefWidth="939.0" textAlignment="CENTER">
+               <children>
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txtAgreement" text="By submitting your videos to YouTube, you acknowledge that you agree to YouTube's" />
+                  <Hyperlink fx:id="linkTerms" text="Terms of Service" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txtAgreement" text="and" />
+                  <Hyperlink fx:id="linkGuidelines" text="Community Guidelines" />
+               </children>
+            </TextFlow>
+            <TextFlow prefHeight="3.0" prefWidth="939.0" textAlignment="CENTER">
+               <children>
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txtAgreement" text="Please be sure not to violate others' copyright or privacy rights." />
+                  <Hyperlink fx:id="linkLearnMore" text="Learn more" />
+               </children>
+            </TextFlow>
+         </children>
+      </VBox>
+        <VBox fx:id="vbxDetails" alignment="TOP_CENTER" prefHeight="540.0" prefWidth="960.0" spacing="7.0" styleClass="vbxUpload">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <children>
+                <Text fx:id="txtTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Video Title" wrappingWidth="934.9366075992584" VBox.vgrow="ALWAYS">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Text>
+                <Separator prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

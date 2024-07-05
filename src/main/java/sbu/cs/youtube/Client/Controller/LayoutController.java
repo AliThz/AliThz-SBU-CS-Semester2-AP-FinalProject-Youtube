@@ -532,6 +532,20 @@ public class LayoutController implements Initializable {
 
     protected void getCreatePage(ActionEvent event) {
         setDefaultSvgs();
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/create-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
 
     //endregion

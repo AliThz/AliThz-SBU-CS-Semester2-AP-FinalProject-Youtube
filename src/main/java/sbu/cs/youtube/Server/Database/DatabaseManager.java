@@ -371,7 +371,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Id","username", "email", "Password" , "avatarPath" FROM UserManagement.User 
+                    SELECT "Id","username", "email", "Password" , "AvatarPath" FROM UserManagement.User 
                     WHERE username = ?
                     """);
             stmt.setObject(1, username);
@@ -383,7 +383,7 @@ public class DatabaseManager {
                 user.setEmail(rs.getString("Email"));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
-                user.setAvatarPath(rs.getString("avatarPath"));
+                user.setAvatarPath(rs.getString("AvatarPath"));
                 user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath() , "jpg"));
             }
             rs.close();
@@ -410,7 +410,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Id","username", "email", "Password","avatarPath"  FROM UserManagement.User 
+                    SELECT "Id","username", "email", "Password","AvatarPath"  FROM UserManagement.User 
                     WHERE email = ?
                     """);
             stmt.setObject(1, email);
@@ -422,7 +422,7 @@ public class DatabaseManager {
                 user.setEmail(rs.getString("email"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("Password"));
-                user.setAvatarPath(rs.getString("avatarPath"));
+                user.setAvatarPath(rs.getString("AvatarPath"));
                 user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath() , "jpg"));
             }
             rs.close();

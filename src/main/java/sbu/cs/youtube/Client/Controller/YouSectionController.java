@@ -35,6 +35,7 @@ public class YouSectionController implements Initializable {
         mainPane.getChildren().add(layout);
         LayoutController layoutController = layoutLoader.getController();
 
+        layoutController.svgYou.setContent("M4 20h14v1H3V6h1v14zM21 3v15H6V3h15zm-4 7.5L11 7v7l6-3.5z");
         layoutController.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
 
