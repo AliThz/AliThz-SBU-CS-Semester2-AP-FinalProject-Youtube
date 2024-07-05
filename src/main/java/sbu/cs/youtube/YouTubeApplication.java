@@ -287,10 +287,20 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
         //        ------------------------- Select categoryVideos Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Category> userRequest = new Request<>(socket, "GetCategoryVideos");
+//        Category category = new Category();
+//        category.setId(UUID.fromString("3d967083-bdd6-4016-b412-b7a2d9576d28"));
+//        userRequest.send(category);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- Select VidoeCategories Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<Category> userRequest = new Request<>(socket, "GetCategoryVideos");
+        Request<Category> userRequest = new Request<>(socket, "GetVideoCategories");
         Category category = new Category();
-        category.setId(UUID.fromString("3d967083-bdd6-4016-b412-b7a2d9576d28"));
+        category.setId(UUID.fromString("a6592c17-0cef-4fa3-a0ae-9fc1844d1971"));
         userRequest.send(category);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();

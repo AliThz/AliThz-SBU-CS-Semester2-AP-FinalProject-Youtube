@@ -175,6 +175,9 @@ public class ClientHandler implements Runnable {
             case "GetCategoryVideos":
                 getCategoryVideos();
                 break;
+            case "GetVideoCategories":
+                getVideoCategories();
+                break;
 
         }
     }
@@ -706,13 +709,28 @@ public class ClientHandler implements Runnable {
     private void getCategoryVideos() {
         TypeToken<Request<Category>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Category> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Category> categoryRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Video>> response;
 
-        Category channel = userRequest.getBody();
-        ArrayList<Video> videos = databaseManager.selectVideosByCategory(channel.getId());
+        Category category = categoryRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByCategory(category.getId());
 
-        response = new Response<>(client, userRequest.getType(), true, "CategoryVideos Received Successfully");
+        response = new Response<>(client, categoryRequest.getType(), true, "CategoryVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getVideoCategories() - ]
+    private void getVideoCategories() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Category>> response;
+
+        Video video = videoRequest.getBody();
+        ArrayList<Category> videos = databaseManager.selectCategoriesByVideo(video.getId());
+
+        response = new Response<>(client, videoRequest.getType(), true, "VideoVideos Received Successfully");
         response.send(videos);
     }
     //endregion

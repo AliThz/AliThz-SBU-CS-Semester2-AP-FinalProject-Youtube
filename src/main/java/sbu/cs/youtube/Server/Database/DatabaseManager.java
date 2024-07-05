@@ -1287,6 +1287,45 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectCategoriesByVideo(UUID videoId) - ] Not test
+    public ArrayList<Category> selectCategoriesByVideo(UUID videoId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Category> categories = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectCategoriesByVideo)");
+
+            stmt = c.prepareStatement("""
+                    SELECT c."Id" , c."title"
+                    FROM ContentManagement.Category c INNER JOIN ContentManagement.VideoCategory vc
+                    ON c."Id" = vc."categoryid"
+                    WHERE vc."videoid" = ?;
+                    """);
+
+            stmt.setObject(1, videoId);
+            ResultSet rs = stmt.executeQuery();
+
+            categories = new ArrayList<>();
+            while (rs.next()) {
+                Category category = new Category();
+                category.setId(UUID.fromString(rs.getString("Id")));
+                category.setTitle(rs.getString("Title"));
+                categories.add(category);
+            }
+
+            rs.close();
+            stmt.close();
+            System.out.println("Operation done successfully (selectCategoriesByVideo)");
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return categories;
+    }
+    //endregion
+
     //region [ - updateCategory(Category category) - ] Tested
     public void updateCategory(Category category) {
         Connection c;
@@ -1599,7 +1638,7 @@ public class DatabaseManager {
         try {
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectVideosByCreator)");
+            System.out.println("Opened database successfully (selectVideosByCategory)");
 
             stmt = c.prepareStatement("""
                     SELECT v."title" , v."Id" , v."UploadDate" , v."thumbnailpath" , v."description" , v."channelid"
@@ -1629,7 +1668,7 @@ public class DatabaseManager {
 
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectVideosByCreator)");
+            System.out.println("Operation done successfully (selectVideosByCategory)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
