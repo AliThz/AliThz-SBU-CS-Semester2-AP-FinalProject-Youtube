@@ -166,6 +166,13 @@ public class ClientHandler implements Runnable {
             case "GetVideoViewCount":
                 getVideoViewCount();
                 break;
+            case "CreatVideo":
+                createVideo();
+                break;
+            case "GetCategories":
+                getCategories();
+                break;
+
         }
     }
     //endregion
@@ -644,6 +651,54 @@ public class ClientHandler implements Runnable {
         response.send(videoViewCount);
     }
     //endregion
+
+    //region [ - createVideo() - ]
+    private void createVideo() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Video> response;
+
+
+        Video video = videoRequest.getBody();
+        String videoPath = "/Videos/" + video.getFileName() ;
+        try (FileOutputStream fos = new FileOutputStream(videoPath)) {
+            video.setPath(videoPath);
+            fos.write(video.getVideoBytes());
+            System.out.println("Video saved successfully to " + videoPath);
+        } catch (IOException e) {
+            System.err.println("Error while saving the video: " + e.getMessage());
+        }
+
+        String thumbnailPath = "/Images/" + video.getFileName().substring(0 , video.getFileName().length()-4) + "jpg" ;
+        try (FileOutputStream fos = new FileOutputStream(thumbnailPath)) {
+            video.setThumbnailPath(thumbnailPath);
+            fos.write(video.getThumbnailBytes());
+            System.out.println("Video saved successfully to " + thumbnailPath);
+        } catch (IOException e) {
+            System.err.println("Error while saving the video: " + e.getMessage());
+        }
+
+        databaseManager.insertVideo(video);
+        response = new Response<>(client, videoRequest.getType(), true, "Signed up successfully");
+        response.send(video);
+    }
+    //endregion
+
+    //region [ - getCategories() - ]
+    private void getCategories() {
+        TypeToken<Request<ArrayList<Category>>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<ArrayList<Category>> categoriesRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Category>> response;
+
+        ArrayList<Category> categories = databaseManager.selectCategories();
+
+        response = new Response<>(client, categoriesRequest.getType(), true, "categories received successfully");
+        response.send(categories);
+    }
+    //endregion
+
 
     //endregion
 

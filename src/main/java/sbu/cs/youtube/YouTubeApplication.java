@@ -19,6 +19,7 @@ import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -267,14 +268,25 @@ public class YouTubeApplication extends Application {
 //        launch();
 
         //        ------------------------- selectVideoViewCount Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Video> userRequest = new Request<>(socket, "GetVideoViewCount");
+//        Video video = new Video();
+//        video.setId(UUID.fromString("ee7f655a-a0ca-48c5-b796-29009608aa2c"));
+//        userRequest.send(video);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- getCategories Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<Video> userRequest = new Request<>(socket, "GetVideoViewCount");
-        Video video = new Video();
-        video.setId(UUID.fromString("ee7f655a-a0ca-48c5-b796-29009608aa2c"));
-        userRequest.send(video);
+        Request<ArrayList<Category>> userRequest = new Request<>(socket, "GetCategories");
+        ArrayList<Category> categories = new ArrayList<Category>();
+        userRequest.send(categories);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
         System.out.println(response);
         launch();
+
+
     }
 }

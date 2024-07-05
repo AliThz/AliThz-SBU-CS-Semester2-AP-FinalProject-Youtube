@@ -1202,7 +1202,6 @@ public class DatabaseManager {
                 Category category = new Category();
                 category.setId(UUID.fromString(rs.getString("Id")));
                 category.setTitle(rs.getString("Title"));
-                category.setVideoCategories(selectCategoryVideos(category.getId()));
                 categories.add(category);
             }
             rs.close();
@@ -1360,7 +1359,7 @@ public class DatabaseManager {
 
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" ) 
+                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" , path , thumbnailpath ,  ) 
                     VALUES (?, ?, ?, ?, ?, ?);
                     """);
 
@@ -1369,6 +1368,8 @@ public class DatabaseManager {
             stmt.setString(3, video.getDescription());
             stmt.setObject(4, video.getChannelId());
             stmt.setObject(5, video.getUploadDate());
+            stmt.setObject(6, video.getPath());
+            stmt.setObject(7, video.getThumbnailPath());
 
             stmt.executeUpdate();
             c.commit();
@@ -1970,8 +1971,6 @@ public class DatabaseManager {
                 VideoCategory videoCategory = new VideoCategory();
                 videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 videoCategory.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
-                videoCategory.setVideo(selectVideo(videoCategory.getVideoId()));
-                videoCategory.setCategory(selectCategory(videoCategory.getCategoryId()));
                 videoCategories.add(videoCategory);
             }
             rs.close();
