@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -532,7 +533,7 @@ public class VideoPageController implements Initializable {
             mediaPlayer.setRate(currentRate + 0.5);
             if (mediaPlayer.getRate() > 2)
                 mediaPlayer.setRate(0.5);
-            btnIncreaseSpeed.setText(String.valueOf(mediaPlayer.getRate()) + "x");
+            btnIncreaseSpeed.setText(mediaPlayer.getRate() + "x");
         });
 
         hbxControls.getChildren().add(4, volumeSlider);
@@ -791,6 +792,18 @@ public class VideoPageController implements Initializable {
         int minutes = (int) time.toMinutes();
         int seconds = (int) time.toSeconds() % 60;
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public void setParentController(LayoutController layoutController) {
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            anchrpnVideoPage.getStylesheets().clear();
+            anchrpnVideoPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-page.css")).toExternalForm());
+        });
     }
 
     //endregion

@@ -1,19 +1,19 @@
 /* -------------------------------- Background -------------------------------- */
 .background {
-    -fx-background-color: black;
-    -fx-border-color: black;
+    -fx-background-color: white;
+    -fx-border-color: white;
 }
 
 /* -------------------------------- Video -------------------------------- */
 .left-vbox {
     -fx-padding: 0 10;
     -fx-alignment: top-center;
-    -fx-background-color: rgb(0, 0, 0);
+    -fx-background-color: white;
 }
 
 .text {
-    -fx-text-fill: rgb(255, 255, 255);
-    -fx-fill: rgb(255, 255, 255);
+    -fx-text-fill: black;
+    -fx-fill: black;
 }
 
 .button {
@@ -21,60 +21,60 @@
 }
 
 .svg {
-    -fx-fill: rgb(255, 255, 255);
+    -fx-fill: black;
 }
 
 .separator-vertical .line {
-    -fx-border-color: rgb(72, 71, 71);
+    -fx-border-color: rgb(204, 204, 204);
     -fx-border-width: 0.5;
 }
 
 .separator-horizontal .line {
-    -fx-border-color: rgb(33, 33, 33);
+    -fx-border-color: rgb(204, 204, 204);
     -fx-border-width: 1;
 }
 
 .button-like {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(242, 242, 242);
     -fx-background-radius: 20 0 0 20;
 }
 
 .button-like:hover {
-    -fx-background-color: rgb(41, 41, 41);
+    -fx-background-color: rgb(229, 229, 229);
 }
 
 .button-like:pressed {
-    -fx-background-color: rgb(60, 60, 60);
+    -fx-background-color: rgb(204, 204, 204);
 }
 
 .button-dislike {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(242, 242, 242);
     -fx-background-radius: 0 20 20 0;
 }
 
 .button-dislike:hover {
-    -fx-background-color: rgb(41, 41, 41);
+    -fx-background-color: rgb(229, 229, 229);
 }
 
 .button-dislike:pressed {
-    -fx-background-color: rgb(60, 60, 60);
+    -fx-background-color: rgb(204, 204, 204);
 }
 
 .button-subscription {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(242, 242, 242);
     -fx-background-radius: 20;
 }
 
 .button-subscription:hover {
-    -fx-background-color: rgb(41, 41, 41);
+    -fx-background-color: rgb(229, 229, 229);
 }
 
 .button-subscription:pressed {
-    -fx-background-color: rgb(60, 60, 60);
+    -fx-background-color: rgb(204, 204, 204);
 }
 
 .vbxDescription {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(242, 242, 242);
     -fx-background-radius: 20;
 }
 
@@ -120,13 +120,13 @@
 }
 
 .vbx-recommended-videos {
-    -fx-background-color: rgb(0, 0, 0);
+    -fx-background-color: white;
     -fx-padding: 35 10 10 10;
     -fx-alignment: top-center;
 }
 
 .scroll-pane {
-    -fx-background-color: black;
+    -fx-background-color: white;
     -fx-alignment: center;
 }
 
@@ -163,34 +163,36 @@
 .field-comment {
     -fx-text-fill: white;
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent rgb(33, 33, 33) transparent;
+    -fx-border-color: transparent transparent rgb(242, 242, 242) transparent;
     -fx-border-width: 0 0 1 0;
 }
 
 .field-comment:hover {
-    -fx-border-color: transparent transparent rgb(41, 41, 41) transparent;
+    -fx-border-color: transparent transparent rgb(229,229,229) transparent;
 }
 
 .field-comment:focused {
-    -fx-border-color: transparent transparent white transparent;
+    -fx-border-color: transparent transparent black transparent;
 }
 
 .btn-video {
-    -fx-background-color: black;
+    -fx-background-color: white;
     -fx-padding: 6;
     -fx-background-radius: 5;
 }
 
 .btn-video:hover {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(229, 229, 229);
 }
 
 .btn-video:pressed {
-    -fx-background-color: rgb(41, 41, 41);
+    -fx-background-color: rgb(204, 204, 204);
 }
 
 .btn-speed {
+    -fx-background-color: transparent;
     -fx-border-width: 1;
     -fx-border-color: white;
     -fx-border-radius: 5;
+    -fx-text-fill: white;
 }

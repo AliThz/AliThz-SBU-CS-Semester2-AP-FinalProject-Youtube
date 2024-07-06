@@ -1,6 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,9 +10,11 @@ import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class VideoSectionController implements Initializable {
@@ -41,7 +44,16 @@ public class VideoSectionController implements Initializable {
 
         layoutController.hbxContent.getChildren().remove(2);
         layoutController.btnBurger.setDisable(true);
-//        layoutController.isExpanded = true;
+
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            mainPane.getStylesheets().clear();
+            mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-section.css")).toExternalForm());
+        });
 
 
         FXMLLoader videoPageLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-page.fxml"));
@@ -53,6 +65,7 @@ public class VideoSectionController implements Initializable {
         }
         layoutController.hbxContent.getChildren().add(videoPage);
         VideoPageController videoPageController = videoPageLoader.getController();
+        videoPageController.setParentController(layoutController);
 
 //        HBox.setHgrow(layoutController.hbxContent.getChildren().get(2), Priority.ALWAYS);
 
