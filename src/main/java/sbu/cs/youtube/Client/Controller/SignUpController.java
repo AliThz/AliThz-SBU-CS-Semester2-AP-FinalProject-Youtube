@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -91,7 +92,7 @@ public class SignUpController implements Initializable {
         inputError.setContent("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z");
         inputError.getStyleClass().add("error-svg");
         inputLog = new Text("");
-        inputLog.setFill(Color.rgb(255, 122, 96));
+        inputLog.getStyleClass().add("error-txt");
         inputLog.setWrappingWidth(204);
         hbxLog.getChildren().addAll(inputError, inputLog);
         hbxLog.setPadding(new Insets(2, 2, 2, 2));
@@ -99,6 +100,8 @@ public class SignUpController implements Initializable {
         hbxLog.setVisible(false);
         vbxRight.getChildren().add(3, hbxLog);
 
+        vbxContainer.getStylesheets().clear();
+        vbxContainer.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/sign-up.css")).toExternalForm());
     }
     //endregion
 
@@ -133,7 +136,7 @@ public class SignUpController implements Initializable {
 
     //region [ - boolean validateName(String fullName) - ]
     private boolean validateName(String fullName) {
-        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{8,}$";
+        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{4,}$";
         Pattern usernamePattern = Pattern.compile(usernameRegex);
         Matcher usernameMatcher = usernamePattern.matcher(fullName);
 
