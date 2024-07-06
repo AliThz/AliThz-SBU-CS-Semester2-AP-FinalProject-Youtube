@@ -95,9 +95,11 @@ public class LayoutController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-
-
+        setMode();
+        if (YouTubeApplication.theme.equals("Light")) {
+            btnMode.setSelected(true);
+            modeSvg.setContent("M12 22C10.93 22 9.86998 21.83 8.83998 21.48L7.41998 21.01L8.83998 20.54C12.53 19.31 15 15.88 15 12C15 8.12 12.53 4.69 8.83998 3.47L7.41998 2.99L8.83998 2.52C9.86998 2.17 10.93 2 12 2C17.51 2 22 6.49 22 12C22 17.51 17.51 22 12 22ZM10.58 20.89C11.05 20.96 11.53 21 12 21C16.96 21 21 16.96 21 12C21 7.04 16.96 3 12 3C11.53 3 11.05 3.04 10.58 3.11C13.88 4.81 16 8.21 16 12C16 15.79 13.88 19.19 10.58 20.89Z");
+        }
 
         if (YouTubeApplication.user == null) {
             isSignedIn = false;
@@ -115,8 +117,27 @@ public class LayoutController implements Initializable {
             flowPane.getChildren().removeFirst();
         }
     }
-
     //endregion
+
+    private void setMode() {
+
+        vbxLayout.getStylesheets().clear();
+        vbxLayout.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
+        scrollPane.getStylesheets().clear();
+        scrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/home-section.css")).toExternalForm());
+        Separator separator = (Separator) hbxContent.getChildren().get(1);
+        separator.getStylesheets().clear();
+        separator.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
+        vbxSideBar.getStylesheets().clear();
+        if (!isExpanded) {
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
+        }
+        else {
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-expanded.css")).toExternalForm());
+        }
+
+    }
+
 
     //region [ - disableButtons() - ]
     private void disableButtons() {
@@ -573,26 +594,12 @@ public class LayoutController implements Initializable {
             modeSvg.setContent("M12 22C10.93 22 9.86998 21.83 8.83998 21.48L7.41998 21.01L8.83998 20.54C12.53 19.31 15 15.88 15 12C15 8.12 12.53 4.69 8.83998 3.47L7.41998 2.99L8.83998 2.52C9.86998 2.17 10.93 2 12 2C17.51 2 22 6.49 22 12C22 17.51 17.51 22 12 22ZM10.58 20.89C11.05 20.96 11.53 21 12 21C16.96 21 21 16.96 21 12C21 7.04 16.96 3 12 3C11.53 3 11.05 3.04 10.58 3.11C13.88 4.81 16 8.21 16 12C16 15.79 13.88 19.19 10.58 20.89Z");
             YouTubeApplication.theme = "Light";
         }
-
         else {
             modeSvg.setContent("M10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-15a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM1 9h2a1 1 0 1 1 0 2H1a1 1 0 0 1 0-2zm16 0h2a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2zm.071-6.071a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM5.757 14.243a1 1 0 0 1 0 1.414L4.343 17.07a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM4.343 2.929l1.414 1.414a1 1 0 0 1-1.414 1.414L2.93 4.343A1 1 0 0 1 4.343 2.93zm11.314 11.314l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 1 1 1.414-1.414z");
             YouTubeApplication.theme = "Dark";
         }
 
-        vbxLayout.getStylesheets().clear();
-        vbxLayout.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
-        scrollPane.getStylesheets().clear();
-        scrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/home-section.css")).toExternalForm());
-        Separator separator = (Separator) hbxContent.getChildren().get(1);
-        separator.getStylesheets().clear();
-        separator.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
-        vbxSideBar.getStylesheets().clear();
-        if (!isExpanded) {
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
-        }
-        else {
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-expanded.css")).toExternalForm());
-        }
+        setMode();
 
     }
     //endregion
