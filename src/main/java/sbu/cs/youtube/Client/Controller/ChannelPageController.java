@@ -115,7 +115,7 @@ public class ChannelPageController implements Initializable {
         txtChannelDescription.setText(channel.getDescription());
         txtUsername.setText(YouTubeApplication.user.getUsername());
 //        txtVideosCount.setText(channel);
-        txtSubscribersCount.setText(String.valueOf(channel.getSubscribers()));
+        txtSubscribersCount.setText(String.valueOf(channel.getSubscriberCount()));
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());

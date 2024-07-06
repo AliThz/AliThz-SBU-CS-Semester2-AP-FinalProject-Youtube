@@ -507,7 +507,7 @@ public class VideoPageController implements Initializable {
         txtVideoTitle.setText(video.getTitle());
         txtVideoDescription.setText(video.getDescription());
         txtChannelName.setText(video.getChannel().getTitle());
-        txtChannelSubscribres.setText(String.valueOf(video.getChannel().getSubscribers()));
+        txtChannelSubscribres.setText(String.valueOf(video.getChannel().getSubscriberCount()));
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear());
         txtViews.setText(String.valueOf(video.getViewcount()));
