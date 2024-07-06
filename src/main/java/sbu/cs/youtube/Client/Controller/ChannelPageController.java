@@ -258,7 +258,7 @@ public class ChannelPageController implements Initializable {
 
     //region [ - updateSub(ActionEvent event) - ]
     @FXML
-    private void updateSub(ActionEvent event) {
+    private void updateSub() {
         SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
 
         Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "CheckSubscriptionExistence");
