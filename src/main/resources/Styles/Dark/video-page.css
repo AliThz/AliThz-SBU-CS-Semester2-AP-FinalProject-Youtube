@@ -194,3 +194,9 @@
 .btn-video:pressed {
     -fx-background-color: rgb(41, 41, 41);
 }
+
+.btn-speed {
+    -fx-border-width: 1;
+    -fx-border-color: white;
+    -fx-border-radius: 5;
+}
