@@ -188,7 +188,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (insertUser)");
 
             stmt = c.prepareStatement("""
-                    INSERT INTO UserManagement."User"(\"Id\", FullName, Email, DateOfBirth, Username, \"Password\")
+                    INSERT INTO "UserManagement"."User"(\"Id\", "FullName", "Email", "DateOfBirth", "Username", \"Password\")
                     VALUES (?, ?, ?, ?, ?,?);
                     """);
 
@@ -224,11 +224,11 @@ public class DatabaseManager {
 
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUserBriefly)");
+            System.out.println("Opened database successfully (selectUsersBriefly)");
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT "Id","Username", "Email", "Password" FROM UserManagement."User";
+                    SELECT "Id","Username", "Email", "Password" FROM "UserManagement"."User";
                     """);
 
             users = new ArrayList<>();
@@ -242,7 +242,7 @@ public class DatabaseManager {
             }
             rs.close();
             stmt.close();
-            System.out.println("Operation done successfully (selectUserBriefly)");
+            System.out.println("Operation done successfully (selectUsersBriefly)");
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -264,7 +264,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM UserManagement."User";
+                    SELECT * FROM "UserManagement"."User";
                     """);
 
             users = new ArrayList<>();
@@ -308,7 +308,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectUser)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement."User" 
+                    SELECT * FROM "UserManagement"."User" 
                     WHERE \"Id\" = ?
                     """);
 
@@ -357,7 +357,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "Id", "Username", "FullName", "AvatarPath" 
-                    FROM UserManagement."User" 
+                    FROM "UserManagement"."User" 
                     WHERE "Id" = ?
                     """);
 
@@ -398,8 +398,8 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "Id", "FullName", "Username", "Email", "Password" , "AvatarPath"
-                    FROM UserManagement."User" 
-                    WHERE Username = ?
+                    FROM "UserManagement"."User" 
+                    WHERE "Username" = ?
                     """);
 
             stmt.setObject(1, username);
@@ -441,8 +441,8 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "Id", "FullName", "Username", "Email", "Password","AvatarPath" 
-                    FROM UserManagement."User" 
-                    WHERE Email = ?
+                    FROM "UserManagement"."User" 
+                    WHERE "Email" = ?
                     """);
 
             stmt.setObject(1, email);
@@ -481,8 +481,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (updateUser)");
 
             stmt = c.prepareStatement("""
-                    UPDATE UserManagement."User"
-                    SET FullName = ?, Email = ?, DateOfBirth = ?, Username = ?, \"Password\" = ?, AvatarPath = ?
+                    UPDATE "UserManagement"."User"
+                    SET "FullName" = ?, "Email" = ?, "DateOfBirth" = ?, "Username" = ?, \"Password\" = ?, "AvatarPath" = ?
                     WHERE \"Id\" = ?;
                     """);
 
@@ -516,7 +516,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (deleteUser)");
 
             stmt = c.prepareStatement("""
-                    DELETE FROM UserManagement."User" WHERE \"Id\" = ?;
+                    DELETE FROM "UserManagement"."User" WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
             stmt.executeUpdate();
@@ -546,7 +546,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertChannel)");
             stmt = c.prepareStatement("""
-                    INSERT INTO UserManagement."Channel"(\"Id\", CreatorId, Title, Description) 
+                    INSERT INTO "UserManagement"."Channel"(\"Id\", "CreatorId", "Title", "Description") 
                     VALUES (?, ?, ?, ?);
                     """);
 
@@ -579,7 +579,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM UserManagement."Channel";
+                    SELECT * FROM "UserManagement"."Channel";
                     """);
 
             channels = new ArrayList<>();
@@ -618,7 +618,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "CreatorId", "Title", "Description", "ProfilePath"
-                    FROM UserManagement."Channel" 
+                    FROM "UserManagement"."Channel" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -636,24 +636,28 @@ public class DatabaseManager {
             }
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(SubscriberId) AS SubscriberCount
-                    FROM UserManagement."Subscription"
-                    WHERE ChannelId = ?;
+                    SELECT COUNT("SubscriberId") AS "SubscriberCount"
+                    FROM "UserManagement"."Subscription"
+                    WHERE "ChannelId" = ?;
                     """);
 
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
-            channel.setSubscriberCount(rs.getInt("SubscriberCount"));
+            if (rs.next()) {
+                channel.setSubscriberCount(rs.getInt("SubscriberCount"));
+            }
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(VideoId) AS VideoCount
-                    FROM UserManagement.Video
-                    WHERE ChannelId = ?;
+                    SELECT COUNT("Id") AS "VideoCount"
+                    FROM "ContentManagement"."Video"
+                    WHERE "ChannelId" = ?;
                     """);
 
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
-            channel.setVideoCounts(rs.getInt("VideoCount"));
+            if (rs.next()) {
+                channel.setVideoCounts(rs.getInt("VideoCount"));
+            }
 
             rs.close();
             stmt.close();
@@ -679,7 +683,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectChannel)");
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement."Channel" 
+                    SELECT * FROM "UserManagement"."Channel" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -720,7 +724,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (updateChannel)");
 
             stmt = c.prepareStatement("""
-                    UPDATE UserManagement."Channel" SET CreatorId = ?, Title = ?, Description = ?, \"DateCreated\" = ?  
+                    UPDATE "UserManagement"."Channel" SET "CreatorId" = ?, "Title" = ?, "Description" = ?, \"DateCreated\" = ?  
                     WHERE \"Id\" = ?;
                     """);
 
@@ -752,7 +756,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (deleteChannel)");
 
             stmt = c.prepareStatement("""
-                    DELETE FROM UserManagement."Channel" 
+                    DELETE FROM "UserManagement"."Channel" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -785,7 +789,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (insertSubscription)");
 
             stmt = c.prepareStatement("""
-                    INSERT INTO UserManagement."Subscription"(SubscriberId, ChannelId) 
+                    INSERT INTO "UserManagement"."Subscription"("SubscriberId", "ChannelId") 
                     VALUES (?, ?);
                     """);
             stmt.setObject(1, subscription.getSubscriberId());
@@ -816,7 +820,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM UserManagement."Subscription";
+                    SELECT * FROM "UserManagement"."Subscription";
                     """);
 
             subscriptions = new ArrayList<>();
@@ -853,7 +857,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement."Subscription" WHERE SubscriberId = ?;
+                    SELECT * FROM "UserManagement"."Subscription" WHERE "SubscriberId" = ?;
                     """);
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -892,7 +896,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement."Subscription" WHERE "SubscriberId" = ? AND "ChannelId" = ? 
+                    SELECT * FROM "UserManagement"."Subscription" WHERE "SubscriberId" = ? AND "ChannelId" = ? 
                     """);
             stmt.setObject(1, subscriberId);
             stmt.setObject(2, channelId);
@@ -932,7 +936,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement."Subscription" WHERE "SubscriberId" = ? AND "ChannelId" = ? 
+                    SELECT * FROM "UserManagement"."Subscription" WHERE "SubscriberId" = ? AND "ChannelId" = ? 
                     """);
             stmt.setObject(1, subscriberId);
             stmt.setObject(2, channelId);
@@ -966,7 +970,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM UserManagement."Subscription" WHERE SubscriberId = ? AND ChannelId = ?;
+                    DELETE FROM "UserManagement"."Subscription" WHERE "SubscriberId" = ? AND "ChannelId" = ?;
                     """);
 
             stmt.setObject(1, SubscriberId);
@@ -1000,7 +1004,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""                 
-                    INSERT INTO UserManagement."Notification"(\"Id\", UserId, \"Message\", IsRead, DateSent) VALUES (?, ?, ?, ?, ?);
+                    INSERT INTO "UserManagement"."Notification"(\"Id\", "UserId", \"Message\", "IsRead", "DateSent") VALUES (?, ?, ?, ?, ?);
                     """);
 
             stmt.setObject(1, notification.getId());
@@ -1034,7 +1038,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM UserManagement."Notification"
+            SELECT * FROM "UserManagement"."Notification"
             """);
 
             notifications = new ArrayList<>();
@@ -1074,7 +1078,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement."Notification" WHERE UserId = ?;
+                    SELECT * FROM "UserManagement"."Notification" WHERE "UserId" = ?;
                     """);
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -1085,7 +1089,6 @@ public class DatabaseManager {
 
                 notification.setId(UUID.fromString(rs.getString("Id")));
                 notification.setUserId(UUID.fromString(rs.getString("UserId")));
-//                notification.setUser(selectUser(notification.getUserId()));
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("IsRead")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
@@ -1117,7 +1120,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM UserManagement."Notification" WHERE \"Id\" = ?
+                    SELECT * FROM "UserManagement"."Notification" WHERE \"Id\" = ?
                     """);
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
@@ -1126,7 +1129,6 @@ public class DatabaseManager {
             if (rs.next()) {
                 notification.setId(UUID.fromString(rs.getString("Id")));
                 notification.setUserId(UUID.fromString(rs.getString("UserId")));
-//                notification.setUser(selectUser(notification.getUserId()));
                 notification.setMessage(rs.getString("Message"));
                 notification.setRead(Boolean.getBoolean(rs.getString("IsRead")));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
@@ -1155,7 +1157,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    UPDATE UserManagement."Notification" SET IsRead = ?  
+                    UPDATE "UserManagement"."Notification" SET "IsRead" = ?  
                     WHERE \"Id\" = ?;
                     """);
             stmt.setBoolean(1, notification.isRead());
@@ -1183,7 +1185,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM UserManagement."Notification" 
+                    DELETE FROM "UserManagement"."Notification" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -1216,7 +1218,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."Category"(\"Id\", Title) 
+                    INSERT INTO "ContentManagement"."Category"(\"Id\", "Title") 
                     VALUES (?, ?);
                     """);
             stmt.setObject(1, category.getId());
@@ -1247,7 +1249,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM ContentManagement."Category";
+                    SELECT * FROM "ContentManagement"."Category";
                     """);
 
             categories = new ArrayList<>();
@@ -1284,7 +1286,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT * 
-                    FROM ContentManagement."Category" 
+                    FROM "ContentManagement"."Category" 
                     WHERE \"Id\" = ?
                     """);
 
@@ -1303,10 +1305,10 @@ public class DatabaseManager {
             stmt.close();
 
             stmt = c.prepareStatement("""
-                    SELECT vc.CategoryId,pd."VideoId, v.Title, v.Description, v.ChannelId , v."UploadDate" , v.ThumbnailPath 
-                    FROM ContentManagement."VideoCategory"" vc INNER JOIN ContentManagment.Video v 
-                    ON vc.VideoId = v."Id"
-                    WHERE pd.CategoryId = ? ;   
+                    SELECT vc."CategoryId",pd."VideoId, v."Title", v."Description", v."ChannelId" , v."UploadDate" , v."ThumbnailPath" 
+                    FROM "ContentManagement"."VideoCategory"" vc INNER JOIN ContentManagment."Video" v 
+                    ON vc."VideoId" = v."Id"
+                    WHERE pd."CategoryId" = ? ;   
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -1354,9 +1356,9 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT c."Id" , c."Title"
-                    FROM ContentManagement."Category" c INNER JOIN ContentManagement."VideoCategory" vc
+                    FROM "ContentManagement"."Category" c INNER JOIN "ContentManagement"."VideoCategory" vc
                     ON c."Id" = vc."CategoryId"
-                    WHERE vc."videoId" = ?;
+                    WHERE vc."VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             ResultSet rs = stmt.executeQuery();
@@ -1391,7 +1393,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    UPDATE ContentManagement."Category" SET Title = ? 
+                    UPDATE "ContentManagement"."Category" SET "Title" = ? 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setString(1, category.getTitle());
@@ -1419,7 +1421,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."Category" WHERE \"Id\" = ?;
+                    DELETE FROM "ContentManagement"."Category" WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
             stmt.executeUpdate();
@@ -1451,7 +1453,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT c."Id"\s
-                    FROM UserManagement."User" u INNER JOIN UserManagement."Channel" c
+                    FROM "UserManagement"."User" u INNER JOIN "UserManagement"."Channel" c
                     ON u."Id" = c."CreatorId"   
                     WHERE c."CreatorId" = ?;
                     """);
@@ -1463,7 +1465,7 @@ public class DatabaseManager {
             }
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."Video"(\"Id\", Title, Description, ChannelId , \"UploadDate\" , "Path" , "ThumbnailPath") 
+                    INSERT INTO "ContentManagement"."Video"(\"Id\", Title, Description, ChannelId , \"UploadDate\" , "Path" , "ThumbnailPath") 
                     VALUES (?, ?, ?, ?, ?, ?, ?);
                     """);
             stmt.setObject(1, video.getId());
@@ -1506,7 +1508,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                            SELECT * FROM ContentManagement."Video";
+                            SELECT * FROM "ContentManagement"."Video";
                             """);
 
             videos = new ArrayList<>();
@@ -1550,7 +1552,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT *  FROM ContentManagement."Video";
+                    SELECT *  FROM "ContentManagement"."Video";
                     """);
 
             videos = new ArrayList<>();
@@ -1593,7 +1595,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "Title" , "Id" , "UploadDate" , "ThumbnailPath" , "Description"   
-                    FROM ContentManagement."Video" 
+                    FROM "ContentManagement"."Video" 
                     WHERE \"ChannelId\" = ?;
                     """)
             ;
@@ -1642,7 +1644,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" , v."ChannelId"
-                    FROM ContentManagement."Video" v INNER JOIN UserManagement."Channel" c
+                    FROM "ContentManagement"."Video" v INNER JOIN "UserManagement"."Channel" c
                     ON v."ChannelId" = c."Id"
                     WHERE "CreatorId" = ?;
                     """);
@@ -1690,7 +1692,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" , v."ChannelId"
-                    FROM ContentManagement."Video" v INNER JOIN ContentManagement."VideoCategory" vc
+                    FROM "ContentManagement"."Video" v INNER JOIN "ContentManagement"."VideoCategory" vc
                     ON v."Id" = vc."VideoId"
                     WHERE vc."CategoryId" = ?;
                     """);
@@ -1738,7 +1740,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId"
-                    FROM ContentManagement."Video" v JOIN ContentManagement."UserVideo" uv
+                    FROM "ContentManagement"."Video" v JOIN "ContentManagement"."UserVideo" uv
                     ON v."Id" = uv."VideoId"
                     WHERE uv."UserId" = ? AND uv."Like" = true;
                     """);
@@ -1786,7 +1788,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId"
-                    FROM ContentManagement."Video" v JOIN ContentManagement."UserVideo" uv
+                    FROM "ContentManagement"."Video" v JOIN "ContentManagement"."UserVideo" uv
                     ON v."Id" = uv."VideoId"
                     WHERE uv."UserId" = ?;
                     """);
@@ -1834,7 +1836,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "Title" , "ChannelId" , "UploadDate" , "ThumbnailPath" , "Description" 
-                    FROM ContentManagement."Video" 
+                    FROM "ContentManagement"."Video" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -1875,7 +1877,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."Video" 
+                    SELECT * FROM "ContentManagement"."Video" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -1921,7 +1923,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    UPDATE ContentManagement."Video" SET Title = ?, Description = ? 
+                    UPDATE "ContentManagement"."Video" SET "Title" = ?, "Description" = ? 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setString(1, video.getTitle());
@@ -1940,8 +1942,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //    region [ - deleteVideo(UUID videoid) - ] YES
-    public void deleteVideo(UUID videoid) {
+    //    region [ - deleteVideo(UUID videoId) - ] YES
+    public void deleteVideo(UUID videoId) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -1950,18 +1952,18 @@ public class DatabaseManager {
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
 
-//            for (var comment : selectComments(videoid)) {
+//            for (var comment : selectComments(videoId)) {
 //                deleteComment(comment.getId());
 //            }
-            deletePlaylistDetail(videoid);
-            deleteVideoCategory(videoid);
-            deleteUserVideo(videoid);
+            deletePlaylistDetail(videoId);
+            deleteVideoCategory(videoId);
+            deleteUserVideo(videoId);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."Video" 
+                    DELETE FROM "ContentManagement"."Video" 
                     WHERE \"Id\" = ?;
                     """);
-            stmt.setObject(1, videoid);
+            stmt.setObject(1, videoId);
             stmt.executeUpdate();
 
             c.commit();
@@ -1991,7 +1993,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."VideoCategory"(VideoId, CategoryId) 
+                    INSERT INTO "ContentManagement"."VideoCategory"("VideoId", "CategoryId") 
                     VALUES (?, ?);
                     """);
             stmt.setObject(1, videoCategory.getVideoId());
@@ -2021,7 +2023,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM ContentManagement."VideoCategory";"
+            SELECT * FROM "ContentManagement"."VideoCategory";"
             """);
 
             videoCategories = new ArrayList<>();
@@ -2058,8 +2060,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."VideoCategory" 
-                    WHERE VideoId = ?;
+                    SELECT * FROM "ContentManagement"."VideoCategory" 
+                    WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             ResultSet rs = stmt.executeQuery();
@@ -2098,8 +2100,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."VideoCategory" 
-                    WHERE CategoryId = ?;
+                    SELECT * FROM "ContentManagement"."VideoCategory" 
+                    WHERE "CategoryId" = ?;
                     """);
             stmt.setObject(1, categoryId);
             ResultSet rs = stmt.executeQuery();
@@ -2136,7 +2138,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."VideoCategory" WHERE \"VideoId\" = ? AND \"CategoryId\" = ?;
+                    SELECT * FROM "ContentManagement"."VideoCategory" WHERE \"VideoId\" = ? AND \"CategoryId\" = ?;
                     """);
             stmt.setObject(1, videoId);
             stmt.setObject(2, categoryId);
@@ -2173,8 +2175,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (deleteVideoCategory)");
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."VideoCategory" 
-                    WHERE VideoId = ? AND CategoryId = ?;
+                    DELETE FROM "ContentManagement"."VideoCategory" 
+                    WHERE "VideoId" = ? AND "CategoryId" = ?;
                     """);
             stmt.setObject(1, videoId);
             stmt.setObject(2, categoryId);
@@ -2203,8 +2205,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."VideoCategory" 
-                    WHERE VideoId = ?;
+                    DELETE FROM "ContentManagement"."VideoCategory" 
+                    WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             stmt.executeUpdate();
@@ -2236,7 +2238,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."UserVideo"(VideoId, UserId , \"Like\") 
+                    INSERT INTO "ContentManagement"."UserVideo"("VideoId", "UserId" , \"Like\") 
                     VALUES (?, ?, ?);
                     """);
             stmt.setObject(1, userVideo.getVideoId());
@@ -2268,7 +2270,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM ContentManagement."UserVideo";
+            SELECT * FROM "ContentManagement"."UserVideo";
             """);
 
             userVideos = new ArrayList<>();
@@ -2309,8 +2311,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."UserVideo" 
-                    WHERE UserId = ?;
+                    SELECT * FROM "ContentManagement"."UserVideo" 
+                    WHERE "UserId" = ?;
                     """);
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -2325,7 +2327,6 @@ public class DatabaseManager {
                 userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
                 userVideo.setVideo(selectVideo(userVideo.getVideoId()));
-//                userVideo.setUser(selectUser(userVideo.getUserId()));
                 userVideos.add(userVideo);
             }
 
@@ -2353,8 +2354,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."UserVideo" 
-                    WHERE VideoId = ?;
+                    SELECT * FROM "ContentManagement"."UserVideo" 
+                    WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             ResultSet rs = stmt.executeQuery();
@@ -2397,8 +2398,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."UserVideo" 
-                    WHERE UserId = ? AND VideoId = ?;
+                    SELECT * FROM "ContentManagement"."UserVideo" 
+                    WHERE "UserId" = ? AND "VideoId" = ?;
                     """);
             stmt.setObject(1, userID);
             stmt.setObject(2, videoId);
@@ -2438,9 +2439,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS VideoLikes
-                    FROM ContentManagement."UserVideo"
-                    WHERE VideoId = ? AND \"Like\" = true;
+                    SELECT COUNT("UserId") AS "VideoLikes"
+                    FROM "ContentManagement"."UserVideo"
+                    WHERE "VideoId" = ? AND \"Like\" = true;
                     """);
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
@@ -2450,9 +2451,9 @@ public class DatabaseManager {
             }
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS VideoDislikes
-                    FROM ContentManagement."UserVideo"
-                    WHERE VideoId = ? AND \"Like\" = false;
+                    SELECT COUNT("UserId") AS "VideoDislikes"
+                    FROM "ContentManagement"."UserVideo"
+                    WHERE "VideoId" = ? AND \"Like\" = false;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -2485,9 +2486,9 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideoViewCount)");
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS VideoViewCount
-                    FROM ContentManagement."UserVideo"
-                    WHERE VideoId = ?;
+                    SELECT COUNT("UserId") AS "VideoViewCount"
+                    FROM "ContentManagement"."UserVideo"
+                    WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
@@ -2520,14 +2521,15 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."UserVideo" 
-                    WHERE UserId = ? AND VideoId = ?;
+                    SELECT * FROM "ContentManagement"."UserVideo" 
+                    WHERE "UserId" = ? AND "VideoId" = ?;
                     """);
             stmt.setObject(1, userID);
             stmt.setObject(2, videoId);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                userVideo = new UserVideo();
                 userVideo.setLike(rs.getBoolean("Like"));
                 if (rs.wasNull()) {
                     userVideo.setLike(null);
@@ -2559,9 +2561,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    UPDATE ContentManagement."UserVideo"
+                    UPDATE "ContentManagement"."UserVideo"
                     SET "Like" = ?
-                    WHERE UserId = ? AND VideoId = ?;
+                    WHERE "UserId" = ? AND "VideoId" = ?;
                     """);
             stmt.setObject(1, userVideo.getLike());
             stmt.setObject(2, userVideo.getUserId());
@@ -2591,8 +2593,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."UserVideo" 
-                    WHERE UserId = ? AND VideoId = ?;
+                    DELETE FROM "ContentManagement"."UserVideo" 
+                    WHERE "UserId" = ? AND "VideoId" = ?;
                     """);
             stmt.setObject(1, userId);
             stmt.setObject(2, videoId);
@@ -2621,8 +2623,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."UserVideo" 
-                    WHERE VideoId = ?;
+                    DELETE FROM "ContentManagement"."UserVideo" 
+                    WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             stmt.executeUpdate();
@@ -2654,7 +2656,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."Playlist"(\"Id\", Title, Description, CreatorId,IsPublic) 
+                    INSERT INTO "ContentManagement"."Playlist"(\"Id\", "Title", "Description", "CreatorId","IsPublic") 
                     VALUES (?, ?, ?, ?, ?);
                     """);
             stmt.setObject(1, playlist.getId());
@@ -2688,7 +2690,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM ContentManagement."Playlist";
+            SELECT * FROM "ContentManagement"."Playlist";
             """);
 
             playlists = new ArrayList<>();
@@ -2738,7 +2740,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT *
-                    FROM ContentManagement."Playlist" 
+                    FROM "ContentManagement"."Playlist" 
                     WHERE \"Id\" = ? ;
                     """);
             stmt.setObject(1, Id);
@@ -2750,7 +2752,6 @@ public class DatabaseManager {
                 playlist.setTitle(rs.getString("Title"));
                 playlist.setDescription(rs.getString("Description"));
                 playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-//                playlist.setCreator(selectUser(playlist.getCreatorId()));
                 playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
@@ -2763,10 +2764,10 @@ public class DatabaseManager {
             stmt.close();
 
             stmt = c.prepareStatement("""
-                    SELECT pd.PlaylistId, pd."VideoId", v.Title, v.Description, v.ChannelId , v."UploadDate" , v.ThumbnailPath 
-                    FROM ContentManagement."PlaylistDetail" pd
-                    INNER JOIN ContentManagement."Video" v ON pd.vIdeoId = v."Id"
-                    WHERE pd.PlaylistId = ? ;
+                    SELECT pd."PlaylistId", pd."VideoId", v."Title", v."Description", v."ChannelId" , v.""UploadDate"" , v."ThumbnailPath" 
+                    FROM "ContentManagement"."PlaylistDetail" pd
+                    INNER JOIN "ContentManagement"."Video" v ON pd."vIdeoId" = v."Id"
+                    WHERE pd."PlaylistId" = ? ;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -2818,7 +2819,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "Title" , "Description" , "CreatorId" , "ThumbnailPath"
-                    FROM ContentManagement."Playlist" 
+                    FROM "ContentManagement"."Playlist" 
                     WHERE \"Id\" = ? ;
                     """);
             stmt.setObject(1, Id);
@@ -2836,9 +2837,9 @@ public class DatabaseManager {
             }
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(VidoeId) AS Videos
-                    FROM ContentManagement."PlaylistDetail"
-                    WHERE PlaylistId = ?;
+                    SELECT COUNT("VidoeId") AS "Videos"
+                    FROM "ContentManagement"."PlaylistDetail"
+                    WHERE "PlaylistId" = ?;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -2869,8 +2870,8 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT "Title", "Description", "Id", "ThumbnailPath", 
-                           (SELECT COUNT(VideoId) FROM ContentManagement."PlaylistDetail" WHERE PlaylistId = p."Id") AS Videos
-                    FROM ContentManagement."Playlist" p
+                           (SELECT COUNT("VideoId") FROM "ContentManagement"."PlaylistDetail" WHERE "PlaylistId" = p."Id") AS "Videos"
+                    FROM "ContentManagement"."Playlist" p
                     WHERE "creatorid" = ?;
                     """);
             stmt.setObject(1, creatorId);
@@ -2912,7 +2913,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    UPDATE ContentManagement."Playlist" SET Title = ?, Description = ?, IsPublic = ? 
+                    UPDATE "ContentManagement"."Playlist" SET "Title" = ?, "Description" = ?, "IsPublic" = ? 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, playlist.getTitle());
@@ -2945,7 +2946,7 @@ public class DatabaseManager {
             deletePlaylistDetails(Id);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."Playlist" 
+                    DELETE FROM "ContentManagement"."Playlist" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -2978,7 +2979,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."PlaylistDetail"(PlaylistId, VideoId , SequenceNumber) 
+                    INSERT INTO "ContentManagement"."PlaylistDetail"("PlaylistId", "VideoId" , "SequenceNumber") 
                     VALUES (?, ?, ?);
                     """);
             stmt.setObject(1, playlistDetail.getPlaylistId());
@@ -3010,7 +3011,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM ContentManagement."PlaylistDetail";
+                    SELECT * FROM "ContentManagement"."PlaylistDetail";
                     """);
 
             playlistDetails = new ArrayList<>();
@@ -3052,8 +3053,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."PlaylistDetail" 
-                    WHERE PlayListId = ?;
+                    SELECT * FROM "ContentManagement"."PlaylistDetail" 
+                    WHERE "PlayListId" = ?;
                     """);
             stmt.setObject(1, playlistId);
             ResultSet rs = stmt.executeQuery();
@@ -3097,7 +3098,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."PlaylistDetail" 
+                    SELECT * FROM "ContentManagement"."PlaylistDetail" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id); // what is this
@@ -3137,8 +3138,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."PlaylistDetail" 
-                    WHERE PlaylistId = ? AND VideoId = ?;
+                    DELETE FROM "ContentManagement"."PlaylistDetail" 
+                    WHERE "PlaylistId" = ? AND "VideoId" = ?;
                     """);
             stmt.setObject(1, playlistId);
             stmt.setObject(2, videoId);
@@ -3167,7 +3168,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."PlaylistDetail" WHERE VideoId = ?;
+                    DELETE FROM "ContentManagement"."PlaylistDetail" WHERE VideoId = ?;
                     """);
             stmt.setObject(1, videoId);
             stmt.executeUpdate();
@@ -3195,8 +3196,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."PlaylistDetail" 
-                    WHERE PlaylistId = ?;
+                    DELETE FROM "ContentManagement"."PlaylistDetail" 
+                    WHERE "PlaylistId" = ?;
                     """);
             stmt.setObject(1, playlistId);
             stmt.executeUpdate();
@@ -3228,7 +3229,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."Comment"(\"Id\", \"Message\", VideoId, SenderId,ParentCommentId) 
+                    INSERT INTO "ContentManagement"."Comment"(\"Id\", \"Message\", "VideoId", "SenderId","ParentCommentId") 
                     VALUES (?, ?, ?, ?, ?);
                     """);
             stmt.setObject(1, comment.getId());
@@ -3262,7 +3263,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM ContentManagement."Comment";
+                    SELECT * FROM "ContentManagement"."Comment";
                     """);
 
             comments = new ArrayList<>();
@@ -3308,8 +3309,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."Comment" 
-                    WHERE VideoId = ?;
+                    SELECT * FROM "ContentManagement"."Comment" 
+                    WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             ResultSet rs = stmt.executeQuery();
@@ -3355,7 +3356,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."Comment" 
+                    SELECT * FROM "ContentManagement"."Comment" 
                     WHERE \"Id\" = ?
                     """);
             stmt.setObject(1, Id);
@@ -3376,18 +3377,18 @@ public class DatabaseManager {
             }
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS CommentLikeCount
-                    FROM ContentManagement."UserComment"
-                    WHERE CommentId = ? AND Like = true;
+                    SELECT COUNT("UserId") AS "CommentLikeCount"
+                    FROM "ContentManagement"."UserComment"
+                    WHERE "CommentId" = ? AND Like = true;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
             comment.setLikes(rs.getInt("CommentLikeCount"));
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS CommentDislikeCount
-                    FROM ContentManagement."UserComment"
-                    WHERE CommentId = ? AND Like = false;
+                    SELECT COUNT("UserId") AS "CommentDislikeCount"
+                    FROM "ContentManagement"."UserComment"
+                    WHERE "CommentId" = ? AND Like = false;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -3416,7 +3417,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    UPDATE ContentManagement."Comment" SET \"Message\" = ? 
+                    UPDATE "ContentManagement"."Comment" SET \"Message\" = ? 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setString(1, comment.getContent());
@@ -3447,7 +3448,7 @@ public class DatabaseManager {
             deleteUserComment(Id);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."Comment" 
+                    DELETE FROM "ContentManagement"."Comment" 
                     WHERE \"Id\" = ?;
                     """);
             stmt.setObject(1, Id);
@@ -3480,7 +3481,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement."UserComment"(UserId, CommentId , \"Like\") 
+                    INSERT INTO "ContentManagement"."UserComment"("UserId", "CommentId" , \"Like\") 
                     VALUES (?, ?, ?);
                     """);
 
@@ -3513,7 +3514,7 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM ContentManagement."UserComment";
+                    SELECT * FROM "ContentManagement"."UserComment";
                     """);
 
             userComments = new ArrayList<>();
@@ -3551,8 +3552,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."UserComment" 
-                    WHERE UserId = ?;
+                    SELECT * FROM "ContentManagement"."UserComment" 
+                    WHERE "UserId" = ?;
                     """);
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -3593,8 +3594,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."UserComment" 
-                    WHERE CommentId = ?;
+                    SELECT * FROM "ContentManagement"."UserComment" 
+                    WHERE "CommentId" = ?;
                     """);
             stmt.setObject(1, commentId);
             ResultSet rs = stmt.executeQuery();
@@ -3635,9 +3636,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS CommentLikes
-                    FROM ContentManagement."UserComment"
-                    WHERE CommentId = ? AND \"Like\" = true;
+                    SELECT COUNT("UserId") AS "CommentLikes"
+                    FROM "ContentManagement"."UserComment"
+                    WHERE "CommentId" = ? AND \"Like\" = true;
                     """);
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
@@ -3647,9 +3648,9 @@ public class DatabaseManager {
             }
 
             stmt = c.prepareStatement("""
-                    SELECT COUNT(UserId) AS CommentDislikes
-                    FROM ContentManagement."UserComment"
-                    WHERE CommentId = ? AND \"Like\" = false;
+                    SELECT COUNT("UserId") AS "CommentDislikes"
+                    FROM "ContentManagement"."UserComment"
+                    WHERE "CommentId" = ? AND \"Like\" = false;
                     """);
             stmt.setObject(1, Id);
             rs = stmt.executeQuery();
@@ -3682,8 +3683,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM ContentManagement."UserComment" 
-                    WHERE UserId = ? AND CommentId = ?;
+                    SELECT * FROM "ContentManagement"."UserComment" 
+                    WHERE "UserId" = ? AND "CommentId" = ?;
                     """);
             stmt.setObject(1, userID);
             stmt.setObject(2, commentID);
@@ -3719,9 +3720,9 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    UPDATE ContentManagement."UserComment"
+                    UPDATE "ContentManagement"."UserComment"
                     SET "Like" = ?
-                    WHERE UserId = ? AND CommentId = ?;
+                    WHERE "UserId" = ? AND "CommentId" = ?;
                     """);
             stmt.setObject(1, userComment.getLike());
             stmt.setObject(2, userComment.getUserId());
@@ -3752,8 +3753,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."UserComment" 
-                    WHERE UserId = ? AND CommentId = ?;
+                    DELETE FROM "ContentManagement"."UserComment" 
+                    WHERE "UserId" = ? AND "CommentId" = ?;
                     """);
             stmt.setObject(1, userId);
             stmt.setObject(2, commentID);
@@ -3782,8 +3783,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM ContentManagement."UserComment" 
-                    WHERE CommentId = ?;
+                    DELETE FROM "ContentManagement"."UserComment" 
+                    WHERE "CommentId" = ?;
                     """);
             stmt.setObject(1, commentId);
             stmt.executeUpdate();
