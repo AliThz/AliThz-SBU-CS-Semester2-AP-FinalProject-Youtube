@@ -25,6 +25,9 @@ public class VideoRecommendationController implements Initializable {
     private Button btnVideoPreviewOptions;
 
     @FXML
+    private HBox hbxVideoDetail;
+
+    @FXML
     private HBox hbxViewsAndDate;
 
     @FXML
@@ -55,11 +58,13 @@ public class VideoRecommendationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         btnVideoPreviewOptions.setOnAction(event -> {
             event.consume();
             save(event);
         });
+
+        hbxVideoDetail.prefWidthProperty().bind(vbxDetails.prefWidthProperty());
+
     }
 
     private void save(ActionEvent event) {
