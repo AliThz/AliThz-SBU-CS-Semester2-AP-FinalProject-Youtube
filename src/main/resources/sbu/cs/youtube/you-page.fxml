@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="vbxDashboard" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1800.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/you-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.YouPageController">
+<VBox fx:id="vbxDashboard" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1800.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/you-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.YouPageController">
    <children>
       <HBox fx:id="hbxUserDetails" prefHeight="0.0" prefWidth="828.0" spacing="20.0">
          <children>

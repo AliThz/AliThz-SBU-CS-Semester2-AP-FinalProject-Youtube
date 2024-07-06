@@ -119,11 +119,11 @@ public class LayoutController implements Initializable {
     protected void openSesame() {
         if (isExpanded) {
             vbxSideBar.getStylesheets().clear();
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/side-bar-collapsed-dark.css")).toExternalForm());
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/Dark/side-bar-collapsed.css")).toExternalForm());
             isExpanded = false;
         } else {
             vbxSideBar.getStylesheets().clear();
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/side-bar-expanded-dark.css")).toExternalForm());
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/Dark/side-bar-expanded.css")).toExternalForm());
             isExpanded = true;
         }
         setSideBarMenus();
