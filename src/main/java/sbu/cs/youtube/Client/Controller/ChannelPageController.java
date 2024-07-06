@@ -340,6 +340,7 @@ public class ChannelPageController implements Initializable {
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
         Button uploadButton = new Button("",imageView);
+        uploadButton.getStyleClass().add("btn-upload");
 
         grid.add(new Label("Full Name:"), 0, 0);
         grid.add(fullNameField, 1, 0);
