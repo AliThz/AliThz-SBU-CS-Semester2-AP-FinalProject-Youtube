@@ -1,6 +1,7 @@
 /* -------------------------------- Background -------------------------------- */
 .background {
     -fx-background-color : white;
+    -fx-border-width: 0px;
     -fx-border-color : white;
 }
 
