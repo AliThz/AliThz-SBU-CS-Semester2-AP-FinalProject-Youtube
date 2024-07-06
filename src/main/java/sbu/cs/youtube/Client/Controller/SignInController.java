@@ -25,6 +25,7 @@ import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,11 +69,14 @@ public class SignInController implements Initializable {
     //region [ - Methods - ]
 
     //region [ - initialize(URL location, ResourceBundle resources) - ]
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        inputField.setText("Ali_Thz");
+        passField.setText("Ali123456");
         inputError.getParent().setVisible(false);
         nextBtn.setOnAction(this::verifyCredentials);
+        vbxContainer.getStylesheets().clear();
+        vbxContainer.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/sign-in.css")).toExternalForm());
     }
     //endregion
 
@@ -142,10 +146,6 @@ public class SignInController implements Initializable {
 
         inputLog.setText("Invalid entry: please enter your username or password");
         return null;
-    }
-
-    private void openHomePage() {
-
     }
 
     //region [ - checkEmail(ActionEvent event) - ]

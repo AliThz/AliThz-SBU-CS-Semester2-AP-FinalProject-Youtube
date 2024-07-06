@@ -7,8 +7,9 @@
     -fx-background-radius : 20;
 }
 
-.menu-btn {
-    -fx-text-fill : white;
+.menu-guide {
+    -fx-text-fill: white;
+    -fx-fill: white;
 }
 
 /* -------------------------------- Google Logo -------------------------------- */
@@ -108,6 +109,10 @@
     -fx-fill : rgb(255,122,96);
     -fx-scale-x : 1;
     -fx-scale-y : 1;
+}
+
+.error-txt {
+    -fx-fill: rgb(255,122,96);
 }
 
 

@@ -1,6 +1,6 @@
 .background {
-    -fx-background-color : black;
-    -fx-border-color : black;
+    -fx-background-color: black;
+    -fx-border-color: black;
 }
 
 .text {
@@ -27,18 +27,53 @@
 }
 
 .svg {
-    -fx-fill: rgb(255,255,255);
+    -fx-fill: rgb(255, 255, 255);
 }
 
+/*--------------------------------------------------------------------------*/
+
+.dialog-pane {
+    -fx-background-color: rgb(0, 0, 0);
+}
+
+.dialog-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    /*-fx-background-color: #4CAF50;*/
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+}
+
+.dialog-content {
+    -fx-padding: 20px;
+}
+
+.text-field {
+    -fx-background-color: rgb(255, 255, 255);
+    /*-fx-border-color: #cccccc;*/
+    -fx-padding: 5px;
+}
+
+.label {
+    -fx-font-size: 14px;
+}
+
+.button-bar {
+    -fx-background-color: rgb(0, 0, 0);
+    -fx-padding: 10px;
+}
+
+/*--------------------------------------------------------------------------*/
+
 .tab-pane {
-    -fx-background-color: rgb(0,0,0);
-    -fx-border-color: rgb(0,0,0);
+    -fx-background-color: rgb(0, 0, 0);
+    -fx-border-color: rgb(0, 0, 0);
     -fx-padding: 5px;
 }
 
 .tab-pane .tab-header-area {
-    -fx-background-color: rgb(0,0,0);
-    -fx-border-color: rgb(0,0,0);
+    -fx-background-color: rgb(0, 0, 0);
+    -fx-border-color: rgb(0, 0, 0);
 }
 
 .tab-pane .tab-header-area .tab {
@@ -50,14 +85,14 @@
     -fx-padding: 0 0 0 10;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: rgb(0,0,0);
-    -fx-fill: rgb(0,0,0); /* Change this to your desired color */
+    -fx-text-fill: rgb(0, 0, 0);
+    -fx-fill: rgb(0, 0, 0); /* Change this to your desired color */
     /*-fx-background-color: rgb(0,0,0);*/
 }
 
 /* Change the background color of the tab header */
 .tab-pane .tab-header-background {
-    -fx-background-color: rgb(0,0,0); /* Change this to your desired color */
+    -fx-background-color: rgb(0, 0, 0); /* Change this to your desired color */
 }
 
 /*.tab-pane .tab-header-area {*/
@@ -65,8 +100,8 @@
 /*}*/
 /* Change the text color of all tab labels */
 .tab-pane .tab-header-area .tab .tab-label {
-    -fx-text-fill: rgb(255,255,255); /* Change this to your desired color */
-    -fx-fill: rgb(255,255,255); /* Change this to your desired color */
+    -fx-text-fill: rgb(255, 255, 255); /* Change this to your desired color */
+    -fx-fill: rgb(255, 255, 255); /* Change this to your desired color */
     -fx-background-color: transparent;
 
 

@@ -1,45 +1,46 @@
 /* -------------------------------- BackGround -------------------------------- */
 .background {
-    -fx-background-color : black;
+    -fx-background-color : white;
 }
 
 /* -------------------------------- Youtube Logo -------------------------------- */
 .youtube-svg {
-        -fx-fill : white;
-        -fx-scale-x : 1.2;
-        -fx-scale-y : 1.2;
+    -fx-fill : black;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
 }
 
 /* -------------------------------- Burger Button -------------------------------- */
 .burger-svg {
-    -fx-fill : white;
+    -fx-fill : black;
     -fx-scale-x : 1;
     -fx-scale-y : 1;
 }
 
 .burger-btn {
     -fx-background-color : transparent;
-    -fx-pref-width : 40px;
-    -fx-pref-height : 40px;
+    -fx-pref-width : 34px;
+    -fx-pref-height : 34px;
     -fx-background-radius : 100;
 }
 
 .burger-btn:hover {
-    -fx-background-color : rgb(33, 33, 33);
+    -fx-background-color : rgb(229, 229, 229);
 }
 
 .burger-btn:pressed {
-    -fx-background-color : rgb(41, 41, 41);
+    -fx-background-color : rgb(204, 204, 204);
 }
 
 /* -------------------------------- Search Bar -------------------------------- */
 .search-field {
     -fx-background-color : transparent;
-    -fx-text-fill : white;
+    -fx-text-fill : black;
+    -fx-prompt-text-fill: rgb(150,150,150);
 }
 
 .search-svg {
-    -fx-fill : white;
+    -fx-fill : black;
     -fx-scale-x : 1;
     -fx-scale-y : 1;
 }
@@ -61,12 +62,12 @@
 .search-bar {
     -fx-background-radius : 50;
     -fx-border-radius : 50;
-    -fx-border-color : rgb(33,33,33);
+    -fx-border-color : rgb(204,204,204);
     -fx-border-width : 2;
 }
 
 .search-bar:hover {
-    -fx-background-color : rgb(33,33,33);
+    -fx-background-color : rgb(204,204,204);
 }
 
 /* -------------------------------- SignIn Button -------------------------------- */
@@ -85,35 +86,35 @@
 .signIn-btn {
     -fx-background-color : transparent;
     -fx-background-radius : 50;
-    -fx-border-color : rgb(33, 33, 33);
+    -fx-border-color : rgb(204, 204, 204);
     -fx-background-radius : 50;
-    -fx-border-width : 3;
+    -fx-border-width : 1;
     -fx-border-radius : 50;
     -fx-pref-width: 89px;
     -fx-pref-height: 34px;
 }
 
 .signIn-btn:hover {
-    -fx-background-color : rgb(38, 56, 80);
-    -fx-border-color : rgb(38, 56, 80);
+    -fx-background-color : rgb(222,241,255);
+    -fx-border-color : rgb(222,241,255);
 
 }
 
 .signIn-btn:pressed {
-    -fx-background-color : rgb(50,50,60);
-    -fx-border-color : rgb(50,50,60);
+    -fx-background-color : rgb(229,229,229);
+    -fx-border-color : rgb(200,200,200);
 }
 
 /* -------------------------------- Create Button -------------------------------- */
 .create-svg {
-    -fx-fill : white;
+    -fx-fill : black;
     -fx-scale-x : 1;
     -fx-scale-y : 1;
 }
 
 /* -------------------------------- Notifications Button -------------------------------- */
 .notifications-svg {
-    -fx-fill : white;
+    -fx-fill : black;
     -fx-scale-x : 1;
     -fx-scale-y : 1;
 }
@@ -125,10 +126,10 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-color: transparent;
-    -fx-pref-width: 23px; /* Double the width to ensure a proper circle */
-    -fx-pref-height: 23px; /* Double the height to ensure a proper circle */
-    -fx-background-radius: 50; /* This makes the background circular */
-    -fx-border-radius: 50; /* Ensure border (if any) is also circular */
+    -fx-pref-width: 23px;
+    -fx-pref-height: 23px;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
 }
 
 /* -------------------------------- LoggedIn Button Group -------------------------------- */
@@ -140,11 +141,11 @@
 }
 
 .loggedIn-btn:hover {
-    -fx-background-color : rgb(33, 33, 33);
+    -fx-background-color : rgb(229, 229, 229);
 }
 
 .loggedIn-btn:pressed {
-    -fx-background-color : rgb(41, 41, 41);
+    -fx-background-color : rgb(204, 204, 204);
 }
 
 .modeSwitch {
@@ -157,5 +158,5 @@
 }
 
 .mode-svg {
-    -fx-fill: white;
+    -fx-fill: black;
 }

@@ -10,18 +10,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
@@ -31,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ChannelPageController implements Initializable {
@@ -41,6 +41,9 @@ public class ChannelPageController implements Initializable {
     private final Gson gson = new Gson();
     @FXML
     private HBox hbxChannelDetails;
+
+    @FXML
+    private HBox hbxButtons;
 
     @FXML
     private ImageView imgAvatar;
@@ -86,8 +89,14 @@ public class ChannelPageController implements Initializable {
 
     @FXML
     private VBox vbxChannelPage;
+
     @FXML
     private Button btnSub;
+
+    @FXML
+    private Button btnEditCredentials;
+
+    private Image avatar;
 
     //endregion
 
@@ -102,6 +111,11 @@ public class ChannelPageController implements Initializable {
         Response<Channel> videoResponse = gson.fromJson(response, responseTypeToken.getType());
         channel = videoResponse.getBody();
 
+        if (channel.getCreatorId().equals(YouTubeApplication.user.getId())) {
+            hbxButtons.getChildren().removeFirst();
+        } else {
+            hbxChannelDetails.getChildren().remove(1);
+        }
 
         new Thread(this::setChannel).start();
         new Thread(this::displayVideos).start();
@@ -119,7 +133,7 @@ public class ChannelPageController implements Initializable {
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
-        Image avatar = new Image(bis);
+        avatar = new Image(bis);
         imgAvatar.setImage(avatar);
     }
     //endregion
@@ -258,7 +272,7 @@ public class ChannelPageController implements Initializable {
 
     //region [ - updateSub(ActionEvent event) - ]
     @FXML
-    private void updateSub(ActionEvent event) {
+    private void updateSub() {
         SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
 
         Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "CheckSubscriptionExistence");
@@ -287,6 +301,74 @@ public class ChannelPageController implements Initializable {
         response = YouTubeApplication.receiveResponse();
         subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(subscriptionResponse.getMessage());
+    }
+    //endregion
+
+    //region [ - showDialog() - ]
+    @FXML
+    private void showDialog() {
+        // Sample user
+        User user = new User("Email", "Username", "Password");
+
+        // Create the custom dialog
+        Dialog<User> dialog = new Dialog<>();
+        dialog.setTitle("Update Your Information");
+        dialog.setHeaderText("Update Your Information");
+
+        // Apply CSS to the dialog
+        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/Dark/channel-page.css")).toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
+
+        // Set the button types
+        ButtonType updateButtonType = new ButtonType("Update", ButtonType.OK.getButtonData());
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+        // Create the labels and fields
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField fullNameField = new TextField();
+        fullNameField.setText(user.getUsername());
+        TextField usernameField = new TextField();
+        usernameField.setText(user.getUsername());
+        TextField emailField = new TextField();
+        emailField.setText(user.getEmail());
+        TextField passwordField = new TextField();
+        passwordField.setText(user.getEmail());
+        ImageView imageView =  new ImageView(avatar);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        Button uploadButton = new Button("",imageView);
+
+        grid.add(new Label("Full Name:"), 0, 0);
+        grid.add(fullNameField, 1, 0);
+        grid.add(new Label("Username:"), 0, 1);
+        grid.add(usernameField, 1, 1);
+        grid.add(new Label("Email:"), 0, 2);
+        grid.add(emailField, 1, 2);
+        grid.add(new Label("Password:"), 0, 3);
+        grid.add(passwordField, 1, 3);
+        grid.add(new Label("Avatar:"), 0, 4);
+        grid.add(uploadButton, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Convert the result to a user object when the update button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                return new User(emailField.getText(), usernameField.getText(), passwordField.getText());
+            }
+            return null;
+        });
+
+        // Show the dialog and update the user if the update button is clicked
+        dialog.showAndWait().ifPresent(updatedUser -> {
+            YouTubeApplication.user.setFullName(updatedUser.getFullName());
+            YouTubeApplication.user.setUsername(updatedUser.getUsername());
+            YouTubeApplication.user.setEmail(updatedUser.getEmail());
+            YouTubeApplication.user.setPassword(updatedUser.getPassword());
+        });
     }
     //endregion
 
