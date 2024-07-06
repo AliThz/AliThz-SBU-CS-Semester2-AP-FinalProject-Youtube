@@ -306,7 +306,5 @@ public class YouTubeApplication extends Application {
         String response = receiveResponse();
         System.out.println(response);
         launch();
-
-
     }
 }

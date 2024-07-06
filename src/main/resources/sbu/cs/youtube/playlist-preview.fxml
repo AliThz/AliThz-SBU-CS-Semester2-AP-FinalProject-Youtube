@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="vbxPlaylistPreview" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="352.0" spacing="5.0" styleClass="vbx-video-preview" stylesheets="@../../../Styles/playlist-preview.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.PlaylistPreviewController">
+<VBox fx:id="vbxPlaylistPreview" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="352.0" spacing="5.0" styleClass="vbx-video-preview" stylesheets="@../../../Styles/Dark/playlist-preview.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.PlaylistPreviewController">
    <children>
       <ImageView fx:id="imgThumbnail" fitHeight="160.0" fitWidth="262.0" pickOnBounds="true" preserveRatio="true" styleClass="img-thumbnail" VBox.vgrow="ALWAYS">
          <VBox.margin>

@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="701.0" styleClass="hbx-main" stylesheets="@../../../Styles/comment-dark.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.CommentPreviewController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="701.0" styleClass="hbx-main" stylesheets="@../../../Styles/Dark/comment.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.CommentPreviewController">
    <children>
       <ImageView fx:id="imgProfile" fitHeight="55.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
          <image>

@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -16,7 +17,7 @@
 
 <VBox fx:id="vbxLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.LayoutController">
    <children>
-      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="939.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/nav-bar-dark.css">
+      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="939.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/Dark/nav-bar.css">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="253.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
@@ -32,7 +33,7 @@
                         <SVGPath content="M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z" styleClass="burger-svg" />
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="134.0" style="-fx-background-color: transparent;">
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="105.0" style="-fx-background-color: transparent;">
                      <graphic>
                         <AnchorPane prefHeight="22.0" prefWidth="86.0">
                            <children>
@@ -94,6 +95,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
+            <ToggleButton mnemonicParsing="false" prefHeight="26.0" prefWidth="57.0" styleClass="modeSwitch" />
             <HBox fx:id="hbxRightNavItem" alignment="CENTER_RIGHT" prefHeight="82.0" prefWidth="244.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -104,7 +106,7 @@
          </padding></HBox>
       <HBox fx:id="hbxContent" prefHeight="467.0" prefWidth="939.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="vbxSideBar" prefHeight="458.0" prefWidth="76.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/side-bar-collapsed-dark.css">
+            <VBox fx:id="vbxSideBar" prefHeight="458.0" prefWidth="76.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/side-bar-collapsed.css">
                <children>
                   <Button mnemonicParsing="false" onAction="#setHomeSection" prefHeight="46.0" prefWidth="52.0" styleClass="side-btn">
                      <graphic>
@@ -183,12 +185,12 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            <Separator orientation="VERTICAL" prefHeight="466.0" prefWidth="0.0" styleClass="separator-vertical" stylesheets="@../../../Styles/side-bar-expanded-dark.css">
+            <Separator orientation="VERTICAL" prefHeight="466.0" prefWidth="0.0" styleClass="separator-vertical" stylesheets="@../../../Styles/Dark/side-bar-expanded.css">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </Separator>
-            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="466.0" prefWidth="718.0" stylesheets="@../../../Styles/home-section-dark.css" HBox.hgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="466.0" prefWidth="718.0" stylesheets="@../../../Styles/Dark/home-section.css" HBox.hgrow="ALWAYS">
                <content>
                   <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="850.0" styleClass="flwpane">
                      <children>

@@ -66,12 +66,32 @@ public class DatabaseManager {
 
 //        ------------ Category --------------------
 
-//        Category category = new Category("fun");
+//        Category category = new Category("Trending");
 //        insertCategory(category);
+//        category = new Category("Music");
+//        insertCategory(category);
+//        category = new Category("Movies & TV");
+//        insertCategory(category);
+//        category = new Category("Gaming");
+//        insertCategory(category);
+//        category = new Category("News");
+//        insertCategory(category);
+//        category = new Category("Sports");
+//        insertCategory(category);
+//        category = new Category("Learning");
+//        insertCategory(category);
+//        category = new Category("Fashion & Beauty");
+//        insertCategory(category);
+//        category = new Category("Trending");
+//        insertCategory(category);
+//        category = new Category("Podcasts");
+//        insertCategory(category);
+
 //        Category category1 = new Category("game");
 //        category1.setId(category.getId());
+
 //        updateCategory(category1);
-//        deleteCategory(category.getId());
+//        deleteCategory(category.getId());//
 
 //        ------------ Video --------------------
 //
@@ -1396,12 +1416,23 @@ public class DatabaseManager {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (insertVideo)");
 
+            stmt = c.prepareStatement("""
+                    SELECT c."Id"\s
+                    FROM UserManagement.User u INNER JOIN UserManagement.Channel c
+                    ON u."Id" = c."creatorid"   
+                    WHERE c."creatorid" = ?;
+                    """);
+            stmt.setObject(1, video.getChannel().getCreatorId());
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                video.setChannelId(UUID.fromString(rs.getString("channelId")));
+            }
 
             stmt = c.prepareStatement("""
-                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" , "Path" , "thumbnailPath") 
+                    INSERT INTO ContentManagement.Video(\"Id\", Title, Description, ChannelId , \"UploadDate\" , "Path" , "thumbnailpath") 
                     VALUES (?, ?, ?, ?, ?, ?, ?);
                     """);
-
             stmt.setObject(1, video.getId());
             stmt.setString(2, video.getTitle());
             stmt.setString(3, video.getDescription());
@@ -3709,7 +3740,7 @@ public class DatabaseManager {
     //region [ - Tools - ]
 
     //region [ - convertImageToByteArray(String imagePath, String type) - ]
-    private byte[] convertImageToByteArray(String imagePath, String type) {
+    private static byte[] convertImageToByteArray(String imagePath, String type) {
         String path;
         if (imagePath == null) {
             path = "src/main/resources/Images/Arcane2.jpg";
