@@ -701,6 +701,30 @@ public class DatabaseManager {
                 }
             }
 
+            stmt = c.prepareStatement("""
+                    SELECT COUNT("SubscriberId") AS "SubscriberCount"
+                    FROM "UserManagement"."Subscription"
+                    WHERE "ChannelId" = ?;
+                    """);
+
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                channel.setSubscriberCount(rs.getInt("SubscriberCount"));
+            }
+
+            stmt = c.prepareStatement("""
+                    SELECT COUNT("Id") AS "VideoCount"
+                    FROM "ContentManagement"."Video"
+                    WHERE "ChannelId" = ?;
+                    """);
+
+            stmt.setObject(1, Id);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                channel.setVideoCounts(rs.getInt("VideoCount"));
+            }
+
             rs.close();
             stmt.close();
             c.close();
@@ -2869,10 +2893,10 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT "Title", "Description", "Id", "ThumbnailPath", 
+                    SELECT p."Title", p."Description", p."Id", p."ThumbnailPath", 
                            (SELECT COUNT("VideoId") FROM "ContentManagement"."PlaylistDetail" WHERE "PlaylistId" = p."Id") AS "Videos"
                     FROM "ContentManagement"."Playlist" p
-                    WHERE "creatorid" = ?;
+                    WHERE p."CreatorId" = ?;
                     """);
             stmt.setObject(1, creatorId);
             ResultSet rs = stmt.executeQuery();
