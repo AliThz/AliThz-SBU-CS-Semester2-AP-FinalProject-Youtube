@@ -10,18 +10,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
@@ -41,6 +40,9 @@ public class ChannelPageController implements Initializable {
     private final Gson gson = new Gson();
     @FXML
     private HBox hbxChannelDetails;
+
+    @FXML
+    private HBox hbxButtons;
 
     @FXML
     private ImageView imgAvatar;
@@ -86,8 +88,12 @@ public class ChannelPageController implements Initializable {
 
     @FXML
     private VBox vbxChannelPage;
+
     @FXML
     private Button btnSub;
+
+    @FXML
+    private Button btnEditCredentials;
 
     //endregion
 
@@ -102,6 +108,13 @@ public class ChannelPageController implements Initializable {
         Response<Channel> videoResponse = gson.fromJson(response, responseTypeToken.getType());
         channel = videoResponse.getBody();
 
+        if (channel.getCreatorId().equals(YouTubeApplication.user.getId())) {
+            hbxChannelDetails.getChildren().remove(btnSub);
+//            btnSub.setVisible(false);
+        } else {
+            hbxChannelDetails.getChildren().remove(btnEditCredentials);
+//            btnEditCredentials.setVisible(false);
+        }
 
         new Thread(this::setChannel).start();
         new Thread(this::displayVideos).start();
@@ -287,6 +300,61 @@ public class ChannelPageController implements Initializable {
         response = YouTubeApplication.receiveResponse();
         subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(subscriptionResponse.getMessage());
+    }
+    //endregion
+
+    //region [ - showDialog() - ]
+    private void showDialog() {
+        // Sample user
+        User user = new User("Email", "Username", "Password");
+
+        // Create the custom dialog
+        Dialog<User> dialog = new Dialog<>();
+        dialog.setTitle("Update User Information");
+        dialog.setHeaderText("Update the details of the user");
+
+        // Set the button types
+        ButtonType updateButtonType = new ButtonType("Update", ButtonType.OK.getButtonData());
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+        // Create the labels and fields
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField nameField = new TextField();
+        nameField.setText(user.getUsername());
+        TextField emailField = new TextField();
+        emailField.setText(user.getEmail());
+        TextField passwordField = new TextField();
+        passwordField.setText(user.getEmail());
+
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("Email:"), 0, 1);
+        grid.add(emailField, 1, 1);
+        grid.add(new Label("Email:"), 0, 2);
+        grid.add(emailField, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Convert the result to a user object when the update button is clicked
+        dialog.setResultConverter(new Callback<ButtonType, User>() {
+            @Override
+            public User call(ButtonType dialogButton) {
+                if (dialogButton == updateButtonType) {
+                    return new User( emailField.getText(), nameField.getText(), passwordField.getText());
+                }
+                return null;
+            }
+        });
+
+        // Show the dialog and update the user if the update button is clicked
+        dialog.showAndWait().ifPresent(updatedUser -> {
+            user.setUsername(updatedUser.getUsername());
+            user.setEmail(updatedUser.getEmail());
+            System.out.println("Updated user: " + user.getUsername() + ", " + user.getEmail());
+        });
     }
     //endregion
 
