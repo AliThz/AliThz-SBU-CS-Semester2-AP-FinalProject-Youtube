@@ -74,14 +74,10 @@ public class SignInController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         inputError.getParent().setVisible(false);
         nextBtn.setOnAction(this::verifyCredentials);
-        setMode();
-    }
-    //endregion
-
-    private void setMode() {
         vbxContainer.getStylesheets().clear();
         vbxContainer.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/sign-in.css")).toExternalForm());
     }
+    //endregion
 
     //region [ - exitSignInSignUp(ActionEvent event) - ]
 

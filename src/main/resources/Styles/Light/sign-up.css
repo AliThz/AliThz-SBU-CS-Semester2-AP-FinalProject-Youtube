@@ -1,14 +1,15 @@
 .background {
-    -fx-background-color : rgb(33, 36, 40);
+    -fx-background-color : rgb(240,244,249);
 }
 
 .foreground {
-    -fx-background-color : rgb(18, 18, 18);
+    -fx-background-color : white;
     -fx-background-radius : 20;
 }
 
-.menu-btn {
-    -fx-text-fill : white;
+.menu-guide {
+    -fx-text-fill : black;
+    -fx-fill: black;
 }
 
 /* -------------------------------- Google Logo -------------------------------- */
@@ -36,29 +37,25 @@
 /* -------------------------------- Bottom Buttons -------------------------------- */
 .bottom-btn {
     -fx-background-color : transparent;
-    -fx-text-fill : white;
+    -fx-text-fill : black;
     -fx-background-radius : 30;
 }
 .bottom-btn:hover {
-    -fx-background-color : rgb(35, 39, 43);
+    -fx-background-color : rgb(225,229,234);
 }
 .bottom-btn:pressed {
-    -fx-background-color : rgb(37, 39, 43);
+    -fx-background-color : rgb(221,225,230);
 }
 
 /* -------------------------------- Input Field -------------------------------- */
 .input-field {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-background-color: transparent;
     -fx-background-radius: 3;
-    -fx-border-color: rgb(60,62,61);
+    -fx-border-color: rgb(116,119,117);
     -fx-border-radius: 3;
     -fx-pref-width : 304px;
     -fx-pref-height : 56px;
-}
-
-.input-field:hover {
-    -fx-background-color: rgb(41,41,41);
 }
 
 .input-field:focused {
@@ -71,17 +68,17 @@
 .signIn-btn {
     -fx-background-color : transparent;
     -fx-background-radius : 30;
-    -fx-text-fill : rgb(136,166,255);
+    -fx-text-fill : rgb(11,87,208);
     -fx-font-weight : bold;
     -fx-font-size : 13px;
 }
 
 .signIn-btn:hover {
-    -fx-background-color : rgb(17,20,25);
+    -fx-background-color : rgb(244,247,252);
 }
 
 .signIn-btn:pressed {
-    -fx-background-color : rgb(17,26,41);
+    -fx-background-color : rgb(214,227,247);
 }
 
 /* -------------------------------- Next Button -------------------------------- */
@@ -104,33 +101,34 @@
 
 /* -------------------------------- Log Section -------------------------------- */
 .error-svg {
-    -fx-fill : rgb(255,122,96);
+    -fx-fill : rgb(179,38,30);
     -fx-scale-x : 1;
     -fx-scale-y : 1;
 }
 
 .error-txt {
-    -fx-fill : rgb(255,122,96);
+    -fx-fill: rgb(179,38,30);
 }
+
 /* -------------------------------- Date Picker -------------------------------- */
 
 .date-picker {
-    -fx-background-color: rgb(18,18,18);
+    -fx-background-color: white;
     -fx-background-radius: 3;
-    -fx-text-fill: white;
-    -fx-border-color: rgb(60,62,61);
+    -fx-text-fill: black;
+    -fx-border-color: rgb(116,119,117);
     -fx-border-radius: 3;
 }
 
 .date-picker .text-field {
-    -fx-background-color: rgb(18,18,18);
+    -fx-background-color: white;
     -fx-font-size : 18;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
 .date-picker .arrow-button {
-    -fx-background-color: rgb(18,18,18);
-    -fx-border-color : rgb(60,62,61);
+    -fx-background-color: white;
+    -fx-border-color: rgb(116,119,117);
     -fx-border-radius: 3;
     -fx-padding: 5px;
     -fx-background-radius: 3px;
