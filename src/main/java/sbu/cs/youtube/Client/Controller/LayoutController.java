@@ -95,6 +95,10 @@ public class LayoutController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
+
+
         if (YouTubeApplication.user == null) {
             isSignedIn = false;
         } else {
@@ -128,11 +132,11 @@ public class LayoutController implements Initializable {
     protected void openSesame() {
         if (isExpanded) {
             vbxSideBar.getStylesheets().clear();
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/Dark/side-bar-collapsed.css")).toExternalForm());
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
             isExpanded = false;
         } else {
             vbxSideBar.getStylesheets().clear();
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/Dark/side-bar-expanded.css")).toExternalForm());
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-expanded.css")).toExternalForm());
             isExpanded = true;
         }
         setSideBarMenus();
@@ -577,7 +581,8 @@ public class LayoutController implements Initializable {
 
         hbxNavBar.getStylesheets().clear();
         hbxNavBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
-
+        scrollPane.getStylesheets().clear();
+        scrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/home-section.css")).toExternalForm());
 
     }
     //endregion
@@ -638,17 +643,13 @@ public class LayoutController implements Initializable {
     }
     //endregion
 
-    //region [ -  - ]
-    public boolean getIsExpanded() {
-        return isExpanded;
-    }
-    //endregion
-
+    //region [ - setDefaultSvgs() - ]
     private void setDefaultSvgs() {
         svgHome.setContent("m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z");
         svgSubs.setContent("M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z");
         svgYou.setContent("m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z");
     }
+    //endregion
 
 
     //endregion

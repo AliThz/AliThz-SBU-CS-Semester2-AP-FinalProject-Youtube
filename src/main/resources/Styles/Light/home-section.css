@@ -1,0 +1,82 @@
+/* -------------------------------- Background -------------------------------- */
+.background {
+    -fx-background-color : white;
+    -fx-border-color : white;
+}
+
+/* -------------------------------- Scroll Pane -------------------------------- */
+.scroll-pane {
+    -fx-background-color: white;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-pref-width: 15;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgb(204, 204, 204);
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .increment-button {
+    -fx-background-color: black;
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+
+.scroll-bar .decrement-button {
+    -fx-background-color: black;
+    -fx-shape: "M 0 4 L 4 0 L 8 4 Z";
+}
+
+.scroll-bar .increment-arrow {
+    -fx-background-color: black;
+}
+
+.scroll-bar .decrement-arrow {
+    -fx-background-color: black;
+}
+
+.flwpane {
+    -fx-background-color : white;
+    -fx-border-color : white;
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-hgap: 50;
+    -fx-vgap: 30;
+}
+
+.btn-video {
+    -fx-background-color: white;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
+
+.btn-video:hover {
+    -fx-background-color : rgb(229,229,229);
+}
+
+.btn-video:pressed {
+    -fx-background-color: rgb(204,204,204);
+}
+
+.vbx-welcome {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: rgb(204,204,204);
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+}
+
+.lbl-welcome {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.lbl-guide {
+    -fx-text-fill: rgb(100,100,100);
+}
+
+
