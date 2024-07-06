@@ -37,6 +37,9 @@ public class LayoutController implements Initializable {
     protected boolean isDarkMode = true;
 
     @FXML
+    protected HBox hbxNavBar;
+
+    @FXML
     protected HBox searchHbx;
 
     @FXML
@@ -77,6 +80,12 @@ public class LayoutController implements Initializable {
 
     @FXML
     protected FlowPane flowPane;
+
+    @FXML
+    protected SVGPath modeSvg;
+
+    @FXML
+    protected ToggleButton btnMode;
 
     //endregion
 
@@ -421,6 +430,7 @@ public class LayoutController implements Initializable {
             signInSvg.setContent("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 1c4.96 0 9 4.04 9 9 0 1.42-.34 2.76-.93 3.96-1.53-1.72-3.98-2.89-7.38-3.03A3.996 3.996 0 0016 9c0-2.21-1.79-4-4-4S8 6.79 8 9c0 1.97 1.43 3.6 3.31 3.93-3.4.14-5.85 1.31-7.38 3.03C3.34 14.76 3 13.42 3 12c0-4.96 4.04-9 9-9zM9 9c0-1.65 1.35-3 3-3s3 1.35 3 3-1.35 3-3 3-3-1.35-3-3zm3 12c-3.16 0-5.94-1.64-7.55-4.12C6.01 14.93 8.61 13.9 12 13.9c3.39 0 5.99 1.03 7.55 2.98C17.94 19.36 15.16 21 12 21z");
             Label signInLbl = new Label();
             HBox signInHbx = new HBox();
+            signInHbx.setAlignment(Pos.CENTER);
 
             signInBtn.getStyleClass().add("signIn-btn");
             signInSvg.getStyleClass().add("signIn-svg");
@@ -550,6 +560,26 @@ public class LayoutController implements Initializable {
         setDefaultSvgs();
     }
 
+    //endregion
+
+    //region [ - changeMode(ActionEvent event) - ]
+    @FXML
+    protected void changeMode(ActionEvent event) {
+        if (btnMode.isSelected()) {
+            modeSvg.setContent("M12 22C10.93 22 9.86998 21.83 8.83998 21.48L7.41998 21.01L8.83998 20.54C12.53 19.31 15 15.88 15 12C15 8.12 12.53 4.69 8.83998 3.47L7.41998 2.99L8.83998 2.52C9.86998 2.17 10.93 2 12 2C17.51 2 22 6.49 22 12C22 17.51 17.51 22 12 22ZM10.58 20.89C11.05 20.96 11.53 21 12 21C16.96 21 21 16.96 21 12C21 7.04 16.96 3 12 3C11.53 3 11.05 3.04 10.58 3.11C13.88 4.81 16 8.21 16 12C16 15.79 13.88 19.19 10.58 20.89Z");
+            YouTubeApplication.theme = "Light";
+        }
+
+        else {
+            modeSvg.setContent("M10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-15a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM1 9h2a1 1 0 1 1 0 2H1a1 1 0 0 1 0-2zm16 0h2a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2zm.071-6.071a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM5.757 14.243a1 1 0 0 1 0 1.414L4.343 17.07a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM4.343 2.929l1.414 1.414a1 1 0 0 1-1.414 1.414L2.93 4.343A1 1 0 0 1 4.343 2.93zm11.314 11.314l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 1 1 1.414-1.414z");
+            YouTubeApplication.theme = "Dark";
+        }
+
+        hbxNavBar.getStylesheets().clear();
+        hbxNavBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
+
+
+    }
     //endregion
 
     //region [ - getCreatePage(ActionEvent event) - ]

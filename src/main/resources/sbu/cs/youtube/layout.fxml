@@ -15,13 +15,13 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbxLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.LayoutController">
+<VBox fx:id="vbxLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" styleClass="background" stylesheets="@../../../Styles/Dark/nav-bar.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.LayoutController">
    <children>
-      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="939.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/Dark/nav-bar.css">
+      <HBox fx:id="hbxNavBar" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="939.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/Dark/nav-bar.css">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="253.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="btnBurger" mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
+                  <Button fx:id="btnBurger" mnemonicParsing="false" onAction="#openSesame" prefHeight="34.0" prefWidth="27.0" styleClass="burger-btn">
                      <tooltip>
                         <Tooltip text="Expand">
                            <font>
@@ -95,7 +95,10 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
-            <ToggleButton mnemonicParsing="false" prefHeight="26.0" prefWidth="57.0" styleClass="modeSwitch" />
+            <ToggleButton fx:id="btnMode" mnemonicParsing="false" onAction="#changeMode" prefHeight="34.0" prefWidth="34.0" styleClass="modeSwitch">
+               <graphic>
+                  <SVGPath fx:id="modeSvg" content="M10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-15a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM1 9h2a1 1 0 1 1 0 2H1a1 1 0 0 1 0-2zm16 0h2a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2zm.071-6.071a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM5.757 14.243a1 1 0 0 1 0 1.414L4.343 17.07a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM4.343 2.929l1.414 1.414a1 1 0 0 1-1.414 1.414L2.93 4.343A1 1 0 0 1 4.343 2.93zm11.314 11.314l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 1 1 1.414-1.414z" fill="WHITE" styleClass="mode-svg" />
+               </graphic></ToggleButton>
             <HBox fx:id="hbxRightNavItem" alignment="CENTER_RIGHT" prefHeight="82.0" prefWidth="244.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

@@ -27,6 +27,7 @@ public class YouTubeApplication extends Application {
 
     public static Socket socket;
     public static User user;
+    public static String theme;
     private static BufferedReader bufferedReader;
     private static BufferedWriter bufferedWriter;
 
@@ -35,6 +36,7 @@ public class YouTubeApplication extends Application {
     }
 
     public YouTubeApplication(Socket socket){
+        YouTubeApplication.theme = "Dark";
         try {
             YouTubeApplication.socket = socket;
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
