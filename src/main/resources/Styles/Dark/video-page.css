@@ -190,7 +190,9 @@
 }
 
 .btn-speed {
+    -fx-background-color: black;
     -fx-border-width: 1;
     -fx-border-color: white;
     -fx-border-radius: 5;
+    -fx-text-fill: white;
 }
