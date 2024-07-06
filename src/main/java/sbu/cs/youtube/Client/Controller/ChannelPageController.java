@@ -19,12 +19,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sbu.cs.youtube.Shared.POJO.Channel;
-import sbu.cs.youtube.Shared.POJO.Playlist;
-import sbu.cs.youtube.Shared.POJO.User;
-import sbu.cs.youtube.Shared.POJO.Video;
+import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
@@ -88,6 +86,8 @@ public class ChannelPageController implements Initializable {
 
     @FXML
     private VBox vbxChannelPage;
+    @FXML
+    private Button btnSub;
 
     //endregion
 
@@ -252,6 +252,41 @@ public class ChannelPageController implements Initializable {
         scene = new Scene(root, vbxChannelPage.getScene().getWidth(), vbxChannelPage.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
+    }
+    //endregion
+
+
+    //region [ - updateSub(ActionEvent event) - ]
+    @FXML
+    private void updateSub(ActionEvent event) {
+        SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
+
+        Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "CheckSubscriptionExistence");
+        subscriptionRequest.send(new Subscription(YouTubeApplication.user.getId(), channel.getId()));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<Subscription>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Subscription> subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
+        Subscription subscription = subscriptionResponse.getBody();
+
+        if (subscription != null) {
+            svgPath.setContent("m3.85 3.15-.7.7 3.48 3.48C6.22 8.21 6 9.22 6 10.32v5.15l-2 1.88V19h14.29l1.85 1.85.71-.71-17-16.99zM5 18v-.23l2-1.88v-5.47c0-.85.15-1.62.41-2.3L17.29 18H5zm5 2h4c0 1.1-.9 2-2 2s-2-.9-2-2zM9.28 5.75l-.7-.7c.43-.29.9-.54 1.42-.7v-.39c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v4.14l-1-1v-3.05c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03-.27.11-.51.24-.75.4z");
+            btnSub.setText("Unsubscribed");
+            Request<Subscription> unsubRequest = new Request<>(YouTubeApplication.socket, "Unsubscribe");
+            unsubRequest.send(new Subscription(YouTubeApplication.user.getId(), channel.getId()));
+
+        } else {
+            svgPath.setContent("M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z");
+            btnSub.setText("Subscribed");
+            Request<Subscription> subRequest = new Request<>(YouTubeApplication.socket, "Subscribe");
+            subRequest.send(new Subscription(YouTubeApplication.user.getId(), channel.getId()));
+        }
+
+        response = YouTubeApplication.receiveResponse();
+        subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
+        System.out.println(subscriptionResponse.getMessage());
     }
     //endregion
 

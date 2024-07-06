@@ -83,9 +83,6 @@ public class VideoPageController implements Initializable {
     private Button btnBack;
 
     @FXML
-    private Button btnPause;
-
-    @FXML
     private Button btnPlayPause;
 
     @FXML
