@@ -1,14 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sbu.cs.youtube.Client.Controller.ChannelPageController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<VBox fx:id="vbxChannelPage" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/channel-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.ChannelPageController">
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <children>
+      <HBox fx:id="hbxChannelDetails" alignment="CENTER_LEFT" prefHeight="131.0" prefWidth="906.0" spacing="20.0">
+         <children>
+            <ImageView fx:id="imgAvatar" fitHeight="110.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+               <image>
+                  <Image url="@../../../Images/SrgtSajjad.jpg" />
+               </image>
+            </ImageView>
+            <VBox fx:id="vbxChannelDetails" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="677.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Text fx:id="txtChannelTitle" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Title">
+                     <font>
+                        <Font name="System Bold" size="25.0" />
+                     </font>
+                  </Text>
+                  <HBox prefHeight="14.0" prefWidth="678.0" spacing="5.0">
+                     <children>
+                        <Text fx:id="txtUsername" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="\@Userame" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="•" />
+                        <Text fx:id="txtSubscribersCount" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="Subscribers" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="•" />
+                        <Text fx:id="txtVideosCount" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="Videos" />
+                     </children>
+                  </HBox>
+                  <Text fx:id="txtChannelDescription" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Description">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="7.0" />
+                     </VBox.margin>
+                  </Text>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+          <Tab fx:id="tabVideo" closable="false" text="Video">
+               <content>
+                  <ScrollPane fx:id="scrlpnVideo" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="0.0" prefWidth="807.0" vbarPolicy="NEVER">
+                     <content>
+                        <TilePane fx:id="tilePaneVideo" hgap="10.0" prefHeight="250.0" prefWidth="806.0" styleClass="background" vgap="10.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                           </padding></TilePane>
+                     </content>
+                  </ScrollPane>
+               </content>
+          </Tab>
+          <Tab fx:id="tabPlaylist" closable="false" text="Playlist">
+               <content>
+                  <ScrollPane fx:id="scrlpnPlaylist" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="0.0" prefWidth="807.0" vbarPolicy="NEVER">
+                     <content>
+                        <TilePane fx:id="tilePanePlaylist" hgap="10.0" prefHeight="229.0" prefWidth="806.0" styleClass="background" vgap="10.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                           </padding></TilePane>
+                     </content>
+                  </ScrollPane>
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>
