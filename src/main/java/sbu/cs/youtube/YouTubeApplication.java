@@ -300,13 +300,10 @@ public class YouTubeApplication extends Application {
 //        launch();
         //        ------------------------- Select VidoeCategories Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<Category> userRequest = new Request<>(socket, "GetVideoCategories");
-        Category category = new Category();
-        category.setId(UUID.fromString("a6592c17-0cef-4fa3-a0ae-9fc1844d1971"));
-        userRequest.send(category);
+        Request<Playlist> playlistRequest = new Request<>(socket, "CreatPlaylist");
+        Playlist playlist = new Playlist("My favorite videos" , "vayyy ashegh video hamam" , UUID.fromString("75d0f9e8-cad4-48f4-8947-9d8486d4d991") , false);
+        playlistRequest.send(playlist);
         YouTubeApplication client = new YouTubeApplication(socket);
-        String response = receiveResponse();
-        System.out.println(response);
-        launch();
+        receiveResponse();
     }
 }

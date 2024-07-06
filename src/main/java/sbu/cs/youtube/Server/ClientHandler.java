@@ -178,6 +178,12 @@ public class ClientHandler implements Runnable {
             case "GetVideoCategories":
                 getVideoCategories();
                 break;
+            case "ChangeUserInfo":
+                changeUserInfo();
+                break;
+            case "CreatPlaylist":
+                creatPlaylist();
+                break;
 
         }
     }
@@ -734,6 +740,35 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
+    //region [ - changeUserInfo() - ]
+    public void changeUserInfo() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        User user = userRequest.getBody();
+
+        databaseManager.updateUser(user);
+
+        Response<User> response;
+        response = new Response<>(client, userRequest.getType(), true, "User Info Changed ");
+        response.send();
+    }
+    //endregion
+
+    //region [ - creatPlaylist() - ]
+    private void creatPlaylist() {
+        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Playlist> response;
+
+        Playlist playlist = playlistRequest.getBody();
+
+        databaseManager.insertPlaylist(playlist);
+        response = new Response<>(client, playlistRequest.getType(), true, "Playlist created successfully");
+        response.send();
+    }
+    //endregion
 
     //endregion
 
