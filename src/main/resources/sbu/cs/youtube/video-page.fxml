@@ -23,7 +23,7 @@
          <children>
             <VBox fx:id="vbxLeft" prefHeight="386.0" prefWidth="850.0" styleClass="left-vbox" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox fx:id="hbxControls" alignment="CENTER" prefHeight="22.0" prefWidth="578.0" style="-fx-alignment: center;">
+                  <HBox fx:id="hbxControls" alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="807.0">
                      <children>
                         <Button fx:id="btnBack" mnemonicParsing="false" style="-fx-fill: white;">
                            <graphic>
