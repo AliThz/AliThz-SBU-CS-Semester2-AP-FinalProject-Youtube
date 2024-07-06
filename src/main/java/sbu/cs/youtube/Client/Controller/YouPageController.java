@@ -193,6 +193,7 @@ public class YouPageController implements Initializable {
 
         ArrayList<Video> videos = videoResponse.getBody();
         videos.sort(Comparator.comparing(d -> LocalDateTime.parse(d.getUploadDate())));
+        Collections.reverse(videos);
         Platform.runLater(() -> {
             if (videos != null) {
                 for (var v : videos) {

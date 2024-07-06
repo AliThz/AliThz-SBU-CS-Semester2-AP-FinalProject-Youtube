@@ -10,7 +10,7 @@ public class Video {
     private transient String thumbnailPath ;
     private byte[] thumbnailBytes;
     private transient String path;
-    private byte[] videoBytes ;
+    private byte[] videoBytes;
     private String description;
     private Channel channel;
     private UUID channelId;

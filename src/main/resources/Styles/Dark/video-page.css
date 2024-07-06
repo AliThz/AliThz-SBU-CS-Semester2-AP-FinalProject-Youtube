@@ -41,6 +41,41 @@
     -fx-border-width: 1;
 }
 
+/*--------------------------------------------------------------------------*/
+
+.dialog-pane {
+    -fx-background-color: #f0f0f0;
+}
+
+.dialog-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+}
+
+.dialog-content {
+    -fx-padding: 20px;
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 5px;
+}
+
+.label {
+    -fx-font-size: 14px;
+}
+
+.button-bar {
+    -fx-background-color: #e0e0e0;
+    -fx-padding: 10px;
+}
+
+/*--------------------------------------------------------------------------*/
+
 .button-like {
     -fx-background-color: rgb(33, 33, 33);
     -fx-background-radius: 20 0 0 20;

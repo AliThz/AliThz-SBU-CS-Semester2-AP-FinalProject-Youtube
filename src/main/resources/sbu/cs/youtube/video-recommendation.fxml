@@ -17,9 +17,9 @@
             <Image url="@../../../Images/Thumbnail.jpg" />
          </image>
       </ImageView>
-      <VBox fx:id="vbxDetails" alignment="CENTER" prefHeight="107.0" prefWidth="200.0">
+      <VBox fx:id="vbxDetails" alignment="CENTER" prefHeight="107.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
          <children>
-            <HBox prefHeight="70.0" prefWidth="174.0" VBox.vgrow="ALWAYS">
+            <HBox fx:id="hbxVideoDetail" prefHeight="70.0" prefWidth="174.0" VBox.vgrow="ALWAYS">
                <children>
                   <VBox alignment="CENTER_LEFT" prefHeight="89.0" prefWidth="176.0" spacing="5.0">
                      <children>

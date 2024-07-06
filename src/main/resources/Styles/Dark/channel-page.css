@@ -1,0 +1,85 @@
+.background {
+    -fx-background-color : black;
+    -fx-border-color : black;
+}
+
+.text {
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-fill: rgb(255, 255, 255);
+    /*-fx-text-fill: rgb(0, 0, 0);*/
+    /*-fx-fill: rgb(0, 0, 0);*/
+}
+
+.text-detail {
+    -fx-text-fill: rgb(200, 200, 200);
+    -fx-fill: rgb(200, 200, 200);
+}
+
+.btn-video {
+    -fx-background-color: black;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
+
+.button-subscription {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 20;
+}
+
+.svg {
+    -fx-fill: rgb(255,255,255);
+}
+
+.tab-pane {
+    -fx-background-color: rgb(0,0,0);
+    -fx-border-color: rgb(0,0,0);
+    -fx-padding: 5px;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: rgb(0,0,0);
+    -fx-border-color: rgb(0,0,0);
+}
+
+.tab-pane .tab-header-area .tab {
+    -fx-background-color: transparent;
+    /*-fx-background-color: rgb(0,0,0);*/
+}
+
+.tab {
+    -fx-padding: 0 0 0 10;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgb(0,0,0);
+    -fx-fill: rgb(0,0,0); /* Change this to your desired color */
+    /*-fx-background-color: rgb(0,0,0);*/
+}
+
+/* Change the background color of the tab header */
+.tab-pane .tab-header-background {
+    -fx-background-color: rgb(0,0,0); /* Change this to your desired color */
+}
+
+/*.tab-pane .tab-header-area {*/
+/*    -fx-text-fill: #336699; !* Change this to your desired color *!*/
+/*}*/
+/* Change the text color of all tab labels */
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-text-fill: rgb(255,255,255); /* Change this to your desired color */
+    -fx-fill: rgb(255,255,255); /* Change this to your desired color */
+    -fx-background-color: transparent;
+
+
+}
+
+/*!* Optionally, change the text color of the selected tab label *!*/
+/*.tab-pane .tab-header-area .tab:selected .tab-label {*/
+/*    -fx-text-fill: #ff0000; !* Change this to your desired color *!*/
+/*    !*-fx-background-color: rgb(0,0,0);*!*/
+
+/*}*/
+
+/*.tab-pane .tab-header-area .tab-label {*/
+/*    -fx-text-fill: #336699; !* Change the text color to ensure visibility *!*/
+/*}*/
+

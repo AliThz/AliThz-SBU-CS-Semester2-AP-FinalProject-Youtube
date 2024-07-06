@@ -666,7 +666,7 @@ public class ClientHandler implements Runnable {
         Response<Video> response;
 
         Video video = videoRequest.getBody();
-        String videoPath = "/Videos/" + video.getFileName() ;
+        String videoPath = "/Videos/" + video.getFileName();
         try (FileOutputStream fos = new FileOutputStream("src/main/resources" + videoPath)) {
             video.setPath(videoPath);
             fos.write(video.getVideoBytes());
