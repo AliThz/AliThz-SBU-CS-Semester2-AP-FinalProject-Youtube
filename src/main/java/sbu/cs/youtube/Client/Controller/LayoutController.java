@@ -579,10 +579,20 @@ public class LayoutController implements Initializable {
             YouTubeApplication.theme = "Dark";
         }
 
-        hbxNavBar.getStylesheets().clear();
-        hbxNavBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
+        vbxLayout.getStylesheets().clear();
+        vbxLayout.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
         scrollPane.getStylesheets().clear();
         scrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/home-section.css")).toExternalForm());
+        Separator separator = (Separator) hbxContent.getChildren().get(1);
+        separator.getStylesheets().clear();
+        separator.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
+        vbxSideBar.getStylesheets().clear();
+        if (!isExpanded) {
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
+        }
+        else {
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-expanded.css")).toExternalForm());
+        }
 
     }
     //endregion
