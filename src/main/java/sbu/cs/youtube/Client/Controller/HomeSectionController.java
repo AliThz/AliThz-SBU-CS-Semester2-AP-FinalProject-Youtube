@@ -80,6 +80,7 @@ public class HomeSectionController implements Initializable {
 //                videoPreview.prefWidthProperty().bind(mainPane.widthProperty().divide(6));
 //                videoPreview.prefHeightProperty().bind(mainPane.heightProperty().divide(6));
                 VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                videoPreviewController.setParentController(layoutController);
                 if (videoPreviewController != null) {
                     videoPreviewController.setVideo(video);
                 }

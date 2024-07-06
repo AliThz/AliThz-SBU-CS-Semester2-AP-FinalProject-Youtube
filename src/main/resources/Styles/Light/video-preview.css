@@ -1,6 +1,6 @@
 .vbx-video-preview {
     -fx-alignment : top-center;
-    -fx-background-color : black;
+    -fx-background-color : white;
     -fx-padding: 0;
     -fx-pref-width: 260;
     -fx-pref-height: 240;
@@ -26,22 +26,22 @@
 }
 
 .add-btn:hover {
-    -fx-background-color : rgb(33, 33, 33);
+    -fx-background-color : rgb(229, 229, 229);
 }
 .add-btn:pressed {
-    -fx-background-color : rgb(41, 41, 41);
+    -fx-background-color : rgb(204, 204, 204);
 }
 
 .btn-video {
-    -fx-background-color: black;
+    -fx-background-color: white;
     -fx-padding: 6;
     -fx-background-radius: 5;
 }
 
 .text {
-    -fx-text-fill: rgb(255,255,255);
+    -fx-fill: black;
 }
 
 .add-svg {
-    -fx-fill: white;
+    -fx-fill: black;
 }

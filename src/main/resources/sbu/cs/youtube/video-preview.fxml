@@ -41,7 +41,7 @@
                         <Insets bottom="3.0" />
                      </VBox.margin>
                   </Text>
-                  <Button fx:id="btnChannelName" mnemonicParsing="false" prefHeight="14.0" prefWidth="94.0" style="-fx-background-color: transparent;" styleClass="text" text="Channel Name">
+                  <Button fx:id="btnChannelName" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" style="-fx-background-color: transparent;" styleClass="text" text="Channel Name" wrapText="true">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Button>
@@ -77,7 +77,7 @@
             </VBox>
             <Button fx:id="btnVideoPreviewOptions" mnemonicParsing="false" prefHeight="31.0" prefWidth="19.0" styleClass="add-btn" textFill="WHITE" HBox.hgrow="ALWAYS">
                <graphic>
-                  <SVGPath fx:id="svgpthVideoPreviewOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" />
+                  <SVGPath fx:id="svgpthVideoPreviewOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" styleClass="add-svg" />
                </graphic>
                <HBox.margin>
                   <Insets right="-5.0" top="-2.0" />

@@ -1,6 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -125,7 +126,7 @@ public class VideoPreviewController implements Initializable {
         btnChannelName.setText(video.getChannel().getTitle());
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth());
-        txtViews.setText(String.valueOf(video.getViewcount()));
+        txtViews.setText(video.getViewcount() + " views");
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(video.getThumbnailBytes());
@@ -137,6 +138,18 @@ public class VideoPreviewController implements Initializable {
         imgChannelProfile.setImage(channelProfile);
     }
     //endregion
+
+    public void setParentController(LayoutController layoutController) {
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            vbxVideoPreview.getStylesheets().clear();
+            vbxVideoPreview.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-preview.css")).toExternalForm());
+        });
+    }
 
     //endregion
 
