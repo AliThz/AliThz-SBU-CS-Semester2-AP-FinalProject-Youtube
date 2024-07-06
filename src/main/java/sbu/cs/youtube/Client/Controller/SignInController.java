@@ -68,9 +68,10 @@ public class SignInController implements Initializable {
     //region [ - Methods - ]
 
     //region [ - initialize(URL location, ResourceBundle resources) - ]
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        inputField.setText("Ali_Thz");
+        passField.setText("Ali123456");
         inputError.getParent().setVisible(false);
         nextBtn.setOnAction(this::verifyCredentials);
     }

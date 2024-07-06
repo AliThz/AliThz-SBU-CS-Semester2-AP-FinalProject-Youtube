@@ -216,9 +216,8 @@ public class VideoPageController implements Initializable {
 
         //endregion
 
-        if (video.getChannel().getId().equals(YouTubeApplication.user.getId())) {
-            vbxVideoDetails.getChildren().remove(btnSub);
-//            btnSub.setVisible(false);
+        if (video.getChannel().getCreatorId().equals(YouTubeApplication.user.getId())) {
+            btnSub.setVisible(false);
         }
 
         setVideo();
@@ -228,6 +227,41 @@ public class VideoPageController implements Initializable {
 //        displayRecommendedVideos();
         new Thread(this::displayComments).start();
 //        displayComments();
+    }
+    //endregion
+
+    //region [ - setLikeCount() - ]
+    private void setLikeCount() {
+        Gson gson = new Gson();
+        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoLikesStatus");
+        videoRequest.send(new Video(video.getId()));
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+        video = videoResponse.getBody();
+
+        Platform.runLater(() -> {
+            txtViews.setText(String.valueOf(video.getViewcount()));
+            txtLikes.setText(String.valueOf(video.getLikes()));
+        });
+    }
+    //endregion
+
+    //region [ - setViewCount() - ]
+    private void setViewCount() {
+        Gson gson = new Gson();
+        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoViewCount");
+        videoRequest.send(new Video(video.getId()));
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+        video = videoResponse.getBody();
+
+        Platform.runLater(() -> {
+            txtViews.setText(String.valueOf(video.getViewcount()));
+        });
     }
     //endregion
 

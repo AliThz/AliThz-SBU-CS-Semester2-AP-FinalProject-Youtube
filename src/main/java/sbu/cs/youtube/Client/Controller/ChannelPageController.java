@@ -30,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ChannelPageController implements Initializable {
@@ -95,6 +96,8 @@ public class ChannelPageController implements Initializable {
     @FXML
     private Button btnEditCredentials;
 
+    private Image avatar;
+
     //endregion
 
     //region [ - Methods - ]
@@ -109,11 +112,9 @@ public class ChannelPageController implements Initializable {
         channel = videoResponse.getBody();
 
         if (channel.getCreatorId().equals(YouTubeApplication.user.getId())) {
-            hbxChannelDetails.getChildren().remove(btnSub);
-//            btnSub.setVisible(false);
+            hbxButtons.getChildren().removeFirst();
         } else {
-            hbxChannelDetails.getChildren().remove(btnEditCredentials);
-//            btnEditCredentials.setVisible(false);
+            hbxChannelDetails.getChildren().remove(1);
         }
 
         new Thread(this::setChannel).start();
@@ -132,7 +133,7 @@ public class ChannelPageController implements Initializable {
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
-        Image avatar = new Image(bis);
+        avatar = new Image(bis);
         imgAvatar.setImage(avatar);
     }
     //endregion
@@ -304,14 +305,19 @@ public class ChannelPageController implements Initializable {
     //endregion
 
     //region [ - showDialog() - ]
+    @FXML
     private void showDialog() {
         // Sample user
         User user = new User("Email", "Username", "Password");
 
         // Create the custom dialog
         Dialog<User> dialog = new Dialog<>();
-        dialog.setTitle("Update User Information");
-        dialog.setHeaderText("Update the details of the user");
+        dialog.setTitle("Update Your Information");
+        dialog.setHeaderText("Update Your Information");
+
+        // Apply CSS to the dialog
+        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/Dark/channel-page.css")).toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
 
         // Set the button types
         ButtonType updateButtonType = new ButtonType("Update", ButtonType.OK.getButtonData());
@@ -322,38 +328,46 @@ public class ChannelPageController implements Initializable {
         grid.setHgap(10);
         grid.setVgap(10);
 
-        TextField nameField = new TextField();
-        nameField.setText(user.getUsername());
+        TextField fullNameField = new TextField();
+        fullNameField.setText(user.getUsername());
+        TextField usernameField = new TextField();
+        usernameField.setText(user.getUsername());
         TextField emailField = new TextField();
         emailField.setText(user.getEmail());
         TextField passwordField = new TextField();
         passwordField.setText(user.getEmail());
+        ImageView imageView =  new ImageView(avatar);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        Button uploadButton = new Button("",imageView);
 
-        grid.add(new Label("Name:"), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label("Email:"), 0, 1);
-        grid.add(emailField, 1, 1);
+        grid.add(new Label("Full Name:"), 0, 0);
+        grid.add(fullNameField, 1, 0);
+        grid.add(new Label("Username:"), 0, 1);
+        grid.add(usernameField, 1, 1);
         grid.add(new Label("Email:"), 0, 2);
         grid.add(emailField, 1, 2);
+        grid.add(new Label("Password:"), 0, 3);
+        grid.add(passwordField, 1, 3);
+        grid.add(new Label("Avatar:"), 0, 4);
+        grid.add(uploadButton, 1, 4);
 
         dialog.getDialogPane().setContent(grid);
 
         // Convert the result to a user object when the update button is clicked
-        dialog.setResultConverter(new Callback<ButtonType, User>() {
-            @Override
-            public User call(ButtonType dialogButton) {
-                if (dialogButton == updateButtonType) {
-                    return new User( emailField.getText(), nameField.getText(), passwordField.getText());
-                }
-                return null;
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                return new User(emailField.getText(), usernameField.getText(), passwordField.getText());
             }
+            return null;
         });
 
         // Show the dialog and update the user if the update button is clicked
         dialog.showAndWait().ifPresent(updatedUser -> {
-            user.setUsername(updatedUser.getUsername());
-            user.setEmail(updatedUser.getEmail());
-            System.out.println("Updated user: " + user.getUsername() + ", " + user.getEmail());
+            YouTubeApplication.user.setFullName(updatedUser.getFullName());
+            YouTubeApplication.user.setUsername(updatedUser.getUsername());
+            YouTubeApplication.user.setEmail(updatedUser.getEmail());
+            YouTubeApplication.user.setPassword(updatedUser.getPassword());
         });
     }
     //endregion
