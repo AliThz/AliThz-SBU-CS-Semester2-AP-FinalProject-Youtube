@@ -8,7 +8,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -146,12 +148,17 @@ public class VideoPageController implements Initializable {
     @FXML
     private SVGPath svgDislike;
 
-    Boolean hasLiked = null;
+    private Boolean hasLiked = null;
 
-    MediaPlayer mediaPlayer;
-    MediaView mediaView;
+    private MediaPlayer mediaPlayer;
 
-    Slider volumeSlider;
+    private MediaView mediaView;
+
+    private Slider volumeSlider;
+
+    private VBox videoStuff;
+
+    private StackPane videoStack;
 
 
     //endregion
@@ -299,7 +306,7 @@ public class VideoPageController implements Initializable {
         }
 
         // Create a Media object from the temporary file
-        Media media = new Media(tempFile.toURI().toString());
+        media = new Media(tempFile.toURI().toString());
 
         //region [ - Without Thread - ]
 //         mediaPlayer = new MediaPlayer(media);
@@ -317,7 +324,9 @@ public class VideoPageController implements Initializable {
             mediaView.setPreserveRatio(true);
             mediaView.setSmooth(true);
             mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
-            vbxLeft.getChildren().addFirst(mediaView);
+            videoStack = new StackPane();
+            videoStack.getChildren().add(mediaView);
+            vbxLeft.getChildren().addFirst(videoStack);
             mediaPlayer.play();
 
             setPlaybackButtons();
@@ -455,11 +464,6 @@ public class VideoPageController implements Initializable {
         btnVolume.setOnAction(this::volumeOff);
 
         Slider timeSlider = new Slider(0, 100, 0);
-        timeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty());
-        timeSlider.prefHeightProperty().bind(mediaView.fitHeightProperty());
-        timeSlider.getStyleClass().add("timeSlider");
-
-
 
         volumeSlider = new Slider(0, 100, 100);
         volumeSlider.setOrientation(Orientation.HORIZONTAL);
@@ -472,7 +476,13 @@ public class VideoPageController implements Initializable {
             mediaPlayer.setVolume(newValue.doubleValue()/100);
         });
         volumeSlider.getStyleClass().add("volumeSlider");
-        volumeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty().divide(3));
+        volumeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty().divide(12));
+
+
+
+        timeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty());
+        timeSlider.prefHeightProperty().bind(mediaView.fitHeightProperty());
+        timeSlider.getStyleClass().add("timeSlider");
 
         // Create a ProgressBar
         ProgressBar progressBar = new ProgressBar(0);
@@ -500,8 +510,50 @@ public class VideoPageController implements Initializable {
             }
         });
 
+        Label currentTimeLabel = new Label("00:00");
+        Label totalTimeLabel = new Label("00:00");
+
+        mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+            if (!timeSlider.isValueChanging()) {
+                timeSlider.setValue(newTime.toSeconds() / media.getDuration().toSeconds() * 100);
+            }
+            currentTimeLabel.setText(formatTime(newTime));
+        });
+
+        mediaPlayer.setOnReady(() -> {
+            Duration total = media.getDuration();
+            totalTimeLabel.setText(formatTime(total));
+        });
+
+        Button btnIncreaseSpeed = new Button("1.0x");
+        btnIncreaseSpeed.getStyleClass().add("btn-speed");
+        btnIncreaseSpeed.setOnAction(event -> {
+            double currentRate = mediaPlayer.getRate();
+            mediaPlayer.setRate(currentRate + 0.5);
+            if (mediaPlayer.getRate() > 2)
+                mediaPlayer.setRate(0.5);
+            btnIncreaseSpeed.setText(String.valueOf(mediaPlayer.getRate()) + "x");
+        });
+
         hbxControls.getChildren().add(4, volumeSlider);
-        hbxControls.getChildren().add(stackPane);
+        HBox.setMargin(volumeSlider, new Insets(0, 10, 0, 0));
+        hbxControls.getChildren().addAll(currentTimeLabel, new Label(" / "), totalTimeLabel, new HBox(), btnIncreaseSpeed);
+        HBox.setHgrow(hbxControls.getChildren().get(8), Priority.ALWAYS);
+        videoStuff = new VBox(stackPane, hbxControls);
+        videoStuff.setAlignment(Pos.BOTTOM_CENTER);
+        videoStack.getChildren().add(videoStuff);
+        videoStack.setAlignment(Pos.CENTER);
+        videoStuff.setVisible(false);
+
+        videoStack.setOnMouseEntered(event -> {
+            videoStuff.setVisible(true);
+        });
+
+        videoStack.setOnMouseExited(event -> {
+            videoStuff.setVisible(false);
+        });
+
+
         mediaPlayer.play();
 
     }
@@ -734,6 +786,12 @@ public class VideoPageController implements Initializable {
         displayComments();
     }
     //endregion
+
+    private String formatTime(Duration time) {
+        int minutes = (int) time.toMinutes();
+        int seconds = (int) time.toSeconds() % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
 
     //endregion
 
