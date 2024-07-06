@@ -216,6 +216,11 @@ public class VideoPageController implements Initializable {
 
         //endregion
 
+        if (video.getChannel().getId().equals(YouTubeApplication.user.getId())) {
+            vbxVideoDetails.getChildren().remove(btnSub);
+//            btnSub.setVisible(false);
+        }
+
         setVideo();
         new Thread(this::displayMedia).start();
 //        setPlaybackButtons();
