@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -150,6 +151,8 @@ public class VideoPageController implements Initializable {
     MediaPlayer mediaPlayer;
     MediaView mediaView;
 
+    Slider volumeSlider;
+
 
     //endregion
 
@@ -227,6 +230,11 @@ public class VideoPageController implements Initializable {
 //        displayRecommendedVideos();
         new Thread(this::displayComments).start();
 //        displayComments();
+
+
+
+
+
     }
     //endregion
 
@@ -446,14 +454,25 @@ public class VideoPageController implements Initializable {
         btnNext.setOnAction(this::next);
         btnVolume.setOnAction(this::volumeOff);
 
-        Slider timeSlider = new Slider();
+        Slider timeSlider = new Slider(0, 100, 0);
         timeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty());
         timeSlider.prefHeightProperty().bind(mediaView.fitHeightProperty());
-        timeSlider.setMin(0);
-        timeSlider.setMax(100);
-        timeSlider.setValue(0);
         timeSlider.getStyleClass().add("timeSlider");
 
+
+
+        volumeSlider = new Slider(0, 100, 100);
+        volumeSlider.setOrientation(Orientation.HORIZONTAL);
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue()/100==0) {
+                volumeOff(new ActionEvent());
+            }
+            else
+                volumeOn(new ActionEvent());
+            mediaPlayer.setVolume(newValue.doubleValue()/100);
+        });
+        volumeSlider.getStyleClass().add("volumeSlider");
+        volumeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty().divide(3));
 
         // Create a ProgressBar
         ProgressBar progressBar = new ProgressBar(0);
@@ -481,7 +500,7 @@ public class VideoPageController implements Initializable {
             }
         });
 
-
+        hbxControls.getChildren().add(4, volumeSlider);
         hbxControls.getChildren().add(stackPane);
         mediaPlayer.play();
 
@@ -500,7 +519,10 @@ public class VideoPageController implements Initializable {
     //region [ - volumeOn(ActionEvent event) - ]
     private void volumeOn(ActionEvent event) {
         btnVolume.setOnAction(this::volumeOff);
-        mediaPlayer.setVolume(100);
+        if (volumeSlider.getValue() == 0) {
+            volumeSlider.setValue(20);
+        }
+        mediaPlayer.setVolume(volumeSlider.getValue()/100);
         SVGPath svgPath = (SVGPath) btnVolume.getChildrenUnmodifiable().getFirst();
         svgPath.setContent("M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z");
     }

@@ -110,6 +110,16 @@
     -fx-background-color: rgb(33, 33, 33);
 }
 
+.volumeSlider {
+    -fx-background-color: transparent;
+}
+.volumeSlider .track {
+    -fx-background-color: rgb(204,204,204);
+}
+.volumeSlider .thumb {
+    -fx-background-color: white;
+}
+
 .stack-pane {
     -fx-alignment: center;
 }

@@ -71,8 +71,8 @@ public class SignInController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        inputField.setText("Ali_Thz");
-        passField.setText("Ali123456");
+        inputField.setText("sajjad");
+        passField.setText("12345678");
         inputError.getParent().setVisible(false);
         nextBtn.setOnAction(this::verifyCredentials);
         vbxContainer.getStylesheets().clear();
