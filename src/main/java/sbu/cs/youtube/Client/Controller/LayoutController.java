@@ -19,6 +19,8 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import sbu.cs.youtube.Shared.POJO.Channel;
+import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
@@ -573,6 +575,24 @@ public class LayoutController implements Initializable {
 
     protected void getDashboard(ActionEvent event) {
         setDefaultSvgs();
+
+//        Request<Channel> videoRequest = new Request<>(YouTubeApplication.socket, "GetChannel");
+//        videoRequest.send(new Channel(video.getChannelId()));
+//
+//        Stage stage;
+//        Scene scene;
+//        Parent root;
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+//        try {
+//            root = loader.load();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+//        stage.setScene(scene);
+//        stage.show();
+
     }
 
     //endregion

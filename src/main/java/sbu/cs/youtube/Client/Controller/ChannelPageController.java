@@ -115,6 +115,7 @@ public class ChannelPageController implements Initializable {
             hbxButtons.getChildren().removeFirst();
         } else {
             hbxButtons.getChildren().remove(1);
+            hbxButtons.getChildren().remove(2);
         }
 
         new Thread(this::setChannel).start();
@@ -122,6 +123,24 @@ public class ChannelPageController implements Initializable {
         new Thread(this::displayPlaylists).start();
     }
     //endregion
+
+    @FXML
+    private void logOut(ActionEvent event) {
+        YouTubeApplication.user = null;
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/home-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
     //region [ - setChannel() - ]
     private void setChannel() {
