@@ -718,7 +718,7 @@ public class DatabaseManager {
 
             // Get channel details
             stmt = c.prepareStatement("""
-            SELECT c."Id", c."CreatorId", c."Title", c."Description", c."DateCreated",
+            SELECT c."Id", c."CreatorId", c."Title", c."Description", c."DateCreated", c."ProfilePath" , 
                 (SELECT COUNT("SubscriberId") FROM "UserManagement"."Subscription" WHERE "ChannelId" = c."Id") AS "SubscriberCount",
                 (SELECT COUNT("Id") FROM "ContentManagement"."Video" WHERE "ChannelId" = c."Id") AS "VideoCount"
             FROM "UserManagement"."Channel" c
@@ -738,6 +738,8 @@ public class DatabaseManager {
                     Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                     channel.setDateCreated(timestamp.toLocalDateTime().toString());
                 }
+                channel.setProfilePath(rs.getString("ProfilePath"));
+                channel.setProfileBytes(convertImageToByteArray(channel.getProfilePath()));
                 channel.setSubscriberCount(rs.getInt("SubscriberCount"));
                 channel.setVideoCounts(rs.getInt("VideoCount"));
             }
@@ -1893,10 +1895,11 @@ public class DatabaseManager {
             stmt = c.prepareStatement("""
             SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId" ,
                 (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" uvv WHERE uvv."VideoId" = v."Id") AS "VideoViewCount"
-            FROM "ContentManagement"."Video" v JOIN "ConntManagemetent"."UserVideo" uv
+            FROM "ContentManagement"."Video" v JOIN "ContentManagement"."UserVideo" uv
             ON v."Id" = uv."VideoId"
             WHERE uv."UserId" = ? ;
                     """);
+
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
 
