@@ -29,18 +29,11 @@
 }
 
 .txt-like-count {
-    -fx-text-fill: rgb(160,160,160);
+    -fx-fill: rgb(160,160,160);
 }
 
 .txt-comment {
     -fx-fill: white;
-}
-
-.btn-reply {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-color: transparent;
-    -fx-background-radius: 20;
 }
 
 .btn-reply:hover {
@@ -50,25 +43,4 @@
 .btn-reply:pressed {
     -fx-background-color: rgb(41,41,41);
 }
-
-.btn-replies {
-    -fx-text-fill: rgb(62,166,255);
-    -fx-background-color: transparent;
-    -fx-background-radius: 100;
-    -fx-font-weight: bold;
-}
-
-.btn-replies:hover {
-    -fx-background-color: rgb(14,78,181);
-}
-
-.btn-replies:pressed {
-    -fx-background-color: rgb(18,70,151);
-}
-
-.svg-replies {
-    -fx-fill: rgb(62,166,255);
-}
-
-
 

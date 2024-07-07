@@ -161,7 +161,7 @@
 
 
 .field-comment {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent rgb(242, 242, 242) transparent;
     -fx-border-width: 0 0 1 0;
