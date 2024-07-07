@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -218,7 +220,7 @@ public class VideoPageController implements Initializable {
 
         //region [ - Check Video View API  - ]
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "CheckViewVideoExistence");
-        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId() , video.getId()));
+        userVideoRequest.send(new UserVideo(YouTubeApplication.user.getId(), video.getId()));
 
         response = YouTubeApplication.receiveResponse();
         TypeToken<Response<UserVideo>> viewResponseTypeToken = new TypeToken<>() {
@@ -227,8 +229,7 @@ public class VideoPageController implements Initializable {
         UserVideo userVideo = userVideoResponse.getBody();
         System.out.println(userVideoResponse.getMessage());
 
-        if (userVideo != null)
-            hasLiked = userVideo.getLike();
+        if (userVideo != null) hasLiked = userVideo.getLike();
 
         //todo set subscribe
 
@@ -297,8 +298,7 @@ public class VideoPageController implements Initializable {
             tempFile.deleteOnExit();
 
             // Write the byte array to the temporary file
-            try (FileOutputStream fos = new FileOutputStream(tempFile);
-                 ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
+            try (FileOutputStream fos = new FileOutputStream(tempFile); ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = bais.read(buffer)) != -1) {
@@ -336,6 +336,14 @@ public class VideoPageController implements Initializable {
             mediaPlayer.play();
 
             setPlaybackButtons();
+
+            mediaView.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene == null) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.stop();
+                    }
+                }
+            });
         });
     }
     //endregion
@@ -478,16 +486,13 @@ public class VideoPageController implements Initializable {
         volumeSlider = new Slider(0, 100, 100);
         volumeSlider.setOrientation(Orientation.HORIZONTAL);
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.doubleValue()/100==0) {
+            if (newValue.doubleValue() / 100 == 0) {
                 volumeOff(new ActionEvent());
-            }
-            else
-                volumeOn(new ActionEvent());
-            mediaPlayer.setVolume(newValue.doubleValue()/100);
+            } else volumeOn(new ActionEvent());
+            mediaPlayer.setVolume(newValue.doubleValue() / 100);
         });
         volumeSlider.getStyleClass().add("volumeSlider");
         volumeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty().divide(12));
-
 
 
         timeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty());
@@ -540,8 +545,7 @@ public class VideoPageController implements Initializable {
         btnIncreaseSpeed.setOnAction(event -> {
             double currentRate = mediaPlayer.getRate();
             mediaPlayer.setRate(currentRate + 0.5);
-            if (mediaPlayer.getRate() > 2)
-                mediaPlayer.setRate(0.5);
+            if (mediaPlayer.getRate() > 2) mediaPlayer.setRate(0.5);
             btnIncreaseSpeed.setText(mediaPlayer.getRate() + "x");
         });
 
@@ -570,9 +574,7 @@ public class VideoPageController implements Initializable {
                 if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
                     mediaPlayer.pause();
 //                    pause(new ActionEvent());
-                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED ||
-                        mediaPlayer.getStatus() == MediaPlayer.Status.READY ||
-                        mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
+                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED || mediaPlayer.getStatus() == MediaPlayer.Status.READY || mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
                     mediaPlayer.play();
                 }
             }
@@ -598,7 +600,7 @@ public class VideoPageController implements Initializable {
         if (volumeSlider.getValue() == 0) {
             volumeSlider.setValue(20);
         }
-        mediaPlayer.setVolume(volumeSlider.getValue()/100);
+        mediaPlayer.setVolume(volumeSlider.getValue() / 100);
         SVGPath svgPath = (SVGPath) btnVolume.getChildrenUnmodifiable().getFirst();
         svgPath.setContent("M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z");
     }
@@ -823,7 +825,7 @@ public class VideoPageController implements Initializable {
 
     //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
-       this.parentController = layoutController;
+        this.parentController = layoutController;
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
         layoutController.btnMode.setOnAction(event -> {
