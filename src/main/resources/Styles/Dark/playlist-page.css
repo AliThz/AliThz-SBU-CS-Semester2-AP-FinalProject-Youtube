@@ -1,0 +1,30 @@
+.background {
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
+
+.vbx-details {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 20;
+}
+
+.vbx-Videos {
+    -fx-background-color: rgb(0, 0, 0);
+    /*-fx-background-radius: 20;*/
+}
+
+.text {
+    -fx-fill: rgb(255, 255, 255);
+}
+
+.btn-channel {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+.btn-play {
+    -fx-background-color: rgb(255, 255, 255);
+    -fx-background-radius: 20;
+    -fx-text-fill: rgb(0, 0, 0);
+    /*-fx-text-fill: #000;*/
+}

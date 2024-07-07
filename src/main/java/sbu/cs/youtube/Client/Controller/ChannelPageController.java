@@ -207,7 +207,7 @@ public class ChannelPageController implements Initializable {
 
     //region [ - displayPlaylists() - ]
     private void displayPlaylists() {
-        new Request<User>(YouTubeApplication.socket, "GetUserPlaylists").send(YouTubeApplication.user);
+        new Request<User>(YouTubeApplication.socket, "GetUserPlaylists").send(new User(channel.getCreatorId()));
         TypeToken<Response<ArrayList<Playlist>>> responseTypeToken = new TypeToken<>() {
         };
         Response<ArrayList<Playlist>> playlistResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
@@ -232,7 +232,7 @@ public class ChannelPageController implements Initializable {
                 }
 
                 Button button = new Button();
-                button.getStyleClass().add("btn-playlist");
+                button.getStyleClass().add("btn-video");
                 button.setGraphic(playlistPreview);
 
                 button.setOnAction(event -> getPlaylist(event, playlist));
