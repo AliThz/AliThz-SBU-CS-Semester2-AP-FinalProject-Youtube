@@ -139,6 +139,7 @@ public class VideoPreviewController implements Initializable {
     }
     //endregion
 
+    //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
@@ -150,6 +151,7 @@ public class VideoPreviewController implements Initializable {
             vbxVideoPreview.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-preview.css")).toExternalForm());
         });
     }
+    //endregion
 
     //endregion
 

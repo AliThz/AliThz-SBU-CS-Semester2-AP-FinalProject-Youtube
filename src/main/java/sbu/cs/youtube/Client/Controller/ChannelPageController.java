@@ -128,8 +128,8 @@ public class ChannelPageController implements Initializable {
         txtChannelTitle.setText(channel.getTitle());
         txtChannelDescription.setText(channel.getDescription());
         txtUsername.setText(YouTubeApplication.user.getUsername());
-//        txtVideosCount.setText(channel);
-        txtSubscribersCount.setText(String.valueOf(channel.getSubscriberCount()));
+        txtVideosCount.setText(channel.getVideoCounts() + " Videos");
+        txtSubscribersCount.setText(channel.getSubscriberCount() + " Subscribers");
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
@@ -164,13 +164,13 @@ public class ChannelPageController implements Initializable {
                     throw new RuntimeException(e);
                 }
 
-                tilePaneVideo.getChildren().add(videoPreview);
-
                 Button button = new Button();
                 button.getStyleClass().add("btn-video");
                 button.setGraphic(videoPreview);
 
                 button.setOnAction(event -> getVideo(event, video));
+
+                tilePaneVideo.getChildren().add(button);
             }
         });
     }
@@ -230,13 +230,13 @@ public class ChannelPageController implements Initializable {
                     throw new RuntimeException(e);
                 }
 
-                tilePanePlaylist.getChildren().add(playlistPreview);
-
                 Button button = new Button();
                 button.getStyleClass().add("btn-playlist");
                 button.setGraphic(playlistPreview);
 
                 button.setOnAction(event -> getPlaylist(event, playlist));
+
+                tilePanePlaylist.getChildren().add(button);
             }
         });
     }
@@ -336,10 +336,10 @@ public class ChannelPageController implements Initializable {
         emailField.setText(user.getEmail());
         TextField passwordField = new TextField();
         passwordField.setText(user.getEmail());
-        ImageView imageView =  new ImageView(avatar);
+        ImageView imageView = new ImageView(avatar);
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
-        Button uploadButton = new Button("",imageView);
+        Button uploadButton = new Button("", imageView);
         uploadButton.getStyleClass().add("btn-upload");
 
         grid.add(new Label("Full Name:"), 0, 0);

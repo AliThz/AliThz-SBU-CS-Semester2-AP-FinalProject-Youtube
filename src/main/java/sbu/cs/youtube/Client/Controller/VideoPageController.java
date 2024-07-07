@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -18,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 
 import java.io.ByteArrayInputStream;
@@ -171,8 +174,13 @@ public class VideoPageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         //region [ - Bindings - ]
-        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.prefViewportWidthProperty());
-        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.prefViewportHeightProperty());
+//        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.prefViewportWidthProperty());
+//        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.prefViewportHeightProperty());
+        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getWidth));
+        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getHeight));
+        vbxLeft.prefWidthProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getWidth));
+        vbxLeft.prefHeightProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getHeight));
+
 
         hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
         vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0).add(30));
@@ -202,7 +210,11 @@ public class VideoPageController implements Initializable {
 
         //region [ - Video API - ]
         Gson gson = new Gson();
+        LocalDateTime t1 = LocalDateTime.now();
         String response = YouTubeApplication.receiveResponse();
+        LocalDateTime t2 = LocalDateTime.now();
+        java.time.Duration duration1 = java.time.Duration.between(t1,t2);
+        System.out.println("------------------------------ 1 :   " + duration1.toSeconds());
         TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
         };
         Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
@@ -238,11 +250,6 @@ public class VideoPageController implements Initializable {
 //        displayRecommendedVideos();
         new Thread(this::displayComments).start();
 //        displayComments();
-
-
-
-
-
     }
     //endregion
 
@@ -554,6 +561,20 @@ public class VideoPageController implements Initializable {
             videoStuff.setVisible(false);
         });
 
+        // Add key event handler to the scene
+        mediaView.setOnKeyPressed((KeyEvent event) -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                // Pause or play the video based on current status
+                if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                    mediaPlayer.pause();
+//                    pause(new ActionEvent());
+                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED ||
+                        mediaPlayer.getStatus() == MediaPlayer.Status.READY ||
+                        mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
+                    mediaPlayer.play();
+                }
+            }
+        });
 
         mediaPlayer.play();
 
@@ -638,8 +659,8 @@ public class VideoPageController implements Initializable {
             svgDislike.setContent("M18,4h3v10h-3V4z M5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21c0.58,0,1.14-0.24,1.52-0.65L17,14V4H6.57 C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14z");
         }
 
-
-//        File tempFile;
+        //region [ - Getting Video Bytes - ]
+        //        File tempFile;
 //        try {
 //            tempFile = File.createTempFile("video", ".mp4");
 //            tempFile.deleteOnExit();
@@ -663,6 +684,8 @@ public class VideoPageController implements Initializable {
 //        Media media = new Media(tempFile.toURI().toString());
 //        displayMedia(media);
 //        displayMedia();
+        //endregion
+
 
     }
     //endregion
@@ -788,12 +811,15 @@ public class VideoPageController implements Initializable {
     }
     //endregion
 
+    //region [ - formatTime(Duration time) - ]
     private String formatTime(Duration time) {
         int minutes = (int) time.toMinutes();
         int seconds = (int) time.toSeconds() % 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
+    //endregion
 
+    //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
@@ -805,6 +831,35 @@ public class VideoPageController implements Initializable {
             anchrpnVideoPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-page.css")).toExternalForm());
         });
     }
+    //endregion
+
+    //region [ - getChannel(ActionEvent event) - ]
+    @FXML
+    private void getChannel(ActionEvent event) {
+        Request<Channel> videoRequest = new Request<>(YouTubeApplication.socket, "GetChannel");
+        videoRequest.send(new Channel(video.getChannelId()));
+
+        getChannelPage(event);
+    }
+    //endregion
+
+    //region [ - getChannelPage(ActionEvent event) - ]
+    private void getChannelPage(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLeft.getScene().getWidth(), vbxLeft.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
 
     //endregion
 

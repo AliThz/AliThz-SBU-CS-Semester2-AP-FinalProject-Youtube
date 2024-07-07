@@ -33,15 +33,15 @@
             </Button>
             <VBox fx:id="vbxTextDetails" prefHeight="65.0" prefWidth="169.0" styleClass="vbx-text-details" HBox.hgrow="ALWAYS">
                <children>
-                  <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="A title for a video in youtube" wrappingWidth="176.5368847846985">
+                  <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="A title for a video in youtube youtube youtube" wrappingWidth="176.5368847846985">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                      <VBox.margin>
                         <Insets bottom="3.0" />
                      </VBox.margin>
                   </Text>
-                  <Button fx:id="btnChannelName" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" style="-fx-background-color: transparent;" styleClass="text" text="Channel Name" wrapText="true">
+                  <Button fx:id="btnChannelName" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" styleClass="btn-channel" text="Channel Name" wrapText="true">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Button>
@@ -82,6 +82,9 @@
                <HBox.margin>
                   <Insets right="-5.0" top="-2.0" />
                </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </children>
       </HBox>
