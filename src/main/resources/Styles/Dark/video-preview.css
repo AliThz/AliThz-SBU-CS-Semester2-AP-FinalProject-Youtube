@@ -7,6 +7,11 @@
     -fx-spacing: 5;
 }
 
+.btn-channel {
+    -fx-background-color : transparent;
+    -fx-background-radius : 100;
+    -fx-text-fill: rgb(200, 200, 200);
+}
 
 .hbx-video-details {
     -fx-alignment : top-center;
