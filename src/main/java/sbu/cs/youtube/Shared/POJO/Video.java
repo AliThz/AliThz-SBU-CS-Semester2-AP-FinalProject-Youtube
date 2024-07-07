@@ -1,6 +1,5 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ public class Video {
     private ArrayList<VideoCategory> categories;
     private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
-    private int viewcount;
+    private int viewCount;
     private int likes;
     private int dislikes;
     private String fileName ;
@@ -44,7 +43,7 @@ public class Video {
         this.title = title;
         this.description = description;
         this.channelId = channelId;
-        this.viewcount = viewcount;
+        this.viewCount = viewcount;
         this.uploadDate = uploadDate;
     }
 
@@ -112,12 +111,12 @@ public class Video {
         this.channelId = channelId;
     }
 
-    public int getViewcount() {
-        return viewcount;
+    public int getViewCount() {
+        return viewCount;
     }
 
-    public void setViewcount(int viewcount) {
-        this.viewcount = viewcount;
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
     }
 
     public String getUploadDate() {
