@@ -3007,6 +3007,52 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectPlaylistsByTitle(String title) - ] Not Test
+    public ArrayList<Playlist> selectPlaylistsByTitle(String title) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Playlist> playlists = null;
+        try {
+
+            System.out.println("Opened database successfully (selectPlaylistsBrieflyByTitle)");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+
+            stmt = c.prepareStatement("""
+                    SELECT p."Title", p."Description", p."Id", p."ThumbnailPath", p."CreatorId" ,
+                           (SELECT COUNT("VideoId") FROM "ContentManagement"."PlaylistDetail" WHERE "PlaylistId" = p."Id") AS "Videos"
+                    FROM "ContentManagement"."Playlist" p
+                    WHERE p."Title" LIKE ?;
+                    """);
+            stmt.setObject(1, "%" + title + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            playlists = new ArrayList<>();
+            while (rs.next()) {
+                Playlist playlist = new Playlist();
+                playlist.setId(UUID.fromString(rs.getString("Id")));
+                playlist.setTitle(rs.getString("Title"));
+                playlist.setDescription(rs.getString("Description"));
+                playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
+                playlist.setThumbnailBytes(convertImageToByteArray(playlist.getThumbnailPath()));
+                playlist.setVideos(rs.getInt("Videos"));
+
+                playlists.add(playlist);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectPlaylistsBrieflyByTitle)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return playlists;
+    }
+    //endregion
+
     //region [ - updatePlaylist(Playlist playlist) - ] Tested
     public void updatePlaylist(Playlist playlist) {
         Connection c;

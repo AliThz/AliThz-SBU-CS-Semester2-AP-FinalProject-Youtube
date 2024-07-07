@@ -190,6 +190,9 @@ public class ClientHandler implements Runnable {
             case "SearchChannel":
                 searchChannel();
                 break;
+            case "SearchPlaylist":
+                searchPlaylist();
+                break;
 
         }
     }
@@ -793,7 +796,6 @@ public class ClientHandler implements Runnable {
     //endregion
 
     //region [ - searchChannel() - ]
-
     private void searchChannel() {
         TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
         };
@@ -805,6 +807,22 @@ public class ClientHandler implements Runnable {
 
         response = new Response<>(client, channelRequest.getType(), true, "Search For Channel Successfully");
         response.send(channels);
+    }
+    //endregion
+
+    //region [ - searchChannel() - ]
+
+    private void searchPlaylist() {
+        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Playlist>> response;
+
+        Playlist playlist = playlistRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsByTitle(playlist.getTitle());
+
+        response = new Response<>(client, playlistRequest.getType(), true, "Search For Playlist Successfully");
+        response.send(playlists);
     }
     //endregion
 
