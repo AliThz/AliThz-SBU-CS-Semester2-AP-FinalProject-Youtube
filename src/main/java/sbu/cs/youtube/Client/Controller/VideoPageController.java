@@ -19,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 
 import java.io.ByteArrayInputStream;
@@ -248,11 +250,6 @@ public class VideoPageController implements Initializable {
 //        displayRecommendedVideos();
         new Thread(this::displayComments).start();
 //        displayComments();
-
-
-
-
-
     }
     //endregion
 
@@ -564,6 +561,20 @@ public class VideoPageController implements Initializable {
             videoStuff.setVisible(false);
         });
 
+        // Add key event handler to the scene
+        mediaView.setOnKeyPressed((KeyEvent event) -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                // Pause or play the video based on current status
+                if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                    mediaPlayer.pause();
+//                    pause(new ActionEvent());
+                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED ||
+                        mediaPlayer.getStatus() == MediaPlayer.Status.READY ||
+                        mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
+                    mediaPlayer.play();
+                }
+            }
+        });
 
         mediaPlayer.play();
 
