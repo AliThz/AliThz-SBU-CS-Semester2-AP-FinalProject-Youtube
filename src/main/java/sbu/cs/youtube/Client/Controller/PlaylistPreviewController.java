@@ -98,7 +98,7 @@ public class PlaylistPreviewController implements Initializable {
             summarizedTitle += " ...";
         }
         txtPlaylistTitle.setText(summarizedTitle);
-        txtChannelName.setText(YouTubeApplication.user.getFullName());
+        txtChannelName.setText(YouTubeApplication.user.getUsername());
         txtPrivatePublic.setText(playlist.isPublic() ? "Public" : "Private");
         txtVideoCount.setText(String.valueOf(playlist.getVideos()));
 
