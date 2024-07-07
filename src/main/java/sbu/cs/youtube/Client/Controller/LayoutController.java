@@ -646,7 +646,7 @@ public class LayoutController implements Initializable {
     //region [ - sendNotification(String text) - ]
 
     protected void sendNotification(String text) {
-        Notifications.create().text(text).hideAfter(Duration.seconds(2)).owner(hbxRightNavItem).position(Pos.BASELINE_RIGHT).threshold(3, Notifications.create().title("Notifications")).show();
+        Notifications.create().text(text).hideAfter(Duration.seconds(3)).owner(hbxRightNavItem).position(Pos.BASELINE_RIGHT).threshold(3, Notifications.create().title("Notifications")).show();
     }
 
 
