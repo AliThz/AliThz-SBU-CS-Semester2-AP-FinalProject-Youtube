@@ -164,13 +164,13 @@ public class ChannelPageController implements Initializable {
                     throw new RuntimeException(e);
                 }
 
-                tilePaneVideo.getChildren().add(videoPreview);
-
                 Button button = new Button();
                 button.getStyleClass().add("btn-video");
                 button.setGraphic(videoPreview);
 
                 button.setOnAction(event -> getVideo(event, video));
+
+                tilePaneVideo.getChildren().add(button);
             }
         });
     }
@@ -230,13 +230,13 @@ public class ChannelPageController implements Initializable {
                     throw new RuntimeException(e);
                 }
 
-                tilePanePlaylist.getChildren().add(playlistPreview);
-
                 Button button = new Button();
                 button.getStyleClass().add("btn-playlist");
                 button.setGraphic(playlistPreview);
 
                 button.setOnAction(event -> getPlaylist(event, playlist));
+
+                tilePanePlaylist.getChildren().add(button);
             }
         });
     }
