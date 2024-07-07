@@ -128,8 +128,8 @@ public class ChannelPageController implements Initializable {
         txtChannelTitle.setText(channel.getTitle());
         txtChannelDescription.setText(channel.getDescription());
         txtUsername.setText(YouTubeApplication.user.getUsername());
-        txtVideosCount.setText(String.valueOf(channel.getVideoCounts()));
-        txtSubscribersCount.setText(String.valueOf(channel.getSubscriberCount()));
+        txtVideosCount.setText(channel.getVideoCounts() + " Videos");
+        txtSubscribersCount.setText(channel.getSubscriberCount() + " Subscribers");
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
@@ -336,10 +336,10 @@ public class ChannelPageController implements Initializable {
         emailField.setText(user.getEmail());
         TextField passwordField = new TextField();
         passwordField.setText(user.getEmail());
-        ImageView imageView =  new ImageView(avatar);
+        ImageView imageView = new ImageView(avatar);
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
-        Button uploadButton = new Button("",imageView);
+        Button uploadButton = new Button("", imageView);
         uploadButton.getStyleClass().add("btn-upload");
 
         grid.add(new Label("Full Name:"), 0, 0);
