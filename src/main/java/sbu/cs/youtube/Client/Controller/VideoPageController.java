@@ -206,7 +206,6 @@ public class VideoPageController implements Initializable {
 
         //endregion
 
-
         //region [ - Video API - ]
         Gson gson = new Gson();
         LocalDateTime t1 = LocalDateTime.now();
@@ -219,7 +218,6 @@ public class VideoPageController implements Initializable {
         Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
         video = videoResponse.getBody();
         //endregion
-
 
         //region [ - Check Video View API  - ]
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "CheckViewVideoExistence");
@@ -242,7 +240,6 @@ public class VideoPageController implements Initializable {
         if (video.getChannel().getCreatorId().equals(YouTubeApplication.user.getId())) {
             btnSub.setVisible(false);
         }
-
 
         setVideo();
         new Thread(this::displayMedia).start();
@@ -803,12 +800,15 @@ public class VideoPageController implements Initializable {
     }
     //endregion
 
+    //region [ - formatTime(Duration time) - ]
     private String formatTime(Duration time) {
         int minutes = (int) time.toMinutes();
         int seconds = (int) time.toSeconds() % 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
+    //endregion
 
+    //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
@@ -820,6 +820,35 @@ public class VideoPageController implements Initializable {
             anchrpnVideoPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-page.css")).toExternalForm());
         });
     }
+    //endregion
+
+    //region [ - getChannel(ActionEvent event) - ]
+    @FXML
+    private void getChannel(ActionEvent event) {
+        Request<Channel> videoRequest = new Request<>(YouTubeApplication.socket, "GetChannel");
+        videoRequest.send(new Channel(video.getChannelId()));
+
+        getChannelPage(event);
+    }
+    //endregion
+
+    //region [ - getChannelPage(ActionEvent event) - ]
+    private void getChannelPage(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLeft.getScene().getWidth(), vbxLeft.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
 
     //endregion
 
