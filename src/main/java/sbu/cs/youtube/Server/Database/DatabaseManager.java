@@ -1610,7 +1610,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT "Title" , "Id" , "UploadDate" , "ThumbnailPath" , "Description"   
+                    SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description", "ChannelId" ,
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video";
                     """);
 
@@ -1626,6 +1627,7 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
 
                 videos.add(video);
             }
@@ -1653,7 +1655,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideosByChannel)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Title" , "Id" , "UploadDate" , "ThumbnailPath" , "Description"   
+                    SELECT "Title" , "Id" , "UploadDate" , "ThumbnailPath" , "Description" ,  
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" 
                     WHERE \"ChannelId\" = ?;
                     """)
@@ -1675,6 +1678,7 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
                 videos.add(video);
             }
 
@@ -1702,7 +1706,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" , v."ChannelId"
+                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" , v."ChannelId" ,
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = v."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" v INNER JOIN "UserManagement"."Channel" c
                     ON v."ChannelId" = c."Id"
                     WHERE "CreatorId" = ?;
@@ -1723,6 +1728,7 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
                 videos.add(video);
             }
 
@@ -1750,7 +1756,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" , v."ChannelId"
+                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" , v."ChannelId" ,
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = v."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" v INNER JOIN "ContentManagement"."VideoCategory" vc
                     ON v."Id" = vc."VideoId"
                     WHERE vc."CategoryId" = ?;
@@ -1771,6 +1778,7 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
                 videos.add(video);
             }
 
@@ -1798,7 +1806,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId"
+                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId" , 
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE uv."VideoId" = v."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" v JOIN "ContentManagement"."UserVideo" uv
                     ON v."Id" = uv."VideoId"
                     WHERE uv."UserId" = ? AND uv."Like" = true;
@@ -1819,6 +1828,7 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
                 videos.add(video);
             }
 
@@ -1846,7 +1856,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId"
+                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId" ,
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE uv."VideoId" = v."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" v JOIN "ContentManagement"."UserVideo" uv
                     ON v."Id" = uv."VideoId"
                     WHERE uv."UserId" = ?;
@@ -1867,6 +1878,7 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
                 videos.add(video);
             }
 
@@ -1893,7 +1905,8 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideosByTitle)");
 
             stmt = c.prepareStatement("""
-                    SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description" , "ChannelId"
+                    SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description" , "ChannelId" ,
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video"
                     WHERE "Title" LIKE ?
                     """);
@@ -1913,6 +1926,7 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
                 videos.add(video);
             }
 
@@ -1940,7 +1954,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT "Title" , "ChannelId" , "UploadDate" , "ThumbnailPath" , "Description" 
+                    SELECT "Title" , "ChannelId" , "UploadDate" , "ThumbnailPath" , "Description" ,
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" 
                     WHERE \"Id\" = ?;
                     """);
@@ -1957,6 +1972,7 @@ public class DatabaseManager {
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setViewCount(rs.getInt("VideoViewCount"));
             }
 
             rs.close();
@@ -2003,6 +2019,23 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 video.setPath(rs.getString("Path"));
                 video.setVideoBytes(convertVideoToByteArray(video.getPath()));
+            }
+
+            stmt = c.prepareStatement("""
+                SELECT
+                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ? AND "Like" = true) AS "VideoLikes",
+                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ? AND "Like" = false) AS "VideoDislikes",
+                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ?) AS "VideoViewCount"
+                """);
+            stmt.setObject(1, Id);
+            stmt.setObject(2, Id);
+            stmt.setObject(3, Id);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                video.setLikes(rs.getInt("VideoLikes"));
+                video.setDislikes(rs.getInt("VideoDislikes"));
+                video.setViewCount(rs.getInt("VideoViewCount"));
             }
 
             rs.close();
@@ -2579,7 +2612,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //    region [ - selectVideoLikesStatus(UUID Id) - ] test
+    //    region [ - selectVideoViewCount(UUID Id) - ] test
     public Video selectVideoViewCount(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -2599,7 +2632,7 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                video.setViewcount(rs.getInt("VideoViewCount"));
+                video.setViewCount(rs.getInt("VideoViewCount"));
             }
 
             rs.close();

@@ -193,7 +193,9 @@ public class ClientHandler implements Runnable {
             case "SearchPlaylist":
                 searchPlaylist();
                 break;
-
+            case "GetUserChannel":
+                getUserChannel();
+                break;
         }
     }
     //endregion
@@ -719,7 +721,7 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
-    //region [ - getUserVideos() - ]
+    //region [ - getCategoryVideos() - ]
     private void getCategoryVideos() {
         TypeToken<Request<Category>> responseTypeToken = new TypeToken<>() {
         };
@@ -826,6 +828,26 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
+    //region [ - getUserChannel() - ]
+    private void getUserChannel() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Channel> response;
+
+        User requestedUser = userRequest.getBody();
+        Channel channel;
+
+        channel = databaseManager.selectChannel(requestedUser.getId());
+
+        if (channel != null) {
+            response = new Response<>(client, userRequest.getType(), true, "channel received successfully");
+        } else {
+            response = new Response<>(client, userRequest.getType(), true, "channel not found");
+        }
+        response.send(channel);
+    }
+    //endregion
 
     //endregion
 
