@@ -370,7 +370,6 @@ public class VideoPageController implements Initializable {
                     button.setGraphic(videoRecommendation);
 
                     button.setOnAction(event -> getVideo(event, v));
-//                vbxRecommendedVideos.getChildren().add(videoRecommendation);
                     vbxRecommendedVideos.getChildren().add(button);
                     VBox.setVgrow(videoRecommendation, Priority.ALWAYS);
                 }
@@ -556,8 +555,8 @@ public class VideoPageController implements Initializable {
         });
 
         // Add key event handler to the scene
-        mediaView.setOnKeyPressed((KeyEvent event) -> {
-            if (event.getCode() == KeyCode.SPACE) {
+        mediaView.getScene().setOnKeyPressed((KeyEvent event) -> {
+            if (event.getCode() == KeyCode.K) {
                 // Pause or play the video based on current status
                 if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
                     mediaPlayer.pause();

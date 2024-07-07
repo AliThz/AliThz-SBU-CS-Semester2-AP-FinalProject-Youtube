@@ -186,12 +186,12 @@
                            <children>
                               <HBox fx:id="hbxViewDate" prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <Text fx:id="txtViews" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="100" wrappingWidth="31.457794189453125">
+                                    <Text fx:id="txtViews" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="1" wrappingWidth="10.6577787399292">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </Text>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="views" wrappingWidth="40.2578125">
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="views" wrappingWidth="48.257816314697266">
                                        <font>
                                           <Font size="15.0" />
                                        </font>

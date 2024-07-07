@@ -114,7 +114,7 @@ public class ChannelPageController implements Initializable {
         if (channel.getCreatorId().equals(YouTubeApplication.user.getId())) {
             hbxButtons.getChildren().removeFirst();
         } else {
-            hbxChannelDetails.getChildren().remove(1);
+            hbxButtons.getChildren().remove(1);
         }
 
         new Thread(this::setChannel).start();
@@ -126,13 +126,14 @@ public class ChannelPageController implements Initializable {
     //region [ - setChannel() - ]
     private void setChannel() {
         txtChannelTitle.setText(channel.getTitle());
+        System.out.println(channel.getTitle());
         txtChannelDescription.setText(channel.getDescription());
-        txtUsername.setText(YouTubeApplication.user.getUsername());
+        txtUsername.setText(channel.getCreator().getUsername());
         txtVideosCount.setText(channel.getVideoCounts() + " Videos");
         txtSubscribersCount.setText(channel.getSubscriberCount() + " Subscribers");
 
         ByteArrayInputStream bis;
-        bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
+        bis = new ByteArrayInputStream(channel.getCreator().getAvatarBytes());
         avatar = new Image(bis);
         imgAvatar.setImage(avatar);
     }
