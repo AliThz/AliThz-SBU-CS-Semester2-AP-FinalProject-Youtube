@@ -136,7 +136,7 @@ public class SignUpController implements Initializable {
 
     //region [ - boolean validateName(String fullName) - ]
     private boolean validateName(String fullName) {
-        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{4,}$";
+        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{3,}$";
         Pattern usernamePattern = Pattern.compile(usernameRegex);
         Matcher usernameMatcher = usernamePattern.matcher(fullName);
 

@@ -44,19 +44,16 @@ public class ChannelSectionController implements Initializable {
         VBox channelPage;
         try {
             channelPage = channelPageLoader.load();
-//            channelPage.prefWidthProperty().bind(mainPane.widthProperty().subtract(60));
-//            channelPage.prefWidthProperty().bind(mainPane.widthProperty().subtract(layoutController.vbxSideBar.prefWidthProperty().intValue() < 100 ? layoutController.vbxSideBar.prefWidthProperty().add(70) : layoutController.vbxSideBar.prefWidthProperty().add(10)));
-//            channelPage.prefHeightProperty().bind(mainPane.heightProperty());
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         layoutController.scrollPane.setContent(channelPage);
-//        channelPage.prefWidthProperty().bind(layoutController.scrollPane.prefWidthProperty());
+        ChannelPageController channelPageController = channelPageLoader.getController();
+        channelPageController.setParentController(layoutController);
         channelPage.prefWidthProperty().bind(layoutController.scrollPane.viewportBoundsProperty().map(Bounds::getWidth));
         channelPage.prefHeightProperty().bind(layoutController.scrollPane.viewportBoundsProperty().map(Bounds::getHeight));
-//        YouPageController channelPageController = channelPageLoader.getController();
+        //endregion
     }
-    //endregion
-
     //endregion
 }

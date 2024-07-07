@@ -19,6 +19,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import sbu.cs.youtube.Shared.POJO.*;
@@ -27,11 +28,14 @@ import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChannelPageController implements Initializable {
 
@@ -39,6 +43,7 @@ public class ChannelPageController implements Initializable {
 
     private Channel channel;
     private final Gson gson = new Gson();
+
     @FXML
     private HBox hbxChannelDetails;
 
@@ -98,6 +103,10 @@ public class ChannelPageController implements Initializable {
 
     private Image avatar;
 
+    private LayoutController parentController;
+
+    File newImage;
+
     //endregion
 
     //region [ - Methods - ]
@@ -124,6 +133,8 @@ public class ChannelPageController implements Initializable {
     }
     //endregion
 
+    //region [ - logOut(ActionEvent event) - ]
+
     @FXML
     private void logOut(ActionEvent event) {
         YouTubeApplication.user = null;
@@ -141,6 +152,7 @@ public class ChannelPageController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    //endregion
 
     //region [ - setChannel() - ]
     private void setChannel() {
@@ -223,7 +235,6 @@ public class ChannelPageController implements Initializable {
     }
     //endregion
 
-
     //region [ - displayPlaylists() - ]
     private void displayPlaylists() {
         new Request<User>(YouTubeApplication.socket, "GetUserPlaylists").send(new User(channel.getCreatorId()));
@@ -289,7 +300,6 @@ public class ChannelPageController implements Initializable {
     }
     //endregion
 
-
     //region [ - updateSub(ActionEvent event) - ]
     @FXML
     private void updateSub() {
@@ -324,6 +334,11 @@ public class ChannelPageController implements Initializable {
     }
     //endregion
 
+
+    public void setParentController(LayoutController parentController) {
+        this.parentController = parentController;
+    }
+
     //region [ - showDialog() - ]
     @FXML
     private void showDialog() {
@@ -336,7 +351,7 @@ public class ChannelPageController implements Initializable {
         dialog.setHeaderText("Update Your Information");
 
         // Apply CSS to the dialog
-        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/Dark/channel-page.css")).toExternalForm());
+        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
         dialog.getDialogPane().getStyleClass().add("dialog-pane");
 
         // Set the button types
@@ -360,6 +375,14 @@ public class ChannelPageController implements Initializable {
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
         Button uploadButton = new Button("", imageView);
+
+        uploadButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select new Avatar");
+            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            newImage = fileChooser.showOpenDialog(vbxChannelPage.getScene().getWindow());
+        });
         uploadButton.getStyleClass().add("btn-upload");
 
         grid.add(new Label("Full Name:"), 0, 0);
@@ -374,6 +397,29 @@ public class ChannelPageController implements Initializable {
         grid.add(uploadButton, 1, 4);
 
         dialog.getDialogPane().setContent(grid);
+
+        String newFullName = fullNameField.getText();
+        String newUsername = usernameField.getText();
+        String newEmail = emailField.getText();
+        String newPassword = passwordField.getText();
+
+        boolean updateable = true;
+
+        if (!newFullName.isEmpty() && !verifyFullName(newFullName))
+            updateable = false;
+        if(!newUsername.isEmpty() && !verifyUsername(newUsername))
+            updateable = false;
+        if (!newEmail.isEmpty() && !verifyEmail(newEmail))
+            updateable = false;
+        if (!newPassword.isEmpty() && !verifyPassword(newPassword))
+            updateable = false;
+
+        if (updateable) {
+            //todo do something
+        }
+
+
+        //todo wtf do these do?
 
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
@@ -390,8 +436,63 @@ public class ChannelPageController implements Initializable {
             YouTubeApplication.user.setEmail(updatedUser.getEmail());
             YouTubeApplication.user.setPassword(updatedUser.getPassword());
         });
+
+        parentController.sendNotification("profile update message"); //todo
     }
     //endregion
+
+
+    private boolean verifyPassword(String newPassword) {
+        String passwordRegex = "^[A-Za-z0-9]+$";
+        Pattern passwordPattern = Pattern.compile(passwordRegex);
+        Matcher passwordMatcher = passwordPattern.matcher(newPassword);
+
+        if (passwordMatcher.matches()) {
+            return true;
+        }
+
+        parentController.sendNotification("Password can only contain alphabets and numbers and have at least 8 characters");
+        return false;
+    }
+
+    private boolean verifyEmail(String newEmail) {
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
+        userRequest.send(new User(newEmail, "", ""));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        User responseUser = userResponse.getBody();
+
+        if (responseUser != null) {
+            parentController.sendNotification(userResponse.getMessage());
+            return false;
+        } else {
+            System.out.println(userResponse.getMessage());
+            return true;
+        }
+    }
+
+    private boolean verifyUsername(String newUsername) {
+        // todo needs its own request
+        return false;
+    }
+
+    private boolean verifyFullName(String newFullName) {
+        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{3,}$";
+        Pattern usernamePattern = Pattern.compile(usernameRegex);
+        Matcher usernameMatcher = usernamePattern.matcher(newFullName);
+
+        if (usernameMatcher.matches()) {
+            return true;
+        }
+
+        parentController.sendNotification("Full name should only contain alphabets and no consecutive spaces");
+        return false;
+    }
 
     //endregion
 }
