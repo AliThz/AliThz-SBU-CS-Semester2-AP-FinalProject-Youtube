@@ -82,6 +82,9 @@
                <HBox.margin>
                   <Insets right="-5.0" top="-2.0" />
                </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </children>
       </HBox>
