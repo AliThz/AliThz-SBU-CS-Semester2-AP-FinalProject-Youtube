@@ -192,8 +192,10 @@ public class YouPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         ArrayList<Video> videos = videoResponse.getBody();
-        videos.sort(Comparator.comparing(d -> LocalDateTime.parse(d.getUploadDate())));
-        Collections.reverse(videos);
+        if (videos != null) {
+            videos.sort(Comparator.comparing(d -> LocalDateTime.parse(d.getUploadDate())));
+            Collections.reverse(videos);
+        }
         Platform.runLater(() -> {
             if (videos != null) {
                 for (var v : videos) {
@@ -235,30 +237,30 @@ public class YouPageController implements Initializable {
 
         ArrayList<Playlist> playlists = videoResponse.getBody();
         Platform.runLater(() -> {
-        if (playlists != null) {
-            for (var p : playlists) {
+            if (playlists != null) {
+                for (var p : playlists) {
 
-                FXMLLoader playlistPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-preview.fxml"));
-                VBox playlistPreview;
-                try {
-                    playlistPreview = playlistPreviewLoader.load();
-                    PlaylistPreviewController playlistPreviewController = playlistPreviewLoader.getController();
-                    if (playlistPreviewController != null) {
-                        playlistPreviewController.setPlaylist(p);
+                    FXMLLoader playlistPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-preview.fxml"));
+                    VBox playlistPreview;
+                    try {
+                        playlistPreview = playlistPreviewLoader.load();
+                        PlaylistPreviewController playlistPreviewController = playlistPreviewLoader.getController();
+                        if (playlistPreviewController != null) {
+                            playlistPreviewController.setPlaylist(p);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+
+                    Button button = new Button();
+                    button.getStyleClass().add("btn-video");
+                    button.setGraphic(playlistPreview);
+
+                    button.setOnAction(event -> getPlaylist(event, p));
+                    hbxPlaylistsVideos.getChildren().add(button);
+                    VBox.setVgrow(playlistPreview, Priority.ALWAYS);
                 }
-
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(playlistPreview);
-
-                button.setOnAction(event -> getPlaylist(event, p));
-                hbxPlaylistsVideos.getChildren().add(button);
-                VBox.setVgrow(playlistPreview, Priority.ALWAYS);
             }
-        }
         });
     }
     //endregion
