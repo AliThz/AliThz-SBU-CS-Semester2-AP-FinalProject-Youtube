@@ -659,7 +659,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ -(String channelTitle) - ] UnUsed
+    //region [ - selectChannelByTitle - ] UnUsed
     public ArrayList<Channel> selectChannelByTitle(String channelTitle) {
         Connection c;
         PreparedStatement stmt;
@@ -730,6 +730,7 @@ public class DatabaseManager {
             if (rs.next()) {
                 channel = new Channel();
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                channel.setCreator(selectUserBriefly(channel.getCreatorId()));
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
                 channel.setId(UUID.fromString(rs.getString("Id")));
@@ -782,6 +783,7 @@ public class DatabaseManager {
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
                 channel.setId(UUID.fromString(rs.getString("Id")));
+                channel.setCreator(selectUserBriefly(channel.getCreatorId()));
                 if (rs.getString("DateCreated") != null) {
                     Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                     channel.setDateCreated(timestamp.toLocalDateTime().toString());
