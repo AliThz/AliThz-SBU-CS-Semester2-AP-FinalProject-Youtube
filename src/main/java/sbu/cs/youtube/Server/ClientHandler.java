@@ -187,9 +187,9 @@ public class ClientHandler implements Runnable {
             case "SearchVideo":
                 searchVideo();
                 break;
-//            case "SearchChannel":
-//                searchChannel();
-//                break;
+            case "SearchChannel":
+                searchChannel();
+                break;
 
         }
     }
@@ -791,23 +791,23 @@ public class ClientHandler implements Runnable {
         response.send(videos);
     }
     //endregion
-//
-//    //region [ - searchChannel() - ]
-//
-//    private void searchChannel() {
-//        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
-//        };
-//        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
-//        Response<ArrayList<Video>> response;
-//
-//        Channel channel = channelRequest.getBody();
-//        ArrayList<Video> videos = databaseManager.selectVideosByChannel(channel.getId());
-//
-//        response = new Response<>(client, channelRequest.getType(), true, "Search For Channel Successfully");
-//        response.send(videos);
-//    }
-//    //endregion
-//
+
+    //region [ - searchChannel() - ]
+
+    private void searchChannel() {
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Channel>> response;
+
+        Channel channel = channelRequest.getBody();
+        ArrayList<Channel> channels = databaseManager.selectChannelByTitle(channel.getTitle());
+
+        response = new Response<>(client, channelRequest.getType(), true, "Search For Channel Successfully");
+        response.send(channels);
+    }
+    //endregion
+
 
     //endregion
 

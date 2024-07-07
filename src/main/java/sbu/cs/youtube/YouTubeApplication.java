@@ -297,12 +297,22 @@ public class YouTubeApplication extends Application {
 //        YouTubeApplication client = new YouTubeApplication(socket);
 //        String response = receiveResponse();
 //        System.out.println(response);
-        //        ------------------------- Select VidoeCategories Test ---------------------------------------------
+        //        ------------------------- searchVideo Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<Video> videoRequest = new Request<>(socket, "SearchVideo");
+//        Video video = new Video();
+//        video.setTitle("vel");
+//        videoRequest.send(video);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- searchVideo Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<Video> videoRequest = new Request<>(socket, "SearchVideo");
-        Video video = new Video();
-        video.setTitle("vel");
-        videoRequest.send(video);
+        Request<Channel> channelRequest = new Request<>(socket, "SearchChannel");
+        Channel channel = new Channel();
+        channel.setTitle("ha");
+        channelRequest.send(channel);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
         System.out.println(response);

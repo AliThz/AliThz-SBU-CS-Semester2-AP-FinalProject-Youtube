@@ -566,7 +566,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Channel> selectChannels() - ] Not Tested
+    //region [ - selectChannels() - ] Not Tested
     public ArrayList<Channel> selectChannels() {
         Connection c;
         Statement stmt;
@@ -606,7 +606,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - Channel selectChannelBriefly(UUID Id) - ] UnUsed
+    //region [ -selectChannelBriefly(UUID Id) - ] UnUsed
     public Channel selectChannelBriefly(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -656,6 +656,52 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return channel;
+    }
+    //endregion
+
+    //region [ -(String channelTitle) - ] UnUsed
+    public ArrayList<Channel> selectChannelByTitle(String channelTitle) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Channel> channels = null;
+        try {
+
+            System.out.println("Opened database successfully (selectChannelByTitle)");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+
+            stmt = c.prepareStatement("""
+                    SELECT c."CreatorId", c."Title", c."Description", c."ProfilePath", c."Id",
+                           (SELECT COUNT("SubscriberId") FROM "UserManagement"."Subscription" s WHERE s."ChannelId" = c."Id") AS "SubscriberCount"
+                    FROM "UserManagement"."Channel" c
+                    WHERE c."Title" LIKE ?
+                    """);
+            stmt.setString(1, "%" + channelTitle + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            channels = new ArrayList<>();
+            while (rs.next()) {
+                Channel channel = new Channel();
+                channel.setId(UUID.fromString(rs.getString("Id")));
+                channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                channel.setCreator(selectUserBriefly(channel.getCreatorId()));
+                channel.setTitle(rs.getString("Title"));
+                channel.setDescription(rs.getString("Description"));
+                channel.setProfilePath(rs.getString("ProfilePath"));
+                channel.setProfileBytes(convertImageToByteArray(channel.getCreator().getAvatarPath()));
+                channel.setSubscriberCount(rs.getInt("SubscriberCount"));
+
+                channels.add(channel);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectChannelByTitle)");
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return channels;
     }
     //endregion
 
@@ -1050,8 +1096,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM "UserManagement"."Notification"
-            """);
+                    SELECT * FROM "UserManagement"."Notification"
+                    """);
 
             notifications = new ArrayList<>();
             while (rs.next()) {
@@ -1520,8 +1566,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                            SELECT * FROM "ContentManagement"."Video";
-                            """);
+                    SELECT * FROM "ContentManagement"."Video";
+                    """);
 
             videos = new ArrayList<>();
             while (rs.next()) {
@@ -1564,7 +1610,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT *  FROM "ContentManagement"."Video";
+                    SELECT "Title" , "Id" , "UploadDate" , "ThumbnailPath" , "Description"   
+                    FROM "ContentManagement"."Video";
                     """);
 
             videos = new ArrayList<>();
@@ -1573,13 +1620,13 @@ public class DatabaseManager {
                 video.setId(UUID.fromString(rs.getString("Id")));
                 video.setTitle(rs.getString("Title"));
                 video.setDescription(rs.getString("Description"));
-//                video.setCategories(selectVideoCategories(video.getId()));
                 video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
                 video.setChannel(selectChannelBriefly(video.getChannelId()));
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
+
                 videos.add(video);
             }
 
@@ -1846,10 +1893,10 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (selectVideosByTitle)");
 
             stmt = c.prepareStatement("""
-                SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description" , "ChannelId"
-                FROM "ContentManagement"."Video"
-                WHERE "Title" LIKE ?
-                """);
+                    SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description" , "ChannelId"
+                    FROM "ContentManagement"."Video"
+                    WHERE "Title" LIKE ?
+                    """);
 
             stmt.setString(1, "%" + videoTitle + "%");
             ResultSet rs = stmt.executeQuery();
@@ -2081,8 +2128,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM "ContentManagement"."VideoCategory";"
-            """);
+                    SELECT * FROM "ContentManagement"."VideoCategory";"
+                    """);
 
             videoCategories = new ArrayList<>();
             while (rs.next()) {
@@ -2202,7 +2249,7 @@ public class DatabaseManager {
             stmt.setObject(2, categoryId);
             ResultSet rs = stmt.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 videoCategory = new VideoCategory();
                 videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 videoCategory.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
@@ -2328,8 +2375,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM "ContentManagement"."UserVideo";
-            """);
+                    SELECT * FROM "ContentManagement"."UserVideo";
+                    """);
 
             userVideos = new ArrayList<>();
             while (rs.next()) {
@@ -2748,8 +2795,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM "ContentManagement"."Playlist";
-            """);
+                    SELECT * FROM "ContentManagement"."Playlist";
+                    """);
 
             playlists = new ArrayList<>();
             while (rs.next()) {
