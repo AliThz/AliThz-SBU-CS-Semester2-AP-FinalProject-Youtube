@@ -98,7 +98,7 @@ public class VideoRecommendationController implements Initializable {
         btnChannelName.setText(video.getChannel().getTitle());
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth());
-        txtViews.setText(String.valueOf(video.getViewcount()));
+        txtViews.setText(String.valueOf(video.getViewCount()));
 
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(video.getThumbnailBytes());

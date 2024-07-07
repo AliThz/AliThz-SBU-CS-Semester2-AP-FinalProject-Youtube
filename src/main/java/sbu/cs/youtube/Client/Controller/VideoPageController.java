@@ -259,7 +259,7 @@ public class VideoPageController implements Initializable {
         video = videoResponse.getBody();
 
         Platform.runLater(() -> {
-            txtViews.setText(String.valueOf(video.getViewcount()));
+            txtViews.setText(String.valueOf(video.getViewCount()));
             txtLikes.setText(String.valueOf(video.getLikes()));
         });
     }
@@ -277,7 +277,7 @@ public class VideoPageController implements Initializable {
         video = videoResponse.getBody();
 
         Platform.runLater(() -> {
-            txtViews.setText(String.valueOf(video.getViewcount()));
+            txtViews.setText(String.valueOf(video.getViewCount()));
         });
     }
     //endregion
@@ -636,7 +636,7 @@ public class VideoPageController implements Initializable {
         txtChannelSubscribres.setText(String.valueOf(video.getChannel().getSubscriberCount()));
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear());
-        txtViews.setText(String.valueOf(video.getViewcount()));
+        txtViews.setText(String.valueOf(video.getViewCount()));
         txtLikes.setText(String.valueOf(video.getLikes()));
 
 //        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
