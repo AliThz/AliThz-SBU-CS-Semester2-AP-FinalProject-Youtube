@@ -1,6 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -73,7 +74,8 @@ public class VideoRecommendationController implements Initializable {
         });
 
         hbxVideoDetail.prefWidthProperty().bind(vbxDetails.prefWidthProperty());
-
+        hbxVideoRecommendation.getStylesheets().clear();
+        hbxVideoRecommendation.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-recommendation.css")).toExternalForm());
     }
 
     private void save(ActionEvent event) {
@@ -134,4 +136,17 @@ public class VideoRecommendationController implements Initializable {
         stage.show();
     }
     //endregion
+
+    //region [ - setParentController(LayoutController layoutController) - ]
+    public void setParentController(LayoutController layoutController) {
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            hbxVideoRecommendation.getStylesheets().clear();
+            hbxVideoRecommendation.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-recommendation.css")).toExternalForm());
+        });
+    }
 }

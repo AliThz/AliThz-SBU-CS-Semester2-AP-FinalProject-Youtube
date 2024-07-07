@@ -82,6 +82,9 @@ public class VideoSectionController implements Initializable {
 //        }
         videoPage.prefHeightProperty().bind(layoutController.hbxContent.heightProperty());
 
+        mainPane.getStylesheets().clear();
+        mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-section.css")).toExternalForm());
+
 
     }
     //endregion

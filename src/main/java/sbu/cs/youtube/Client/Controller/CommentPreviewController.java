@@ -3,12 +3,14 @@ package sbu.cs.youtube.Client.Controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import sbu.cs.youtube.Shared.POJO.Comment;
@@ -22,22 +24,15 @@ import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CommentPreviewController implements Initializable {
 
     //region [ - Fields - ]
-    @FXML
-    private Button btnDislike;
 
     @FXML
-    private Button btnLike;
-
-    @FXML
-    private Button btnReplies;
-
-    @FXML
-    private Button btnReply;
+    private HBox hbxMain;
 
     @FXML
     private SVGPath svgLike;
@@ -70,9 +65,8 @@ public class CommentPreviewController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        todo setComment
-//        hasLiked = ....
-//        comment = ...
+        hbxMain.getStylesheets().clear();
+        hbxMain.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/comment-preview.css")).toExternalForm());
     }
     //endregion
 
@@ -179,6 +173,17 @@ public class CommentPreviewController implements Initializable {
     }
     //endregion
 
+    public void setParentController(LayoutController layoutController) {
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            hbxMain.getStylesheets().clear();
+            hbxMain.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-preview.css")).toExternalForm());
+        });
+    }
     //endregion
 
 }
