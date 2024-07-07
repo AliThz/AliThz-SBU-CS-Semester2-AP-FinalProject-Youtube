@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -61,21 +62,32 @@
                            <children>
                               <HBox fx:id="hbxChannel" alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="195.0" spacing="20.0" HBox.hgrow="NEVER">
                                  <children>
-                                    <ImageView fx:id="imgChannelProfile" fitHeight="40.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true" />
-                                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
-                                       <children>
-                                          <Text fx:id="txtChannelName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Name">
-                                             <font>
-                                                <Font name="System Bold" size="15.0" />
-                                             </font>
-                                          </Text>
-                                          <Text fx:id="txtChannelSubscribres" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Name">
-                                             <font>
-                                                <Font size="10.0" />
-                                             </font>
-                                          </Text>
-                                       </children>
-                                    </VBox>
+                                    <Button fx:id="btnChannelProfile" mnemonicParsing="false" onAction="#getChannel">
+                                       <graphic>
+                                          <ImageView fx:id="imgChannelProfile" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                       </graphic>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Button fx:id="btnChannelName" mnemonicParsing="false" onAction="#getChannel">
+                                       <graphic>
+                                          <VBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="122.0">
+                                             <children>
+                                                <Text fx:id="txtChannelName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Name">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Text>
+                                                <Text fx:id="txtChannelSubscribres" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Subscribers">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </VBox>
+                                       </graphic>
+                                    </Button>
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="363.0" styleClass="button-group" HBox.hgrow="ALWAYS">
