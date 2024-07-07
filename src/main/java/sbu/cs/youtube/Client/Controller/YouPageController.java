@@ -404,28 +404,18 @@ public class YouPageController implements Initializable {
     private void bindItems() {
         hbxHistoryHeader.prefWidthProperty().bind(scrlbrHistory.widthProperty());
         hbxHistoryVideos.prefWidthProperty().bind(scrlbrHistory.widthProperty());
-//        hbxHistoryHeader.prefHeightProperty().bind(scrlbrHistory.heightProperty());
-//        hbxHistoryVideos.prefHeightProperty().bind(scrlbrHistory.heightProperty());
 
         hbxPlaylistsHeader.prefWidthProperty().bind(scrlbrPlaylists.widthProperty());
         hbxPlaylistsVideos.prefWidthProperty().bind(scrlbrPlaylists.widthProperty());
-//        hbxPlaylistsHeader.prefHeightProperty().bind(scrlbrPlaylists.heightProperty());
-//        hbxPlaylistsVideos.prefHeightProperty().bind(scrlbrPlaylists.heightProperty());
 
         hbxWatchLaterHeader.prefWidthProperty().bind(scrlbrWatchLater.widthProperty());
         hbxWatchLaterVideos.prefWidthProperty().bind(scrlbrWatchLater.widthProperty());
-//        hbxWatchLaterHeader.prefHeightProperty().bind(scrlbrWatchLater.heightProperty());
-//        hbxWatchLaterVideos.prefHeightProperty().bind(scrlbrWatchLater.heightProperty());
 
         hbxLikedVideosHeader.prefWidthProperty().bind(scrlbrLikedVideos.widthProperty());
         hbxLikedVideos.prefWidthProperty().bind(scrlbrLikedVideos.widthProperty());
-//        hbxLikedVideosHeader.prefHeightProperty().bind(scrlbrLikedVideos.heightProperty());
-//        hbxLikedVideos.prefHeightProperty().bind(scrlbrLikedVideos.heightProperty());
 
         hbxYourClipsHeader.prefWidthProperty().bind(scrlbrYourClips.widthProperty());
         hbxYourClips.prefWidthProperty().bind(scrlbrYourClips.widthProperty());
-//        hbxYourClipsHeader.prefHeightProperty().bind(scrlbrYourClips.heightProperty());
-//        hbxYourClips.prefHeightProperty().bind(scrlbrYourClips.heightProperty());
     }
     //endregion
 

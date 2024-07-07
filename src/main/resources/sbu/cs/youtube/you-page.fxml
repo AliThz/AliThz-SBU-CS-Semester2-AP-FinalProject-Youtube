@@ -35,7 +35,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <VBox fx:id="vbxHistory" prefHeight="320.0" prefWidth="828.0">
+      <VBox fx:id="vbxHistory" prefHeight="330.0" prefWidth="828.0">
          <children>
             <HBox fx:id="hbxHistoryHeader" prefHeight="47.0" prefWidth="849.0">
                <children>
@@ -52,9 +52,9 @@
                   </Button>
                </children>
             </HBox>
-            <ScrollPane fx:id="scrlbrHistory" hbarPolicy="NEVER" prefHeight="0.0" prefWidth="807.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="scrlbrHistory" hbarPolicy="NEVER" prefHeight="260.0" prefWidth="807.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <HBox fx:id="hbxHistoryVideos" prefHeight="250.0" prefWidth="810.0" styleClass="background" />
+                  <HBox fx:id="hbxHistoryVideos" prefHeight="260.0" prefWidth="810.0" styleClass="background" />
                </content>
             </ScrollPane>
          </children>
@@ -62,7 +62,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vbxPlaylists" prefHeight="320.0" prefWidth="828.0">
+      <VBox fx:id="vbxPlaylists" prefHeight="330.0" prefWidth="828.0">
          <children>
             <HBox fx:id="hbxPlaylistsHeader" prefHeight="47.0" prefWidth="849.0">
                <children>
@@ -79,9 +79,9 @@
                   </Button>
                </children>
             </HBox>
-            <ScrollPane fx:id="scrlbrPlaylists" hbarPolicy="NEVER" prefHeight="250.0" prefWidth="807.0" vbarPolicy="NEVER">
+            <ScrollPane fx:id="scrlbrPlaylists" hbarPolicy="NEVER" prefHeight="260.0" prefWidth="807.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <HBox fx:id="hbxPlaylistsVideos" prefHeight="250.0" prefWidth="810.0" styleClass="background" />
+                  <HBox fx:id="hbxPlaylistsVideos" prefHeight="260.0" prefWidth="810.0" styleClass="background" />
                </content>
             </ScrollPane>
          </children>
@@ -89,7 +89,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vbxWatchLater" prefHeight="320.0" prefWidth="828.0">
+      <VBox fx:id="vbxWatchLater" prefHeight="330.0" prefWidth="828.0">
          <children>
             <HBox fx:id="hbxWatchLaterHeader" prefHeight="47.0" prefWidth="849.0">
                <children>
@@ -106,9 +106,9 @@
                   </Button>
                </children>
             </HBox>
-            <ScrollPane fx:id="scrlbrWatchLater" hbarPolicy="NEVER" prefHeight="250.0" prefWidth="807.0" vbarPolicy="NEVER">
+            <ScrollPane fx:id="scrlbrWatchLater" hbarPolicy="NEVER" prefHeight="260.0" prefWidth="807.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <HBox fx:id="hbxWatchLaterVideos" prefHeight="250.0" prefWidth="810.0" styleClass="background" />
+                  <HBox fx:id="hbxWatchLaterVideos" prefHeight="260.0" prefWidth="810.0" styleClass="background" />
                </content>
             </ScrollPane>
          </children>
@@ -116,7 +116,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vbxLikedVideos" prefHeight="320.0" prefWidth="828.0">
+      <VBox fx:id="vbxLikedVideos" prefHeight="330.0" prefWidth="828.0">
          <children>
             <HBox fx:id="hbxLikedVideosHeader" prefHeight="47.0" prefWidth="849.0">
                <children>
@@ -133,9 +133,9 @@
                   </Button>
                </children>
             </HBox>
-            <ScrollPane fx:id="scrlbrLikedVideos" hbarPolicy="NEVER" prefHeight="250.0" prefWidth="807.0" vbarPolicy="NEVER">
+            <ScrollPane fx:id="scrlbrLikedVideos" hbarPolicy="NEVER" prefHeight="260.0" prefWidth="807.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <HBox fx:id="hbxLikedVideos" prefHeight="250.0" prefWidth="810.0" styleClass="background" />
+                  <HBox fx:id="hbxLikedVideos" prefHeight="260.0" prefWidth="810.0" styleClass="background" />
                </content>
             </ScrollPane>
          </children>
@@ -143,7 +143,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vbxYourClips" prefHeight="320.0" prefWidth="828.0">
+      <VBox fx:id="vbxYourClips" prefHeight="330.0" prefWidth="828.0">
          <children>
             <HBox fx:id="hbxYourClipsHeader" prefHeight="47.0" prefWidth="849.0">
                <children>
@@ -160,9 +160,9 @@
                   </Button>
                </children>
             </HBox>
-            <ScrollPane fx:id="scrlbrYourClips" hbarPolicy="NEVER" prefHeight="250.0" prefWidth="807.0" vbarPolicy="NEVER">
+            <ScrollPane fx:id="scrlbrYourClips" hbarPolicy="NEVER" prefHeight="260.0" prefWidth="807.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <HBox fx:id="hbxYourClips" prefHeight="250.0" prefWidth="810.0" styleClass="background" />
+                  <HBox fx:id="hbxYourClips" prefHeight="260.0" prefWidth="810.0" styleClass="background" />
                </content>
             </ScrollPane>
          </children>
