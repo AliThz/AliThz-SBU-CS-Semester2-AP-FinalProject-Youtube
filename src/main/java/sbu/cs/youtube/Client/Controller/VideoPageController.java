@@ -174,8 +174,6 @@ public class VideoPageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         //region [ - Bindings - ]
-//        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.prefViewportWidthProperty());
-//        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.prefViewportHeightProperty());
         vbxCommentSection.prefWidthProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getWidth));
         vbxCommentSection.prefHeightProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getHeight));
         vbxLeft.prefWidthProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getWidth));
@@ -210,11 +208,7 @@ public class VideoPageController implements Initializable {
 
         //region [ - Video API - ]
         Gson gson = new Gson();
-        LocalDateTime t1 = LocalDateTime.now();
         String response = YouTubeApplication.receiveResponse();
-        LocalDateTime t2 = LocalDateTime.now();
-        java.time.Duration duration1 = java.time.Duration.between(t1,t2);
-        System.out.println("------------------------------ 1 :   " + duration1.toSeconds());
         TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
         };
         Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
