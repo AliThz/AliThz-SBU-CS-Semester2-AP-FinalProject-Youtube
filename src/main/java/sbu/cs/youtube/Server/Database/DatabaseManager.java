@@ -1547,7 +1547,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT c."Id"\s
+                    SELECT c."Id"
                     FROM "UserManagement"."User" u INNER JOIN "UserManagement"."Channel" c
                     ON u."Id" = c."CreatorId"   
                     WHERE c."CreatorId" = ?;
@@ -1556,20 +1556,19 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannelId(UUID.fromString(rs.getString("Id")));
             }
 
             stmt = c.prepareStatement("""
-                    INSERT INTO "ContentManagement"."Video"(\"Id\", Title, Description, ChannelId , \"UploadDate\" , "Path" , "ThumbnailPath") 
-                    VALUES (?, ?, ?, ?, ?, ?, ?);
+                    INSERT INTO "ContentManagement"."Video"(\"Id\", "Title", "Description", "ChannelId" , "Path" , "ThumbnailPath") 
+                    VALUES (?, ?, ?, ?, ?, ?);
                     """);
             stmt.setObject(1, video.getId());
             stmt.setString(2, video.getTitle());
             stmt.setString(3, video.getDescription());
             stmt.setObject(4, video.getChannelId());
-            stmt.setObject(5, video.getUploadDate());
-            stmt.setObject(6, video.getPath());
-            stmt.setObject(7, video.getThumbnailPath());
+            stmt.setObject(5, video.getPath());
+            stmt.setObject(6, video.getThumbnailPath());
             stmt.executeUpdate();
             c.commit();
 
