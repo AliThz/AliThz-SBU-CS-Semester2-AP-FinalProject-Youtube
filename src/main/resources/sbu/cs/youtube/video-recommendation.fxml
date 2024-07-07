@@ -28,7 +28,7 @@
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Text>
-                        <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel Name" />
+                        <Button fx:id="btnChannelName" mnemonicParsing="false" onAction="#getChannel" prefHeight="26.0" prefWidth="94.0" styleClass="btn-channel" text="Channel Name" />
                         <HBox fx:id="hbxViewsAndDate" alignment="BOTTOM_LEFT" prefHeight="10.0" prefWidth="188.0" spacing="5.0">
                            <children>
                               <Text fx:id="txtViews" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Views">

@@ -11,6 +11,13 @@
 .add-btn:hover {
     -fx-background-color : rgb(33, 33, 33);
 }
+
 .add-btn:pressed {
     -fx-background-color : rgb(41, 41, 41);
+}
+
+.btn-channel{
+    -fx-background-color : transparent;
+    -fx-background-radius : 100;
+    -fx-text-fill: rgb(200, 200, 200);
 }

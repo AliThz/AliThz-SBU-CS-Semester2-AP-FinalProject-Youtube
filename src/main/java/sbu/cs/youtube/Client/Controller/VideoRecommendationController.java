@@ -2,7 +2,11 @@ package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,9 +14,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import sbu.cs.youtube.Shared.POJO.Channel;
 import sbu.cs.youtube.Shared.POJO.Video;
+import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -43,7 +52,7 @@ public class VideoRecommendationController implements Initializable {
     private SVGPath svgpthVideoPreviewOptions;
 
     @FXML
-    private Text txtChannelName;
+    private Button btnChannelName;
 
     @FXML
     private Text txtDate;
@@ -86,7 +95,7 @@ public class VideoRecommendationController implements Initializable {
             summarizedTitle += " ...";
         }
         txtVideoTitle.setText(summarizedTitle);
-        txtChannelName.setText(video.getChannel().getTitle());
+        btnChannelName.setText(video.getChannel().getTitle());
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth());
         txtViews.setText(String.valueOf(video.getViewcount()));
@@ -95,6 +104,34 @@ public class VideoRecommendationController implements Initializable {
         bis = new ByteArrayInputStream(video.getThumbnailBytes());
         Image videoThumbnail = new Image(bis);
         imgThumbnail.setImage(videoThumbnail);
+    }
+    //endregion
+
+    //region [ - getChannel(ActionEvent event) - ]
+    @FXML
+    private void getChannel(ActionEvent event) {
+        Request<Channel> videoRequest = new Request<>(YouTubeApplication.socket, "GetChannel");
+        videoRequest.send(new Channel(video.getChannelId()));
+
+        getChannelPage(event);
+    }
+    //endregion
+
+    //region [ - getChannelPage(ActionEvent event) - ]
+    private void getChannelPage(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, hbxVideoRecommendation.getScene().getWidth(), hbxVideoRecommendation.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 }
