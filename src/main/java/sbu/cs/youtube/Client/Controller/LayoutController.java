@@ -92,7 +92,6 @@ public class LayoutController implements Initializable {
     //region [ - Methods - ]
 
     //region [ - initialize(URL location, ResourceBundle resources) - ]
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setMode();
@@ -119,8 +118,8 @@ public class LayoutController implements Initializable {
     }
     //endregion
 
+    //region [ - setMode() - ]
     private void setMode() {
-
         vbxLayout.getStylesheets().clear();
         vbxLayout.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
         scrollPane.getStylesheets().clear();
@@ -137,7 +136,7 @@ public class LayoutController implements Initializable {
         }
 
     }
-
+    //endregion
 
     //region [ - disableButtons() - ]
     private void disableButtons() {
@@ -148,7 +147,6 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - openSesame() - ]
-
     @FXML
     protected void openSesame() {
         if (isExpanded) {
