@@ -710,21 +710,25 @@ public class DatabaseManager {
         Connection c;
         PreparedStatement stmt;
         Channel channel = null;
-        try {
 
+        try {
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (selectChannel)");
 
+            // Get channel details
             stmt = c.prepareStatement("""
-                    SELECT * FROM "UserManagement"."Channel" 
-                    WHERE \"Id\" = ?;
-                    """);
+            SELECT c."Id", c."CreatorId", c."Title", c."Description", c."DateCreated",
+                (SELECT COUNT("SubscriberId") FROM "UserManagement"."Subscription" WHERE "ChannelId" = c."Id") AS "SubscriberCount",
+                (SELECT COUNT("Id") FROM "ContentManagement"."Video" WHERE "ChannelId" = c."Id") AS "VideoCount"
+            FROM "UserManagement"."Channel" c
+            WHERE c."Id" = ?
+        """);
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
 
-            channel = new Channel();
             if (rs.next()) {
+                channel = new Channel();
                 channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
                 channel.setTitle(rs.getString("Title"));
                 channel.setDescription(rs.getString("Description"));
@@ -733,29 +737,7 @@ public class DatabaseManager {
                     Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                     channel.setDateCreated(timestamp.toLocalDateTime().toString());
                 }
-            }
-
-            stmt = c.prepareStatement("""
-                    SELECT COUNT("SubscriberId") AS "SubscriberCount"
-                    FROM "UserManagement"."Subscription"
-                    WHERE "ChannelId" = ?;
-                    """);
-
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
                 channel.setSubscriberCount(rs.getInt("SubscriberCount"));
-            }
-
-            stmt = c.prepareStatement("""
-                    SELECT COUNT("Id") AS "VideoCount"
-                    FROM "ContentManagement"."Video"
-                    WHERE "ChannelId" = ?;
-                    """);
-
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
                 channel.setVideoCounts(rs.getInt("VideoCount"));
             }
 
@@ -767,8 +749,59 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+
         return channel;
     }
+    //endregion
+
+    //region [ - selectChannelByUser(UUID userId) - ] Tested
+    public Channel selectChannelByUser(UUID creatorId) {
+        Connection c;
+        PreparedStatement stmt;
+        Channel channel = null;
+
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectChannel)");
+
+            // Get channel details
+            stmt = c.prepareStatement("""
+            SELECT c."Id", c."Title", c."Description", c."DateCreated",
+                (SELECT COUNT("SubscriberId") FROM "UserManagement"."Subscription" WHERE "ChannelId" = c."Id") AS "SubscriberCount",
+                (SELECT COUNT("Id") FROM "ContentManagement"."Video" WHERE "ChannelId" = c."Id") AS "VideoCount"
+            FROM "UserManagement"."Channel" c
+            WHERE c."CreatorId" = ?
+        """);
+            stmt.setObject(1, creatorId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                channel = new Channel();
+                channel.setCreatorId(creatorId);
+                channel.setTitle(rs.getString("Title"));
+                channel.setDescription(rs.getString("Description"));
+                channel.setId(UUID.fromString(rs.getString("Id")));
+                if (rs.getString("DateCreated") != null) {
+                    Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
+                    channel.setDateCreated(timestamp.toLocalDateTime().toString());
+                }
+                channel.setSubscriberCount(rs.getInt("SubscriberCount"));
+                channel.setVideoCounts(rs.getInt("VideoCount"));
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectChannel)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+
+        return channel;
+    }
+
     //endregion
 
     //region [ - updateChannel(Channel channel) - ] Tested
@@ -1856,11 +1889,11 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId" ,
-                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE uv."VideoId" = v."Id") AS "VideoViewCount"
-                    FROM "ContentManagement"."Video" v JOIN "ContentManagement"."UserVideo" uv
-                    ON v."Id" = uv."VideoId"
-                    WHERE uv."UserId" = ?;
+            SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId" ,
+                (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" uvv WHERE uvv."VideoId" = v."Id") AS "VideoViewCount"
+            FROM "ContentManagement"."Video" v JOIN "ConntManagemetent"."UserVideo" uv
+            ON v."Id" = uv."VideoId"
+            WHERE uv."UserId" = ? ;
                     """);
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
