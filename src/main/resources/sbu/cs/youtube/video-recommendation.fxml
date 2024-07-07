@@ -47,6 +47,9 @@
                                  </font>
                               </Text>
                            </children>
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
                         </HBox>
                      </children>
                   </VBox>
