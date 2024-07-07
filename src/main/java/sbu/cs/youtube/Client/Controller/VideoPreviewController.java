@@ -78,6 +78,10 @@ public class VideoPreviewController implements Initializable {
             event.consume();
             getChannel(event);
         });
+
+        vbxVideoPreview.getStylesheets().clear();
+        vbxVideoPreview.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-preview.css")).toExternalForm());
+
     }
     //endregion
 

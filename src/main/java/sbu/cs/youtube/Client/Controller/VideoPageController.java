@@ -164,6 +164,7 @@ public class VideoPageController implements Initializable {
 
     private StackPane videoStack;
 
+    private LayoutController parentController;
 
     //endregion
 
@@ -244,6 +245,9 @@ public class VideoPageController implements Initializable {
 //        displayRecommendedVideos();
         new Thread(this::displayComments).start();
 //        displayComments();
+
+        anchrpnVideoPage.getStylesheets().clear();
+        anchrpnVideoPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-page.css")).toExternalForm());
     }
     //endregion
 
@@ -358,13 +362,17 @@ public class VideoPageController implements Initializable {
                     HBox videoRecommendation;
                     try {
                         videoRecommendation = videoRecommendationLoader.load();
-                        VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
-                        if (videoRecommendationController != null) {
-                            videoRecommendationController.setVideo(v);
-                        }
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
+                    if (videoRecommendationController != null) {
+                        videoRecommendationController.setVideo(v);
+                    }
+
+                    videoRecommendationController.setParentController(parentController);
+
                     Button button = new Button();
                     button.getStyleClass().add("btn-video");
                     button.setGraphic(videoRecommendation);
@@ -448,6 +456,7 @@ public class VideoPageController implements Initializable {
                     commentPreview = commentPreviewLoader.load();
                     CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
                     commentPreviewController.setComment(comment);
+                    commentPreviewController.setParentController(parentController);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -814,6 +823,7 @@ public class VideoPageController implements Initializable {
 
     //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
+       this.parentController = layoutController;
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
         layoutController.btnMode.setOnAction(event -> {

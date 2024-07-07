@@ -45,3 +45,9 @@
 .add-svg {
     -fx-fill: black;
 }
+
+.btn-channel {
+    -fx-background-color : transparent;
+    -fx-background-radius : 100;
+    -fx-text-fill: rgb(50,50,50);
+}

@@ -838,7 +838,7 @@ public class ClientHandler implements Runnable {
         User requestedUser = userRequest.getBody();
         Channel channel;
 
-        channel = databaseManager.selectChannel(requestedUser.getId());
+        channel = databaseManager.selectChannelByUser(requestedUser.getId());
 
         if (channel != null) {
             response = new Response<>(client, userRequest.getType(), true, "channel received successfully");
