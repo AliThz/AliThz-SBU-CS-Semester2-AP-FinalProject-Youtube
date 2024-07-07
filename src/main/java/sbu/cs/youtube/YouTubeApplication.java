@@ -299,11 +299,13 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
         //        ------------------------- Select VidoeCategories Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-//        Request<Playlist> playlistRequest = new Request<>(socket, "CreatPlaylist");
-//        Playlist playlist = new Playlist("My favorite videos" , "vayyy ashegh video hamam" , UUID.fromString("75d0f9e8-cad4-48f4-8947-9d8486d4d991") , false);
-//        playlistRequest.send(playlist);
+        Request<Video> videoRequest = new Request<>(socket, "SearchVideo");
+        Video video = new Video();
+        video.setTitle("vel");
+        videoRequest.send(video);
         YouTubeApplication client = new YouTubeApplication(socket);
+        String response = receiveResponse();
+        System.out.println(response);
         launch();
-        receiveResponse();
     }
 }

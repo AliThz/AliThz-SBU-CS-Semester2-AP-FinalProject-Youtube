@@ -647,18 +647,6 @@ public class DatabaseManager {
                 channel.setSubscriberCount(rs.getInt("SubscriberCount"));
             }
 
-            stmt = c.prepareStatement("""
-                    SELECT COUNT("Id") AS "VideoCount"
-                    FROM "ContentManagement"."Video"
-                    WHERE "ChannelId" = ?;
-                    """);
-
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
-                channel.setVideoCounts(rs.getInt("VideoCount"));
-            }
-
             rs.close();
             stmt.close();
             c.close();
@@ -1839,6 +1827,52 @@ public class DatabaseManager {
             stmt.close();
             c.close();
             System.out.println("Operation done successfully (select history)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
+
+    //region [ - selectVideosByTitle(UUID channelId) - ] Not test
+    public ArrayList<Video> selectVideosByTitle(String videoTitle) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = new ArrayList<>();
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (selectVideosByTitle)");
+
+            stmt = c.prepareStatement("""
+                SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description" , "ChannelId"
+                FROM "ContentManagement"."Video"
+                WHERE "Title" LIKE ?
+                """);
+
+            stmt.setString(1, "%" + videoTitle + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+                // video.setCategories(selectVideoCategories(video.getId()));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectVideosByTitle)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
