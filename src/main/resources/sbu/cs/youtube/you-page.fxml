@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
@@ -27,7 +28,10 @@
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Text>
-                  <Button fx:id="btnViewChannel" mnemonicParsing="false" prefHeight="26.0" prefWidth="165.0" styleClass="btn-view-channel" text="\@Userame  •  View Channel" />
+                  <Button fx:id="btnViewChannel" mnemonicParsing="false" onAction="#getChannel" prefHeight="26.0" prefWidth="165.0" styleClass="btn-view-channel" text="\@Userame  •  View Channel">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
                </children>
             </VBox>
          </children>

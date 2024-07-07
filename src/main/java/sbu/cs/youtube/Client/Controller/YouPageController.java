@@ -19,6 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sbu.cs.youtube.Shared.POJO.Channel;
 import sbu.cs.youtube.Shared.POJO.Playlist;
 import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.POJO.Video;
@@ -402,6 +403,52 @@ public class YouPageController implements Initializable {
     }
     //endregion
 
+    //region [ - getVideoPage(ActionEvent event) - ]
+    private void getVideoPage(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxDashboard.getScene().getWidth(), vbxDashboard.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
+
+    //region [ - getChannel(ActionEvent event) - ]
+    @FXML
+    private void getChannel(ActionEvent event) {
+        Request<User> videoRequest = new Request<>(YouTubeApplication.socket, "GetUserChannel");
+        videoRequest.send(new User(YouTubeApplication.user.getId()));
+
+        getChannelPage(event);
+    }
+    //endregion
+
+    //region [ - getChannelPage(ActionEvent event) - ]
+    private void getChannelPage(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxDashboard.getScene().getWidth(), vbxDashboard.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
+
     //region [ - bindItems() - ]
     private void bindItems() {
         hbxHistoryHeader.prefWidthProperty().bind(scrlbrHistory.widthProperty());
@@ -418,24 +465,6 @@ public class YouPageController implements Initializable {
 
         hbxYourClipsHeader.prefWidthProperty().bind(scrlbrYourClips.widthProperty());
         hbxYourClips.prefWidthProperty().bind(scrlbrYourClips.widthProperty());
-    }
-    //endregion
-
-    //region [ - getVideoPage(ActionEvent event) - ]
-    private void getVideoPage(ActionEvent event) {
-        Stage stage;
-        Scene scene;
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-section.fxml"));
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, vbxDashboard.getScene().getWidth(), vbxDashboard.getScene().getHeight());
-        stage.setScene(scene);
-        stage.show();
     }
     //endregion
 
