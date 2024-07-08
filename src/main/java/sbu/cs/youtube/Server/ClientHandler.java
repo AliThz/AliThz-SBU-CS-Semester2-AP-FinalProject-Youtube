@@ -806,13 +806,13 @@ public class ClientHandler implements Runnable {
     //region [ - searchVideo() - ]
 
     private void searchVideo() {
-        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        TypeToken<Request<String>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<String> videoRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Video>> response;
 
-        Video video = videoRequest.getBody();
-        ArrayList<Video> videos = databaseManager.selectVideosByTitle(video.getTitle());
+        String videoTitle = videoRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByTitle(videoTitle);
 
         response = new Response<>(client, videoRequest.getType(), true, "Search For Video Successfully");
         response.send(videos);

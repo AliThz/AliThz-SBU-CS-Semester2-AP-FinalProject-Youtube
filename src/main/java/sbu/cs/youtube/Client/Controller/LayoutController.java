@@ -53,7 +53,7 @@ public class LayoutController implements Initializable {
     protected HBox searchHbx;
 
     @FXML
-    protected Button searchBtn;
+    protected Button btnSearch;
 
     @FXML
     protected TextField searchField;
@@ -124,6 +124,7 @@ public class LayoutController implements Initializable {
         } else {
             flowPane.getChildren().removeFirst();
         }
+        btnSearch.setOnAction(event -> search(event, searchField.getText()));
     }
     //endregion
 
@@ -710,6 +711,12 @@ public class LayoutController implements Initializable {
         scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
+    }
+    //endregion
+
+    //region [ - search(ActionEvent event, String searchedText) - ]
+    private void search(ActionEvent event, String searchedText) {
+
     }
     //endregion
 
