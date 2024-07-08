@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import sbu.cs.youtube.Shared.POJO.Channel;
+import sbu.cs.youtube.Shared.POJO.User;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.YouTubeApplication;
 
@@ -196,7 +197,7 @@ public class LayoutController implements Initializable {
             yourChannelBtn.setGraphic(yourChannelPane);
             yourChannelBtn.getStyleClass().add("side-btn");
             yourChannelBtn.setTooltip(new Tooltip("Your Channel"));
-            yourChannelBtn.setOnAction(this::getYourChannelPage);
+            yourChannelBtn.setOnAction(this::getDashboard);
             //endregion
 
             //region [ - History Button - ]
@@ -211,7 +212,7 @@ public class LayoutController implements Initializable {
             historyBtn.setGraphic(historyPane);
             historyBtn.getStyleClass().add("side-btn");
             historyBtn.setTooltip(new Tooltip("History"));
-            historyBtn.setOnAction(this::getHistoryPage);
+            historyBtn.setOnAction(this::setYouSection);
             //endregion
 
             //region [ - Playlists Button - ]
@@ -226,7 +227,7 @@ public class LayoutController implements Initializable {
             playlistsBtn.setGraphic(playlistsPane);
             playlistsBtn.getStyleClass().add("side-btn");
             playlistsBtn.setTooltip(new Tooltip("Playlists"));
-            playlistsBtn.setOnAction(this::getHistoryPage);
+            playlistsBtn.setOnAction(this::setYouSection);
             //endregion
 
             //region [ - WatchLater Button - ]
@@ -439,13 +440,6 @@ public class LayoutController implements Initializable {
     }
     //endregion
 
-    //region [ - getYourChannelPage(ActionEvent event) - ]
-
-    private void getYourChannelPage(ActionEvent event) {
-        setDefaultSvgs();
-    }
-    //endregion
-
     //region [ - setRightNavBarHBox() - ]
 
     protected void setRightNavBarHBox() {
@@ -576,22 +570,22 @@ public class LayoutController implements Initializable {
     protected void getDashboard(ActionEvent event) {
         setDefaultSvgs();
 
-//        Request<Channel> videoRequest = new Request<>(YouTubeApplication.socket, "GetChannel");
-//        videoRequest.send(new Channel(video.getChannelId()));
-//
-//        Stage stage;
-//        Scene scene;
-//        Parent root;
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
-//        try {
-//            root = loader.load();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
-//        stage.setScene(scene);
-//        stage.show();
+        Request<User> videoRequest = new Request<>(YouTubeApplication.socket, "GetUserChannel");
+        videoRequest.send(new User(YouTubeApplication.user.getId()));
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
 
     }
 
