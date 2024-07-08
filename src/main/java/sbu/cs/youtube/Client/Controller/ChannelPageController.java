@@ -346,6 +346,7 @@ public class ChannelPageController implements Initializable {
     //region [ - showDialog() - ]
     @FXML
     private void showDialog() {
+        isUpdating = false;
         // Sample user
         User user = new User("Email", "Username", "Password");
 
