@@ -2929,6 +2929,7 @@ public class DatabaseManager {
                 playlist.setTitle(rs.getString("Title"));
                 playlist.setDescription(rs.getString("Description"));
                 playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                playlist.setCreator(selectUserBriefly(playlist.getId()));
                 playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
@@ -3103,6 +3104,7 @@ public class DatabaseManager {
                 playlist.setTitle(rs.getString("Title"));
                 playlist.setDescription(rs.getString("Description"));
                 playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                playlist.setCreator(selectUserBriefly(playlist.getCreatorId()));
                 playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
                 playlist.setThumbnailBytes(convertImageToByteArray(playlist.getThumbnailPath()));
                 playlist.setVideos(rs.getInt("Videos"));
