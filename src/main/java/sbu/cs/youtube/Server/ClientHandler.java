@@ -773,10 +773,11 @@ public class ClientHandler implements Runnable {
         }
 
         databaseManager.updateUser(user);
+        User updatedUser = databaseManager.selectUserBriefly(user.getId());
 
         Response<User> response;
         response = new Response<>(client, userRequest.getType(), true, "User Info Changed ");
-        response.send();
+        response.send(updatedUser);
     }
     //endregion
 
