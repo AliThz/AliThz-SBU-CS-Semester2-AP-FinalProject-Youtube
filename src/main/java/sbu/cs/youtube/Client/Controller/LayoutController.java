@@ -1,5 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,15 +21,17 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import sbu.cs.youtube.Shared.POJO.Channel;
-import sbu.cs.youtube.Shared.POJO.User;
+import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class LayoutController implements Initializable {
 
@@ -287,7 +291,7 @@ public class LayoutController implements Initializable {
             trendingPane.getStyleClass().add("flow-pane");
             trendingBtn.setGraphic(trendingPane);
             trendingBtn.getStyleClass().add("side-btn");
-            trendingBtn.setOnAction(event -> getCategory(event, "Trending"));
+            trendingBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("1c577d77-1a69-4207-9642-b9d356e3082d"), trendingBtn.getText())));
             //endregion
 
             //region [ - Music Button - ]
@@ -301,7 +305,7 @@ public class LayoutController implements Initializable {
             musicPane.getStyleClass().add("flow-pane");
             musicBtn.setGraphic(musicPane);
             musicBtn.getStyleClass().add("side-btn");
-            musicBtn.setOnAction(event -> getCategory(event, "Music"));
+            musicBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("23278ae1-3944-44df-af8e-28ecaeffc771"), musicBtn.getText())));
             //endregion
 
             //region [ - Movies&TV Button - ]
@@ -315,7 +319,7 @@ public class LayoutController implements Initializable {
             moviesPane.getStyleClass().add("flow-pane");
             moviesBtn.setGraphic(moviesPane);
             moviesBtn.getStyleClass().add("side-btn");
-            moviesBtn.setOnAction(event -> getCategory(event, "Movies"));
+            moviesBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("8442cd0e-7d67-497a-a172-e09910dc12c0"), moviesBtn.getText())));
             //endregion
 
             //region [ - Gaming Button - ]
@@ -329,7 +333,7 @@ public class LayoutController implements Initializable {
             gamingPane.getStyleClass().add("flow-pane");
             gamingBtn.setGraphic(gamingPane);
             gamingBtn.getStyleClass().add("side-btn");
-            gamingBtn.setOnAction(event -> getCategory(event, "Gaming"));
+            gamingBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("8d68738b-e384-4681-9a48-ba4b42aaf2e7"), gamingBtn.getText())));
             //endregion
 
             //region [ - News Button - ]
@@ -343,7 +347,7 @@ public class LayoutController implements Initializable {
             newsPane.getStyleClass().add("flow-pane");
             newsBtn.setGraphic(newsPane);
             newsBtn.getStyleClass().add("side-btn");
-            newsBtn.setOnAction(event -> getCategory(event, "News"));
+            newsBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("dcc365a3-1671-49c7-a3ea-ae61f52ac629"), newsBtn.getText())));
             //endregion
 
             //region [ - Sports Button - ]
@@ -357,7 +361,7 @@ public class LayoutController implements Initializable {
             sportsPane.getStyleClass().add("flow-pane");
             sportsBtn.setGraphic(sportsPane);
             sportsBtn.getStyleClass().add("side-btn");
-            sportsBtn.setOnAction(event -> getCategory(event, "Sports"));
+            sportsBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("c1dddd73-ecca-4897-aaf4-f584bf3e26fa"), sportsBtn.getText())));
             //endregion
 
             //region [ - Learning Button - ]
@@ -371,7 +375,7 @@ public class LayoutController implements Initializable {
             learningPane.getStyleClass().add("flow-pane");
             learningBtn.setGraphic(learningPane);
             learningBtn.getStyleClass().add("side-btn");
-            learningBtn.setOnAction(event -> getCategory(event, "Learning"));
+            learningBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("518cfb98-b4a3-46c7-9533-e7cbb68e16f3"), learningBtn.getText())));
             //endregion
 
             //region [ - Fashion&Beauty Button - ]
@@ -385,7 +389,7 @@ public class LayoutController implements Initializable {
             fashionPane.getStyleClass().add("flow-pane");
             fashionBtn.setGraphic(fashionPane);
             fashionBtn.getStyleClass().add("side-btn");
-            fashionBtn.setOnAction(event -> getCategory(event, "Fashion"));
+            fashionBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("493a8465-40b6-4379-ae02-e302b797b6f9"), fashionBtn.getText())));
             //endregion
 
             //region [ - Podcasts Button - ]
@@ -399,7 +403,7 @@ public class LayoutController implements Initializable {
             podcastsPane.getStyleClass().add("flow-pane");
             podcastsBtn.setGraphic(podcastsPane);
             podcastsBtn.getStyleClass().add("side-btn");
-            podcastsBtn.setOnAction(event -> getCategory(event, "Podcasts"));
+            podcastsBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("95e32988-1ee7-479a-9a1f-340bfc225893"), podcastsBtn.getText())));
             //endregion
 
             sideVbx.getChildren().addAll(trendingBtn, musicBtn, moviesBtn, gamingBtn, newsBtn, sportsBtn, learningBtn, fashionBtn, podcastsBtn);
@@ -421,8 +425,9 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - getCategory(ActionEvent event) - ]
-    private void getCategory(ActionEvent event, String category) {
+    private void getCategory(ActionEvent event, Category category) {
         setDefaultSvgs();
+        getCategoryPage(event, category);
     }
     //endregion
 
@@ -680,6 +685,36 @@ public class LayoutController implements Initializable {
     }
     //endregion
 
+    //region [ - getCategoryPage(ActionEvent event, Category category) - ]
+    private void getCategoryPage(ActionEvent event, Category category) {
+        Gson gson = new Gson();
+        new Request<Category>(YouTubeApplication.socket, "GetCategoryVideos").send(category);
+        TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {};
+        Response<ArrayList<Video>> playlistResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
+        ArrayList<Video> videos = playlistResponse.getBody();
+
+        Playlist categoryPlaylist = new Playlist();
+        categoryPlaylist.setTitle(category.getTitle());
+        categoryPlaylist.setPlaylistDetails(new ArrayList<>());
+        videos.forEach(v -> categoryPlaylist.getPlaylistDetails().add(new PlaylistDetail(categoryPlaylist.getId(), v.getId())));
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-section.fxml"));
+        try {
+            root = loader.load();
+            PlaylistSectionController playlistSectionController = loader.getController();
+            playlistSectionController.setPlaylist(categoryPlaylist);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
 
     //endregion
 

@@ -391,7 +391,6 @@ public class DatabaseManager {
         PreparedStatement stmt;
         User user = null;
         try {
-
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (selectUserByUsername)");
