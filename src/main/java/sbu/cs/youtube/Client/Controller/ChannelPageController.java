@@ -413,7 +413,7 @@ public class ChannelPageController implements Initializable {
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                return new User(fullNameField.getText(), emailField.getText(), avatarChanged ? newImage.getAbsolutePath() : null, avatarChanged ? convertImageToByteArray(newImage.getAbsolutePath()) : null, usernameField.getText(), passwordField.getText().isEmpty() ? YouTubeApplication.user.getPassword() : passwordField.getText());
+                return new User(fullNameField.getText(), emailField.getText(), avatarChanged ? convertImageToByteArray(newImage.getAbsolutePath()) : null, usernameField.getText(), passwordField.getText().isEmpty() ? YouTubeApplication.user.getPassword() : passwordField.getText());
             }
             return null;
         });
@@ -448,6 +448,9 @@ public class ChannelPageController implements Initializable {
             }
             if (avatarChanged)
                 YouTubeApplication.user.setAvatarBytes(convertImageToByteArray(newImage.getAbsolutePath()));
+            else {
+                YouTubeApplication.user.setAvatarBytes(null);
+            }
         });
 
 

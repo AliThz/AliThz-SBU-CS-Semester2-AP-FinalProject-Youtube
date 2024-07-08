@@ -12,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -26,6 +28,7 @@ import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -492,8 +495,15 @@ public class LayoutController implements Initializable {
             notificationsSvg.setContent("M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z");
             notificationsSvg.getStyleClass().add("notifications-svg");
 
-            Circle clip = new Circle(11.5, 11.5, 11);
-            Label accountImg = new Label();
+            Circle clip = new Circle(17, 17, 13);
+            ByteArrayInputStream bis;
+            bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
+            Image avatar = new Image(bis);
+            ImageView accountImg = new ImageView(avatar);
+
+            accountImg.fitWidthProperty().set(34);
+            accountImg.fitHeightProperty().set(34);
+
             accountImg.getStyleClass().add("account-img");
             accountImg.setClip(clip);
 

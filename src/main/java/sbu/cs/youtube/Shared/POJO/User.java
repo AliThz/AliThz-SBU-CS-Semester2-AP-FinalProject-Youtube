@@ -45,7 +45,7 @@ public class User {
         viewedVideos = new ArrayList<>();
     }
 
-    public User(String fullName, String email, String avatarPath, byte[] avatarBytes, String username, String password) {
+    public User(String fullName, String email, byte[] avatarBytes, String username, String password) {
         this.fullName = fullName;
         this.email = email;
         this.avatarPath = avatarPath;

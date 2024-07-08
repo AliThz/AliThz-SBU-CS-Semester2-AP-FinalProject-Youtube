@@ -122,7 +122,6 @@
 /* -------------------------------- Account Button -------------------------------- */
 
 .account-img {
-    -fx-background-image: url("../../Images/SrgtSajjad.jpg");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-color: transparent;
