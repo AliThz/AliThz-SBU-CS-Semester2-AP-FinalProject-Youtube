@@ -481,17 +481,16 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     UPDATE "UserManagement"."User"
-                    SET "FullName" = ?, "Email" = ?, "DateOfBirth" = ?, "Username" = ?, \"Password\" = ?, "AvatarPath" = ?
+                    SET "FullName" = ?, "Email" = ?, "Username" = ?, \"Password\" = ?, "AvatarPath" = ?
                     WHERE \"Id\" = ?;
                     """);
 
             stmt.setString(1, user.getFullName());
             stmt.setString(2, user.getEmail());
-            stmt.setObject(3, LocalDateTime.parse(user.getDateOfBirth()));
-            stmt.setString(4, user.getUsername());
-            stmt.setString(5, user.getPassword());
-            stmt.setObject(6, user.getAvatarPath());
-            stmt.setObject(7, user.getId());
+            stmt.setString(3, user.getUsername());
+            stmt.setString(4, user.getPassword());
+            stmt.setObject(5, user.getAvatarPath());
+            stmt.setObject(6, user.getId());
 
             stmt.executeUpdate();
             c.commit();
@@ -2928,6 +2927,7 @@ public class DatabaseManager {
                 playlist.setTitle(rs.getString("Title"));
                 playlist.setDescription(rs.getString("Description"));
                 playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                playlist.setCreator(selectUserBriefly(playlist.getId()));
                 playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
@@ -3102,6 +3102,7 @@ public class DatabaseManager {
                 playlist.setTitle(rs.getString("Title"));
                 playlist.setDescription(rs.getString("Description"));
                 playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
+                playlist.setCreator(selectUserBriefly(playlist.getCreatorId()));
                 playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
                 playlist.setThumbnailBytes(convertImageToByteArray(playlist.getThumbnailPath()));
                 playlist.setVideos(rs.getInt("Videos"));

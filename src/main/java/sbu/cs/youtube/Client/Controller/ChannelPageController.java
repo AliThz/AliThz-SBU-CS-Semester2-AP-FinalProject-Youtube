@@ -22,12 +22,16 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.commons.codec.digest.DigestUtils;
 import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -106,6 +110,12 @@ public class ChannelPageController implements Initializable {
     private LayoutController parentController;
 
     File newImage;
+
+    boolean updateable;
+
+    boolean avatarChanged;
+
+    boolean isUpdating;
 
     //endregion
 
@@ -350,7 +360,8 @@ public class ChannelPageController implements Initializable {
 
         // Set the button types
         ButtonType updateButtonType = new ButtonType("Update", ButtonType.OK.getButtonData());
-        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonType.CANCEL.getButtonData());
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, cancelButtonType);
 
         // Create the labels and fields
         GridPane grid = new GridPane();
@@ -358,24 +369,31 @@ public class ChannelPageController implements Initializable {
         grid.setVgap(10);
 
         TextField fullNameField = new TextField();
-        fullNameField.setText(user.getUsername());
+        fullNameField.setPromptText("New Full Name");
+        fullNameField.setText(YouTubeApplication.user.getFullName());
         TextField usernameField = new TextField();
-        usernameField.setText(user.getUsername());
+        usernameField.setPromptText("New Username");
+        usernameField.setText(YouTubeApplication.user.getUsername());
         TextField emailField = new TextField();
-        emailField.setText(user.getEmail());
+        emailField.setPromptText("New Email");
+        emailField.setText(YouTubeApplication.user.getEmail());
         TextField passwordField = new TextField();
-        passwordField.setText(user.getEmail());
+        passwordField.setPromptText("New Password");
         ImageView imageView = new ImageView(avatar);
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
         Button uploadButton = new Button("", imageView);
 
+        avatarChanged = false;
         uploadButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select new Avatar");
             FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
             fileChooser.getExtensionFilters().add(extensionFilter);
             newImage = fileChooser.showOpenDialog(vbxChannelPage.getScene().getWindow());
+            if (newImage != null) {
+                avatarChanged = true;
+            }
         });
         uploadButton.getStyleClass().add("btn-upload");
 
@@ -392,51 +410,71 @@ public class ChannelPageController implements Initializable {
 
         dialog.getDialogPane().setContent(grid);
 
-        String newFullName = fullNameField.getText();
-        String newUsername = usernameField.getText();
-        String newEmail = emailField.getText();
-        String newPassword = passwordField.getText();
-
-        boolean updateable = true;
-
-        if (!newFullName.isEmpty() && !verifyFullName(newFullName))
-            updateable = false;
-        if(!newUsername.isEmpty() && !verifyUsername(newUsername))
-            updateable = false;
-        if (!newEmail.isEmpty() && !verifyEmail(newEmail))
-            updateable = false;
-        if (!newPassword.isEmpty() && !verifyPassword(newPassword))
-            updateable = false;
-
-        if (updateable) {
-            //todo do something
-        }
-
-
-        //todo wtf do these do?
-
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                return new User(emailField.getText(), usernameField.getText(), passwordField.getText());
+                return new User(fullNameField.getText(), emailField.getText(), avatarChanged ? newImage.getAbsolutePath() : null, avatarChanged ? convertImageToByteArray(newImage.getAbsolutePath()) : null, usernameField.getText(), passwordField.getText().isEmpty() ? YouTubeApplication.user.getPassword() : passwordField.getText());
             }
             return null;
         });
 
+        updateable = true;
         // Show the dialog and update the user if the update button is clicked
         dialog.showAndWait().ifPresent(updatedUser -> {
-            YouTubeApplication.user.setFullName(updatedUser.getFullName());
-            YouTubeApplication.user.setUsername(updatedUser.getUsername());
-            YouTubeApplication.user.setEmail(updatedUser.getEmail());
-            YouTubeApplication.user.setPassword(updatedUser.getPassword());
+            isUpdating = true;
+            if (verifyFullName(updatedUser.getFullName())) {
+                YouTubeApplication.user.setFullName(updatedUser.getFullName());
+            } else {
+                updateable = false;
+                return;
+            }
+            if (verifyUsername(updatedUser.getUsername())) {
+                YouTubeApplication.user.setUsername(updatedUser.getUsername());
+            } else {
+                updateable = false;
+                return;
+            }
+            if (verifyEmail(updatedUser.getEmail())) {
+                YouTubeApplication.user.setEmail(updatedUser.getEmail());
+            } else {
+                updateable = false;
+                return;
+            }
+            if (verifyPassword(updatedUser.getPassword())) {
+                YouTubeApplication.user.setPassword(updatedUser.getPassword());
+            } else {
+                updateable = false;
+                return;
+            }
+            if (avatarChanged)
+                YouTubeApplication.user.setAvatarBytes(convertImageToByteArray(newImage.getAbsolutePath()));
         });
 
-        parentController.sendNotification("profile update message"); //todo
+
+        if (!updateable) {
+            return;
+        }
+
+        if (isUpdating) {
+            Request<User> userRequest = new Request<>(YouTubeApplication.socket, "ChangeUserInfo");
+            userRequest.send(YouTubeApplication.user);
+
+            String response = YouTubeApplication.receiveResponse();
+            Gson gson = new Gson();
+            TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {
+            };
+            Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
+
+            parentController.sendNotification(userResponse.getMessage());
+        }
     }
     //endregion
 
 
     private boolean verifyPassword(String newPassword) {
+        if (newPassword.isEmpty()) {
+            return true;
+        }
         String passwordRegex = "^[A-Za-z0-9]+$";
         Pattern passwordPattern = Pattern.compile(passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(newPassword);
@@ -450,6 +488,8 @@ public class ChannelPageController implements Initializable {
     }
 
     private boolean verifyEmail(String newEmail) {
+        if (newEmail.equals(YouTubeApplication.user.getEmail())) return true;
+
         Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
         userRequest.send(new User(newEmail, "", ""));
 
@@ -465,14 +505,32 @@ public class ChannelPageController implements Initializable {
             parentController.sendNotification(userResponse.getMessage());
             return false;
         } else {
-            System.out.println(userResponse.getMessage());
+            parentController.sendNotification(userResponse.getMessage());
             return true;
         }
     }
 
     private boolean verifyUsername(String newUsername) {
-        // todo needs its own request
-        return false;
+        if (newUsername.equals(YouTubeApplication.user.getUsername())) return true;
+
+        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
+        userRequest.send(new User("", newUsername, ""));
+
+        String response = YouTubeApplication.receiveResponse();
+        Gson gson = new Gson();
+        TypeToken<Response<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
+
+        User responseUser = userResponse.getBody();
+
+        if (responseUser != null) {
+            parentController.sendNotification(userResponse.getMessage());
+            return false;
+        } else {
+            parentController.sendNotification(userResponse.getMessage());
+            return true;
+        }
     }
 
     private boolean verifyFullName(String newFullName) {
@@ -487,6 +545,29 @@ public class ChannelPageController implements Initializable {
         parentController.sendNotification("Full name should only contain alphabets and no consecutive spaces");
         return false;
     }
+
+    //region [ - convertImageToByteArray(String imagePath, String type) - ]
+    private byte[] convertImageToByteArray(String imagePath) {
+        System.out.println("In ConvertImage Method");
+        byte[] imageBytes = null;
+        try {
+            // Load the image
+            File file = new File(imagePath);
+            BufferedImage bufferedImage = ImageIO.read(file);
+
+            // Convert BufferedImage to byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            baos.flush();
+            imageBytes = baos.toByteArray();
+            baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("End of ConvertImage Method");
+        return imageBytes;
+    }
+    //endregion
 
     //endregion
 }
