@@ -110,8 +110,6 @@ public class PlaylistPageController implements Initializable {
             return;
         }
         Platform.runLater(() -> {
-            for (int i = 0; i < 10; i++) {
-
                 for (var video : videos) {
                     FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
                     HBox videoRecommendation;
@@ -144,7 +142,6 @@ public class PlaylistPageController implements Initializable {
 
                     vbxVideos.getChildren().add(button);
                 }
-            }
         });
     }
     //endregion
