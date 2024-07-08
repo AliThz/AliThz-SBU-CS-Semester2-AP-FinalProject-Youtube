@@ -101,7 +101,6 @@
                               <RadioButton fx:id="radioLearning" mnemonicParsing="false" styleClass="radioCategory" text="Learning" textFill="WHITE" />
                               <RadioButton fx:id="radioFashion" mnemonicParsing="false" styleClass="radioCategory" text="Fashion and Beauty" textFill="WHITE" />
                               <RadioButton fx:id="radioPodcasts" mnemonicParsing="false" styleClass="radioCategory" text="Podcasts" textFill="WHITE" />
-                              <RadioButton fx:id="radioMisc" mnemonicParsing="false" styleClass="radioCategory" text="Miscelanious" textFill="WHITE" />
                            </children>
                            <padding>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
