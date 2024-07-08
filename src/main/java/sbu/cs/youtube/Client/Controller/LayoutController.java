@@ -696,7 +696,7 @@ public class LayoutController implements Initializable {
         Playlist categoryPlaylist = new Playlist();
         categoryPlaylist.setTitle(category.getTitle());
         categoryPlaylist.setPlaylistDetails(new ArrayList<>());
-        videos.forEach(v -> categoryPlaylist.getPlaylistDetails().add(new PlaylistDetail(categoryPlaylist.getId(), v.getId())));
+        videos.forEach(v -> categoryPlaylist.getPlaylistDetails().add(new PlaylistDetail(categoryPlaylist.getId(), v.getId(), v)));
 
         Stage stage;
         Scene scene;

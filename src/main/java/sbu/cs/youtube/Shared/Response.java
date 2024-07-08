@@ -2,6 +2,7 @@ package sbu.cs.youtube.Shared;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import sbu.cs.youtube.Shared.POJO.Notification;
 
 import java.io.BufferedWriter;

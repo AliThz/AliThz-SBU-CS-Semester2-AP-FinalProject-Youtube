@@ -1842,7 +1842,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT v."Title" , v."Id" , v."UploadDate" , v."ThumbnailPath" , v."Description" ,v."ChannelId" ,uv."VideoId" , 
-                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE uv."VideoId" = v."Id") AS "VideoViewCount"
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" uuv WHERE uuv."VideoId" = v."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" v JOIN "ContentManagement"."UserVideo" uv
                     ON v."Id" = uv."VideoId"
                     WHERE uv."UserId" = ? AND uv."Like" = true;
@@ -2864,7 +2864,8 @@ public class DatabaseManager {
 
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "ContentManagement"."Playlist";
+                    SELECT * 
+                    FROM "ContentManagement"."Playlist";
                     """);
 
             playlists = new ArrayList<>();
@@ -2913,7 +2914,8 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT *
+                    SELECT * ,
+                        (SELECT COUNT("VideoId") FROM "ContentManagement"."PlaylistDetail" pd WHERE pd."PlaylistId" = "Id") AS "Videos"
                     FROM "ContentManagement"."Playlist" 
                     WHERE \"Id\" = ? ;
                     """);
@@ -2930,6 +2932,7 @@ public class DatabaseManager {
                 playlist.setPublic(rs.getBoolean("IsPublic"));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
                 playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
+                playlist.setVideos(rs.getInt("Videos"));
                 playlist.setThumbnailBytes(convertImageToByteArray(playlist.getThumbnailPath()));
                 playlist.setDateCreated(timestamp.toLocalDateTime().toString());
             }
@@ -2938,9 +2941,10 @@ public class DatabaseManager {
             stmt.close();
 
             stmt = c.prepareStatement("""
-                    SELECT pd."PlaylistId", pd."VideoId", v."Title", v."Description", v."ChannelId" , v.""UploadDate"" , v."ThumbnailPath" 
+                    SELECT pd."PlaylistId", pd."VideoId", v."Title", v."Description", v."ChannelId" , v."UploadDate" , v."ThumbnailPath" 
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" uuv WHERE uuv."VideoId" = v."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."PlaylistDetail" pd
-                    INNER JOIN "ContentManagement"."Video" v ON pd."vIdeoId" = v."Id"
+                    INNER JOIN "ContentManagement"."Video" v ON pd."VideoId" = v."Id"
                     WHERE pd."PlaylistId" = ? ;
                     """);
             stmt.setObject(1, Id);
@@ -2949,7 +2953,6 @@ public class DatabaseManager {
             playlistDetails = new ArrayList<>();
             while (rs.next()) {
                 playlistDetail = new PlaylistDetail();
-                playlistDetail.setPlaylist(playlist);
                 playlistDetail.setPlaylistId(Id);
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 Video video = new Video();
@@ -2962,9 +2965,11 @@ public class DatabaseManager {
                 video.setUploadDate(timestamp.toLocalDateTime().toString());
                 video.setThumbnailPath(rs.getString("ThumbnailPath"));
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
+                video.setViewCount(rs.getInt("VideoViewCount"));
                 playlistDetail.setVideo(video);
                 playlistDetails.add(playlistDetail);
             }
+
             assert playlist != null;
             playlist.setPlaylistDetails(playlistDetails);
 
@@ -2981,43 +2986,37 @@ public class DatabaseManager {
     //endregion
 
     //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
-    public Playlist selectPlaylistBriefly(UUID Id) {
+    public Playlist selectPlaylistBriefly(UUID id) {
         Connection c;
         PreparedStatement stmt;
         Playlist playlist = null;
         try {
-
             System.out.println("Opened database successfully (selectPlaylistBriefly)");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT "Title" , "Description" , "CreatorId" , "ThumbnailPath"
-                    FROM "ContentManagement"."Playlist" 
-                    WHERE \"Id\" = ? ;
-                    """);
-            stmt.setObject(1, Id);
+                SELECT p."Title", p."Description", p."CreatorId", p."ThumbnailPath", COUNT(pd."VidoeId") AS "Videos"
+                FROM "ContentManagement"."Playlist" p LEFT JOIN "ContentManagement"."PlaylistDetail" pd 
+                ON p."Id" = pd."PlaylistId"
+                WHERE p."Id" = ?
+                GROUP BY p."Id";
+                """);
+            stmt.setObject(1, id);
             ResultSet rs = stmt.executeQuery();
 
             playlist = new Playlist();
             if (rs.next()) {
-                playlist.setId(Id);
+                playlist.setId(id);
                 playlist.setTitle(rs.getString("Title"));
-                playlist.setDescription(rs.getString("Description")); // WHY ???
+                playlist.setDescription(rs.getString("Description"));
                 playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-//                playlist.setCreator(selectUser(playlist.getCreatorId()));
+                playlist.setCreator(selectUser(playlist.getCreatorId()));
+                playlist.setCreator(selectUserBriefly(playlist.getCreatorId()));
                 playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
                 playlist.setThumbnailBytes(convertImageToByteArray(playlist.getThumbnailPath()));
+                playlist.setVideos(rs.getInt("Videos"));
             }
-
-            stmt = c.prepareStatement("""
-                    SELECT COUNT("VidoeId") AS "Videos"
-                    FROM "ContentManagement"."PlaylistDetail"
-                    WHERE "PlaylistId" = ?;
-                    """);
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
-            playlist.setVideos(rs.getInt("Videos"));
 
             rs.close();
             stmt.close();
@@ -3239,7 +3238,7 @@ public class DatabaseManager {
                 PlaylistDetail playlistDetail = new PlaylistDetail();
 
                 playlistDetail.setPlaylistId(UUID.fromString(rs.getString("PlaylistId")));
-                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
+//                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
@@ -3274,7 +3273,7 @@ public class DatabaseManager {
 
             stmt = c.prepareStatement("""
                     SELECT * FROM "ContentManagement"."PlaylistDetail" 
-                    WHERE "PlayListId" = ?;
+                    WHERE "PlaylistId" = ?;
                     """);
             stmt.setObject(1, playlistId);
             ResultSet rs = stmt.executeQuery();
@@ -3284,9 +3283,8 @@ public class DatabaseManager {
                 PlaylistDetail playlistDetail = new PlaylistDetail();
 
                 playlistDetail.setPlaylistId(UUID.fromString(rs.getString("PlaylistId")));
-                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
+                playlistDetail.setVideo(selectVideoBriefly(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
                 playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
                 playlistDetail.setNumber(rs.getInt("SequenceNumber"));
@@ -3327,7 +3325,7 @@ public class DatabaseManager {
             if (rs.next()) {
                 playlistDetail = new PlaylistDetail();
                 playlistDetail.setPlaylistId(UUID.fromString(rs.getString("PlaylistId")));
-                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
+//                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
                 playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
                 playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
                 Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));

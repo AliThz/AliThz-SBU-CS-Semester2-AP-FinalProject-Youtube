@@ -20,6 +20,12 @@ public class PlaylistDetail {
         this.videoId = videoId;
     }
 
+    public PlaylistDetail(UUID playlistId, UUID videoId, Video video) {
+        this.playlistId = playlistId;
+        this.videoId = videoId;
+        this.video = video;
+    }
+
     public Playlist getPlaylist() {
         return playlist;
     }

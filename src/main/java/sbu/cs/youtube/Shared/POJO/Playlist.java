@@ -31,7 +31,7 @@ public class Playlist {
 
     public Playlist() {
         Id = UUID.randomUUID();
-        this.playlistDetails = new ArrayList<>();
+//        this.playlistDetails = new ArrayList<>();
     }
 
     public Playlist(String title, String description, UUID creatorId, boolean isPublic) {
@@ -40,7 +40,7 @@ public class Playlist {
         this.description = description;
         this.creatorId = creatorId;
         this.isPublic = isPublic;
-        this.playlistDetails = new ArrayList<>();
+//        this.playlistDetails = new ArrayList<>();
     }
 
     public UUID getId() {
