@@ -181,8 +181,8 @@ public class ClientHandler implements Runnable {
             case "ChangeUserInfo":
                 changeUserInfo();
                 break;
-            case "CreatPlaylist":
-                creatPlaylist();
+            case "CreatePlaylist":
+                createPlaylist();
                 break;
             case "SearchVideo":
                 searchVideo();
@@ -767,7 +767,7 @@ public class ClientHandler implements Runnable {
     //endregion
 
     //region [ - creatPlaylist() - ]
-    private void creatPlaylist() {
+    private void createPlaylist() {
         TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
         };
         Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());

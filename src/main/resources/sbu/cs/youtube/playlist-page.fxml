@@ -11,42 +11,57 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/playlist-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.PlaylistPageController">
+<HBox fx:id="hbxPlaylistPage" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/playlist-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.PlaylistPageController">
    <children>
-      <VBox prefHeight="465.0" prefWidth="248.0" spacing="10.0" styleClass="vbx-details" HBox.hgrow="ALWAYS">
+      <VBox fx:id="vbxPlaylistInfo" alignment="TOP_CENTER" prefHeight="434.0" prefWidth="422.0" spacing="10.0" styleClass="vbx-details">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+            <ImageView fx:id="imgPlaylistThumbnail" fitHeight="191.0" fitWidth="339.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                <image>
                   <Image url="@../../../Images/Thumbnail.jpg" />
                </image>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
             </ImageView>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Title" wrappingWidth="194.13672494888306" VBox.vgrow="ALWAYS">
+            <Text fx:id="txtPlaylistTitle" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Title" wrappingWidth="338.1367402076721" VBox.vgrow="ALWAYS">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="System Bold" size="30.0" />
                </font>
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin>
             </Text>
-            <Button mnemonicParsing="false" styleClass="btn-channel" text="channel title">
+            <Button fx:id="btnChannelTitle" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="26.0" prefWidth="370.0" styleClass="btn-channel" text="channel title">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
                <VBox.margin>
-                  <Insets left="-10.0" />
+                  <Insets left="10.0" />
                </VBox.margin>
                <font>
-                  <Font name="System Bold" size="12.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="information" wrappingWidth="194.13672494888306">
+            <Text fx:id="txtPlaylistDescription" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="information" wrappingWidth="338.93672800064087">
                <VBox.margin>
-                  <Insets top="-10.0" />
+                  <Insets left="1.0" top="-10.0" />
                </VBox.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
             </Text>
-            <HBox prefHeight="29.0" prefWidth="202.0">
+            <HBox fx:id="hbxButtons" prefHeight="30.0" prefWidth="346.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="88.0" styleClass="btn-play" text="Play All" />
+                  <Button fx:id="btnPlayAll" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="41.0" prefWidth="88.0" styleClass="btn-play" text="Play All">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
                </children>
             </HBox>
          </children>
@@ -57,9 +72,9 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </VBox>
-      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="434.0" prefWidth="572.0" style="-fx-border-image-width: 0;" styleClass="scrollpane">
+      <ScrollPane fx:id="scrollPaneVideos" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="434.0" prefWidth="572.0" style="-fx-border-image-width: 0;" styleClass="scrollpane" vbarPolicy="ALWAYS" HBox.hgrow="ALWAYS">
          <content>
-            <VBox prefHeight="433.0" prefWidth="558.0" styleClass="vbx-Videos" />
+            <VBox fx:id="vbxVideos" prefHeight="433.0" prefWidth="558.0" styleClass="vbx-Videos" />
          </content>
       </ScrollPane>
    </children>

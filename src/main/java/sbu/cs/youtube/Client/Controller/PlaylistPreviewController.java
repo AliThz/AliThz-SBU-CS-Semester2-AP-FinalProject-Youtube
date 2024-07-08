@@ -2,7 +2,11 @@ package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,11 +14,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.Playlist;
 import sbu.cs.youtube.Shared.POJO.Playlist;
+import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -106,6 +113,35 @@ public class PlaylistPreviewController implements Initializable {
         bis = new ByteArrayInputStream(playlist.getThumbnailBytes());
         Image playlistThumbnail = new Image(bis);
         imgThumbnail.setImage(playlistThumbnail);
+    }
+    //endregion
+
+    //region [ - getPlaylist(ActionEvent event) - ]
+    @FXML
+    private void getPlaylist(ActionEvent event) {
+        Request<Playlist> playlistRequest = new Request<>(YouTubeApplication.socket, "GetPlaylist");
+        playlistRequest.send(new Playlist(playlist.getId()));
+        getPlaylistPage(event, playlist);
+    }
+    //endregion
+
+    //region [ - getPlaylistPage(ActionEvent event, Playlist playlist) - ]
+    private void getPlaylistPage(ActionEvent event, Playlist playlist) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-section.fxml"));
+        try {
+            root = loader.load();
+            PlaylistSectionController playlistSectionController = loader.getController();
+            playlistSectionController.setPlaylist(playlist);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxPlaylistPreview.getScene().getWidth(), vbxPlaylistPreview.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 

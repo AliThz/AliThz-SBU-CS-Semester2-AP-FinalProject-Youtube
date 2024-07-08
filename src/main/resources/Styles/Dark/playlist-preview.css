@@ -7,6 +7,11 @@
     -fx-spacing: 5;
 }
 
+.btn-video {
+    -fx-background-color: black;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
 
 .hbx-video-details {
     -fx-alignment: top-center;

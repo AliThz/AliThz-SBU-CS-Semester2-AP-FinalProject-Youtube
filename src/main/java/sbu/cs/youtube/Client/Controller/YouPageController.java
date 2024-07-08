@@ -242,7 +242,7 @@ public class YouPageController implements Initializable {
                 for (var p : playlists) {
 
                     FXMLLoader playlistPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-preview.fxml"));
-                    VBox playlistPreview;
+                    Button playlistPreview;
                     try {
                         playlistPreview = playlistPreviewLoader.load();
                         PlaylistPreviewController playlistPreviewController = playlistPreviewLoader.getController();
@@ -253,12 +253,7 @@ public class YouPageController implements Initializable {
                         throw new RuntimeException(e);
                     }
 
-                    Button button = new Button();
-                    button.getStyleClass().add("btn-video");
-                    button.setGraphic(playlistPreview);
-
-                    button.setOnAction(event -> getPlaylist(event, p));
-                    hbxPlaylistsVideos.getChildren().add(button);
+                    hbxPlaylistsVideos.getChildren().add(playlistPreview);
                     VBox.setVgrow(playlistPreview, Priority.ALWAYS);
                 }
             }
@@ -391,14 +386,6 @@ public class YouPageController implements Initializable {
         Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideo");
         videoRequest.send(new Video(video.getId()));
 
-        getVideoPage(event);
-    }
-    //endregion
-
-    //region [ - getPlaylist(ActionEvent event, Playlist video) - ]
-    private void getPlaylist(ActionEvent event, Playlist playlist) {
-        Request<Playlist> playlistRequest = new Request<>(YouTubeApplication.socket, "GetPlaylist");
-        playlistRequest.send(new Playlist(playlist.getId()));
         getVideoPage(event);
     }
     //endregion

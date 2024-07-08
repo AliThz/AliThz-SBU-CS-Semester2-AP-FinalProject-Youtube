@@ -219,7 +219,7 @@ public class ChannelPageController implements Initializable {
         Platform.runLater(() -> {
             for (var playlist : playlists) {
                 FXMLLoader playlistPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-preview.fxml"));
-                VBox playlistPreview;
+                Button playlistPreview;
 
                 try {
                     playlistPreview = playlistPreviewLoader.load();
@@ -231,13 +231,7 @@ public class ChannelPageController implements Initializable {
                     throw new RuntimeException(e);
                 }
 
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(playlistPreview);
-
-                button.setOnAction(event -> getPlaylist(event, playlist));
-
-                tilePanePlaylist.getChildren().add(button);
+                tilePanePlaylist.getChildren().add(playlistPreview);
             }
         });
     }
