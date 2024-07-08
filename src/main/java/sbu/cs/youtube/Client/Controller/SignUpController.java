@@ -136,7 +136,7 @@ public class SignUpController implements Initializable {
 
     //region [ - boolean validateName(String fullName) - ]
     private boolean validateName(String fullName) {
-        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{4,}$";
+        String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{3,}$";
         Pattern usernamePattern = Pattern.compile(usernameRegex);
         Matcher usernameMatcher = usernamePattern.matcher(fullName);
 
@@ -169,6 +169,8 @@ public class SignUpController implements Initializable {
 
     //endregion
 
+    //region [ - checkEmail(String email) - ]
+
     private boolean checkEmail(String email) {
         Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
         userRequest.send(new User(email, "", ""));
@@ -190,6 +192,7 @@ public class SignUpController implements Initializable {
         }
 
     }
+    //endregion
 
     //region [ - void getUsername(String email) - ]
     private void getUsername(String email) {

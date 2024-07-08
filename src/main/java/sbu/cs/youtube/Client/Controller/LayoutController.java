@@ -19,6 +19,8 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import sbu.cs.youtube.Shared.POJO.Channel;
+import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
@@ -491,7 +493,7 @@ public class LayoutController implements Initializable {
             notificationsSvg.setContent("M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z");
             notificationsSvg.getStyleClass().add("notifications-svg");
 
-            Circle clip = new Circle(12, 12, 12);
+            Circle clip = new Circle(11.5, 11.5, 11);
             Label accountImg = new Label();
             accountImg.getStyleClass().add("account-img");
             accountImg.setClip(clip);
@@ -573,6 +575,24 @@ public class LayoutController implements Initializable {
 
     protected void getDashboard(ActionEvent event) {
         setDefaultSvgs();
+
+//        Request<Channel> videoRequest = new Request<>(YouTubeApplication.socket, "GetChannel");
+//        videoRequest.send(new Channel(video.getChannelId()));
+//
+//        Stage stage;
+//        Scene scene;
+//        Parent root;
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+//        try {
+//            root = loader.load();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+//        stage.setScene(scene);
+//        stage.show();
+
     }
 
     //endregion
@@ -646,7 +666,7 @@ public class LayoutController implements Initializable {
     //region [ - sendNotification(String text) - ]
 
     protected void sendNotification(String text) {
-        Notifications.create().text(text).hideAfter(Duration.seconds(2)).owner(hbxRightNavItem).position(Pos.BASELINE_RIGHT).threshold(3, Notifications.create().title("Notifications")).show();
+        Notifications.create().text(text).hideAfter(Duration.seconds(3)).owner(hbxRightNavItem).position(Pos.BASELINE_RIGHT).threshold(3, Notifications.create().title("Notifications")).show();
     }
 
 

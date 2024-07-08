@@ -5,6 +5,10 @@ import com.google.gson.reflect.TypeToken;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
@@ -16,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.UserVideo;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
@@ -88,7 +93,10 @@ public class CreateDetailsController  {
     @FXML
     private HBox hbxError;
 
-    public void initialize(File file) {
+    LayoutController parentController;
+
+    public void initialize(File file, LayoutController parentController) {
+        this.parentController = parentController;
         videoFile = file;
         hbxError.setVisible(false);
         setPage();
@@ -150,8 +158,22 @@ public class CreateDetailsController  {
         TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
         };
         Response<Video> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
-        // todo notif for message
         System.out.println(userVideoResponse.getMessage());
+        parentController.sendNotification(userVideoResponse.getMessage());
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/home-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     //region [ - convertVideoToByteArray - ]

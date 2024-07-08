@@ -85,7 +85,7 @@ public class CreateUploadController implements Initializable {
             throw new RuntimeException(e);
         }
         CreateDetailsController controller = loader.getController();
-        controller.initialize(selectedFile);
+        controller.initialize(selectedFile, parentController);
 
         FlowPane flwPane = (FlowPane) parentController.hbxContent.getChildren().get(2);
         flwPane.getChildren().removeFirst();
@@ -93,24 +93,6 @@ public class CreateUploadController implements Initializable {
 
         createDetails.prefWidthProperty().bind(flwPane.widthProperty().subtract(70));
         createDetails.prefHeightProperty().bind(flwPane.heightProperty().subtract(70));
-//
-//
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/create-details.fxml"));
-//        VBox createDetails;
-//        try {
-//            createDetails = loader.load();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        CreateDetailsController controller = loader.getController();
-//        controller.initialize(selectedFile);
-//
-//        parentController.hbxContent.getChildren().remove(2);
-//        parentController.hbxContent.getChildren().add(2, createDetails);
-//        HBox.setHgrow(createDetails, Priority.ALWAYS);
-//
-//        createDetails.prefWidthProperty().bind(parentController.hbxContent.widthProperty().subtract(parentController.vbxSideBar.prefWidthProperty()));
-
     }
     //endregion
 
