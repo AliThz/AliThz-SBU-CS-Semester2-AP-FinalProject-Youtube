@@ -761,6 +761,17 @@ public class ClientHandler implements Runnable {
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
         User user = userRequest.getBody();
 
+        if (user.getAvatarBytes() != null) {
+            String avatarPath = "/Images/" + user.getId() + ".jpg" ;
+            try (FileOutputStream fos = new FileOutputStream("src/main/resources" + avatarPath)) {
+                user.setAvatarPath(avatarPath);
+                fos.write(user.getAvatarBytes());
+                System.out.println("Video saved successfully to " + avatarPath);
+            } catch (IOException e) {
+                System.err.println("Error while saving the video: " + e.getMessage());
+            }
+        }
+
         databaseManager.updateUser(user);
 
         Response<User> response;
