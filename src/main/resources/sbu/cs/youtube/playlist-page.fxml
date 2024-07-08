@@ -52,7 +52,7 @@
             </Text>
             <HBox fx:id="hbxButtons" prefHeight="30.0" prefWidth="346.0">
                <children>
-                  <Button fx:id="btnPlayAll" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="41.0" prefWidth="88.0" styleClass="btn-play" text="Play All">
+                  <Button fx:id="btnPlayAll" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="41.0" prefWidth="88.0" styleClass="btn-play" text="Play All" textAlignment="CENTER" wrapText="true">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

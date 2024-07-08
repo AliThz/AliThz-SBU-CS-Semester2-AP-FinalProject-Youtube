@@ -729,13 +729,20 @@ public class ClientHandler implements Runnable {
         TypeToken<Request<Category>> responseTypeToken = new TypeToken<>() {
         };
         Request<Category> categoryRequest = gson.fromJson(request, responseTypeToken.getType());
-        Response<ArrayList<Video>> response;
+        Response<Playlist> response;
 
         Category category = categoryRequest.getBody();
         ArrayList<Video> videos = databaseManager.selectVideosByCategory(category.getId());
 
+        Playlist categoryPlaylist = new Playlist();
+        categoryPlaylist.setTitle(category.getTitle());
+        categoryPlaylist.setPlaylistDetails(new ArrayList<>());
+        for (Video v : videos) {
+            categoryPlaylist.getPlaylistDetails().add(new PlaylistDetail(categoryPlaylist.getId(), v.getId(), v));
+        }
+
         response = new Response<>(client, categoryRequest.getType(), true, "CategoryVideos Received Successfully");
-        response.send(videos);
+        response.send(categoryPlaylist);
     }
     //endregion
 

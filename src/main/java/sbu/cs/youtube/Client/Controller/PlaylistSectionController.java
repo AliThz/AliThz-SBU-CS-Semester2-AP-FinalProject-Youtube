@@ -62,11 +62,5 @@ public class PlaylistSectionController implements Initializable {
     }
     //endregion
 
-    //region [ - setPlaylist(Playlist playlist) - ]
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
-    }
-    //endregion
-
     //endregion
 }

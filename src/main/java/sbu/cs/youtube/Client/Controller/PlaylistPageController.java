@@ -87,13 +87,17 @@ public class PlaylistPageController implements Initializable {
 
     //region [ - setPlaylist() - ]
     public void setPlaylist() {
-        ByteArrayInputStream bis;
-        bis = new ByteArrayInputStream(playlist.getThumbnailBytes());
-        Image thumbnail = new Image(bis);
-        imgPlaylistThumbnail.setImage(thumbnail);
+        if (playlist.getThumbnailBytes() != null) {
+            ByteArrayInputStream bis;
+            bis = new ByteArrayInputStream(playlist.getThumbnailBytes());
+            Image thumbnail = new Image(bis);
+            imgPlaylistThumbnail.setImage(thumbnail);
+        } else {
+            vbxPlaylistInfo.getChildren().removeFirst();
+        }
 
         txtPlaylistTitle.setText(playlist.getTitle());
-        btnChannelTitle.setText(playlist.getCreator().getUsername());
+        btnChannelTitle.setText(playlist.getCreator()!= null?playlist.getCreator().getUsername(): "");
         txtPlaylistDescription.setText(playlist.getDescription());
     }
     //endregion
