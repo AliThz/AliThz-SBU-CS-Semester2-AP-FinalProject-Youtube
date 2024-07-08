@@ -196,6 +196,8 @@ public class ClientHandler implements Runnable {
             case "GetUserChannel":
                 getUserChannel();
                 break;
+            default:
+                new Response<Object>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
     }
     //endregion
@@ -263,7 +265,7 @@ public class ClientHandler implements Runnable {
         if (user != null) {
             response = new Response<>(client, userRequest.getType(), true, "There is already a user with this email");
         } else {
-            response = new Response<>(client, userRequest.getType(), true, "User not found");
+            response = new Response<>(client, userRequest.getType(), true, "Available");
         }
 
         response.send(user);
@@ -579,8 +581,9 @@ public class ClientHandler implements Runnable {
         playlist = databaseManager.selectPlaylist(requestedPlaylist.getId());
 
         response = new Response<>(client, playlistRequest.getType(), true, "Playlist received successfully");
-
+        System.out.println("1");
         response.send(playlist);
+        System.out.println("2");
     }
     //endregion
 

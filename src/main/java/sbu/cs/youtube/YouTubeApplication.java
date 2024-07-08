@@ -328,13 +328,24 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
 //        launch();
         //        ------------------------- getUserChannel Test ---------------------------------------------
+//        Socket socket = new Socket("localhost", 2345);
+//        Request<User> userRequest = new Request<>(socket, "GetUserChannel");
+//        User user = new User();
+//        user.setId(UUID.fromString("75d0f9e8-cad4-48f4-8947-9d8486d4d991"));
+//        userRequest.send(user);
+//        YouTubeApplication client = new YouTubeApplication(socket);
+//        String response = receiveResponse();
+//        System.out.println(response);
+//        launch();
+        //        ------------------------- getPlaylist Test ---------------------------------------------
         Socket socket = new Socket("localhost", 2345);
-        Request<User> userRequest = new Request<>(socket, "GetUserChannel");
-        User user = new User();
-        user.setId(UUID.fromString("75d0f9e8-cad4-48f4-8947-9d8486d4d991"));
-        userRequest.send(user);
+        Request<Playlist> playlistRequest = new Request<>(socket, "GetPlaylist");
+        Playlist playlist = new Playlist();
+        playlist.setId(UUID.fromString("16524834-6bf8-43e3-b863-c5097647e36e"));
+        playlistRequest.send(playlist);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
+        System.out.println("sajjad");
         System.out.println(response);
         launch();
 
