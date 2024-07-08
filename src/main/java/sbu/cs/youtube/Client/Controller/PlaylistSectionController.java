@@ -7,6 +7,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import sbu.cs.youtube.Shared.POJO.Playlist;
 
@@ -46,21 +47,18 @@ public class PlaylistSectionController implements Initializable {
 
 
         FXMLLoader PlaylistPageLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-page.fxml"));
-        HBox PlaylistPage;
+        HBox playlistPage;
         try {
-            PlaylistPage = PlaylistPageLoader.load();
+            playlistPage = PlaylistPageLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        layoutController.hbxContent.getChildren().add(PlaylistPage);
-        PlaylistPage.prefWidthProperty().bind(layoutController.hbxContent.prefWidthProperty());
-        PlaylistPage.prefHeightProperty().bind(layoutController.hbxContent.prefHeightProperty());
-    }
-    //endregion
-
-    //region [ - setPlaylist(Playlist playlist) - ]
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
+        layoutController.hbxContent.getChildren().add(playlistPage);
+        HBox.setHgrow(playlistPage, Priority.ALWAYS);
+//        playlistPage.prefWidthProperty().bind(layoutController.hbxContent.prefWidthProperty());
+//        playlistPage.prefHeightProperty().bind(layoutController.hbxContent.prefHeightProperty());
+        playlistPage.prefWidthProperty().bind(layoutController.hbxContent.widthProperty().subtract(layoutController.vbxSideBar.widthProperty().add(10)));
+        playlistPage.prefHeightProperty().bind(layoutController.hbxContent.heightProperty());
     }
     //endregion
 

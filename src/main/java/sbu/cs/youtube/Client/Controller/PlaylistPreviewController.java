@@ -82,7 +82,6 @@ public class PlaylistPreviewController implements Initializable {
 
         hbxPlaylistDetails.prefWidthProperty().bind(vbxPlaylistPreview.widthProperty());
 
-
         vbxTextDetails.prefWidthProperty().bind(hbxPlaylistDetails.widthProperty().subtract(100));
 
         btnPlaylistPreviewOptions.setOnAction(event -> {
@@ -133,8 +132,6 @@ public class PlaylistPreviewController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-section.fxml"));
         try {
             root = loader.load();
-            PlaylistSectionController playlistSectionController = loader.getController();
-            playlistSectionController.setPlaylist(playlist);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

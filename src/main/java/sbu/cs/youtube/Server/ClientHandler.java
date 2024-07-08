@@ -729,13 +729,20 @@ public class ClientHandler implements Runnable {
         TypeToken<Request<Category>> responseTypeToken = new TypeToken<>() {
         };
         Request<Category> categoryRequest = gson.fromJson(request, responseTypeToken.getType());
-        Response<ArrayList<Video>> response;
+        Response<Playlist> response;
 
         Category category = categoryRequest.getBody();
         ArrayList<Video> videos = databaseManager.selectVideosByCategory(category.getId());
 
+        Playlist categoryPlaylist = new Playlist();
+        categoryPlaylist.setTitle(category.getTitle());
+        categoryPlaylist.setPlaylistDetails(new ArrayList<>());
+        for (Video v : videos) {
+            categoryPlaylist.getPlaylistDetails().add(new PlaylistDetail(categoryPlaylist.getId(), v.getId(), v));
+        }
+
         response = new Response<>(client, categoryRequest.getType(), true, "CategoryVideos Received Successfully");
-        response.send(videos);
+        response.send(categoryPlaylist);
     }
     //endregion
 
@@ -799,13 +806,13 @@ public class ClientHandler implements Runnable {
     //region [ - searchVideo() - ]
 
     private void searchVideo() {
-        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        TypeToken<Request<String>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<String> videoRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Video>> response;
 
-        Video video = videoRequest.getBody();
-        ArrayList<Video> videos = databaseManager.selectVideosByTitle(video.getTitle());
+        String videoTitle = videoRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByTitle(videoTitle);
 
         response = new Response<>(client, videoRequest.getType(), true, "Search For Video Successfully");
         response.send(videos);

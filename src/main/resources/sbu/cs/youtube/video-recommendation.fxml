@@ -22,9 +22,9 @@
          <children>
             <HBox fx:id="hbxVideoDetail" prefHeight="70.0" prefWidth="174.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox alignment="CENTER_LEFT" prefHeight="89.0" prefWidth="176.0" spacing="5.0">
+                  <VBox alignment="CENTER_LEFT" prefHeight="109.0" prefWidth="124.0" spacing="5.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="A title for a video in youtube in youtube" wrappingWidth="170.13691759109497" VBox.vgrow="ALWAYS">
+                        <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="A title for a video in youtube in youtube" wrappingWidth="170.13691759109497">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>

@@ -69,7 +69,7 @@
                         <Insets />
                      </HBox.margin>
                   </TextField>
-                  <Button fx:id="searchBtn" mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" styleClass="search-btn" HBox.hgrow="ALWAYS">
+                  <Button fx:id="btnSearch" mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" styleClass="search-btn" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="6.0" />
                      </font>

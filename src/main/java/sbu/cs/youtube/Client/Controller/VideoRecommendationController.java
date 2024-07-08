@@ -73,7 +73,8 @@ public class VideoRecommendationController implements Initializable {
             save(event);
         });
 
-        hbxVideoDetail.prefWidthProperty().bind(vbxDetails.prefWidthProperty());
+        hbxVideoDetail.prefWidthProperty().bind(vbxDetails.widthProperty());
+        txtVideoTitle.wrappingWidthProperty().bind(hbxVideoDetail.widthProperty().subtract(50));
         hbxVideoRecommendation.getStylesheets().clear();
         hbxVideoRecommendation.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-recommendation.css")).toExternalForm());
     }
