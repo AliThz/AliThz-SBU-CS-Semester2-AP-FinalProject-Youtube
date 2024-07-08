@@ -232,7 +232,7 @@
                            <children>
                               <ImageView fitHeight="41.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../../Images/SrgtSajjad.jpg" />
+                                    <Image url="@../../../Images/DefaultAvatar.jpg" />
                                  </image>
                               </ImageView>
                               <TextField fx:id="txtComment" prefHeight="32.0" prefWidth="708.0" promptText="Add a comment" styleClass="field-comment" HBox.hgrow="ALWAYS" />

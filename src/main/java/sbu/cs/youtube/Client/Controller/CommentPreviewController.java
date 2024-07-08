@@ -66,7 +66,7 @@ public class CommentPreviewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         hbxMain.getStylesheets().clear();
-        hbxMain.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/comment-page.css")).toExternalForm());
+        hbxMain.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/comment-preview.css")).toExternalForm());
     }
     //endregion
 

@@ -1,45 +1,43 @@
 .background {
-    -fx-background-color: black;
-    -fx-border-color: black;
+    -fx-background-color: white;
+    -fx-border-color: white;
 }
 
 .text {
-    -fx-text-fill: rgb(255, 255, 255);
-    -fx-fill: rgb(255, 255, 255);
-    /*-fx-text-fill: rgb(0, 0, 0);*/
-    /*-fx-fill: rgb(0, 0, 0);*/
+    -fx-text-fill: black;
+    -fx-fill: black;
 }
 
 .text-detail {
-    -fx-text-fill: rgb(200, 200, 200);
-    -fx-fill: rgb(200, 200, 200);
+    -fx-text-fill: rgb(50, 50, 50);
+    -fx-fill: rgb(50, 50, 50);
 }
 
 .btn-video {
-    -fx-background-color: black;
+    -fx-background-color: white;
     -fx-padding: 6;
     -fx-background-radius: 5;
 }
 
 .btn-video:hover {
-    -fx-background-color: rgb(33,33,33);
+    -fx-background-color: rgb(240,240,240);
 }
 
 .btn-video:pressed {
-    -fx-background-color: rgb(41,41,41);
+    -fx-background-color: rgb(229,229,229);
 }
 
 .button-subscription {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(240, 240, 240);
     -fx-background-radius: 20;
 }
 
 .button-subscription:hover {
-    -fx-background-color: rgb(41,41,41);
+    -fx-background-color: rgb(229,229,229);
 }
 
 .button-subscription:pressed {
-    -fx-background-color: rgb(50,50,50);
+    -fx-background-color: rgb(204,204,204);
 }
 
 btn-upload {
@@ -47,7 +45,7 @@ btn-upload {
 }
 
 .svg {
-    -fx-fill: rgb(255, 255, 255);
+    -fx-fill: black;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -89,48 +87,43 @@ btn-upload {
 /*--------------------------------------------------------------------------*/
 
 .tab-pane {
-    -fx-background-color: rgb(0, 0, 0);
-    -fx-border-color: rgb(0, 0, 0);
+    -fx-background-color: white;
+    -fx-border-color: white;
     -fx-padding: 5px;
 }
 
 .tab-pane .tab-header-area {
-    -fx-background-color: rgb(0, 0, 0);
-    -fx-border-color: rgb(0, 0, 0);
+    -fx-background-color: white;
+    -fx-border-color: white;
 }
 
 .tab-pane .tab-header-area .tab {
     -fx-background-color: transparent;
-    /*-fx-background-color: rgb(0,0,0);*/
 }
 
 .tab {
     -fx-padding: 0 0 0 10;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: rgb(0, 0, 0);
-    -fx-fill: rgb(0, 0, 0); /* Change this to your desired color */
-    /*-fx-background-color: rgb(0,0,0);*/
+    -fx-text-fill: black;
+    -fx-fill: black;
 }
 
-/* Change the background color of the tab header */
 .tab-pane .tab-header-background {
-    -fx-background-color: rgb(0, 0, 0); /* Change this to your desired color */
+    -fx-background-color: white
 }
 
-/*.tab-pane .tab-header-area {*/
-/*    -fx-text-fill: #336699; !* Change this to your desired color *!*/
-/*}*/
-/* Change the text color of all tab labels */
+
 .tab-pane .tab-header-area .tab .tab-label {
-    -fx-text-fill: rgb(255, 255, 255); /* Change this to your desired color */
-    -fx-fill: rgb(255, 255, 255); /* Change this to your desired color */
+    -fx-text-fill: black;
+    -fx-fill: black;
     -fx-background-color: transparent;
     -fx-background-radius: 7 7 0 0;
 }
 .tab-pane .tab-header-area .tab:hover .tab-label {
-    -fx-background-color: rgb(33,33,33);
+    -fx-background-color: rgb(229,229,229);
 }
 .tab-pane .tab-header-area .tab:selected .tab-label {
-    -fx-background-color: rgb(41,41,41);
+    -fx-background-color: rgb(204,204,204);
 }
+

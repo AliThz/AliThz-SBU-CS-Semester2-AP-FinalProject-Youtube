@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -140,6 +141,10 @@ public class ChannelPageController implements Initializable {
         new Thread(this::setChannel).start();
         new Thread(this::displayVideos).start();
         new Thread(this::displayPlaylists).start();
+
+        vbxChannelPage.getStylesheets().clear();
+        vbxChannelPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
+
     }
     //endregion
 
@@ -202,6 +207,7 @@ public class ChannelPageController implements Initializable {
                     if (videoPreviewController != null) {
                         videoPreviewController.setVideo(video);
                     }
+                    videoPreviewController.setParentController(parentController);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -338,10 +344,20 @@ public class ChannelPageController implements Initializable {
     }
     //endregion
 
-
+    //region [ - setParentController(LayoutController parentController) - ]
     public void setParentController(LayoutController parentController) {
         this.parentController = parentController;
+        EventHandler<ActionEvent> existingHandler = parentController.btnMode.getOnAction();
+
+        parentController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            vbxChannelPage.getStylesheets().clear();
+            vbxChannelPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
+        });
     }
+    //endregion
 
     //region [ - showDialog() - ]
     @FXML
@@ -358,6 +374,7 @@ public class ChannelPageController implements Initializable {
         // Apply CSS to the dialog
         dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
         dialog.getDialogPane().getStyleClass().add("dialog-pane");
+//        dialog.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/info.jpg")))));
 
         // Set the button types
         ButtonType updateButtonType = new ButtonType("Update", ButtonType.OK.getButtonData());
@@ -395,6 +412,7 @@ public class ChannelPageController implements Initializable {
             if (newImage != null) {
                 avatarChanged = true;
             }
+            imageView.setImage(new Image(newImage.toURI().toString()));
         });
         uploadButton.getStyleClass().add("btn-upload");
 
@@ -476,6 +494,7 @@ public class ChannelPageController implements Initializable {
     }
     //endregion
 
+    //region [ - verifyPassword(String newPassword) - ]
 
     private boolean verifyPassword(String newPassword) {
         if (newPassword.isEmpty()) {
@@ -492,6 +511,9 @@ public class ChannelPageController implements Initializable {
         parentController.sendNotification("Password can only contain alphabets and numbers and have at least 8 characters");
         return false;
     }
+    //endregion
+
+    //region [ - verifyEmail(String newEmail) - ]
 
     private boolean verifyEmail(String newEmail) {
         if (newEmail.equals(YouTubeApplication.user.getEmail())) return true;
@@ -515,6 +537,9 @@ public class ChannelPageController implements Initializable {
             return true;
         }
     }
+    //endregion
+
+    //region [ - verifyUsername(String newUsername) - ]
 
     private boolean verifyUsername(String newUsername) {
         if (newUsername.equals(YouTubeApplication.user.getUsername())) return true;
@@ -538,6 +563,9 @@ public class ChannelPageController implements Initializable {
             return true;
         }
     }
+    //endregion
+
+    //region [ - verifyFullName(String newFullName) - ]
 
     private boolean verifyFullName(String newFullName) {
         String usernameRegex = "^(?!\\s)(?!.*\\s{2})[a-zA-Z ]{3,}$";
@@ -551,6 +579,7 @@ public class ChannelPageController implements Initializable {
         parentController.sendNotification("Full name should only contain alphabets and no consecutive spaces");
         return false;
     }
+    //endregion
 
     //region [ - convertImageToByteArray(String imagePath, String type) - ]
     private byte[] convertImageToByteArray(String imagePath) {

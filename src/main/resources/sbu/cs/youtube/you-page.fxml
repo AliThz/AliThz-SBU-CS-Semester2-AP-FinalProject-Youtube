@@ -18,7 +18,7 @@
          <children>
             <ImageView fx:id="imgAvatar" fitHeight="110.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
-                  <Image url="@../../../Images/SrgtSajjad.jpg" />
+                  <Image url="@../../../Images/DefaultAvatar.jpg" />
                </image>
             </ImageView>
             <VBox fx:id="vbxUserDetails" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="677.0" HBox.hgrow="ALWAYS">

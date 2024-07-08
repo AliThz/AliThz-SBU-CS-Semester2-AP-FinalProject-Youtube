@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="vbxChannelPage" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/channel-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.ChannelPageController">
+<VBox fx:id="vbxChannelPage" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Light/channel-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.ChannelPageController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
@@ -23,7 +23,7 @@
          <children>
             <ImageView fx:id="imgAvatar" fitHeight="128.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
-                  <Image url="@../../../Images/SrgtSajjad.jpg" />
+                  <Image url="@../../../Images/DefaultAvatar.jpg" />
                </image>
             </ImageView>
             <VBox fx:id="vbxChannelDetails" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="677.0" spacing="2.0" HBox.hgrow="ALWAYS">
