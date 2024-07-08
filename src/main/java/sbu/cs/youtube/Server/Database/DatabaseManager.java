@@ -471,34 +471,67 @@ public class DatabaseManager {
 
     //region [ - updateUser(User user) - ] Tested
     public void updateUser(User user) {
-        Connection c;
+        Connection c = null;
         PreparedStatement stmt;
         try {
-
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully (updateUser)");
 
-            stmt = c.prepareStatement("""
-                    UPDATE "UserManagement"."User"
-                    SET "FullName" = ?, "Email" = ?, "Username" = ?, \"Password\" = ?, "AvatarPath" = ?
-                    WHERE \"Id\" = ?;
-                    """);
+            StringBuilder sql = new StringBuilder("UPDATE \"UserManagement\".\"User\" SET ");
+            ArrayList<Object> params = new ArrayList<>();
 
-            stmt.setString(1, user.getFullName());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getUsername());
-            stmt.setString(4, user.getPassword());
-            stmt.setObject(5, user.getAvatarPath());
-            stmt.setObject(6, user.getId());
+            if (user.getFullName() != null) {
+                sql.append("\"FullName\" = ?, ");
+                params.add(user.getFullName());
+            }
+            if (user.getEmail() != null) {
+                sql.append("\"Email\" = ?, ");
+                params.add(user.getEmail());
+            }
+            if (user.getUsername() != null) {
+                sql.append("\"Username\" = ?, ");
+                params.add(user.getUsername());
+            }
+            if (user.getPassword() != null) {
+                sql.append("\"Password\" = ?, ");
+                params.add(user.getPassword());
+            }
+            if (user.getAvatarPath() != null) {
+                sql.append("\"AvatarPath\" = ?, ");
+                params.add(user.getAvatarPath());
+            }
 
-            stmt.executeUpdate();
-            c.commit();
-            stmt.close();
-            System.out.println("Operation done successfully (updateUser)");
+            // Remove the last comma and space
+            if (!params.isEmpty()) {
+                sql.setLength(sql.length() - 2);
+                sql.append(" WHERE \"Id\" = ?;");
+                params.add(user.getId());
+
+                stmt = c.prepareStatement(sql.toString());
+
+                for (int i = 0; i < params.size(); i++) {
+                    stmt.setObject(i + 1, params.get(i));
+                }
+
+                stmt.executeUpdate();
+                c.commit();
+                stmt.close();
+                System.out.println("Operation done successfully (updateUser)");
+            } else {
+                System.out.println("No fields to update (updateUser)");
+            }
+
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            try {
+                if (c != null) {
+                    c.rollback();
+                }
+            } catch (Exception rollbackException) {
+                System.err.println(rollbackException.getClass().getName() + ": " + rollbackException.getMessage());
+            }
         }
     }
     //endregion
@@ -2941,7 +2974,7 @@ public class DatabaseManager {
             stmt.close();
 
             stmt = c.prepareStatement("""
-                    SELECT pd."PlaylistId", pd."VideoId", v."Title", v."Description", v."ChannelId" , v."UploadDate" , v."ThumbnailPath" 
+                    SELECT pd."PlaylistId", pd."VideoId", v."Title", v."Description", v."ChannelId" , v."UploadDate" , v."ThumbnailPath",
                         (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" uuv WHERE uuv."VideoId" = v."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."PlaylistDetail" pd
                     INNER JOIN "ContentManagement"."Video" v ON pd."VideoId" = v."Id"

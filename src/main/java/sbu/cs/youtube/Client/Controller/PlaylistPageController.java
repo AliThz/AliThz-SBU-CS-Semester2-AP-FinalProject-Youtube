@@ -79,13 +79,13 @@ public class PlaylistPageController implements Initializable {
         Response<Playlist> playlistResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
         playlist = playlistResponse.getBody();
 
+        setPlaylist();
         displayVideos();
     }
     //endregion
 
-    //region [ - setPlaylist(Playlist playlist) - ]
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
+    //region [ - setPlaylist() - ]
+    public void setPlaylist() {
         ByteArrayInputStream bis;
         bis = new ByteArrayInputStream(playlist.getThumbnailBytes());
         Image thumbnail = new Image(bis);
@@ -107,7 +107,7 @@ public class PlaylistPageController implements Initializable {
         Platform.runLater(() -> {
             for (var video : videos) {
                 FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
-                VBox videoRecommendation;
+                HBox videoRecommendation;
 
                 try {
                     videoRecommendation = videoRecommendationLoader.load();

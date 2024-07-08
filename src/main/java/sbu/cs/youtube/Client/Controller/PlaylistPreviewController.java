@@ -121,12 +121,12 @@ public class PlaylistPreviewController implements Initializable {
     private void getPlaylist(ActionEvent event) {
         Request<Playlist> playlistRequest = new Request<>(YouTubeApplication.socket, "GetPlaylist");
         playlistRequest.send(new Playlist(playlist.getId()));
-        getPlaylistPage(event, playlist);
+        getPlaylistPage(event);
     }
     //endregion
 
-    //region [ - getPlaylistPage(ActionEvent event, Playlist playlist) - ]
-    private void getPlaylistPage(ActionEvent event, Playlist playlist) {
+    //region [ - getPlaylistPage(ActionEvent event) - ]
+    private void getPlaylistPage(ActionEvent event) {
         Stage stage;
         Scene scene;
         Parent root;

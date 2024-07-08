@@ -19,6 +19,7 @@ public class Playlist {
     private int videos;
 
     public Playlist(UUID id) {
+        this.Id = id;
     }
 
     public int getVideos() {

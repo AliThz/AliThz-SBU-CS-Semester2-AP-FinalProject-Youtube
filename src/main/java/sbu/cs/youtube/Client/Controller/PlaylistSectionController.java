@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import sbu.cs.youtube.Shared.POJO.Playlist;
 
@@ -45,14 +46,12 @@ public class PlaylistSectionController implements Initializable {
 
 
         FXMLLoader PlaylistPageLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-page.fxml"));
-        VBox PlaylistPage;
+        HBox PlaylistPage;
         try {
             PlaylistPage = PlaylistPageLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        PlaylistPageController playlistPageController = PlaylistPageLoader.getController();
-        playlistPageController.setPlaylist(playlist);
         layoutController.hbxContent.getChildren().add(PlaylistPage);
         PlaylistPage.prefWidthProperty().bind(layoutController.hbxContent.prefWidthProperty());
         PlaylistPage.prefHeightProperty().bind(layoutController.hbxContent.prefHeightProperty());
