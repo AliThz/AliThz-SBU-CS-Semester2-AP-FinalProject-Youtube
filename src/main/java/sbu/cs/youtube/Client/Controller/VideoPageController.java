@@ -558,6 +558,7 @@ public class VideoPageController implements Initializable {
         videoStack.getChildren().add(videoStuff);
         videoStack.setAlignment(Pos.CENTER);
         videoStuff.setVisible(false);
+        videoStuff.setPadding(new Insets(0, 10, 0, 10));
 
         videoStack.setOnMouseEntered(event -> {
             videoStuff.setVisible(true);
