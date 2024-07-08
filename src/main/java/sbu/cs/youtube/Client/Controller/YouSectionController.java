@@ -1,5 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +13,7 @@ import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class YouSectionController implements Initializable {
@@ -25,6 +28,10 @@ public class YouSectionController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        mainPane.getStylesheets().clear();
+        mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/you-page.css")).toExternalForm());
+
         FXMLLoader layoutLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/layout.fxml"));
         Parent layout;
         try {
@@ -53,9 +60,24 @@ public class YouSectionController implements Initializable {
             throw new RuntimeException(e);
         }
         layoutController.scrollPane.setContent(youPage);
+
+        YouPageController youPageController = youPageLoader.getController();
+        youPageController.setParentController(layoutController);
+
+
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            mainPane.getStylesheets().clear();
+            mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-page.css")).toExternalForm());
+        });
+
+
 //        youPage.prefWidthProperty().bind(layoutController.scrollPane.prefWidthProperty());
         youPage.prefWidthProperty().bind(layoutController.scrollPane.viewportBoundsProperty().map(bounds -> bounds.getWidth()));
-        YouPageController youPageController = youPageLoader.getController();
     }
     //endregion
 

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,10 +32,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class YouPageController implements Initializable {
 
@@ -150,6 +148,7 @@ public class YouPageController implements Initializable {
 
     @FXML
     private VBox vbxYourClips;
+    private LayoutController parentController;
 
     //endregion
 
@@ -158,6 +157,9 @@ public class YouPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        vbxDashboard.getStylesheets().clear();
+        vbxDashboard.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/you-page.css")).toExternalForm());
+
         gson = new Gson();
         this.user = YouTubeApplication.user;
         new Thread(this::setUser).start();
@@ -209,6 +211,7 @@ public class YouPageController implements Initializable {
                         if (videoPreviewController != null) {
                             videoPreviewController.setVideo(v);
                         }
+                        videoPreviewController.setParentController(parentController);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -284,6 +287,7 @@ public class YouPageController implements Initializable {
                         if (videoPreviewController != null) {
                             videoPreviewController.setVideo(v);
                         }
+                        videoPreviewController.setParentController(parentController);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -324,6 +328,7 @@ public class YouPageController implements Initializable {
                         if (videoPreviewController != null) {
                             videoPreviewController.setVideo(v);
                         }
+                        videoPreviewController.setParentController(parentController);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -364,6 +369,7 @@ public class YouPageController implements Initializable {
                         if (videoPreviewController != null) {
                             videoPreviewController.setVideo(v);
                         }
+                        videoPreviewController.setParentController(parentController);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -452,6 +458,21 @@ public class YouPageController implements Initializable {
 
         hbxYourClipsHeader.prefWidthProperty().bind(scrlbrYourClips.widthProperty());
         hbxYourClips.prefWidthProperty().bind(scrlbrYourClips.widthProperty());
+    }
+    //endregion
+
+    //region [ - setParentController(LayoutController layoutController) - ]
+    public void setParentController(LayoutController layoutController) {
+        this.parentController = layoutController;
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            vbxDashboard.getStylesheets().clear();
+            vbxDashboard.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/you-page.css")).toExternalForm());
+        });
     }
     //endregion
 

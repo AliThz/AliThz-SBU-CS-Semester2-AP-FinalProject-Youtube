@@ -23,12 +23,12 @@
             </ImageView>
             <VBox fx:id="vbxUserDetails" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="677.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Text fx:id="txtFullName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text=" Full Name">
+                  <Text fx:id="txtFullName" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text=" Full Name">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Text>
-                  <Button fx:id="btnViewChannel" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#getChannel" prefHeight="26.0" prefWidth="250.0" styleClass="btn-view-channel" text="\@Userame  •  View Channel">
+                  <Button fx:id="btnViewChannel" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#getChannel" prefHeight="26.0" prefWidth="164.0" styleClass="btn-view-channel" text="\@Userame  •  View Channel" wrapText="true">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Button>
