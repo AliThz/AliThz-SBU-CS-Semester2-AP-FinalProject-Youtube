@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -105,33 +106,40 @@ public class PlaylistPageController implements Initializable {
             return;
         }
         Platform.runLater(() -> {
-            for (var video : videos) {
-                FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
-                HBox videoRecommendation;
+            for (int i = 0; i < 10; i++) {
 
-                try {
-                    videoRecommendation = videoRecommendationLoader.load();
-                    VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
-                    if (videoRecommendationController != null) {
-                        videoRecommendationController.setVideo(video);
+                for (var video : videos) {
+                    FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
+                    HBox videoRecommendation;
+
+                    try {
+                        videoRecommendation = videoRecommendationLoader.load();
+                        VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
+                        if (videoRecommendationController != null) {
+                            videoRecommendationController.setVideo(video);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+
+                    Button button = new Button();
+                    button.getStyleClass().add("btn-video");
+                    button.setGraphic(videoRecommendation);
+
+
+//                button.prefWidthProperty().bind(scrollPaneVideos.prefViewportWidthProperty().subtract(100));
+                    scrollPaneVideos.prefViewportWidthProperty().bind(hbxPlaylistPage.widthProperty().subtract(100));
+                    button.prefWidthProperty().bind(scrollPaneVideos.viewportBoundsProperty().map(bounds -> bounds.getWidth() - 10));
+                    button.prefHeightProperty().bind(scrollPaneVideos.prefViewportHeightProperty());
+                    vbxVideos.prefWidthProperty().bind(scrollPaneVideos.prefViewportWidthProperty());
+                    vbxVideos.prefHeightProperty().bind(scrollPaneVideos.prefViewportHeightProperty());
+
+                    videoRecommendation.prefWidthProperty().bind(button.widthProperty().subtract(20));
+
+                    button.setOnAction(event -> getVideo(event, video));
+
+                    vbxVideos.getChildren().add(button);
                 }
-
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(videoRecommendation);
-
-                videoRecommendation.prefWidthProperty().bind(button.prefWidthProperty());
-                videoRecommendation.prefHeightProperty().bind(button.prefHeightProperty());
-
-                button.prefWidthProperty().bind(vbxVideos.prefWidthProperty());
-                button.prefHeightProperty().bind(vbxVideos.prefHeightProperty());
-
-                button.setOnAction(event -> getVideo(event, video));
-
-                vbxVideos.getChildren().add(button);
             }
         });
     }

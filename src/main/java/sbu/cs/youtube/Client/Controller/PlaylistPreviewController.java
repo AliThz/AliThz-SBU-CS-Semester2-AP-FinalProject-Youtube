@@ -82,7 +82,6 @@ public class PlaylistPreviewController implements Initializable {
 
         hbxPlaylistDetails.prefWidthProperty().bind(vbxPlaylistPreview.widthProperty());
 
-
         vbxTextDetails.prefWidthProperty().bind(hbxPlaylistDetails.widthProperty().subtract(100));
 
         btnPlaylistPreviewOptions.setOnAction(event -> {
