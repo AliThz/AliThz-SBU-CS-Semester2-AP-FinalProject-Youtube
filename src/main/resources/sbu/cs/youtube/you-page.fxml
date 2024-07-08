@@ -28,7 +28,7 @@
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Text>
-                  <Button fx:id="btnViewChannel" mnemonicParsing="false" onAction="#getChannel" prefHeight="26.0" prefWidth="165.0" styleClass="btn-view-channel" text="\@Userame  •  View Channel">
+                  <Button fx:id="btnViewChannel" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#getChannel" prefHeight="26.0" prefWidth="250.0" styleClass="btn-view-channel" text="\@Userame  •  View Channel">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Button>

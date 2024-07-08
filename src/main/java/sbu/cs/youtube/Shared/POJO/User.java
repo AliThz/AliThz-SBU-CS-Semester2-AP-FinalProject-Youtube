@@ -48,7 +48,6 @@ public class User {
     public User(String fullName, String email, byte[] avatarBytes, String username, String password) {
         this.fullName = fullName;
         this.email = email;
-        this.avatarPath = avatarPath;
         this.avatarBytes = avatarBytes;
         this.username = username;
         this.password = password;

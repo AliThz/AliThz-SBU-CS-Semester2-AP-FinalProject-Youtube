@@ -469,6 +469,8 @@ public class ChannelPageController implements Initializable {
             };
             Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
 
+            YouTubeApplication.user = userResponse.getBody();
+
             parentController.sendNotification(userResponse.getMessage());
         }
     }
