@@ -715,8 +715,24 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - search(ActionEvent event, String searchedText) - ]
-    private void search(ActionEvent event, String searchedText) {
+    private void search(ActionEvent event, String searchText) {
+        setDefaultSvgs();
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/search-section.fxml"));
+        try {
+            root = loader.load();
+            SearchSectionController searchSectionController = loader.getController();
+            searchSectionController.initialize(searchText);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 

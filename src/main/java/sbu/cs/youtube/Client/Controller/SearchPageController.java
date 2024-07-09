@@ -11,7 +11,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.Channel;
@@ -26,9 +28,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class SearchPageController implements Initializable {
+public class SearchPageController {
 
     //region [ - Fields - ]
+    Gson gson = new Gson();
     private String searchText;
     @FXML
     private FlowPane flowPanePlaylists;
@@ -37,14 +40,26 @@ public class SearchPageController implements Initializable {
     private FlowPane flowPaneVideos;
 
     @FXML
+    private FlowPane flowPaneChannels;
+
+    @FXML
     private VBox vbxSearchPage;
+
+    @FXML
+    private ScrollPane scrollPaneChannels;
+
+    @FXML
+    private ScrollPane scrollPanePlaylists;
+
+    @FXML
+    private ScrollPane scrollPaneVideos;
     //endregion
 
     //region [ - Methods - ]
 
-    //region [ - initialize(URL location, ResourceBundle resources) - ]
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    //region [ - initialize(String searchText) - ]
+    public void initialize(String searchText){
+        this.searchText = searchText;
         new Thread(this::displayVideos).start();
         new Thread(this::displayPlaylists).start();
         new Thread(this::displayChannels).start();
@@ -53,8 +68,7 @@ public class SearchPageController implements Initializable {
 
     //region [ - displayVideos() - ]
     private void displayVideos() {
-        Gson gson = new Gson();
-        new Request<>(YouTubeApplication.socket, "searchVideo").send(searchText);
+        new Request<>(YouTubeApplication.socket, "SearchVideo").send(searchText);
         TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
         };
         Response<ArrayList<Video>> videoResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
@@ -64,15 +78,41 @@ public class SearchPageController implements Initializable {
             return;
         }
         Platform.runLater(() -> {
+//            for (var video : videos) {
+//                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+//                VBox videoPreview;
+//
+//                try {
+//                    videoPreview = videoPreviewLoader.load();
+//                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+//                    if (videoPreviewController != null) {
+//                        videoPreviewController.setVideo(video);
+//                    }
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                Button button = new Button();
+//                button.getStyleClass().add("btn-video");
+//                button.setGraphic(videoPreview);
+//
+//                button.setOnAction(event -> getVideo(event, video));
+//
+//                flowPaneVideos.getChildren().add(button);
+//            }
+
+
+
+
             for (var video : videos) {
-                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
-                VBox videoPreview;
+                FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
+                HBox videoRecommendation;
 
                 try {
-                    videoPreview = videoPreviewLoader.load();
-                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
-                    if (videoPreviewController != null) {
-                        videoPreviewController.setVideo(video);
+                    videoRecommendation = videoRecommendationLoader.load();
+                    VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
+                    if (videoRecommendationController != null) {
+                        videoRecommendationController.setVideo(video);
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -80,7 +120,17 @@ public class SearchPageController implements Initializable {
 
                 Button button = new Button();
                 button.getStyleClass().add("btn-video");
-                button.setGraphic(videoPreview);
+                button.setGraphic(videoRecommendation);
+
+
+//                button.prefWidthProperty().bind(scrollPaneVideos.prefViewportWidthProperty().subtract(100));
+//                scrollPaneVideos.prefViewportWidthProperty().bind(hbxPlaylistPage.widthProperty().subtract(100));
+                button.prefWidthProperty().bind(scrollPaneVideos.viewportBoundsProperty().map(bounds -> bounds.getWidth() - 10));
+                button.prefHeightProperty().bind(scrollPaneVideos.prefViewportHeightProperty());
+                flowPaneVideos.prefWidthProperty().bind(scrollPaneVideos.prefViewportWidthProperty());
+                flowPaneVideos.prefHeightProperty().bind(scrollPaneVideos.prefViewportHeightProperty());
+
+                videoRecommendation.prefWidthProperty().bind(button.widthProperty().subtract(20));
 
                 button.setOnAction(event -> getVideo(event, video));
 
@@ -120,8 +170,7 @@ public class SearchPageController implements Initializable {
 
     //region [ - displayPlaylists() - ]
     private void displayPlaylists() {
-        Gson gson = new Gson();
-        new Request<>(YouTubeApplication.socket, "searchPlaylist").send(searchText);
+        new Request<>(YouTubeApplication.socket, "SearchPlaylist").send(searchText);
         TypeToken<Response<ArrayList<Playlist>>> responseTypeToken = new TypeToken<>() {
         };
         Response<ArrayList<Playlist>> playlistResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
@@ -133,7 +182,7 @@ public class SearchPageController implements Initializable {
         Platform.runLater(() -> {
             for (var playlist : playlists) {
                 FXMLLoader playlistPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-preview.fxml"));
-                VBox playlistPreview;
+                Button playlistPreview;
 
                 try {
                     playlistPreview = playlistPreviewLoader.load();
@@ -153,16 +202,15 @@ public class SearchPageController implements Initializable {
 
     //region [ - displayChannels() - ]
     private void displayChannels() {
-        Gson gson = new Gson();
-        new Request<>(YouTubeApplication.socket, "searchChannel").send(searchText);
-        TypeToken<Response<ArrayList<Channel>>> responseTypeToken = new TypeToken<>() {
-        };
-        Response<ArrayList<Channel>> channelResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
-
-        ArrayList<Channel> channels = channelResponse.getBody();
-        if (channels == null) {
-            return;
-        }
+//        new Request<>(YouTubeApplication.socket, "searchChannel").send(searchText);
+//        TypeToken<Response<ArrayList<Channel>>> responseTypeToken = new TypeToken<>() {
+//        };
+//        Response<ArrayList<Channel>> channelResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
+//
+//        ArrayList<Channel> channels = channelResponse.getBody();
+//        if (channels == null) {
+//            return;
+//        }
     }
     //endregion
 

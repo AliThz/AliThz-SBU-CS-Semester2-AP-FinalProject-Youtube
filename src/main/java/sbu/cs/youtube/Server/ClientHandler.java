@@ -837,13 +837,13 @@ public class ClientHandler implements Runnable {
     //region [ - searchChannel() - ]
 
     private void searchPlaylist() {
-        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        TypeToken<Request<String>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<String> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Playlist>> response;
 
-        Playlist playlist = playlistRequest.getBody();
-        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsByTitle(playlist.getTitle());
+        String searchText = playlistRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsByTitle(searchText);
 
         response = new Response<>(client, playlistRequest.getType(), true, "Search For Playlist Successfully");
         response.send(playlists);
