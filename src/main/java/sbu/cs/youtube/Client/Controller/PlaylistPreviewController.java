@@ -8,13 +8,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.Playlist;
 import sbu.cs.youtube.Shared.POJO.Playlist;
@@ -94,6 +95,44 @@ public class PlaylistPreviewController implements Initializable {
             event.consume();
             save(event);
         });
+
+
+
+//        ContextMenu contextMenu = new ContextMenu();
+//        MenuItem menuItem1 = new MenuItem("Choice 1");
+//        MenuItem menuItem2 = new MenuItem("Choice 2");
+//        MenuItem menuItem3 = new MenuItem("Choice 3");
+//
+//        menuItem3.setOnAction((event) -> {
+//            System.out.println("Choice 3 clicked!");
+//        });
+//
+//        contextMenu.getItems().addAll(menuItem1,menuItem2,menuItem3);
+//
+//        TextArea textArea = new TextArea();
+//
+//        textArea.setContextMenu(contextMenu);
+//
+//        vbxPlaylistPreview.getChildren().add(textArea);
+//
+//        contextMenu.show(btnPlaylistPreviewOptions, btnPlaylistPreviewOptions.localToScreen(0, 0).getX(), btnPlaylistPreviewOptions.localToScreen(0, 0).getY());
+
+
+        // Create a context menu
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Add menu items to the context menu
+        MenuItem item1 = new MenuItem("Option 1");
+        MenuItem item2 = new MenuItem("Option 2");
+        MenuItem item3 = new MenuItem("Option 3");
+        contextMenu.getItems().addAll(item1, item2, item3);
+
+//         Set the on-action event handler for the button
+        btnPlaylistPreviewOptions.setOnAction(event -> {
+            // Show the context menu when the button is clicked
+            contextMenu.show(btnPlaylistPreviewOptions, btnPlaylistPreviewOptions.getLayoutX(), btnPlaylistPreviewOptions.getLayoutY());
+        });
+        btnPlaylistPreviewOptions.setContextMenu(contextMenu);
     }
 
     private void save(ActionEvent event) {
@@ -159,6 +198,27 @@ public class PlaylistPreviewController implements Initializable {
             btnOpenPlaylist.getStylesheets().clear();
             btnOpenPlaylist.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/playlist-preview.css")).toExternalForm());
         });
+    }
+    //endregion
+
+    //region [ - displayPopUpMenu() - ]
+    @FXML
+    private void displayPopUpMenu() {
+//        Popup popup = new Popup();
+//        VBox popupContent = new VBox(10);
+//        Button btnAddToPlaylist;
+//        popupContent.getChildren().addAll(new Label("Menu Item 1"), new Label("Menu Item 2"), new Label("Menu Item 3"));
+//        popup.getContent().add(popupContent);
+//
+//        btnPlaylistPreviewOptions.setOnAction(e -> {
+//            if (popup.isShowing()) {
+//                popup.hide();
+//            } else {
+//                popup.show(vbxPlaylistPreview.getScene().getWindow());
+//            }
+//        });
+
+
     }
     //endregion
 

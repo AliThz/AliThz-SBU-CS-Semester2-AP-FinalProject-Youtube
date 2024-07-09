@@ -747,10 +747,14 @@ public class VideoPageController implements Initializable {
             svgDislike.setContent(emptiedDislike);
             hasLiked = true;
             txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) + 1));
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " liked your video"));
+            YouTubeApplication.receiveResponse();
         } else if (hasLiked) {
             svgLike.setContent(emptiedLike);
             hasLiked = null;
             txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) - 1));
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " unliked your video"));
+            YouTubeApplication.receiveResponse();
         }
 
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "LikeVideo");
@@ -762,12 +766,6 @@ public class VideoPageController implements Initializable {
         };
         Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
-
-        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " liked your video"));
-        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
-        };
-        response = YouTubeApplication.receiveResponse();
-        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
     }
     //endregion
 
@@ -784,9 +782,13 @@ public class VideoPageController implements Initializable {
             if (hasLiked != null && hasLiked)
                 txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) - 1));
             hasLiked = false;
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " disliked your video"));
+            YouTubeApplication.receiveResponse();
         } else if (!hasLiked) {
             svgDislike.setContent(emptiedDislike);
             hasLiked = null;
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " undisliked your video"));
+            YouTubeApplication.receiveResponse();
         }
 
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "DislikeVideo");
@@ -798,11 +800,6 @@ public class VideoPageController implements Initializable {
         };
         Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
-        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " disliked your video"));
-        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
-        };
-        response = YouTubeApplication.receiveResponse();
-        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
     }
     //endregion
 

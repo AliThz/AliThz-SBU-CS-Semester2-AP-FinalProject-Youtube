@@ -199,7 +199,7 @@ public class ClientHandler implements Runnable {
             case "GetUserChannel":
                 getUserChannel();
                 break;
-            case "CreatNotification":
+            case "CreateNotification":
                 createNotification();
                 break;
             case "CreateNotificationForSubscribers":
@@ -210,7 +210,7 @@ public class ClientHandler implements Runnable {
                 break;
 
             default:
-                new Response<Object>(client , objectRequest.getType() , false , "Invalid Request").send();
+                new Response<>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
     }
     //endregion

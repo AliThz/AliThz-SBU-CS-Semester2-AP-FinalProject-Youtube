@@ -21,6 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -30,6 +31,7 @@ import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
+import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -521,7 +523,6 @@ public class LayoutController implements Initializable {
             createBtn.setOnAction(this::getCreatePage);
 
 
-
             notificationsBtn.setOnAction(this::getNotificationsScene);
             accountBtn.setOnAction(this::getDashboard);
 
@@ -627,17 +628,40 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - getNotificationsScene(ActionEvent event) - ]
-
     protected void getNotificationsScene(ActionEvent event) {
         setDefaultSvgs();
+        Gson gson = new Gson();
+
+        new Request<>(YouTubeApplication.socket, "GetUserNotifications").send(new User(YouTubeApplication.user.getId()));
+        Response<ArrayList<Notification>> notificationResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Notification>>>() {
+        }.getType());
+        ArrayList<Notification> notifications = notificationResponse.getBody();
+
+        VBox vbxNotifications = new VBox();
+        vbxNotifications.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+//        vbxNotifications.getStyleClass().add("vbxNotification");
+        Text text = new Text("Notifications");
+        text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        vbxNotifications.getChildren().add(text);
+
+        for (var n : notifications) {
+            Label label = new Label(n.getMessage());
+            label.setId(n.getId().toString());
+            label.setOnMouseClicked(mouseEvent -> {
+                vbxNotifications.getChildren().remove(vbxNotifications.getChildren().indexOf(label));
+                new Request<Notification>(YouTubeApplication.socket, "UpdateNotification").send(new Notification(UUID.fromString(label.getId()), true));
+                YouTubeApplication.receiveResponse();
+            });
+            label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10;");
+//            label.getStyleClass().add("lblNotification");
+            vbxNotifications.getChildren().add(label);
+//        button.setOnAction(event1 -> {
+//            System.out.println("hello");
+//        });
+        }
 
         Popup popup = new Popup();
-        Button button = new Button("hellloooooooo");
-        button.setStyle(" -fx-background-color: blue");
-        button.setOnAction(event1 -> {
-            System.out.println("hello");
-        });
-        popup.getContent().add(button);
+        popup.getContent().add(vbxNotifications);
         Stage stage = (Stage) btnMode.getScene().getWindow();
 
         Bounds bounds = notificationsBtn.localToScreen(notificationsBtn.getBoundsInLocal());
@@ -650,10 +674,7 @@ public class LayoutController implements Initializable {
             else
                 popup.show(stage);
         });
-
-
     }
-
     //endregion
 
     //region [ - changeMode(ActionEvent event) - ]

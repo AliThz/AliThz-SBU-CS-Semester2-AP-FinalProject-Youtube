@@ -23,6 +23,11 @@ public class Notification {
         this.isRead = false;
     }
 
+    public Notification(UUID id, boolean isRead) {
+        this.Id = id;
+        this.isRead = isRead;
+    }
+
     public UUID getId() {
         return Id;
     }
