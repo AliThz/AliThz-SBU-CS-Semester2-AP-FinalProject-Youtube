@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -96,6 +98,8 @@ public class LayoutController implements Initializable {
 
     @FXML
     protected ToggleButton btnMode;
+
+    private Button notificationsBtn;
 
     //endregion
 
@@ -479,7 +483,7 @@ public class LayoutController implements Initializable {
             Button createBtn = new Button();
             createBtn.getStyleClass().add("loggedIn-btn");
 
-            Button notificationsBtn = new Button();
+            notificationsBtn = new Button();
             notificationsBtn.getStyleClass().add("loggedIn-btn");
 
             Button accountBtn = new Button();
@@ -515,6 +519,9 @@ public class LayoutController implements Initializable {
             accountBtn.setTooltip(new Tooltip("Account Management"));
 
             createBtn.setOnAction(this::getCreatePage);
+
+
+
             notificationsBtn.setOnAction(this::getNotificationsScene);
             accountBtn.setOnAction(this::getDashboard);
 
@@ -623,6 +630,28 @@ public class LayoutController implements Initializable {
 
     protected void getNotificationsScene(ActionEvent event) {
         setDefaultSvgs();
+
+        Popup popup = new Popup();
+        Button button = new Button("hellloooooooo");
+        button.setStyle(" -fx-background-color: blue");
+        button.setOnAction(event1 -> {
+            System.out.println("hello");
+        });
+        popup.getContent().add(button);
+        Stage stage = (Stage) btnMode.getScene().getWindow();
+
+        Bounds bounds = notificationsBtn.localToScreen(notificationsBtn.getBoundsInLocal());
+        popup.setX(bounds.getMinX());
+        popup.setY(bounds.getMinY() + bounds.getHeight());
+
+        notificationsBtn.setOnAction(event1 -> {
+            if (popup.isShowing())
+                popup.hide();
+            else
+                popup.show(stage);
+        });
+
+
     }
 
     //endregion
