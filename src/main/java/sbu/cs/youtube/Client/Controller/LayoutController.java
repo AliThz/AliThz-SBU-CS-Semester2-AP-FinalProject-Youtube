@@ -666,11 +666,12 @@ public class LayoutController implements Initializable {
         }
 
         Popup popup = new Popup();
+        popup.hide();
         popup.getContent().add(vbxNotifications);
         Stage stage = (Stage) btnMode.getScene().getWindow();
 
         Bounds bounds = notificationsBtn.localToScreen(notificationsBtn.getBoundsInLocal());
-        popup.setX(bounds.getMinX());
+        popup.setX(bounds.getMinX() - 150);
         popup.setY(bounds.getMinY() + bounds.getHeight());
 
         notificationsBtn.setOnAction(event1 -> {
