@@ -22,6 +22,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sbu.cs.youtube.Shared.POJO.Notification;
 import sbu.cs.youtube.Shared.POJO.UserVideo;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
@@ -163,6 +164,8 @@ public class CreateDetailsController  {
         Response<Video> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
         parentController.sendNotification(userVideoResponse.getMessage());
+
+        new Request<>(YouTubeApplication.socket, "CreateNotificationForSubscribers").send(new Notification(YouTubeApplication.user.getId(), YouTubeApplication.user.getUsername() + " post a video"));
 
         Stage stage;
         Scene scene;
