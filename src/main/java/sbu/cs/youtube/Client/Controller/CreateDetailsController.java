@@ -171,6 +171,7 @@ public class CreateDetailsController {
         parentController.sendNotification(userVideoResponse.getMessage());
 
         new Request<>(YouTubeApplication.socket, "CreateNotificationForSubscribers").send(new Notification(YouTubeApplication.user.getId(), YouTubeApplication.user.getUsername() + " post a video"));
+        YouTubeApplication.receiveResponse();
 
         Stage stage;
         Scene scene;

@@ -853,9 +853,9 @@ public class DatabaseManager {
 
             // Get subscribers of the channel created by the user
             stmt = c.prepareStatement("""
-                SELECT s."Id" AS "SubscriberId"
+                SELECT s."SubscriberId"
                 FROM "UserManagement"."Channel" ch
-                JOIN "contentManagement"."Subscription" s ON ch."Id" = s."ChannelId"
+                JOIN "UserManagement"."Subscription" s ON ch."Id" = s."ChannelId"
                 WHERE ch."CreatorId" = ?
                 """);
             stmt.setObject(1, notification.getUserId());
