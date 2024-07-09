@@ -727,6 +727,10 @@ public class VideoPageController implements Initializable {
         subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(subscriptionResponse.getMessage());
         new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " subscribed your channel"));
+        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
+        };
+        response = YouTubeApplication.receiveResponse();
+        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
     }
     //endregion
 
@@ -760,6 +764,10 @@ public class VideoPageController implements Initializable {
         System.out.println(userVideoResponse.getMessage());
 
         new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " liked your video"));
+        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
+        };
+        response = YouTubeApplication.receiveResponse();
+        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
     }
     //endregion
 
@@ -791,6 +799,10 @@ public class VideoPageController implements Initializable {
         Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
         new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " disliked your video"));
+        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
+        };
+        response = YouTubeApplication.receiveResponse();
+        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
     }
     //endregion
 
@@ -806,8 +818,6 @@ public class VideoPageController implements Initializable {
         Request<Comment> commentRequest = new Request<>(YouTubeApplication.socket, "Comment");
         Comment comment = new Comment(txtComment.getText(), video.getId(), YouTubeApplication.user.getId(), null);
         commentRequest.send(comment);
-        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " commented \"" + txtComment.getText() +"\" on your video"));
-        txtComment.clear();
 
         String response = YouTubeApplication.receiveResponse();
         Gson gson = new Gson();
@@ -817,6 +827,12 @@ public class VideoPageController implements Initializable {
         System.out.println(commentResponse.getMessage());
 
         displayComments();
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " commented \"" + txtComment.getText() +"\" on your video"));
+        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
+        };
+        response = YouTubeApplication.receiveResponse();
+        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
+        txtComment.clear();
     }
     //endregion
 

@@ -907,6 +907,8 @@ public class ClientHandler implements Runnable {
         Notification notification = notificationRequest.getBody();
 
         databaseManager.insertNotification(notification);
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification Received");
+        response.send();
     }
     //endregion
 
@@ -920,6 +922,8 @@ public class ClientHandler implements Runnable {
         Notification notification = notificationRequest.getBody();
 
         databaseManager.createNotificationForSubscribers(notification);
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification Received");
+        response.send();
     }
     //endregion
 
