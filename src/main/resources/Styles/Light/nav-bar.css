@@ -125,10 +125,6 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-color: transparent;
-    -fx-pref-width: 23px;
-    -fx-pref-height: 23px;
-    -fx-background-radius: 50;
-    -fx-border-radius: 50;
 }
 
 /* -------------------------------- LoggedIn Button Group -------------------------------- */
