@@ -648,11 +648,16 @@ public class LayoutController implements Initializable {
             Label label = new Label(n.getMessage());
             label.setId(n.getId().toString());
             label.setOnMouseClicked(mouseEvent -> {
-                vbxNotifications.getChildren().remove(vbxNotifications.getChildren().indexOf(label));
+//                vbxNotifications.getChildren().remove(vbxNotifications.getChildren().indexOf(label));
+                label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
                 new Request<Notification>(YouTubeApplication.socket, "UpdateNotification").send(new Notification(UUID.fromString(label.getId()), true));
                 YouTubeApplication.receiveResponse();
             });
-            label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10;");
+            if (n.isRead()) {
+                label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+            } else {
+                label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND");
+            }
 //            label.getStyleClass().add("lblNotification");
             vbxNotifications.getChildren().add(label);
 //        button.setOnAction(event1 -> {
@@ -661,11 +666,12 @@ public class LayoutController implements Initializable {
         }
 
         Popup popup = new Popup();
+        popup.hide();
         popup.getContent().add(vbxNotifications);
         Stage stage = (Stage) btnMode.getScene().getWindow();
 
         Bounds bounds = notificationsBtn.localToScreen(notificationsBtn.getBoundsInLocal());
-        popup.setX(bounds.getMinX());
+        popup.setX(bounds.getMinX() - 150);
         popup.setY(bounds.getMinY() + bounds.getHeight());
 
         notificationsBtn.setOnAction(event1 -> {
