@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.Notification;
 import sbu.cs.youtube.Shared.POJO.UserVideo;
 import sbu.cs.youtube.Shared.POJO.Video;
+import sbu.cs.youtube.Shared.POJO.VideoCategory;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
@@ -35,8 +37,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
-public class CreateDetailsController  {
+public class CreateDetailsController {
 
     private File videoFile;
 
@@ -81,6 +84,8 @@ public class CreateDetailsController  {
     @FXML
     private RadioButton radioSports;
 
+    private ArrayList<VideoCategory> categoryIds;
+
     @FXML
     private VBox vbxDetails;
 
@@ -95,6 +100,9 @@ public class CreateDetailsController  {
 
     @FXML
     private HBox hbxError;
+
+    @FXML
+    private TilePane tilePaneCategory;
 
     LayoutController parentController;
 
@@ -128,14 +136,6 @@ public class CreateDetailsController  {
             imageView.setFitWidth(315);
             imageView.setFitHeight(177);
 
-//            imageView.setFitWidth(686);
-//            imageView.setFitHeight(385);
-
-//            vbxRight.prefWidthProperty().bind(Bindings.multiply(hbxDetails.widthProperty(), 2.0 / 5.0));
-//            vbxLeft.prefWidthProperty().bind(Bindings.multiply(hbxDetails.widthProperty(), 3.0 / 5.0));
-
-
-
             btnThumb.setText("");
             btnThumb.setGraphic(imageView);
         }
@@ -146,16 +146,21 @@ public class CreateDetailsController  {
         String title = fieldTitle.getText();
         String description = fieldDescription.getText();
 
-        //todo check radio buttons
 
         if (title.isEmpty()) {
             txtError.setText("Please enter a title");
             hbxError.setVisible(true);
             return;
+        } else if (thumbnailFile == null) {
+            txtError.setText("Please choose a thumbnail");
+            hbxError.setVisible(true);
+            return;
         }
 
+        checkRadios();
+
         Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "CreateVideo");
-        videoRequest.send(new Video(title, convertImageToByteArray(thumbnailFile.getAbsolutePath()), convertVideoToByteArray(videoFile.getAbsolutePath()), description, YouTubeApplication.user.getId(), new ArrayList<>(), videoFile.getName()));
+        videoRequest.send(new Video(title, convertImageToByteArray(thumbnailFile.getAbsolutePath()), convertVideoToByteArray(videoFile.getAbsolutePath()), description, YouTubeApplication.user.getId(), categoryIds, videoFile.getName()));
         Gson gson = new Gson();
 
         String response = YouTubeApplication.receiveResponse();
@@ -180,6 +185,42 @@ public class CreateDetailsController  {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void checkRadios() {
+        categoryIds = new ArrayList<>();
+
+        for (var child : tilePaneCategory.getChildren()) {
+            RadioButton radioButton = (RadioButton) child;
+            if (radioButton.isSelected()) {
+                switch (radioButton.getText()) {
+                    case "Music":
+                        categoryIds.add(new VideoCategory(UUID.fromString("23278ae1-3944-44df-af8e-28ecaeffc771")));
+                        break;
+                    case "News":
+                        categoryIds.add(new VideoCategory(UUID.fromString("dcc365a3-1671-49c7-a3ea-ae61f52ac629")));
+                        break;
+                    case "Fashion and Beauty":
+                        categoryIds.add(new VideoCategory(UUID.fromString("493a8465-40b6-4379-ae02-e302b797b6f9")));
+                        break;
+                    case "Movies and TV":
+                        categoryIds.add(new VideoCategory(UUID.fromString("8442cd0e-7d67-497a-a172-e09910dc12c0")));
+                        break;
+                    case "Sports":
+                        categoryIds.add(new VideoCategory(UUID.fromString("c1dddd73-ecca-4897-aaf4-f584bf3e26fa")));
+                        break;
+                    case "Podcasts":
+                        categoryIds.add(new VideoCategory(UUID.fromString("95e32988-1ee7-479a-9a1f-340bfc225893")));
+                        break;
+                    case "Gaming":
+                        categoryIds.add(new VideoCategory(UUID.fromString("8d68738b-e384-4681-9a48-ba4b42aaf2e7")));
+                        break;
+                    case "Learning":
+                        categoryIds.add(new VideoCategory(UUID.fromString("518cfb98-b4a3-46c7-9533-e7cbb68e16f3")));
+                        break;
+                }
+            }
+        }
     }
 
     //region [ - convertVideoToByteArray - ]

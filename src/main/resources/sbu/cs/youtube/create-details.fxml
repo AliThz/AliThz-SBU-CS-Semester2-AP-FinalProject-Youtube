@@ -91,7 +91,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Label>
-                        <TilePane hgap="20.0" prefHeight="220.0" prefWidth="573.0" tileAlignment="TOP_LEFT" vgap="20.0" HBox.hgrow="ALWAYS">
+                        <TilePane fx:id="tilePaneCategory" hgap="20.0" prefHeight="220.0" prefWidth="573.0" tileAlignment="TOP_LEFT" vgap="20.0" HBox.hgrow="ALWAYS">
                            <children>
                               <RadioButton fx:id="radioMusic" mnemonicParsing="false" styleClass="radioCategory" text="Music" textFill="WHITE" />
                               <RadioButton fx:id="radioMovies" mnemonicParsing="false" styleClass="radioCategory" text="Movies and TV" textFill="WHITE" />
@@ -117,7 +117,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <HBox fx:id="hbxError" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="326.0" spacing="5.0">
+                  <HBox fx:id="hbxError" alignment="CENTER" prefHeight="17.0" prefWidth="326.0" spacing="5.0">
                      <children>
                         <SVGPath content="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="WHITE" styleClass="error" />
                         <Text fx:id="txtError" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Text" wrappingWidth="305.3366584777832" />
