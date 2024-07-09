@@ -1,18 +1,18 @@
 .background {
-    -fx-background-color : black;
+    -fx-background-color : white;
     -fx-border-width: 0px;
-    -fx-border-color : black;
+    -fx-border-color : white;
 }
 
 .tab-pane {
-    -fx-background-color: rgb(0, 0, 0);
-    -fx-border-color: rgb(0, 0, 0);
+    -fx-background-color: white;
+    -fx-border-color: white;
     -fx-padding: 5px;
 }
 
 .tab-pane .tab-header-area {
-    -fx-background-color: rgb(0, 0, 0);
-    -fx-border-color: rgb(0, 0, 0);
+    -fx-background-color: white;
+    -fx-border-color: white;
 }
 
 .tab-pane .tab-header-area .tab {
@@ -31,7 +31,7 @@
 
 /* Change the background color of the tab header */
 .tab-pane .tab-header-background {
-    -fx-background-color: rgb(0, 0, 0); /* Change this to your desired color */
+    -fx-background-color: white; /* Change this to your desired color */
 }
 
 /*.tab-pane .tab-header-area {*/
@@ -39,16 +39,16 @@
 /*}*/
 /* Change the text color of all tab labels */
 .tab-pane .tab-header-area .tab .tab-label {
-    -fx-text-fill: rgb(255, 255, 255); /* Change this to your desired color */
-    -fx-fill: rgb(255, 255, 255); /* Change this to your desired color */
+    -fx-text-fill: black;
+    -fx-fill: black;
     -fx-background-color: transparent;
     -fx-background-radius: 7 7 0 0;
 }
 .tab-pane .tab-header-area .tab:hover .tab-label {
-    -fx-background-color: rgb(33,33,33);
+    -fx-background-color: rgb(229,229,229);
 }
 .tab-pane .tab-header-area .tab:selected .tab-label {
-    -fx-background-color: rgb(41,41,41);
+    -fx-background-color: rgb(204,204,204);
 }
 
 /*!* Optionally, change the text color of the selected tab label *!*/
@@ -65,17 +65,17 @@
 
 
 .scroll-pane {
-    -fx-background-color: black;
+    -fx-background-color: white;
 }
 
 .scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: gray;
+    -fx-background-color: white;
     -fx-background-radius: 10;
     -fx-pref-width: 15;
 }
 
 .scroll-pane .scroll-bar:vertical .track {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(204, 204, 204);
     -fx-background-radius: 10;
 }
 

@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,7 +16,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sbu.cs.youtube.Shared.POJO.Channel;
 import sbu.cs.youtube.Shared.POJO.Playlist;
 import sbu.cs.youtube.Shared.POJO.Video;
 import sbu.cs.youtube.Shared.Request;
@@ -24,9 +23,8 @@ import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.Objects;
 
 public class SearchPageController {
 
@@ -53,12 +51,16 @@ public class SearchPageController {
 
     @FXML
     private ScrollPane scrollPaneVideos;
+
+    private LayoutController parentController;
     //endregion
 
     //region [ - Methods - ]
 
     //region [ - initialize(String searchText) - ]
     public void initialize(String searchText){
+        vbxSearchPage.getStylesheets().clear();
+        vbxSearchPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/search-page.css")).toExternalForm());
         this.searchText = searchText;
         new Thread(this::displayVideos).start();
         new Thread(this::displayPlaylists).start();
@@ -187,6 +189,7 @@ public class SearchPageController {
                 try {
                     playlistPreview = playlistPreviewLoader.load();
                     PlaylistPreviewController playlistPreviewController = playlistPreviewLoader.getController();
+                    playlistPreviewController.setParentController(parentController);
                     if (playlistPreviewController != null) {
                         playlistPreviewController.setPlaylist(playlist);
                     }
@@ -211,6 +214,21 @@ public class SearchPageController {
 //        if (channels == null) {
 //            return;
 //        }
+    }
+    //endregion
+
+    //region [ - setParentController(LayoutController layoutController) - ]
+    public void setParentController(LayoutController layoutController) {
+        this.parentController = layoutController;
+        EventHandler<ActionEvent> existingHandler = parentController.btnMode.getOnAction();
+
+        parentController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            vbxSearchPage.getStylesheets().clear();
+            vbxSearchPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/search-page.css")).toExternalForm());
+        });
     }
     //endregion
 
