@@ -212,8 +212,8 @@ public class ClientHandler implements Runnable {
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<User> response;
 
-        User user = userRequest.getBody();
-        databaseManager.insertUser(user);
+        User requestedUser = userRequest.getBody();
+        User user = databaseManager.insertUser(requestedUser);
 
         response = new Response<>(client, userRequest.getType(), true, "Signed up successfully");
         response.send(user);
