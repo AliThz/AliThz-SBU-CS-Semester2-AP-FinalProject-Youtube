@@ -55,14 +55,31 @@
 .btn-channel {
     -fx-background-color: transparent;
     -fx-text-fill: rgb(255, 255, 255);
+    -fx-background-radius: 20;
+}
+
+.btn-channel:hover {
+    -fx-background-color : rgb(33,33,33);
+}
+
+.btn-channel:pressed {
+    -fx-background-color: rgb(41,41,41);
 }
 
 .btn-play {
     -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-background-radius: 20;
-    -fx-text-fill: rgb(0, 0, 0);
+    -fx-text-fill: white;
     /*-fx-background-color: rgba(255, 255, 255, 0.05);*/
     /*-fx-text-fill: #000;*/
+}
+
+.btn-play:hover {
+    -fx-background-color : rgb(41,41,41);
+}
+
+.btn-play:pressed {
+    -fx-background-color: rgb(60,60,60);
 }
 
 .btn-video {
