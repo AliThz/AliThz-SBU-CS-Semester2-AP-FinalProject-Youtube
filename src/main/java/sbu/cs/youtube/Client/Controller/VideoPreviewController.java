@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -137,9 +138,12 @@ public class VideoPreviewController implements Initializable {
         Image videoThumbnail = new Image(bis);
         imgThumbnail.setImage(videoThumbnail);
 
+
+        Circle clip = new Circle(17, 17, 13);
         bis = new ByteArrayInputStream(video.getChannel().getProfileBytes());
         Image channelProfile = new Image(bis);
         imgChannelProfile.setImage(channelProfile);
+        imgChannelProfile.setClip(clip);
     }
     //endregion
 

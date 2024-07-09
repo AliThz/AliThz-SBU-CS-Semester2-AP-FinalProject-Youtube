@@ -27,6 +27,10 @@ public class SearchSectionController {
 
     //region [ - initialize(String searchText) - ]
     public void initialize(String searchText) {
+
+        mainPane.getStylesheets().clear();
+        mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/search-page.css")).toExternalForm());
+
         FXMLLoader layoutLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/layout.fxml"));
         Parent layout;
         try {
@@ -42,7 +46,6 @@ public class SearchSectionController {
 
         layoutController.scrollPane.getChildrenUnmodifiable().remove(layoutController.flowPane);
 
-
         FXMLLoader searchPageLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/search-page.fxml"));
         VBox searchPage;
         try {
@@ -53,12 +56,10 @@ public class SearchSectionController {
         }
         layoutController.scrollPane.setContent(searchPage);
         SearchPageController searchPageController = searchPageLoader.getController();
+        searchPageController.setParentController(layoutController);
         searchPageController.initialize(searchText);
         searchPage.prefWidthProperty().bind(layoutController.scrollPane.viewportBoundsProperty().map(Bounds::getWidth));
         searchPage.prefHeightProperty().bind(layoutController.scrollPane.viewportBoundsProperty().map(Bounds::getHeight));
-
-//        mainPane.getStylesheets().clear();
-//        mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
 
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
@@ -66,8 +67,8 @@ public class SearchSectionController {
             if (existingHandler != null) {
                 existingHandler.handle(event);
             }
-//            mainPane.getStylesheets().clear();
-//            mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
+            mainPane.getStylesheets().clear();
+            mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/search-page.css")).toExternalForm());
         });
     }
     //endregion

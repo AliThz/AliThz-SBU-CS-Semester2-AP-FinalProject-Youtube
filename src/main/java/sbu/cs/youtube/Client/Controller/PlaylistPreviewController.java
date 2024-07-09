@@ -1,6 +1,7 @@
 package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -41,6 +42,9 @@ public class PlaylistPreviewController implements Initializable {
     private Button btnViewPlaylist;
 
     @FXML
+    private Button btnOpenPlaylist;
+
+    @FXML
     private HBox hbxPlaylistDetails;
 
     @FXML
@@ -76,6 +80,8 @@ public class PlaylistPreviewController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        btnOpenPlaylist.getStylesheets().clear();
+        btnOpenPlaylist.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/playlist-preview.css")).toExternalForm());
         imgThumbnail.fitWidthProperty().bind(vbxPlaylistPreview.widthProperty());
         imgThumbnail.fitHeightProperty().bind(vbxPlaylistPreview.heightProperty());
         imgThumbnail.setPreserveRatio(true);
@@ -139,6 +145,20 @@ public class PlaylistPreviewController implements Initializable {
         scene = new Scene(root, vbxPlaylistPreview.getScene().getWidth(), vbxPlaylistPreview.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
+    }
+    //endregion
+
+    //region [ - setParentController(LayoutController layoutController) - ]
+    public void setParentController(LayoutController layoutController) {
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            btnOpenPlaylist.getStylesheets().clear();
+            btnOpenPlaylist.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/playlist-preview.css")).toExternalForm());
+        });
     }
     //endregion
 
