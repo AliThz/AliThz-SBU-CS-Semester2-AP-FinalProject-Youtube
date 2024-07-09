@@ -248,7 +248,7 @@ public class LayoutController implements Initializable {
             watchLaterBtn.setGraphic(watchLaterPane);
             watchLaterBtn.getStyleClass().add("side-btn");
             watchLaterBtn.setTooltip(new Tooltip("Watch Later"));
-            watchLaterBtn.setOnAction(event1 -> getPlaylist(event1, "WatchLater"));
+            watchLaterBtn.setOnAction(event -> getPlaylist(event, "WatchLater"));
             //endregion
 
             //region [ - LikedVideos Button - ]
