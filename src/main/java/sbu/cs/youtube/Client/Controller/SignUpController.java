@@ -220,7 +220,6 @@ public class SignUpController implements Initializable {
     private void signIn(ActionEvent event) {
         if (validatePassword(inputField.getText())) {
             password = inputField.getText();
-
             Request<User> userRequest = new Request<>(YouTubeApplication.socket, "SignUp");
             userRequest.send(new User(fullName, email, username, DigestUtils.sha256Hex(password), birthDate.toString()));
 
@@ -230,7 +229,6 @@ public class SignUpController implements Initializable {
             Response<User> userResponse = gson.fromJson(response, responseTypeToken.getType());
 
             YouTubeApplication.user = userResponse.getBody();
-
             exitSignUp(event);
         }
         else {
@@ -242,7 +240,7 @@ public class SignUpController implements Initializable {
     //region [ - validatePassword(String password) - ]
 
     private boolean validatePassword(String password) {
-        String passwordRegex = "^[A-Za-z0-9]+$";
+        String passwordRegex = "^[A-Za-z0-9]{8,}$";
         Pattern passwordPattern = Pattern.compile(passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(password);
 
