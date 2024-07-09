@@ -70,7 +70,8 @@ public class ChannelSectionController implements Initializable {
             mainPane.getStylesheets().clear();
             mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
         });
-        //endregion
     }
+    //endregion
+
     //endregion
 }
