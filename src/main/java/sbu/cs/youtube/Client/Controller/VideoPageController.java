@@ -726,6 +726,7 @@ public class VideoPageController implements Initializable {
         response = YouTubeApplication.receiveResponse();
         subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(subscriptionResponse.getMessage());
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " subscribed your channel"));
     }
     //endregion
 
@@ -758,6 +759,7 @@ public class VideoPageController implements Initializable {
         Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
 
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " liked your video"));
     }
     //endregion
 
@@ -788,6 +790,7 @@ public class VideoPageController implements Initializable {
         };
         Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " disliked your video"));
     }
     //endregion
 
@@ -803,6 +806,7 @@ public class VideoPageController implements Initializable {
         Request<Comment> commentRequest = new Request<>(YouTubeApplication.socket, "Comment");
         Comment comment = new Comment(txtComment.getText(), video.getId(), YouTubeApplication.user.getId(), null);
         commentRequest.send(comment);
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " commented \"" + txtComment.getText() +"\" on your video"));
         txtComment.clear();
 
         String response = YouTubeApplication.receiveResponse();
