@@ -278,7 +278,7 @@ public class DatabaseManager {
                 user.setFullName(rs.getString("FullName"));
                 user.setEmail(rs.getString("Email"));
                 user.setSubscriptions(selectSubscriptions(user.getId()));
-                user.setNotifications(selectNotifications(user.getId()));
+                user.setNotifications(selectNotificationsByUser(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
                 Timestamp timestamp = rs.getTimestamp("DateOfBirth");
                 user.setDateOfBirth(timestamp.toLocalDateTime().toString());
@@ -329,7 +329,7 @@ public class DatabaseManager {
                 timestamp = rs.getTimestamp("JoinDate");
                 user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 user.setSubscriptions(selectSubscriptions(user.getId()));
-                user.setNotifications(selectNotifications(user.getId()));
+                user.setNotifications(selectNotificationsByUser(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
                 user.setViewedComments(selectUserComments(user.getId()));
                 user.setUsername(rs.getString("Username"));
@@ -1154,7 +1154,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Notification> selectNotifications() - ] Not test
+    //region [ - selectNotifications() - ] Not test
     public ArrayList<Notification> selectNotifications() { //
         Connection c;
         Statement stmt;
@@ -1195,8 +1195,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Notification> selectNotifications(UUID userId) - ] test
-    public ArrayList<Notification> selectNotifications(UUID userId) {
+    //region [ - selectNotificationsByUser(UUID userId) - ] test
+    public ArrayList<Notification> selectNotificationsByUser(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Notification> notifications = null;
@@ -1237,6 +1237,7 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - createNotificationForSubscribers(Notification notification) - ]
     public void createNotificationForSubscribers(Notification notification){
         Connection c;
         PreparedStatement stmt;
@@ -1271,7 +1272,7 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
-
+    //endregion
 
     //region [ - Notification selectNotification(UUID Id) - ] Test
     public Notification selectNotification(UUID Id) {

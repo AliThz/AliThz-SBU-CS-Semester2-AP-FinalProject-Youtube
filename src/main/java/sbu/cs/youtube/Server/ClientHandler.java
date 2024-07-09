@@ -205,9 +205,9 @@ public class ClientHandler implements Runnable {
             case "CreateNotificationForSubscribers":
                 createNotificationForSubscribers();
                 break;
-//            case "GetUserNotifications":
-//                getUserNotifications();
-//                break;
+            case "GetUserNotifications":
+                getUserNotifications();
+                break;
             default:
                 new Response<Object>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
@@ -608,9 +608,7 @@ public class ClientHandler implements Runnable {
         playlist = databaseManager.selectPlaylist(requestedPlaylist.getId());
 
         response = new Response<>(client, playlistRequest.getType(), true, "Playlist received successfully");
-        System.out.println("1");
         response.send(playlist);
-        System.out.println("2");
     }
     //endregion
 
@@ -922,12 +920,26 @@ public class ClientHandler implements Runnable {
 
         Notification notification = notificationRequest.getBody();
 
-        databaseManager.insertNotification(notification);
+        databaseManager.createNotificationForSubscribers(notification);
         response = new Response<>(client, notificationRequest.getType(), true, "Notification created successfully");
         response.send();
     }
     //endregion
 
+    //region [ - getUserNotifications() - ]
+    private void getUserNotifications() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> channelRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Notification>> response;
+
+        User channel = channelRequest.getBody();
+        ArrayList<Notification> videos = databaseManager.selectNotificationsByUser(channel.getId());
+
+        response = new Response<>(client, channelRequest.getType(), true, "UserNotifications Received Successfully");
+        response.send(videos);
+    }
+    //endregion
 
 
     //endregion

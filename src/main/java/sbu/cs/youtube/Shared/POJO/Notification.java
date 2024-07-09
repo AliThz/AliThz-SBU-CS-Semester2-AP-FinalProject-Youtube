@@ -21,14 +21,6 @@ public class Notification {
         this.userId = userId;
         this.message = message;
         this.isRead = false;
-        this.dateSent = LocalDateTime.now().toString();
-    }
-
-    public Notification(UUID userId, String message) {
-        Id = UUID.randomUUID();
-        this.userId = userId;
-        this.message = message;
-        this.isRead = false;
     }
 
     public UUID getId() {
