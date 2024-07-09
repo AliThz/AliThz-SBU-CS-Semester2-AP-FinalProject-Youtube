@@ -202,6 +202,7 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
 
+            insertPlaylist(new Playlist("Watch later" , "here you can save videos to watch later" , user.getId() , false));
             insertChannel(new Channel(user.getId(), user.getUsername()));
             user.setAvatarPath("/Images/DefaultAvatar.jpg");
             user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath()));
@@ -277,7 +278,7 @@ public class DatabaseManager {
                 user.setFullName(rs.getString("FullName"));
                 user.setEmail(rs.getString("Email"));
                 user.setSubscriptions(selectSubscriptions(user.getId()));
-                user.setNotifications(selectNotifications(user.getId()));
+                user.setNotifications(selectNotificationsByUser(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
                 Timestamp timestamp = rs.getTimestamp("DateOfBirth");
                 user.setDateOfBirth(timestamp.toLocalDateTime().toString());
@@ -328,7 +329,7 @@ public class DatabaseManager {
                 timestamp = rs.getTimestamp("JoinDate");
                 user.setDateOfBirth(timestamp.toLocalDateTime().toString().toString());
                 user.setSubscriptions(selectSubscriptions(user.getId()));
-                user.setNotifications(selectNotifications(user.getId()));
+                user.setNotifications(selectNotificationsByUser(user.getId()));
                 user.setViewedVideos(selectUserVideos(user.getId()));
                 user.setViewedComments(selectUserComments(user.getId()));
                 user.setUsername(rs.getString("Username"));
@@ -1133,14 +1134,13 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""                 
-                    INSERT INTO "UserManagement"."Notification"(\"Id\", "UserId", \"Message\", "IsRead", "DateSent") VALUES (?, ?, ?, ?, ?);
+                    INSERT INTO "UserManagement"."Notification"(\"Id\", "UserId", \"Message\", "IsRead") VALUES (?, ?, ?, ?);
                     """);
 
             stmt.setObject(1, notification.getId());
             stmt.setObject(2, notification.getUserId());
             stmt.setString(3, notification.getMessage());
             stmt.setBoolean(4, notification.isRead());
-            stmt.setObject(5, notification.getDateSent());
             stmt.executeUpdate();
 
             c.commit();
@@ -1154,7 +1154,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Notification> selectNotifications() - ] Not test
+    //region [ - selectNotifications() - ] Not test
     public ArrayList<Notification> selectNotifications() { //
         Connection c;
         Statement stmt;
@@ -1195,8 +1195,8 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<Notification> selectNotifications(UUID userId) - ] test
-    public ArrayList<Notification> selectNotifications(UUID userId) {
+    //region [ - selectNotificationsByUser(UUID userId) - ] test
+    public ArrayList<Notification> selectNotificationsByUser(UUID userId) {
         Connection c;
         PreparedStatement stmt;
         ArrayList<Notification> notifications = null;
@@ -1234,6 +1234,43 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return notifications;
+    }
+    //endregion
+
+    //region [ - createNotificationForSubscribers(Notification notification) - ]
+    public void createNotificationForSubscribers(Notification notification){
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<User> users = null;
+        try {
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully (createNotificationForSubscribers)");
+
+            // Get subscribers of the channel created by the user
+            stmt = c.prepareStatement("""
+                SELECT s."Id" AS "SubscriberId"
+                FROM "UserManagement"."Channel" ch
+                JOIN "contentManagement"."Subscription" s ON ch."Id" = s."ChannelId"
+                WHERE ch."CreatorId" = ?
+                """);
+            stmt.setObject(1, notification.getUserId());
+            ResultSet rs = stmt.executeQuery();
+
+            users = new ArrayList<>();
+            while (rs.next()) {;
+                insertNotification(new Notification(UUID.fromString(rs.getString("SubscriberId")), notification.getMessage()));
+                // Save or process the notification1 as needed
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (createNotificationForSubscribers)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
     }
     //endregion
 
@@ -1727,8 +1764,8 @@ public class DatabaseManager {
 
 //            stmt = c.createStatement();
             stmt = c.prepareStatement("""
-
-                    SELECT v."Id", v."Title" , v."ChannelId" , v."UploadDate" , v."ThumbnailPath" , v."Description" , (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = v."Id") AS "VideoViewCount"
+                    SELECT v."Id", v."Title" , v."ChannelId" , v."UploadDate" , v."ThumbnailPath" , v."Description" , 
+                        (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = v."Id") AS "VideoViewCount"
                     FROM (SELECT "ChannelId" FROM "UserManagement"."Subscription" WHERE "SubscriberId" = ?) c
                     INNER JOIN "ContentManagement"."Video" v
                     ON c."ChannelId" = v."ChannelId"
