@@ -705,7 +705,7 @@ public class DatabaseManager {
                     SELECT c."CreatorId", c."Title", c."Description", c."ProfilePath", c."Id",
                            (SELECT COUNT("SubscriberId") FROM "UserManagement"."Subscription" s WHERE s."ChannelId" = c."Id") AS "SubscriberCount"
                     FROM "UserManagement"."Channel" c
-                    WHERE c."Title" LIKE ?
+                    WHERE c."Title" ILIKE ?
                     """);
             stmt.setString(1, "%" + channelTitle + "%");
             ResultSet rs = stmt.executeQuery();
@@ -2028,7 +2028,7 @@ public class DatabaseManager {
                     SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description" , "ChannelId" ,
                         (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video"
-                    WHERE "Title" LIKE ?
+                    WHERE "Title" ILIKE ? 
                     """);
 
             stmt.setString(1, "%" + videoTitle + "%");
@@ -3175,7 +3175,7 @@ public class DatabaseManager {
                     SELECT p."Title", p."Description", p."Id", p."ThumbnailPath", p."CreatorId" ,
                            (SELECT COUNT("VideoId") FROM "ContentManagement"."PlaylistDetail" WHERE "PlaylistId" = p."Id") AS "Videos"
                     FROM "ContentManagement"."Playlist" p
-                    WHERE p."Title" LIKE ?;
+                    WHERE p."Title" ILIKE ?;
                     """);
             stmt.setObject(1, "%" + title + "%");
             ResultSet rs = stmt.executeQuery();
