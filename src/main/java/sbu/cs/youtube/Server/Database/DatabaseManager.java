@@ -178,7 +178,7 @@ public class DatabaseManager {
     //region [ - User - ]
 
     //region [ - insertUser(User user) - ]
-    public void insertUser(User user) {
+    public User insertUser(User user) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -188,7 +188,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (insertUser)");
 
             stmt = c.prepareStatement("""
-                    INSERT INTO "UserManagement"."User"(\"Id\", "FullName", "Email", "DateOfBirth", "Username", \"Password\")
+                    INSERT INTO "UserManagement"."User"(\"Id\", "FullName", "Email", "DateOfBirth", "Username", \"Password\" )
                     VALUES (?, ?, ?, ?, ?,?);
                     """);
 
@@ -203,6 +203,8 @@ public class DatabaseManager {
             c.commit();
 
             insertChannel(new Channel(user.getId(), user.getUsername()));
+            user.setAvatarPath("/Images/DefaultAvatar.jpg");
+            user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath()));
 
             stmt.close();
             c.close();
@@ -211,6 +213,7 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+        return user;
     }
     //endregion
 
