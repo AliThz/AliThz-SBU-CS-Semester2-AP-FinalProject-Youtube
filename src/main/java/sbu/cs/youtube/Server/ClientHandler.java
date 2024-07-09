@@ -154,6 +154,9 @@ public class ClientHandler implements Runnable {
             case "GetUserPlaylists":
                 getUserPlaylists();
                 break;
+            case "GetUserPlaylistsBriefly":
+                getUserPlaylistsBriefly();
+                break;
             case "AddVideoToPlaylist":
                 addVideoToPlaylist();
                 break;
@@ -208,7 +211,9 @@ public class ClientHandler implements Runnable {
             case "GetUserNotifications":
                 getUserNotifications();
                 break;
-
+            case "UpdateNotification" :
+                updateNotification();
+                break;
             default:
                 new Response<>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
@@ -939,6 +944,36 @@ public class ClientHandler implements Runnable {
 
         response = new Response<>(client, userRequest.getType(), true, "UserNotifications Received Successfully");
         response.send(notifications);
+    }
+    //endregion
+
+    //region [ - updateNotification() - ]
+    public void updateNotification() {
+        TypeToken<Request<Notification>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Notification> notificationRequest = gson.fromJson(request, responseTypeToken.getType());
+        Notification notification = notificationRequest.getBody();
+
+        databaseManager.updateNotification(notification);
+
+        Response<Notification> response;
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification Info Changed ");
+        response.send();
+    }
+    //endregion
+
+    //region [ - getUserPlaylists() - ]
+    private void getUserPlaylistsBriefly() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Playlist>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsSoBrieflyByUser(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "userPlaylists received successfully");
+        response.send(playlists);
     }
     //endregion
 

@@ -892,7 +892,7 @@ public class DatabaseManager {
                     UPDATE "UserManagement"."Notification" SET "IsRead" = ?  
                     WHERE \"Id\" = ?;
                     """);
-            stmt.setBoolean(1, notification.isRead());
+            stmt.setBoolean(1, false);
             stmt.setObject(2, notification.getId());
             stmt.executeUpdate();
 
@@ -2335,7 +2335,47 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectPlaylistsBrieflyByUser(UUID Id) - ] Not Test
+    //region [ - selectPlaylistsSoBrieflyByUser(UUID creatorId) - ]
+    public ArrayList<Playlist> selectPlaylistsSoBrieflyByUser(UUID creatorId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Playlist> playlists = null;
+        try {
+
+            System.out.println("Opened database successfully (selectPlaylistsBrieflyByUser)");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+
+            stmt = c.prepareStatement("""
+                    SELECT "Title" , "Id"
+                    FROM "ContentManagement"."Playlist"
+                    WHERE "CreatorId" = ?;
+                    """);
+            stmt.setObject(1, creatorId);
+            ResultSet rs = stmt.executeQuery();
+
+            playlists = new ArrayList<>();
+            while (rs.next()) {
+                Playlist playlist = new Playlist();
+                playlist.setId(UUID.fromString(rs.getString("Id")));
+                playlist.setTitle(rs.getString("Title"));
+
+                playlists.add(playlist);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectPlaylistsBrieflyByUser)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return playlists;
+    }
+    //endregion
+
+    //region [ - selectPlaylistsBrieflyByUser(UUID creatorId) - ] Not Test
     public ArrayList<Playlist> selectPlaylistsBrieflyByUser(UUID creatorId) {
         Connection c;
         PreparedStatement stmt;
