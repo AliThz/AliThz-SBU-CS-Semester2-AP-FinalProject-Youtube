@@ -199,6 +199,15 @@ public class ClientHandler implements Runnable {
             case "GetUserChannel":
                 getUserChannel();
                 break;
+            case "CreatNotification":
+                createNotification();
+                break;
+            case "CreateNotificationForSubscribers":
+                createNotificationForSubscribers();
+                break;
+//            case "GetUserNotifications":
+//                getUserNotifications();
+//                break;
             default:
                 new Response<Object>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
@@ -888,6 +897,38 @@ public class ClientHandler implements Runnable {
         response.send(channel);
     }
     //endregion
+
+    //region [ - createNotification() - ]
+    private void createNotification() {
+        TypeToken<Request<Notification>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Notification> notificationRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Notification> response;
+
+        Notification notification = notificationRequest.getBody();
+
+        databaseManager.insertNotification(notification);
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification created successfully");
+        response.send();
+    }
+    //endregion
+
+    //region [ - createNotificationForSubscribers() - ]
+    private void createNotificationForSubscribers() {
+        TypeToken<Request<Notification>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Notification> notificationRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Notification> response;
+
+        Notification notification = notificationRequest.getBody();
+
+        databaseManager.insertNotification(notification);
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification created successfully");
+        response.send();
+    }
+    //endregion
+
+
 
     //endregion
 

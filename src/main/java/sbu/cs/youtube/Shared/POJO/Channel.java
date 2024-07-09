@@ -15,7 +15,6 @@ public class Channel {
     private ArrayList<Subscription> subscriptions;
     private int subscriberCount;
     private int videoCounts;
-
     public Channel() {
         subscriptions = new ArrayList<>();
     }
