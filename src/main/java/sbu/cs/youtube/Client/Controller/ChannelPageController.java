@@ -134,7 +134,7 @@ public class ChannelPageController implements Initializable {
         if (channel.getCreatorId().equals(YouTubeApplication.user.getId())) {
             hbxButtons.getChildren().removeFirst();
         } else {
-            hbxButtons.getChildren().remove(1, 3);
+            hbxButtons.getChildren().remove(1,3);
         }
 
         new Thread(this::setChannel).start();
