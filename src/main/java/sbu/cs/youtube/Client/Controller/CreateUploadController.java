@@ -1,12 +1,14 @@
 package sbu.cs.youtube.Client.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import sbu.cs.youtube.YouTubeApplication;
 
 import java.awt.*;
 import java.io.File;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CreateUploadController implements Initializable {
@@ -31,6 +34,9 @@ public class CreateUploadController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        vbxUpload.getStylesheets().clear();
+        vbxUpload.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/create-section.css")).toExternalForm());
 
         //region [ - Links - ]
         linkTerms.setOnAction(event -> {
@@ -99,6 +105,15 @@ public class CreateUploadController implements Initializable {
     //region [ - setParentController(LayoutController parentController) - ]
     public void setParentController(LayoutController parentController) {
         this.parentController = parentController;
+        EventHandler<ActionEvent> existingHandler = parentController.btnMode.getOnAction();
+
+        parentController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            vbxUpload.getStylesheets().clear();
+            vbxUpload.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/create-section.css")).toExternalForm());
+        });
     }
     //endregion
     //endregion

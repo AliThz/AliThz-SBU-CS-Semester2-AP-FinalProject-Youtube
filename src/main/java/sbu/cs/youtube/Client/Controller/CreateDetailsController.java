@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -32,6 +33,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CreateDetailsController  {
 
@@ -97,11 +99,12 @@ public class CreateDetailsController  {
 
     public void initialize(File file, LayoutController parentController) {
         this.parentController = parentController;
+        setParentController();
         videoFile = file;
         hbxError.setVisible(false);
+        vbxDetails.getStylesheets().clear();
+        vbxDetails.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/create-section.css")).toExternalForm());
         setPage();
-//        fieldTitle.prefWidthProperty().bind(vbxLeft.widthProperty().subtract(10));
-//        fieldDescription.prefWidthProperty().bind(vbxDetails.widthProperty().subtract(10));
     }
 
     private void setPage() {
@@ -219,6 +222,20 @@ public class CreateDetailsController  {
         }
         System.out.println("End of ConvertImage Method");
         return imageBytes;
+    }
+    //endregion
+
+    //region [ - setParentController(LayoutController parentController) - ]
+    public void setParentController() {
+        EventHandler<ActionEvent> existingHandler = parentController.btnMode.getOnAction();
+
+        parentController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            vbxDetails.getStylesheets().clear();
+            vbxDetails.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/create-section.css")).toExternalForm());
+        });
     }
     //endregion
 

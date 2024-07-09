@@ -20,7 +20,7 @@
    <children>
       <HBox prefHeight="6.0" prefWidth="939.0">
          <children>
-            <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload Video" wrappingWidth="157.33654618263245">
+            <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txtTitle" text="Upload Video" wrappingWidth="157.33654618263245">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
@@ -37,7 +37,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label text="Select video files to upload" textFill="WHITE">
+      <Label styleClass="lblDescription" text="Select video files to upload" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>

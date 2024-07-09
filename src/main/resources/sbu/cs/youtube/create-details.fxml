@@ -20,7 +20,7 @@
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
-      <Text fx:id="lblVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Video Title" wrappingWidth="934.9366075992584" VBox.vgrow="ALWAYS">
+      <Text fx:id="lblVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txtTitle" text="Video Title" wrappingWidth="934.9366075992584" VBox.vgrow="ALWAYS">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
@@ -30,7 +30,7 @@
          <children>
             <VBox fx:id="vbxLeft" prefHeight="449.0" prefWidth="942.0" spacing="20.0" styleClass="vbxDetail" HBox.hgrow="ALWAYS">
                <children>
-                  <Label prefHeight="25.0" prefWidth="70.0" text="Details" textFill="WHITE">
+                  <Label prefHeight="25.0" prefWidth="70.0" styleClass="lblDetail" text="Details" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -83,7 +83,7 @@
                   </VBox>
                   <HBox prefHeight="114.0" prefWidth="582.0">
                      <children>
-                        <Label prefHeight="30.0" prefWidth="160.0" text="Categories:" textFill="WHITE">
+                        <Label prefHeight="30.0" prefWidth="186.0" styleClass="lblDetail" text="Categories:" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>

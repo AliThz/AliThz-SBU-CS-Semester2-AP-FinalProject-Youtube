@@ -1,0 +1,156 @@
+.vbxUpload {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: black;
+    -fx-border-width: 2;
+}
+
+.txtTitle {
+    -fx-fill: rgb(33,33,33);
+}
+
+.btnUpload {
+    -fx-background-radius: 200;
+    -fx-background-color: rgb(240, 240, 240);
+}
+
+.btnUpload:hover {
+    -fx-background-color: rgb(229, 229, 229);
+
+}
+
+.btnUpload:pressed {
+    -fx-background-color: rgb(204, 204, 204);
+}
+
+.svgUpload {
+    -fx-fill: rgb(144, 144, 144);
+}
+
+.lblDescription {
+    -fx-text-fill: black;
+}
+
+.lblFormat {
+    -fx-text-fill: rgb(103, 103, 103);
+}
+
+.btnSelect {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-background-radius: 100;
+}
+
+.btnSelect:hover {
+    -fx-background-color: rgb(60,60,60);
+}
+
+.btnSelect:pressed {
+    -fx-background-color: rgb(80,80,80);
+}
+
+.txtAgreement {
+    -fx-fill: rgb(103,103,103);
+}
+
+.hyperlink {
+    -fx-text-fill: rgb(6, 95, 212);
+}
+
+.lblDetail {
+    -fx-text-fill: rgb(33,33,33);
+}
+
+.svgQuestion {
+    -fx-fill: rgb(33,33,33);
+}
+
+.vbxInput {
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-color: rgb(204,204,204);
+    -fx-background-color: transparent;
+}
+
+.vbxInput:hover {
+    -fx-border-color: rgb(33,33,33);
+}
+
+.vbxInput:pressed {
+    -fx-border-color: black;
+}
+
+.fieldDetail {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: rgb(149,149,149);
+}
+
+.radioCategory {
+    -fx-text-fill: black;
+}
+
+.radioCategory .radio {
+    -fx-background-color: transparent;
+    -fx-border-color: rgb(100,100,100);
+    -fx-border-radius: 10;
+    -fx-border-width: 2px;
+}
+
+.radioCategory:selected .radio {
+    -fx-background-color: transparent;
+}
+
+.radio-button:selected .radio > .dot {
+    -fx-background-color: rgb(100,100,100);
+}
+
+.btnThumbnail {
+    -fx-border-radius: 5;
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-border-color: rgb(170,170,170);
+    -fx-border-style: segments(5, 5);
+}
+
+.btnThumbnail:hover {
+    -fx-background-color: rgb(240,240,240);
+}
+
+.btnThumbnail:pressed {
+    -fx-background-color: rgb(229,229,229);
+}
+
+.areaDetail {
+    -fx-background-color: white;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgb(149,149,149);
+}
+
+.areaDetail .content {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.btnNext {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill: black;
+    -fx-border-color: rgb(149,149,149);
+}
+
+.btnNext:hover {
+    -fx-background-color: rgb(240,240,240);
+}
+
+.btnNext:pressed {
+    -fx-background-color: rgb(229,229,229);
+}
+
+.error {
+    -fx-fill : rgb(179,38,30);
+}
+

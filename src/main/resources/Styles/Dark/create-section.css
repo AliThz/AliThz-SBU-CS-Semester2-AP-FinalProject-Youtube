@@ -2,6 +2,11 @@
     -fx-background-color: rgb(40, 40, 40);
     -fx-background-radius: 10;
 }
+
+.txtTitle {
+    -fx-fill: white;
+}
+
 .btnUpload {
     -fx-background-radius: 200;
     -fx-background-color: rgb(31, 31, 31);
@@ -18,6 +23,10 @@
 
 .svgUpload {
     -fx-fill: rgb(144, 144, 144);
+}
+
+.lblDescription {
+    -fx-text-fill: white;
 }
 
 .lblFormat {
@@ -42,6 +51,10 @@
     -fx-fill: rgb(160,160,160);
 }
 
+.hyperlink {
+    -fx-text-fill: rgb(6, 95, 212);
+}
+
 .lblDetail {
     -fx-text-fill: rgb(170,170,170);
 }
@@ -58,6 +71,10 @@
 }
 
 .vbxInput:hover {
+    -fx-border-color: rgb(204,204,204);
+}
+
+.vbxInput:pressed {
     -fx-border-color: white;
 }
 
@@ -67,6 +84,9 @@
     -fx-prompt-text-fill: rgb(109,109,109);
 }
 
+.radioCategory {
+    -fx-text-fill: white;
+}
 
 .radioCategory .radio {
     -fx-background-color: transparent;

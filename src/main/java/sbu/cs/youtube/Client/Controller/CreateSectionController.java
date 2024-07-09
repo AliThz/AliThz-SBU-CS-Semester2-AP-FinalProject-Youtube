@@ -3,6 +3,7 @@ package sbu.cs.youtube.Client.Controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +23,7 @@ import sbu.cs.youtube.YouTubeApplication;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CreateSectionController implements Initializable {
@@ -37,6 +39,9 @@ public class CreateSectionController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        mainPane.getStylesheets().clear();
+        mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/create-section.css")).toExternalForm());
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/layout.fxml"));
         Parent layout;
         try {
@@ -49,6 +54,16 @@ public class CreateSectionController implements Initializable {
 
         layoutController.vbxLayout.prefWidthProperty().bind(mainPane.widthProperty());
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
+
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            mainPane.getStylesheets().clear();
+            mainPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/create-section.css")).toExternalForm());
+        });
 
         layoutController.hbxContent.getChildren().remove(2);
         FlowPane flwPane = new FlowPane();
