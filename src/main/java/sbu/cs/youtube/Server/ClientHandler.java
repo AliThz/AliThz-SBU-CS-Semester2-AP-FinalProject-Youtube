@@ -139,6 +139,9 @@ public class ClientHandler implements Runnable {
             case "GetCommentLikesStatus":
                 getCommentLikesStatus();
                 break;
+            case "GetSubscription":
+                getSubscription();
+                break;
             case "GetChannelVideos":
                 getChannelVideos();
                 break;
@@ -527,6 +530,21 @@ public class ClientHandler implements Runnable {
         Response<Comment> response;
         response = new Response<>(client, commentRequest.getType(), true, "Comment likes status fetched");
         response.send(commentLikesStatus);
+    }
+    //endregion
+
+    //region [ - getSubscription() - ]
+    private void getSubscription() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectUserSubscriptionVideos(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "Subscription Received Successfully");
+        response.send(videos);
     }
     //endregion
 

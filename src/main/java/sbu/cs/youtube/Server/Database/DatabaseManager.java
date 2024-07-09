@@ -1711,6 +1711,58 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - selectUserSubscriptionVideos() - ] Not Tested
+    public ArrayList<Video> selectUserSubscriptionVideos(UUID userId) {
+        Connection c;
+        PreparedStatement stmt;
+        ArrayList<Video> videos = null;
+        try {
+
+            System.out.println("Opened database successfully (selectUserSubscriptionVideos)");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+
+//            stmt = c.createStatement();
+            stmt = c.prepareStatement("""
+
+                    SELECT v."Id", v."Title" , v."ChannelId" , v."UploadDate" , v."ThumbnailPath" , v."Description" , (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = v."Id") AS "VideoViewCount"
+                    FROM (SELECT "ChannelId" FROM "UserManagement"."Subscription" WHERE "SubscriberId" = ?) c
+                    INNER JOIN "ContentManagement"."Video" v
+                    ON c."ChannelId" = v."ChannelId"
+                                        """);
+
+            stmt.setObject(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
+
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectUserSubscriptionVideos)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+    //endregion
+
     //region [ - selectVideosByChannel(UUID channelId) - ] Not test
     public ArrayList<Video> selectVideosByChannel(UUID channelId) {
         Connection c;
