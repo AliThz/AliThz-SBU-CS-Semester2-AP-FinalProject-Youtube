@@ -208,6 +208,7 @@ public class ClientHandler implements Runnable {
             case "GetUserNotifications":
                 getUserNotifications();
                 break;
+
             default:
                 new Response<Object>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
@@ -926,14 +927,14 @@ public class ClientHandler implements Runnable {
     private void getUserNotifications() {
         TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
         };
-        Request<User> channelRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<ArrayList<Notification>> response;
 
-        User channel = channelRequest.getBody();
-        ArrayList<Notification> videos = databaseManager.selectNotificationsByUser(channel.getId());
+        User user = userRequest.getBody();
+        ArrayList<Notification> notifications = databaseManager.selectNotificationsByUser(user.getId());
 
-        response = new Response<>(client, channelRequest.getType(), true, "UserNotifications Received Successfully");
-        response.send(videos);
+        response = new Response<>(client, userRequest.getType(), true, "UserNotifications Received Successfully");
+        response.send(notifications);
     }
     //endregion
 
