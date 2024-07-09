@@ -353,15 +353,11 @@ public class YouTubeApplication extends Application {
         Request<User> userRequest = new Request<>(socket, "ChangeUserInfo");
         User user = new User();
         user.setId(UUID.fromString("133c9ece-dc62-4d2d-b814-2f66e8cbfe68"));
-        user.setFullName("mohammad");
+        user.setFullName("mahdi");
         userRequest.send(user);
         YouTubeApplication client = new YouTubeApplication(socket);
         String response = receiveResponse();
         System.out.println(response);
         launch();
-
-
-
-
     }
 }

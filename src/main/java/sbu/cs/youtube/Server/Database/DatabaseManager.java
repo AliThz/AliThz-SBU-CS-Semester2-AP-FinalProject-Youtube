@@ -178,7 +178,7 @@ public class DatabaseManager {
     //region [ - User - ]
 
     //region [ - insertUser(User user) - ]
-    public void insertUser(User user) {
+    public User insertUser(User user) {
         Connection c;
         PreparedStatement stmt;
         try {
@@ -188,7 +188,7 @@ public class DatabaseManager {
             System.out.println("Opened database successfully (insertUser)");
 
             stmt = c.prepareStatement("""
-                    INSERT INTO "UserManagement"."User"(\"Id\", "FullName", "Email", "DateOfBirth", "Username", \"Password\")
+                    INSERT INTO "UserManagement"."User"(\"Id\", "FullName", "Email", "DateOfBirth", "Username", \"Password\" )
                     VALUES (?, ?, ?, ?, ?,?);
                     """);
 
@@ -203,6 +203,8 @@ public class DatabaseManager {
             c.commit();
 
             insertChannel(new Channel(user.getId(), user.getUsername()));
+            user.setAvatarPath("/Images/DefaultAvatar.jpg");
+            user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath()));
 
             stmt.close();
             c.close();
@@ -211,6 +213,7 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+        return user;
     }
     //endregion
 
@@ -705,7 +708,7 @@ public class DatabaseManager {
                     SELECT c."CreatorId", c."Title", c."Description", c."ProfilePath", c."Id",
                            (SELECT COUNT("SubscriberId") FROM "UserManagement"."Subscription" s WHERE s."ChannelId" = c."Id") AS "SubscriberCount"
                     FROM "UserManagement"."Channel" c
-                    WHERE c."Title" LIKE ?
+                    WHERE c."Title" ILIKE ?
                     """);
             stmt.setString(1, "%" + channelTitle + "%");
             ResultSet rs = stmt.executeQuery();
@@ -2028,7 +2031,7 @@ public class DatabaseManager {
                     SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description" , "ChannelId" ,
                         (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video"
-                    WHERE "Title" LIKE ?
+                    WHERE "Title" ILIKE ? 
                     """);
 
             stmt.setString(1, "%" + videoTitle + "%");
@@ -3175,7 +3178,7 @@ public class DatabaseManager {
                     SELECT p."Title", p."Description", p."Id", p."ThumbnailPath", p."CreatorId" ,
                            (SELECT COUNT("VideoId") FROM "ContentManagement"."PlaylistDetail" WHERE "PlaylistId" = p."Id") AS "Videos"
                     FROM "ContentManagement"."Playlist" p
-                    WHERE p."Title" LIKE ?;
+                    WHERE p."Title" ILIKE ?;
                     """);
             stmt.setObject(1, "%" + title + "%");
             ResultSet rs = stmt.executeQuery();
