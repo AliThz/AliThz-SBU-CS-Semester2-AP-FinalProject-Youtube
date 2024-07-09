@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,6 +31,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class PlaylistPageController implements Initializable {
@@ -66,6 +68,7 @@ public class PlaylistPageController implements Initializable {
 
     @FXML
     private VBox vbxVideos;
+    private LayoutController parentController;
 
     //endregion
 
@@ -79,6 +82,9 @@ public class PlaylistPageController implements Initializable {
         };
         Response<Playlist> playlistResponse = gson.fromJson(YouTubeApplication.receiveResponse(), responseTypeToken.getType());
         playlist = playlistResponse.getBody();
+
+        hbxPlaylistPage.getStylesheets().clear();
+        hbxPlaylistPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/playlist-page.css")).toExternalForm());
 
         setPlaylist();
         displayVideos();
@@ -120,6 +126,7 @@ public class PlaylistPageController implements Initializable {
                         if (videoRecommendationController != null) {
                             videoRecommendationController.setVideo(video);
                         }
+                        videoRecommendationController.setParentController(parentController);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -170,6 +177,21 @@ public class PlaylistPageController implements Initializable {
         scene = new Scene(root, hbxPlaylistPage.getScene().getWidth(), hbxPlaylistPage.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
+    }
+    //endregion
+
+    //region [ - setParentController(LayoutController parentController) - ]
+    public void setParentController(LayoutController controller) {
+        this.parentController = controller;
+        EventHandler<ActionEvent> existingHandler = parentController.btnMode.getOnAction();
+
+        parentController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            hbxPlaylistPage.getStylesheets().clear();
+            hbxPlaylistPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/playlist-page.css")).toExternalForm());
+        });
     }
     //endregion
 

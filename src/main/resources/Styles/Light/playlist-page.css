@@ -1,27 +1,27 @@
 .background {
-    -fx-background-color: black;
-    -fx-border-color: black;
+    -fx-background-color: white;
+    -fx-border-color: white;
 }
 
 .vbx-details {
     /*-fx-background-color: rgb(33, 33, 33);*/
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #212121FF, transparent);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, rgb(190, 190, 190), transparent);
     -fx-background-radius: 20;
 }
 
 .scroll-pane {
-    -fx-background-color: black;
+    -fx-background-color: white;
     /*-fx-background-radius: 20;*/
 }
 
 .scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: gray;
+    -fx-background-color: white;
     -fx-background-radius: 10;
     -fx-pref-width: 15;
 }
 
 .scroll-pane .scroll-bar:vertical .track {
-    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-color: rgb(204,204,204);
     -fx-background-radius: 10;
 }
 
@@ -44,37 +44,54 @@
 }
 
 .vbx-Videos {
-    -fx-background-color: rgb(0, 0, 0);
+    -fx-background-color: white;
     /*-fx-background-radius: 20;*/
 }
 
 .text {
-    -fx-fill: rgb(255, 255, 255);
+    -fx-fill: black;
 }
 
 .btn-channel {
     -fx-background-color: transparent;
-    -fx-text-fill: rgb(255, 255, 255);
+    -fx-text-fill: black;
+    -fx-background-radius: 20;
+}
+
+.btn-channel:hover {
+    -fx-background-color : rgb(229,229,229);
+}
+
+.btn-channel:pressed {
+    -fx-background-color: rgb(204,204,204);
 }
 
 .btn-play {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-color: rgb(229, 229, 229);
     -fx-background-radius: 20;
     -fx-text-fill: rgb(0, 0, 0);
     /*-fx-background-color: rgba(255, 255, 255, 0.05);*/
     /*-fx-text-fill: #000;*/
 }
 
+.btn-play:hover {
+    -fx-background-color : rgb(210,210,210);
+}
+
+.btn-play:pressed {
+    -fx-background-color: rgb(204,204,204);
+}
+
 .btn-video {
-    -fx-background-color: black;
+    -fx-background-color: white;
     -fx-padding: 6;
     -fx-background-radius: 5;
 }
 
 .btn-video:hover {
-    -fx-background-color : rgb(33,33,33);
+    -fx-background-color : rgb(229,229,229);
 }
 
 .btn-video:pressed {
-    -fx-background-color: rgb(41,41,41);
+    -fx-background-color: rgb(204,204,204);
 }
