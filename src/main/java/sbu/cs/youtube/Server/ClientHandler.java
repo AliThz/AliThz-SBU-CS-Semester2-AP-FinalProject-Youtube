@@ -828,6 +828,17 @@ public class ClientHandler implements Runnable {
 
         Playlist playlist = playlistRequest.getBody();
 
+        if (playlist.getThumbnailBytes() != null) {
+            String thumbnailPath = "/Images/" + playlist.getId() + ".jpg" ;
+            try (FileOutputStream fos = new FileOutputStream("src/main/resources" + thumbnailPath)) {
+                playlist.setThumbnailPath(thumbnailPath);
+                fos.write(playlist.getThumbnailBytes());
+                System.out.println("Video saved successfully to " + thumbnailPath);
+            } catch (IOException e) {
+                System.err.println("Error while saving the video: " + e.getMessage());
+            }
+        }
+
         databaseManager.insertPlaylist(playlist);
         response = new Response<>(client, playlistRequest.getType(), true, "Playlist created successfully");
         response.send();

@@ -830,8 +830,8 @@ public class DatabaseManager {
                 notifications.add(notification);
             }
 
-            rs.close();
             stmt.close();
+            rs.close();
             c.close();
             System.out.println("Operation done successfully (selectNotifications(base on userId)");
         } catch (Exception e) {
@@ -2228,14 +2228,16 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    INSERT INTO "ContentManagement"."Playlist"(\"Id\", "Title", "Description", "CreatorId","IsPublic") 
-                    VALUES (?, ?, ?, ?, ?);
+                    INSERT INTO "ContentManagement"."Playlist"(\"Id\", "Title", "Description", "CreatorId","IsPublic" , "ThumbnailPath") 
+                    VALUES (?, ?, ?, ?, ?, ?);
                     """);
             stmt.setObject(1, playlist.getId());
             stmt.setString(2, playlist.getTitle());
             stmt.setString(3, playlist.getDescription());
             stmt.setObject(4, playlist.getCreatorId());
             stmt.setBoolean(5, playlist.isPublic());
+            stmt.setString(6 , playlist.getThumbnailPath());
+
             stmt.executeUpdate();
 
             c.commit();
