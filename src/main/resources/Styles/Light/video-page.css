@@ -196,3 +196,7 @@
     -fx-border-radius: 5;
     -fx-text-fill: white;
 }
+
+.dialog-pane {
+    -fx-background-color: rgb(255, 255, 255);
+}

@@ -429,6 +429,8 @@ public class ChannelPageController implements Initializable {
         grid.add(uploadButton, 1, 4);
 
         dialog.getDialogPane().setContent(grid);
+        dialog.setHeaderText(null); // Remove header text
+        dialog.setGraphic(null); // Remove header graphic if there is any
 
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {

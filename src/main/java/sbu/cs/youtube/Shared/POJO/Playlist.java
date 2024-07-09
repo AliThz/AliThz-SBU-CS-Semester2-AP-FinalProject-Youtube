@@ -44,6 +44,15 @@ public class Playlist {
 //        this.playlistDetails = new ArrayList<>();
     }
 
+    public Playlist(String title, String description, UUID creatorId, boolean isPublic, byte[] thumbnailBytes) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.creatorId = creatorId;
+        this.isPublic = isPublic;
+        this.thumbnailBytes = thumbnailBytes;
+    }
+
     public UUID getId() {
         return Id;
     }

@@ -1,10 +1,13 @@
 package sbu.cs.youtube.Client.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,18 +18,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
-import sbu.cs.youtube.Shared.POJO.Channel;
-import sbu.cs.youtube.Shared.POJO.Video;
+import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class VideoRecommendationController implements Initializable {
 
@@ -80,7 +86,54 @@ public class VideoRecommendationController implements Initializable {
     }
 
     private void save(ActionEvent event) {
-        //todo
+        Gson gson = new Gson();
+        new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
+        Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
+        }.getType());
+        ArrayList<Playlist> playlists = playlistsResponse.getBody();
+
+        VBox vbxPlaylists = new VBox();
+        vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+//        vbxPlaylists.getStyleClass().add("vbxNotification");
+        Text text = new Text("Add to Playlist");
+        text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        vbxPlaylists.getChildren().add(text);
+
+        Popup popup = new Popup();
+        popup.hide();
+        popup.getContent().add(vbxPlaylists);
+        Stage stage = (Stage) btnVideoPreviewOptions.getScene().getWindow();
+
+
+        for (var p : playlists) {
+            Button button = new Button(p.getTitle());
+            button.setId(p.getId().toString());
+            button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            button.setOnMouseClicked(mouseEvent -> {
+//                vbxPlaylists.getChildren().remove(vbxPlaylists.getChildren().indexOf(button));
+                new Request<PlaylistDetail>(YouTubeApplication.socket, "AddVideoToPlaylist").send(new PlaylistDetail(UUID.fromString(button.getId()), video.getId()));
+                YouTubeApplication.receiveResponse();
+                popup.hide();
+            });
+
+//            button.getStyleClass().add("lblNotification");
+            vbxPlaylists.getChildren().add(button);
+//        button.setOnAction(event1 -> {
+//            System.out.println("hello");
+//        });
+        }
+
+
+        Bounds bounds = btnVideoPreviewOptions.localToScreen(btnVideoPreviewOptions.getBoundsInLocal());
+        popup.setX(bounds.getMinX() - 200);
+        popup.setY(bounds.getMinY() + bounds.getHeight());
+
+        btnVideoPreviewOptions.setOnAction(event1 -> {
+            if (popup.isShowing())
+                popup.hide();
+            else
+                popup.show(stage);
+        });
     }
 
     //region [ - addThumbnail(String src) - ]
