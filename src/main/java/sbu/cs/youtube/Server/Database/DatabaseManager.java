@@ -218,88 +218,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUsersBriefly() - ]
-    public ArrayList<User> selectUsersBriefly() {
-        Connection c;
-        Statement stmt;
-        ArrayList<User> users = null;
-        User user = null;
-        try {
-
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUsersBriefly)");
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT "Id","Username", "Email", "Password" FROM "UserManagement"."User";
-                    """);
-
-            users = new ArrayList<>();
-            while (rs.next()) {
-                user = new User();
-                user.setId(UUID.fromString(rs.getString("Id")));
-                user.setEmail(rs.getString("Email"));
-                user.setUsername(rs.getString("Username"));
-                user.setPassword(rs.getString("Password"));
-                users.add(user);
-            }
-            rs.close();
-            stmt.close();
-            System.out.println("Operation done successfully (selectUsersBriefly)");
-            c.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return users;
-    }
-    //endregion
-
-    //region [ - selectUsers() - ]
-    public ArrayList<User> selectUsers() {
-        Connection c;
-        Statement stmt;
-        ArrayList<User> users = null;
-        try {
-
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectUsers)");
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "UserManagement"."User";
-                    """);
-
-            users = new ArrayList<>();
-            while (rs.next()) {
-                User user = new User();
-                user.setId(UUID.fromString(rs.getString("Id")));
-                user.setFullName(rs.getString("FullName"));
-                user.setEmail(rs.getString("Email"));
-                user.setSubscriptions(selectSubscriptions(user.getId()));
-                user.setNotifications(selectNotificationsByUser(user.getId()));
-                user.setViewedVideos(selectUserVideos(user.getId()));
-                Timestamp timestamp = rs.getTimestamp("DateOfBirth");
-                user.setDateOfBirth(timestamp.toLocalDateTime().toString());
-                timestamp = rs.getTimestamp("JoinDate");
-                user.setDateOfBirth(timestamp.toLocalDateTime().toString());
-                user.setUsername(rs.getString("Username"));
-                user.setPassword(rs.getString("Password"));
-                users.add(user);
-            }
-
-            rs.close();
-            stmt.close();
-            System.out.println("Operation done successfully (selectUsers)");
-            c.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return users;
-    }
-    //endregion No
-
     //region [ - selectUser(UUID Id) - ] Tested
     public User selectUser(UUID Id) {
         Connection c;
@@ -601,46 +519,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectChannels() - ] Not Tested
-    public ArrayList<Channel> selectChannels() {
-        Connection c;
-        Statement stmt;
-        ArrayList<Channel> channels = null;
-        try {
-
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully (selectChannels(ALL))");
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "UserManagement"."Channel";
-                    """);
-
-            channels = new ArrayList<>();
-            while (rs.next()) {
-                Channel channel = new Channel();
-                channel.setId(UUID.fromString(rs.getString("Id")));
-                channel.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-                channel.setCreator(selectUser(channel.getCreatorId()));
-                channel.setTitle(rs.getString("Title"));
-                channel.setDescription(rs.getString("Description"));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                channel.setDateCreated(timestamp.toLocalDateTime().toString());
-                channels.add(channel);
-            }
-
-            rs.close();
-            stmt.close();
-            System.out.println("Operation done successfully (selectChannels(ALL))");
-            c.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return channels;
-    }
-    //endregion
-
     //region [ -selectChannelBriefly(UUID Id) - ] UnUsed
     public Channel selectChannelBriefly(UUID Id) {
         Connection c;
@@ -937,45 +815,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectSubscriptions() - ] Not Test
-    public ArrayList<Subscription> selectSubscriptions() {
-        Connection c;
-        Statement stmt;
-        ArrayList<Subscription> subscriptions = null;
-        try {
-
-            System.out.println("Opened database successfully (selectSubscriptions(ALL))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "UserManagement"."Subscription";
-                    """);
-
-            subscriptions = new ArrayList<>();
-            while (rs.next()) {
-                Subscription subscription = new Subscription();
-                subscription.setSubscriberId(UUID.fromString(rs.getString("SubscriberId")));
-                subscription.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-                subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
-                subscription.setChannel(selectChannel(subscription.getChannelId()));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-                subscription.setJoinDate(timestamp.toLocalDateTime().toString());
-                subscriptions.add(subscription);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectSubscriptions(ALL))");
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return subscriptions;
-    }
-    //endregion
-
     //region [ - selectSubscriptions(UUID userId) - ] Test
     public ArrayList<Subscription> selectSubscriptions(UUID userId) {
         Connection c;
@@ -1014,47 +853,7 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectSubscription(UUID Id) - ] Not Exist
-    public Subscription selectSubscription(UUID subscriberId, UUID channelId) {
-        Connection c;
-        PreparedStatement stmt;
-        Subscription subscription = null;
-        try {
-
-            System.out.println("Opened database successfully (selectSubscription)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "UserManagement"."Subscription" WHERE "SubscriberId" = ? AND "ChannelId" = ? 
-                    """);
-            stmt.setObject(1, subscriberId);
-            stmt.setObject(2, channelId);
-            ResultSet rs = stmt.executeQuery();
-
-            subscription = new Subscription();
-            if (rs.next()) {
-                subscription.setSubscriberId(UUID.fromString(rs.getString("SubscriberId")));
-                subscription.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-//                subscription.setSubscriber(selectUser(subscription.getSubscriberId()));
-                subscription.setChannel(selectChannel(subscription.getChannelId()));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("JoinDate"));
-                subscription.setJoinDate(timestamp.toLocalDateTime().toString());
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectSubscription)");
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return subscription;
-    }
-    //endregion
-
     //region [ - subscriptionExistence - ]
-
     public Subscription subscriptionExistence(UUID subscriberId, UUID channelId) {
         Connection c;
         PreparedStatement stmt;
@@ -1154,47 +953,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectNotifications() - ] Not test
-    public ArrayList<Notification> selectNotifications() { //
-        Connection c;
-        Statement stmt;
-        ArrayList<Notification> notifications = null;
-        try {
-
-            System.out.println("Opened database successfully (selectNotifications(ALL))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "UserManagement"."Notification"
-                    """);
-
-            notifications = new ArrayList<>();
-            while (rs.next()) {
-                Notification notification = new Notification();
-                notification.setId(UUID.fromString(rs.getString("Id")));
-                notification.setUserId(UUID.fromString(rs.getString("UserId")));
-                notification.setUser(selectUser(notification.getUserId()));
-                notification.setMessage(rs.getString("Message"));
-                notification.setRead(Boolean.getBoolean(rs.getString("Description")));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
-                notifications.add(notification);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectNotifications(ALL))");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return notifications;
-    }
-    //endregion
-
     //region [ - selectNotificationsByUser(UUID userId) - ] test
     public ArrayList<Notification> selectNotificationsByUser(UUID userId) {
         Connection c;
@@ -1271,44 +1029,6 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-    }
-    //endregion
-
-    //region [ - Notification selectNotification(UUID Id) - ] Test
-    public Notification selectNotification(UUID Id) {
-        Connection c;
-        PreparedStatement stmt;
-        Notification notification = null;
-        try {
-
-            System.out.println("Opened database successfully (selectNotification)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "UserManagement"."Notification" WHERE \"Id\" = ?
-                    """);
-            stmt.setObject(1, Id);
-            ResultSet rs = stmt.executeQuery();
-
-            notification = new Notification();
-            if (rs.next()) {
-                notification.setId(UUID.fromString(rs.getString("Id")));
-                notification.setUserId(UUID.fromString(rs.getString("UserId")));
-                notification.setMessage(rs.getString("Message"));
-                notification.setRead(Boolean.getBoolean(rs.getString("IsRead")));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateSent"));
-                notification.setDateSent(timestamp.toLocalDateTime().toString().toString());
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectNotification)");
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return notification;
     }
     //endregion
 
@@ -1442,60 +1162,53 @@ public class DatabaseManager {
         Connection c;
         PreparedStatement stmt;
         Category category = null;
-        VideoCategory videoCategory = null;
         ArrayList<VideoCategory> videoCategories = null;
         try {
-
             System.out.println("Opened database successfully (selectCategory)");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * 
-                    FROM "ContentManagement"."Category" 
-                    WHERE \"Id\" = ?
+                    SELECT c."Id" AS CategoryId, c."Title", 
+                           v."Id" AS VideoId, v."Title" AS VideoTitle, v."Description", 
+                           v."ChannelId", v."UploadDate", v."ThumbnailPath"
+                    FROM "ContentManagement"."Category" c
+                    LEFT JOIN "ContentManagement"."VideoCategory" vc ON c."Id" = vc."CategoryId"
+                    LEFT JOIN "ContentManagement"."Video" v ON vc."VideoId" = v."Id"
+                    WHERE c."Id" = ?
                     """);
-
 
             stmt.setObject(1, Id);
             ResultSet rs = stmt.executeQuery();
-            category = new Category();
-
-            if (rs.next()) {
-                category.setId(UUID.fromString(rs.getString("Id")));
-                category.setTitle(rs.getString("Title"));
-                category.setVideoCategories(selectCategoryVideos(category.getId()));
-            }
-
-            rs.close();
-            stmt.close();
-
-            stmt = c.prepareStatement("""
-                    SELECT vc."CategoryId",pd."VideoId, v."Title", v."Description", v."ChannelId" , v."UploadDate" , v."ThumbnailPath" 
-                    FROM "ContentManagement"."VideoCategory"" vc INNER JOIN ContentManagment."Video" v 
-                    ON vc."VideoId" = v."Id"
-                    WHERE pd."CategoryId" = ? ;   
-                    """);
-            stmt.setObject(1, Id);
-            rs = stmt.executeQuery();
 
             videoCategories = new ArrayList<>();
+            category = new Category();
             while (rs.next()) {
-                videoCategory = new VideoCategory();
-                videoCategory.setCategory(category);
-                videoCategory.setCategoryId(Id);
-                videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                Video video = new Video();
-                video.setId(UUID.fromString(rs.getString("VideoId")));
-                video.setTitle(rs.getString("Title"));
-                video.setViewers(selectUserVideos(Id));
-                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-                video.setChannel(selectChannelBriefly(video.getChannelId()));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
-                video.setUploadDate(timestamp.toLocalDateTime().toString());
-                video.setThumbnailPath(rs.getString("ThumbnailPath"));
-                videoCategory.setVideo(video);
-                videoCategories.add(videoCategory);
+                if (category.getId() == null) {
+                    category.setId(UUID.fromString(rs.getString("CategoryId")));
+                    category.setTitle(rs.getString("Title"));
+                }
+
+                if (rs.getString("VideoId") != null) {
+                    VideoCategory videoCategory = new VideoCategory();
+                    videoCategory.setCategory(category);
+                    videoCategory.setCategoryId(Id);
+                    videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
+
+                    Video video = new Video();
+                    video.setId(UUID.fromString(rs.getString("VideoId")));
+                    video.setTitle(rs.getString("VideoTitle"));
+                    video.setDescription(rs.getString("Description"));
+                    video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                    video.setChannel(selectChannelBriefly(video.getChannelId()));
+
+                    Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                    video.setUploadDate(timestamp.toLocalDateTime().toString());
+                    video.setThumbnailPath(rs.getString("ThumbnailPath"));
+
+                    videoCategory.setVideo(video);
+                    videoCategories.add(videoCategory);
+                }
             }
             category.setVideoCategories(videoCategories);
 
@@ -1508,6 +1221,7 @@ public class DatabaseManager {
         }
         return category;
     }
+
     //endregion
 
     //region [ - selectCategoriesByVideo(UUID videoId) - ] Not test
@@ -1656,50 +1370,6 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-    }
-    //endregion
-
-    //region [ - selectVideos() - ] Not Tested
-    public ArrayList<Video> selectVideos() {
-        Connection c;
-        Statement stmt;
-        PreparedStatement stmt1;
-        ArrayList<Video> videos = null;
-        try {
-
-            System.out.println("Opened database successfully (selectVideos)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "ContentManagement"."Video";
-                    """);
-
-            videos = new ArrayList<>();
-            while (rs.next()) {
-                Video video = new Video();
-                video.setId(UUID.fromString(rs.getString("Id")));
-                video.setTitle(rs.getString("Title"));
-                video.setDescription(rs.getString("Description"));
-                video.setCategories(selectVideoCategories(video.getId()));
-                video.setViewers(selectUserVideos(video.getId()));
-                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
-                video.setChannel(selectChannel(video.getChannelId()));
-                video.setComments(selectComments(video.getId()));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDateTime"));
-                video.setUploadDate(timestamp.toLocalDateTime().toString());
-                videos.add(video);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectVideos)");
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return videos;
     }
     //endregion
 
@@ -2308,84 +1978,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - ArrayList<VideoCategory> selectVideoCategories() - ] Not Tested
-    public ArrayList<VideoCategory> selectVideoCategories() {
-        Connection c;
-        Statement stmt;
-        ArrayList<VideoCategory> videoCategories = null;
-        try {
-
-            System.out.println("Opened database successfully (selectVideoCategories(ALL))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "ContentManagement"."VideoCategory";"
-                    """);
-
-            videoCategories = new ArrayList<>();
-            while (rs.next()) {
-                VideoCategory videoCategory = new VideoCategory();
-                videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                videoCategory.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
-                videoCategory.setVideo(selectVideo(videoCategory.getVideoId()));
-                videoCategory.setCategory(selectCategory(videoCategory.getCategoryId()));
-                videoCategories.add(videoCategory);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectVideoCategories(ALL))");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return videoCategories;
-    }
-    //endregion
-
-    //region [ - ArrayList<VideoCategory> selectVideoCategories(UUID videoId) - ] Tested
-    public ArrayList<VideoCategory> selectVideoCategories(UUID videoId) {
-        Connection c;
-        PreparedStatement stmt;
-        ArrayList<VideoCategory> videoCategories = null;
-        try {
-
-            System.out.println("Opened database successfully (selectVideoCategories (based on videoId))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "ContentManagement"."VideoCategory" 
-                    WHERE "VideoId" = ?;
-                    """);
-            stmt.setObject(1, videoId);
-            ResultSet rs = stmt.executeQuery();
-
-            videoCategories = new ArrayList<>();
-            while (rs.next()) {
-                VideoCategory videoCategory = new VideoCategory();
-                videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                videoCategory.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
-//                videoCategory.setVideo(selectVideo(videoCategory.getVideoId()));
-//                videoCategory.setCategory(selectCategory(videoCategory.getCategoryId()));
-                videoCategories.add(videoCategory);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectVideoCategories (based on videoId))");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return videoCategories;
-    }
-    //endregion
-
     //region [ - ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) - ] Not Tested
     public ArrayList<VideoCategory> selectCategoryVideos(UUID categoryId) {
         Connection c;
@@ -2421,44 +2013,6 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return videoCategories;
-    }
-    //endregion
-
-    //region [ - VideoCategory selectVideoCategory(UUID videoId ,UUID categoryId ) - ] Not Tested
-    public VideoCategory selectVideoCategory(UUID videoId, UUID categoryId) {
-        Connection c;
-        PreparedStatement stmt;
-        VideoCategory videoCategory = null;
-        try {
-
-            System.out.println("Opened database successfully (selectVideoCategory)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "ContentManagement"."VideoCategory" WHERE \"VideoId\" = ? AND \"CategoryId\" = ?;
-                    """);
-            stmt.setObject(1, videoId);
-            stmt.setObject(2, categoryId);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                videoCategory = new VideoCategory();
-                videoCategory.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                videoCategory.setCategoryId(UUID.fromString(rs.getString("CategoryId")));
-                videoCategory.setVideo(selectVideo(videoCategory.getVideoId()));
-                videoCategory.setCategory(selectCategory(videoCategory.getCategoryId()));
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectVideoCategory)");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return videoCategory;
     }
     //endregion
 
@@ -2555,48 +2109,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUserVideos() - ] Not Tested
-    public ArrayList<UserVideo> selectUserVideos() {
-        Connection c;
-        Statement stmt;
-        ArrayList<UserVideo> userVideos = null;
-        try {
-
-            System.out.println("Opened database successfully (selectUserVideo(ALL))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "ContentManagement"."UserVideo";
-                    """);
-
-            userVideos = new ArrayList<>();
-            while (rs.next()) {
-                UserVideo userVideo = new UserVideo();
-                userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull()) {
-                    userVideo.setLike(null);
-                }
-                userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
-                userVideo.setVideo(selectVideo(userVideo.getVideoId()));
-                userVideo.setUser(selectUser(userVideo.getUserId()));
-                userVideos.add(userVideo);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectUserVideo(ALL))");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return userVideos;
-    }
-    //endregion
-
     //region [ - selectUserVideos(UUID userId) - ] Tested
     public ArrayList<UserVideo> selectUserVideos(UUID userId) {
         Connection c;
@@ -2637,50 +2149,6 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return userVideos;
-    }
-    //endregion
-
-    //region [ - selectVideoUsers(UUID userId) - ] Not Tested
-    public ArrayList<UserVideo> selectVideoUsers(UUID videoId) {
-        Connection c;
-        PreparedStatement stmt;
-        ArrayList<UserVideo> videoUsers = null;
-        try {
-
-            System.out.println("Opened database successfully (selectVideoUsers)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "ContentManagement"."UserVideo" 
-                    WHERE "VideoId" = ?;
-                    """);
-            stmt.setObject(1, videoId);
-            ResultSet rs = stmt.executeQuery();
-
-            videoUsers = new ArrayList<>();
-            while (rs.next()) {
-                UserVideo userVideo = new UserVideo();
-                userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull()) {
-                    userVideo.setLike(null);
-                }
-                userVideo.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                userVideo.setUserId(UUID.fromString(rs.getString("UserId")));
-                userVideo.setVideo(selectVideo(userVideo.getVideoId()));
-//                userVideo.setUser(selectUser(userVideo.getUserId()));
-                videoUsers.add(userVideo);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectVideoUsers)");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return videoUsers;
     }
     //endregion
 
@@ -2804,47 +2272,6 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return video;
-    }
-    //endregion
-
-    //region [ - userVideoExistence(UUID userID , UUID videoId) - ] Not Test
-    public UserVideo userVideoExistence(UUID userID, UUID videoId) {
-        Connection c;
-        PreparedStatement stmt;
-        UserVideo userVideo = null;
-        try {
-
-            System.out.println("Opened database successfully (userVideoExistence)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "ContentManagement"."UserVideo" 
-                    WHERE "UserId" = ? AND "VideoId" = ?;
-                    """);
-            stmt.setObject(1, userID);
-            stmt.setObject(2, videoId);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                userVideo = new UserVideo();
-                userVideo.setLike(rs.getBoolean("Like"));
-                if (rs.wasNull()) {
-                    userVideo.setLike(null);
-                }
-                userVideo.setVideoId(videoId);
-                userVideo.setUserId(userID);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (userVideoExistence)");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return userVideo;
     }
     //endregion
 
@@ -2975,55 +2402,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectPlaylists() - ] Not test
-    public ArrayList<Playlist> selectPlaylists() {
-        Connection c;
-        Statement stmt;
-        ArrayList<Playlist> playlists = null;
-        try {
-
-            System.out.println("Opened database successfully (selectPlaylists)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * 
-                    FROM "ContentManagement"."Playlist";
-                    """);
-
-            playlists = new ArrayList<>();
-            while (rs.next()) {
-                Playlist playlist = new Playlist();
-
-                playlist.setId(UUID.fromString(rs.getString("Id")));
-                playlist.setTitle(rs.getString("Title"));
-                playlist.setDescription(rs.getString("Description"));
-                playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-                playlist.setCreator(selectUser(playlist.getCreatorId()));
-                playlist.setPlaylistDetails(selectPlaylistDetails(playlist.getId()));
-                playlist.setPublic(rs.getBoolean("IsPublic"));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateCreated"));
-                playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
-                playlist.setThumbnailBytes(convertImageToByteArray(playlist.getThumbnailPath()));
-                playlist.setDateCreated(timestamp.toLocalDateTime().toString());
-
-                playlists.add(playlist);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectPlaylists)");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return playlists;
-    }
-
-    //endregion
-
     //region [ - selectPlaylist(UUID Id) - ]
     public Playlist selectPlaylist(UUID Id) {
         Connection c;
@@ -3102,51 +2480,6 @@ public class DatabaseManager {
             stmt.close();
             c.close();
             System.out.println("Operation done successfully (selectPlaylist)");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return playlist;
-    }
-    //endregion
-
-    //region [ - selectPlaylistBriefly(UUID Id) - ] Not Test
-    public Playlist selectPlaylistBriefly(UUID id) {
-        Connection c;
-        PreparedStatement stmt;
-        Playlist playlist = null;
-        try {
-            System.out.println("Opened database successfully (selectPlaylistBriefly)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                SELECT p."Title", p."Description", p."CreatorId", p."ThumbnailPath", COUNT(pd."VidoeId") AS "Videos"
-                FROM "ContentManagement"."Playlist" p LEFT JOIN "ContentManagement"."PlaylistDetail" pd 
-                ON p."Id" = pd."PlaylistId"
-                WHERE p."Id" = ?
-                GROUP BY p."Id";
-                """);
-            stmt.setObject(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            playlist = new Playlist();
-            if (rs.next()) {
-                playlist.setId(id);
-                playlist.setTitle(rs.getString("Title"));
-                playlist.setDescription(rs.getString("Description"));
-                playlist.setCreatorId(UUID.fromString(rs.getString("CreatorId")));
-                playlist.setCreator(selectUser(playlist.getCreatorId()));
-                playlist.setCreator(selectUserBriefly(playlist.getCreatorId()));
-                playlist.setThumbnailPath(rs.getString("ThumbnailPath"));
-                playlist.setThumbnailBytes(convertImageToByteArray(playlist.getThumbnailPath()));
-                playlist.setVideos(rs.getInt("Videos"));
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectPlaylistBriefly)");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -3343,49 +2676,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectPlaylistDetails() - ]
-    public ArrayList<PlaylistDetail> selectPlaylistDetails() {
-        Connection c;
-        Statement stmt;
-        ArrayList<PlaylistDetail> playlistDetails = null;
-        try {
-
-            System.out.println("Opened database successfully (selectPlaylistDetails)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "ContentManagement"."PlaylistDetail";
-                    """);
-
-            playlistDetails = new ArrayList<>();
-            while (rs.next()) {
-                PlaylistDetail playlistDetail = new PlaylistDetail();
-
-                playlistDetail.setPlaylistId(UUID.fromString(rs.getString("PlaylistId")));
-//                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
-                playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-                playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
-                playlistDetail.setNumber(rs.getInt("SequenceNumber"));
-
-                playlistDetails.add(playlistDetail);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectPlaylistDetails)");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return playlistDetails;
-    }
-    //endregion
-
     //region [ - selectPlaylistDetails(UUID playlistId) - ]
     public ArrayList<PlaylistDetail> selectPlaylistDetails(UUID playlistId) {
         Connection c;
@@ -3427,47 +2717,6 @@ public class DatabaseManager {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return playlistDetails;
-    }
-    //endregion
-
-    //region [ - selectPlaylistDetail(UUID Id) - ]
-    public PlaylistDetail selectPlaylistDetail(UUID Id) {
-        Connection c;
-        PreparedStatement stmt;
-        PlaylistDetail playlistDetail = null;
-        try {
-
-            System.out.println("Opened database successfully (selectPlaylistDetail(base on Id))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "ContentManagement"."PlaylistDetail" 
-                    WHERE \"Id\" = ?;
-                    """);
-            stmt.setObject(1, Id); // what is this
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                playlistDetail = new PlaylistDetail();
-                playlistDetail.setPlaylistId(UUID.fromString(rs.getString("PlaylistId")));
-//                playlistDetail.setPlaylist(selectPlaylist(playlistDetail.getVideoId()));
-                playlistDetail.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                playlistDetail.setVideo(selectVideo(playlistDetail.getVideoId()));
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("DateAdded"));
-                playlistDetail.setDateAdded(timestamp.toLocalDateTime().toString());
-                playlistDetail.setNumber(rs.getInt("SequenceNumber"));
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectPlaylistDetail(base on Id))");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return playlistDetail;
     }
     //endregion
 
@@ -3591,53 +2840,6 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-    }
-    //endregion
-
-    //region [ - selectComments() - ]
-    public ArrayList<Comment> selectComments() {
-        Connection c;
-        Statement stmt;
-        ArrayList<Comment> comments = null;
-        try {
-
-            System.out.println("Opened database successfully (selectComments(ALL))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "ContentManagement"."Comment";
-                    """);
-
-            comments = new ArrayList<>();
-            while (rs.next()) {
-                Comment comment = new Comment();
-
-                comment.setId(UUID.fromString(rs.getString("Id")));
-                comment.setVideoId(UUID.fromString(rs.getString("VideoId")));
-                comment.setVideo(selectVideo(comment.getVideoId()));
-                comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
-                comment.setSender(selectUser(comment.getSenderId()));
-                comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
-                if (comment.getParentCommentId() != null) {
-                    comment.setParentComment(selectComment(comment.getParentCommentId()));
-                }
-                Timestamp timestamp = Timestamp.valueOf(rs.getString("CommentDate"));
-                comment.setDateCommented(timestamp.toLocalDateTime().toString());
-
-                comments.add(comment);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectComments(ALL))");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return comments;
     }
     //endregion
 
@@ -3845,45 +3047,6 @@ public class DatabaseManager {
     }
     //endregion
 
-    //region [ - selectUserComments() - ] Not Tested
-    public ArrayList<UserComment> selectUserComments() {
-        Connection c;
-        Statement stmt;
-        ArrayList<UserComment> userComments = null;
-        try {
-
-            System.out.println("Opened database successfully (selectUserComments)");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("""
-                    SELECT * FROM "ContentManagement"."UserComment";
-                    """);
-
-            userComments = new ArrayList<>();
-            while (rs.next()) {
-                UserComment userComment = new UserComment();
-                userComment.setLike(rs.getBoolean("Like"));
-                userComment.setUserId(UUID.fromString(rs.getString("CommentId")));
-                userComment.setCommentId(UUID.fromString(rs.getString("UserId")));
-                userComment.setUser(selectUser(userComment.getUserId()));
-                userComment.setComment(selectComment(userComment.getCommentId()));
-                userComments.add(userComment);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectUserComments)");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return userComments;
-    }
-    //endregion
-
     //region [ - selectUserComments(UUID userID) - ] Tested
     public ArrayList<UserComment> selectUserComments(UUID userId) {
         Connection c;
@@ -3918,48 +3081,6 @@ public class DatabaseManager {
             stmt.close();
             c.close();
             System.out.println("Operation done successfully (selectUserComments(based on userId))");
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return userComments;
-    }
-    //endregion
-
-    //region [ - selectCommentUsers(UUID commentId) - ] Not Tested
-    public ArrayList<UserComment> selectCommentUsers(UUID commentId) {
-        Connection c;
-        PreparedStatement stmt;
-        ArrayList<UserComment> userComments = null;
-        try {
-
-            System.out.println("Opened database successfully (selectCommentUsers(based on commentId))");
-            c = DriverManager.getConnection(URL, USER, PASSWORD);
-            c.setAutoCommit(false);
-
-            stmt = c.prepareStatement("""
-                    SELECT * FROM "ContentManagement"."UserComment" 
-                    WHERE "CommentId" = ?;
-                    """);
-            stmt.setObject(1, commentId);
-            ResultSet rs = stmt.executeQuery();
-
-            userComments = new ArrayList<>();
-            while (rs.next()) {
-                UserComment userComment = new UserComment();
-
-                userComment.setLike(rs.getBoolean("Like"));
-                userComment.setUserId(UUID.fromString(rs.getString("UserId")));
-                userComment.setCommentId(UUID.fromString(rs.getString("CommentId")));
-                userComment.setComment(selectComment(userComment.getCommentId()));
-
-                userComments.add(userComment);
-            }
-
-            rs.close();
-            stmt.close();
-            c.close();
-            System.out.println("Operation done successfully (selectCommentUsers(based on commentId))");
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
