@@ -338,7 +338,7 @@ public class VideoPageController implements Initializable {
             setPlaybackButtons();
 
             mediaView.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene == null) {
+                if (newScene != oldScene) {
                     if (mediaPlayer != null) {
                         mediaPlayer.stop();
                     }
