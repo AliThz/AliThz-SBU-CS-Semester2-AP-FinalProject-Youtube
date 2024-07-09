@@ -411,8 +411,9 @@ public class ChannelPageController implements Initializable {
             newImage = fileChooser.showOpenDialog(vbxChannelPage.getScene().getWindow());
             if (newImage != null) {
                 avatarChanged = true;
+                imageView.setImage(new Image(newImage.toURI().toString()));
             }
-            imageView.setImage(new Image(newImage.toURI().toString()));
+
         });
         uploadButton.getStyleClass().add("btn-upload");
 
