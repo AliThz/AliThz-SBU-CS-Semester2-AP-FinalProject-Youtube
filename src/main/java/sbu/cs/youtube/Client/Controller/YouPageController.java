@@ -252,6 +252,7 @@ public class YouPageController implements Initializable {
                         if (playlistPreviewController != null) {
                             playlistPreviewController.setPlaylist(p);
                         }
+                        playlistPreviewController.setParentController(parentController);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

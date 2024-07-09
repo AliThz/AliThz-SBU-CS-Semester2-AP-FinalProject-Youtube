@@ -270,6 +270,7 @@ public class ChannelPageController implements Initializable {
                 try {
                     playlistPreview = playlistPreviewLoader.load();
                     PlaylistPreviewController playlistPreviewController = playlistPreviewLoader.getController();
+                    playlistPreviewController.setParentController(parentController);
                     if (playlistPreviewController != null) {
                         playlistPreviewController.setPlaylist(playlist);
                     }

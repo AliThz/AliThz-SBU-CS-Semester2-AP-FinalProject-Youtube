@@ -10,10 +10,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<Button fx:id="openPlaylist" mnemonicParsing="false" onAction="#getPlaylist" prefHeight="233.0" prefWidth="222.0" styleClass="btn-video" stylesheets="@../../../Styles/Dark/playlist-preview.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.PlaylistPreviewController">
+<Button fx:id="btnOpenPlaylist" mnemonicParsing="false" onAction="#getPlaylist" prefHeight="233.0" prefWidth="222.0" styleClass="btn-video" stylesheets="@../../../Styles/DArk/playlist-preview.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.PlaylistPreviewController">
    <graphic>
-      <VBox fx:id="vbxPlaylistPreview" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="352.0" spacing="5.0" styleClass="vbx-video-preview" stylesheets="@../../../Styles/Dark/playlist-preview.css">
+      <VBox fx:id="vbxPlaylistPreview" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="352.0" spacing="5.0" styleClass="vbx-video-preview">
          <children>
             <ImageView fx:id="imgThumbnail" fitHeight="160.0" fitWidth="262.0" pickOnBounds="true" preserveRatio="true" styleClass="img-thumbnail" VBox.vgrow="ALWAYS">
                <VBox.margin>
@@ -27,7 +26,7 @@
                <children>
                   <VBox fx:id="vbxTextDetails" prefHeight="47.0" prefWidth="146.0" styleClass="vbx-text-details" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text fx:id="txtPlaylistTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="A title for a playlist in youtube" wrappingWidth="219.73689699172974">
+                        <Text fx:id="txtPlaylistTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="A title for a playlist in youtube" wrappingWidth="219.73689699172974">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -35,25 +34,25 @@
                               <Insets bottom="3.0" />
                            </VBox.margin>
                         </Text>
-                        <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel Name" />
+                        <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="Channel Name" />
                         <HBox fx:id="hbxViewsAndDate" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <Text fx:id="txtPrivatePublic" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Private">
+                              <Text fx:id="txtPrivatePublic" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="Private">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="·">
+                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="·">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="txtVideoCount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="10 videos">
+                              <Text fx:id="txtVideoCount" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="10 videos">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="·">
+                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="·">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
@@ -69,7 +68,7 @@
                   </VBox>
                   <Button fx:id="btnPlaylistPreviewOptions" mnemonicParsing="false" prefHeight="31.0" prefWidth="19.0" styleClass="add-btn" textFill="WHITE" HBox.hgrow="ALWAYS">
                      <graphic>
-                        <SVGPath fx:id="svgpthPlaylistOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" />
+                        <SVGPath fx:id="svgpthPlaylistOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" styleClass="txt" />
                      </graphic>
                      <HBox.margin>
                         <Insets right="-5.0" top="-2.0" />
