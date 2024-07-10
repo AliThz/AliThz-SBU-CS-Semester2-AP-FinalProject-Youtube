@@ -11,13 +11,15 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.*;
@@ -25,7 +27,11 @@ import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -37,6 +43,7 @@ import java.util.UUID;
 public class VideoRecommendationController implements Initializable {
 
     private Video video;
+    File newImage;
     @FXML
     private Button btnVideoPreviewOptions;
 
@@ -190,6 +197,106 @@ public class VideoRecommendationController implements Initializable {
     }
     //endregion
 
+    //region [ - showDialog() - ]
+    private void showDialog() {
+        Dialog<Playlist> dialog = new Dialog<>();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Create Playlist");
+
+        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
+//        dialog.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/info.jpg")))));
+
+        // Set the button types
+        ButtonType updateButtonType = new ButtonType("Create", ButtonType.OK.getButtonData());
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonType.CANCEL.getButtonData());
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, cancelButtonType);
+
+        // Create the labels and fields
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField titleField = new TextField();
+        titleField.setPromptText("Title");
+        titleField.setText("");
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("Description");
+        descriptionField.setText("");
+        RadioButton isPublic = new RadioButton("Public");
+        ImageView imageView = new ImageView();
+//        ImageView imageView = new ImageView(avatar);
+//        imageView.setFitWidth(100);
+//        imageView.setFitHeight(100);
+//        Button uploadButton = new Button("", imageView);
+        Button uploadButton = new Button("Select Thumbnail");
+
+
+        uploadButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Thumbnail");
+            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            newImage = fileChooser.showOpenDialog(hbxVideoRecommendation.getScene().getWindow());
+            imageView.setImage(new Image(newImage.toURI().toString()));
+        });
+        uploadButton.getStyleClass().add("btn-upload");
+
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionField, 1, 1);
+        grid.add(new Label("Access:"), 0, 2);
+        grid.add(isPublic, 1, 2);
+        grid.add(new Label("Thumbnail:"), 0, 3);
+        grid.add(uploadButton, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setHeaderText(null); // Remove header text
+        dialog.setGraphic(null); // Remove header graphic if there is any
+
+        // Convert the result to a user object when the update button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), convertImageToByteArray(newImage.getAbsolutePath()));
+            }
+            return null;
+        });
+
+//        Gson gson = new Gson();
+
+        // Show the dialog and update the user if the update button is clicked
+        dialog.showAndWait().ifPresent(createdPlaylist -> {
+            new Request<Playlist>(YouTubeApplication.socket, "CreatePlaylist").send(createdPlaylist);
+//            Response<User> userResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Playlist>(){}.getType());
+            YouTubeApplication.receiveResponse();
+        });
+    }
+    //endregion
+
+    //region [ - convertImageToByteArray(String imagePath, String type) - ]
+    private byte[] convertImageToByteArray(String imagePath) {
+        System.out.println("In ConvertImage Method");
+        byte[] imageBytes = null;
+        try {
+            // Load the image
+            File file = new File(imagePath);
+            BufferedImage bufferedImage = ImageIO.read(file);
+
+            // Convert BufferedImage to byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            baos.flush();
+            imageBytes = baos.toByteArray();
+            baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("End of ConvertImage Method");
+        return imageBytes;
+    }
+    //endregion
+
     //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
@@ -202,4 +309,5 @@ public class VideoRecommendationController implements Initializable {
             hbxVideoRecommendation.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-recommendation.css")).toExternalForm());
         });
     }
+    //endregion
 }
