@@ -48,7 +48,9 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
 
-            insertPlaylist(new Playlist("Watch later" , "here you can save videos to watch later" , user.getId() , false));
+            Playlist playlist = new Playlist("Watch later" , "here you can save videos to watch later" , user.getId() , false);
+            playlist.setThumbnailPath("/Images/watch-later-thumbnail.jpg");
+            insertPlaylist(playlist);
             insertChannel(new Channel(user.getId(), user.getUsername()));
             user.setAvatarPath("/Images/DefaultAvatar.jpg");
             user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath()));
@@ -892,7 +894,7 @@ public class DatabaseManager {
                     UPDATE "UserManagement"."Notification" SET "IsRead" = ?  
                     WHERE \"Id\" = ?;
                     """);
-            stmt.setBoolean(1, false);
+            stmt.setBoolean(1, true);
             stmt.setObject(2, notification.getId());
             stmt.executeUpdate();
 
@@ -1470,6 +1472,58 @@ public class DatabaseManager {
     }
     //endregion
 
+    //region [ - SelectTrendingVideos - ]
+
+    public ArrayList<Video> SelectTrendingVideos() {
+        Connection c;
+        Statement stmt;
+        PreparedStatement stmt1;
+        ArrayList<Video> videos = null;
+        try {
+
+            System.out.println("Opened database successfully (selectVideosBriefly)");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("""
+                    SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description", "ChannelId",
+                           (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
+                    FROM "ContentManagement"."Video"
+                    ORDER BY "VideoViewCount" DESC
+                    LIMIT 10;
+                    """);
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
+
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectVideosBriefly)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+
+    //endregion
+
     //region [ - selectLikedVideos (UUID userId) - ]
     public ArrayList<Video> selectLikedVideos(UUID userId) {
         Connection c;
@@ -1767,9 +1821,9 @@ public class DatabaseManager {
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
 
-//            for (var comment : selectComments(videoId)) {
-//                deleteComment(comment.getId());
-//            }
+            for (var comment : selectComments(videoId)) {
+                deleteComment(comment.getId());
+            }
             deletePlaylistDetail(videoId);
             deleteVideoCategory(videoId);
             deleteUserVideo(videoId);
@@ -2650,7 +2704,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM "ContentManagement"."PlaylistDetail" WHERE VideoId = ?;
+                    DELETE FROM "ContentManagement"."PlaylistDetail" WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             stmt.executeUpdate();
@@ -3095,7 +3149,6 @@ public class DatabaseManager {
     }
     //endregion
 
-
     //region [ - deleteUserComment(UUID userId , UUID commentID) - ] Yes (this method don't want to exist)
     public void deleteUserComment(UUID userId, UUID commentID) {
         Connection c;
@@ -3221,6 +3274,7 @@ public class DatabaseManager {
     //endregion
 
     //endregion
+
 
     //endregion
 

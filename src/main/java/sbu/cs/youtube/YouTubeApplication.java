@@ -299,9 +299,9 @@ public class YouTubeApplication extends Application {
 //        System.out.println(response);
         //        ------------------------- searchVideo Test ---------------------------------------------
 //        Socket socket = new Socket("localhost", 2345);
-//        Request<Video> videoRequest = new Request<>(socket, "SearchVideo");
+//        Request<Video> videoRequest = new Request<>(socket, "DeleteVideo");
 //        Video video = new Video();
-//        video.setTitle("vel");
+//        video.setId(UUID.fromString("3fb29059-64fb-4d68-9580-b6eb836bd103"));
 //        videoRequest.send(video);
 //        YouTubeApplication client = new YouTubeApplication(socket);
 //        String response = receiveResponse();
