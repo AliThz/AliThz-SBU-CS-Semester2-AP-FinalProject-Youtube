@@ -3,7 +3,6 @@ package sbu.cs.youtube.Client.Controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,15 +11,16 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import sbu.cs.youtube.Shared.POJO.*;
@@ -31,6 +31,8 @@ import sbu.cs.youtube.YouTubeApplication;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -57,6 +59,7 @@ public class VideoPreviewController implements Initializable {
     @FXML
     private VBox vbxVideoPreview, vbxTextDetails;
     Popup popup = new Popup();
+    File newImage;
     private final int TITLE_MAX_LENGTH = 50;
     //endregion
 
@@ -78,17 +81,24 @@ public class VideoPreviewController implements Initializable {
 //            event.consume();
 //            save(event);
 //        });
-
-        btnVideoPreviewOptions.setOnMouseEntered(event -> {
+        btnVideoPreviewOptions.setOnAction(event -> {
+            save();
             event.consume();
-            save(event);
+            Bounds bounds = btnVideoPreviewOptions.localToScreen(btnVideoPreviewOptions.getBoundsInLocal());
+            popup.setX(bounds.getMinX());
+            popup.setY(bounds.getMinY() + bounds.getHeight());
+
+            if (popup.isShowing())
+                popup.hide();
+            else
+                popup.show((Stage) btnVideoPreviewOptions.getScene().getWindow());
+
         });
 
 //        // Consume mouse events on the inner button to prevent propagation to the outer button
 //        btnVideoPreviewOptions.addEventFilter(MouseEvent.MOUSE_PRESSED, Event::consume);
 //        btnVideoPreviewOptions.addEventFilter(MouseEvent.MOUSE_RELEASED, Event::consume);
 //        btnVideoPreviewOptions.addEventFilter(MouseEvent.MOUSE_CLICKED, Event::consume);
-
 
 
 //        final boolean[] innerButtonClicked = {false};
@@ -149,7 +159,7 @@ public class VideoPreviewController implements Initializable {
     //endregion
 
     //region [ - save(ActionEvent event) - ]
-    private void save(MouseEvent event) {
+    public void save() {
         Gson gson = new Gson();
         new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
         Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
@@ -157,52 +167,43 @@ public class VideoPreviewController implements Initializable {
         ArrayList<Playlist> playlists = playlistsResponse.getBody();
 
         VBox vbxPlaylists = new VBox();
-        vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
-//        vbxPlaylists.getStyleClass().add("vbxNotification");
         Text text = new Text("Add to Playlist");
-        text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        } else {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(240, 240, 240);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(0,0,0); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        }
         vbxPlaylists.getChildren().add(text);
 
-        popup.hide();
+        popup.getContent().clear();
         popup.getContent().add(vbxPlaylists);
-        Stage stage = (Stage) btnVideoPreviewOptions.getScene().getWindow();
 
 
         for (var p : playlists) {
             Button button = new Button(p.getTitle());
             button.setId(p.getId().toString());
-            button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
-            button.setOnMouseClicked(mouseEvent -> {
-//                vbxPlaylists.getChildren().remove(vbxPlaylists.getChildren().indexOf(button));
+            if (YouTubeApplication.theme.equals("Dark")) {
+                button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            }
+            else {
+                button.setStyle("-fx-background-color: rgb(200, 200, 200);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            }
+            button.setOnAction(event -> {
                 new Request<PlaylistDetail>(YouTubeApplication.socket, "AddVideoToPlaylist").send(new PlaylistDetail(UUID.fromString(button.getId()), video.getId()));
                 YouTubeApplication.receiveResponse();
-                popup.hide();
             });
-
-//            button.getStyleClass().add("lblNotification");
             vbxPlaylists.getChildren().add(button);
-//        button.setOnAction(event1 -> {
-//            System.out.println("hello");
-//        });
         }
 
 
-        Bounds bounds = btnVideoPreviewOptions.localToScreen(btnVideoPreviewOptions.getBoundsInLocal());
-        popup.setX(bounds.getMinX() - 200);
-        popup.setY(bounds.getMinY() + bounds.getHeight());
-
-        btnVideoPreviewOptions.setOnAction(event1 -> {
-            if (popup.isShowing())
-                popup.hide();
-            else
-                popup.show(stage);
-        });
     }
     //endregion
 
     //region [ - setVideo(Video video) - ]
     public void setVideo(Video video) {
-        this.video= video;
+        this.video = video;
         String summarizedTitle = video.getTitle();
         if (summarizedTitle.length() > TITLE_MAX_LENGTH) {
             summarizedTitle = summarizedTitle.substring(0, TITLE_MAX_LENGTH);
@@ -239,6 +240,106 @@ public class VideoPreviewController implements Initializable {
             vbxVideoPreview.getStylesheets().clear();
             vbxVideoPreview.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-preview.css")).toExternalForm());
         });
+    }
+    //endregion
+
+    //region [ - showDialog() - ]
+    private void showDialog() {
+        Dialog<Playlist> dialog = new Dialog<>();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Create Playlist");
+
+        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
+//        dialog.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/info.jpg")))));
+
+        // Set the button types
+        ButtonType updateButtonType = new ButtonType("Create", ButtonType.OK.getButtonData());
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonType.CANCEL.getButtonData());
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, cancelButtonType);
+
+        // Create the labels and fields
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField titleField = new TextField();
+        titleField.setPromptText("Title");
+        titleField.setText("");
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("Description");
+        descriptionField.setText("");
+        RadioButton isPublic = new RadioButton("Public");
+        ImageView imageView = new ImageView();
+//        ImageView imageView = new ImageView(avatar);
+//        imageView.setFitWidth(100);
+//        imageView.setFitHeight(100);
+//        Button uploadButton = new Button("", imageView);
+        Button uploadButton = new Button("Select Thumbnail");
+
+
+        uploadButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Thumbnail");
+            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            newImage = fileChooser.showOpenDialog(vbxVideoPreview.getScene().getWindow());
+            imageView.setImage(new Image(newImage.toURI().toString()));
+        });
+        uploadButton.getStyleClass().add("btn-upload");
+
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionField, 1, 1);
+        grid.add(new Label("Access:"), 0, 2);
+        grid.add(isPublic, 1, 2);
+        grid.add(new Label("Thumbnail:"), 0, 3);
+        grid.add(uploadButton, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setHeaderText(null); // Remove header text
+        dialog.setGraphic(null); // Remove header graphic if there is any
+
+        // Convert the result to a user object when the update button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), convertImageToByteArray(newImage.getAbsolutePath()));
+            }
+            return null;
+        });
+
+//        Gson gson = new Gson();
+
+        // Show the dialog and update the user if the update button is clicked
+        dialog.showAndWait().ifPresent(createdPlaylist -> {
+            new Request<Playlist>(YouTubeApplication.socket, "CreatePlaylist").send(createdPlaylist);
+//            Response<User> userResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Playlist>(){}.getType());
+            YouTubeApplication.receiveResponse();
+        });
+    }
+    //endregion
+
+    //region [ - convertImageToByteArray(String imagePath, String type) - ]
+    private byte[] convertImageToByteArray(String imagePath) {
+        System.out.println("In ConvertImage Method");
+        byte[] imageBytes = null;
+        try {
+            // Load the image
+            File file = new File(imagePath);
+            BufferedImage bufferedImage = ImageIO.read(file);
+
+            // Convert BufferedImage to byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            baos.flush();
+            imageBytes = baos.toByteArray();
+            baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("End of ConvertImage Method");
+        return imageBytes;
     }
     //endregion
 

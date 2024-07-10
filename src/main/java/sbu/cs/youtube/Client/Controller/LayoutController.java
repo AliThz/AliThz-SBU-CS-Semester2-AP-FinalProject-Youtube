@@ -31,7 +31,6 @@ import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
-import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -103,6 +102,8 @@ public class LayoutController implements Initializable {
 
     private Button notificationsBtn;
 
+    private Popup popup = new Popup();
+
     //endregion
 
     //region [ - Methods - ]
@@ -131,6 +132,7 @@ public class LayoutController implements Initializable {
             flowPane.getChildren().removeFirst();
         }
         btnSearch.setOnAction(event -> search(event, searchField.getText()));
+
     }
     //endregion
 
@@ -522,8 +524,18 @@ public class LayoutController implements Initializable {
 
             createBtn.setOnAction(this::getCreatePage);
 
+            notificationsBtn.setOnAction(event -> {
+                getNotifications();
+                Bounds bounds = notificationsBtn.localToScreen(notificationsBtn.getBoundsInLocal());
+                popup.setX(bounds.getMinX() - 150);
+                popup.setY(bounds.getMinY() + bounds.getHeight());
 
-            notificationsBtn.setOnAction(this::getNotificationsScene);
+                if (popup.isShowing())
+                    popup.hide();
+                else
+                    popup.show((Stage) btnBurger.getScene().getWindow());
+            });
+
             accountBtn.setOnAction(this::getDashboard);
 
             hbxRightNavItem.getChildren().clear();
@@ -628,7 +640,7 @@ public class LayoutController implements Initializable {
     //endregion
 
     //region [ - getNotificationsScene(ActionEvent event) - ]
-    protected void getNotificationsScene(ActionEvent event) {
+    protected void getNotifications() {
         setDefaultSvgs();
         Gson gson = new Gson();
 
@@ -638,48 +650,47 @@ public class LayoutController implements Initializable {
         ArrayList<Notification> notifications = notificationResponse.getBody();
 
         VBox vbxNotifications = new VBox();
-        vbxNotifications.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
-//        vbxNotifications.getStyleClass().add("vbxNotification");
         Text text = new Text("Notifications");
-        text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            vbxNotifications.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        } else {
+            vbxNotifications.setStyle("-fx-background-color: rgb(240, 240, 240);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(0,0,0); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        }
         vbxNotifications.getChildren().add(text);
+
+        popup.getContent().clear();
+        popup.getContent().add(vbxNotifications);
 
         for (var n : notifications) {
             Label label = new Label(n.getMessage());
             label.setId(n.getId().toString());
             label.setOnMouseClicked(mouseEvent -> {
-//                vbxNotifications.getChildren().remove(vbxNotifications.getChildren().indexOf(label));
-                label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                if (YouTubeApplication.theme.equals("Dark")) {
+                    label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                } else {
+                    label.setStyle("-fx-background-color: rgb(200, 200, 200);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                }
                 new Request<Notification>(YouTubeApplication.socket, "UpdateNotification").send(new Notification(UUID.fromString(label.getId()), true));
                 YouTubeApplication.receiveResponse();
             });
             if (n.isRead()) {
-                label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                if (YouTubeApplication.theme.equals("Dark")) {
+                    label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                } else {
+                    label.setStyle("-fx-background-color: rgb(229, 229, 229);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                }
             } else {
-                label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND");
+                if (YouTubeApplication.theme.equals("Dark")) {
+                    label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND");
+                } else {
+                    label.setStyle("-fx-background-color: rgb(204, 204, 204);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND");
+                }
             }
-//            label.getStyleClass().add("lblNotification");
             vbxNotifications.getChildren().add(label);
-//        button.setOnAction(event1 -> {
-//            System.out.println("hello");
-//        });
+
         }
-
-        Popup popup = new Popup();
-        popup.hide();
-        popup.getContent().add(vbxNotifications);
-        Stage stage = (Stage) btnMode.getScene().getWindow();
-
-        Bounds bounds = notificationsBtn.localToScreen(notificationsBtn.getBoundsInLocal());
-        popup.setX(bounds.getMinX() - 150);
-        popup.setY(bounds.getMinY() + bounds.getHeight());
-
-        notificationsBtn.setOnAction(event1 -> {
-            if (popup.isShowing())
-                popup.hide();
-            else
-                popup.show(stage);
-        });
     }
     //endregion
 
