@@ -40,10 +40,6 @@ The UML diagram above shows the structure of the 'model classes' and their inter
 
 ## Usage
 
-[Watch the Demo Video](path-to-your-demo-video.mp4)
+[Watch the Demo Video](YoutubeDemo.mp4)
 
 In this video, you will see an exploration of the most important features of the application, including user authentication, video upload, playback, commenting, and subscription functionalities.
-
----
-
-This README provides a concise overview of the YouTube Clone project, highlighting its key features, technology stack, design patterns, and contributions, along with a demonstration video for practical insight.
