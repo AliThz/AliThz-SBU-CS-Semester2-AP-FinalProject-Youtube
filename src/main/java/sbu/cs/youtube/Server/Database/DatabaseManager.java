@@ -48,7 +48,9 @@ public class DatabaseManager {
             stmt.executeUpdate();
             c.commit();
 
-            insertPlaylist(new Playlist("Watch later" , "here you can save videos to watch later" , user.getId() , false));
+            Playlist playlist = new Playlist("Watch later" , "here you can save videos to watch later" , user.getId() , false);
+            playlist.setThumbnailPath("/Images/watch-later-thumbnail.jpg");
+            insertPlaylist(playlist);
             insertChannel(new Channel(user.getId(), user.getUsername()));
             user.setAvatarPath("/Images/DefaultAvatar.jpg");
             user.setAvatarBytes(convertImageToByteArray(user.getAvatarPath()));
