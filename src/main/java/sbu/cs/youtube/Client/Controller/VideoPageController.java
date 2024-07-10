@@ -459,7 +459,7 @@ public class VideoPageController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, anchrpnVideoPage.getScene().getWidth(), anchrpnVideoPage.getScene().getHeight());
+        scene = new Scene(root, 1920, 1080);
         stage.setScene(scene);
         stage.show();
     }
@@ -1012,12 +1012,9 @@ public class VideoPageController implements Initializable {
         descriptionField.setText("");
         RadioButton isPublic = new RadioButton("Public");
         ImageView imageView = new ImageView();
-//        ImageView imageView = new ImageView(avatar);
-//        imageView.setFitWidth(100);
-//        imageView.setFitHeight(100);
-//        Button uploadButton = new Button("", imageView);
-        Button uploadButton = new Button("Select Thumbnail");
-
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        Button uploadButton = new Button("Select Thumbnail", imageView);
 
         uploadButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
@@ -1025,9 +1022,12 @@ public class VideoPageController implements Initializable {
             FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
             fileChooser.getExtensionFilters().add(extensionFilter);
             newImage = fileChooser.showOpenDialog(anchrpnVideoPage.getScene().getWindow());
-            imageView.setImage(new Image(newImage.toURI().toString()));
+            if (newImage != null) {
+                imageView.setImage(new Image(newImage.toURI().toString()));
+            }
         });
-        uploadButton.getStyleClass().add("btn-upload");
+        uploadButton.getStyleClass().add("dlg-btn");
+
 
         grid.add(new Label("Title:"), 0, 0);
         grid.add(titleField, 1, 0);

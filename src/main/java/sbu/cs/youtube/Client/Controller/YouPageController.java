@@ -409,7 +409,7 @@ public class YouPageController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, vbxDashboard.getScene().getWidth(), vbxDashboard.getScene().getHeight());
+        scene = new Scene(root, 1920, 1080);
         stage.setScene(scene);
         stage.show();
     }
