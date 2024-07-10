@@ -1821,9 +1821,9 @@ public class DatabaseManager {
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
 
-//            for (var comment : selectComments(videoId)) {
-//                deleteComment(comment.getId());
-//            }
+            for (var comment : selectComments(videoId)) {
+                deleteComment(comment.getId());
+            }
             deletePlaylistDetail(videoId);
             deleteVideoCategory(videoId);
             deleteUserVideo(videoId);
@@ -2704,7 +2704,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    DELETE FROM "ContentManagement"."PlaylistDetail" WHERE VideoId = ?;
+                    DELETE FROM "ContentManagement"."PlaylistDetail" WHERE "VideoId" = ?;
                     """);
             stmt.setObject(1, videoId);
             stmt.executeUpdate();
@@ -3148,7 +3148,6 @@ public class DatabaseManager {
         }
     }
     //endregion
-
 
     //region [ - deleteUserComment(UUID userId , UUID commentID) - ] Yes (this method don't want to exist)
     public void deleteUserComment(UUID userId, UUID commentID) {

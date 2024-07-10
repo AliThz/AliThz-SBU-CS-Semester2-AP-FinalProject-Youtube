@@ -217,6 +217,9 @@ public class ClientHandler implements Runnable {
             case "GetTrendingVideos" :
                 getTrendingVideos();
                 break;
+            case "DeleteVideo" :
+                deleteVideo();
+                break;
             default:
                 new Response<>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
@@ -1002,6 +1005,21 @@ public class ClientHandler implements Runnable {
 
         response = new Response<>(client, videosRequest.getType(), true, "Trending videos received  ");
         response.send(videos);
+    }
+    //endregion
+
+    //region [ - deleteVideo - ]
+    public void deleteVideo() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Video video = videoRequest.getBody();
+
+        databaseManager.deleteVideo(video.getId());
+
+        Response<Video> response;
+        response = new Response<>(client, videoRequest.getType(), true, "Video Successfully deleted ");
+        response.send();
     }
     //endregion
 
