@@ -153,6 +153,9 @@ public class VideoPageController implements Initializable {
     @FXML
     private SVGPath svgDislike;
 
+    @FXML
+    private ImageView imgAvatar;
+
     private Boolean hasLiked = null;
 
     private MediaPlayer mediaPlayer;
@@ -346,6 +349,11 @@ public class VideoPageController implements Initializable {
             mediaPlayer.play();
 
             setPlaybackButtons();
+
+            ByteArrayInputStream bis;
+            bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
+            Image userProf = new Image(bis);
+            imgAvatar.setImage(userProf);
 
             mediaView.sceneProperty().addListener((observable, oldScene, newScene) -> {
                 if (newScene != oldScene) {

@@ -1167,7 +1167,7 @@ public class DatabaseManager {
 
     //endregion
 
-    //region [ - Video - ] To think
+    //region [ - Video - ]
 
     //region [ - insertVideo(Video video) - ] Tested
     public void insertVideo(Video video) {
@@ -1749,6 +1749,23 @@ public class DatabaseManager {
                 video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
                 video.setPath(rs.getString("Path"));
                 video.setVideoBytes(convertVideoToByteArray(video.getPath()));
+            }
+
+            stmt = c.prepareStatement("""
+                SELECT
+                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ? AND "Like" = true) AS "VideoLikes",
+                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ? AND "Like" = false) AS "VideoDislikes",
+                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ?) AS "VideoViewCount"
+                """);
+            stmt.setObject(1, Id);
+            stmt.setObject(2, Id);
+            stmt.setObject(3, Id);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                video.setLikes(rs.getInt("VideoLikes"));
+                video.setDislikes(rs.getInt("VideoDislikes"));
+                video.setViewCount(rs.getInt("VideoViewCount"));
             }
 
             rs.close();

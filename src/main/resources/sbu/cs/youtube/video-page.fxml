@@ -230,7 +230,7 @@
                         </Text>
                         <HBox prefHeight="38.0" prefWidth="786.0" spacing="10.0">
                            <children>
-                              <ImageView fitHeight="41.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgAvatar" fitHeight="41.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../Images/DefaultAvatar.jpg" />
                                  </image>
