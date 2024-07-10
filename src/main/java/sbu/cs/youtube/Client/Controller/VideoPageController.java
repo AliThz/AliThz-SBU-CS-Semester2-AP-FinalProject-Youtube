@@ -169,6 +169,8 @@ public class VideoPageController implements Initializable {
 
     Popup popup = new Popup();
 
+    private boolean creatable;
+
     //endregion
 
     //region [ - Methods - ]
@@ -891,8 +893,7 @@ public class VideoPageController implements Initializable {
         svgPath.setContent("M20 12h-8v8h-1v-8H3v-1h8V3h1v8h8z");
         if (YouTubeApplication.theme.equals("Dark")) {
             svgPath.setStyle("-fx-fill: black;-fx-scale-x: 1;-fx-scale-y: 1;");
-        }
-        else {
+        } else {
             svgPath.setStyle("-fx-fill: white;-fx-scale-x: 1;-fx-scale-y: 1;");
         }
         btnCreatePlaylist.setGraphic(svgPath);
@@ -988,6 +989,7 @@ public class VideoPageController implements Initializable {
 
     //region [ - showDialog() - ]
     private void showDialog() {
+        creatable = true;
         Dialog<Playlist> dialog = new Dialog<>();
         dialog.setTitle("Create Playlist");
         dialog.setHeaderText("Create Playlist");
@@ -1023,11 +1025,15 @@ public class VideoPageController implements Initializable {
             fileChooser.setTitle("Select Thumbnail");
             FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
             fileChooser.getExtensionFilters().add(extensionFilter);
-            newImage = fileChooser.showOpenDialog(anchrpnVideoPage.getScene().getWindow());
+            newImage = fileChooser.showOpenDialog(vbxLeft.getScene().getWindow());
             if (newImage != null) {
                 imageView.setImage(new Image(newImage.toURI().toString()));
+            } else {
+                parentController.sendNotification("Please select a thumbnail");
+                creatable = false;
             }
         });
+
         uploadButton.getStyleClass().add("dlg-btn");
 
 
@@ -1047,15 +1053,23 @@ public class VideoPageController implements Initializable {
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), convertImageToByteArray(newImage.getAbsolutePath()));
+                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), newImage == null ? null : convertImageToByteArray(newImage.getAbsolutePath()));
             }
             return null;
         });
 
+
 //        Gson gson = new Gson();
+
 
         // Show the dialog and update the user if the update button is clicked
         dialog.showAndWait().ifPresent(createdPlaylist -> {
+            if (!creatable)
+                return;
+            if (createdPlaylist.getTitle().isEmpty()) {
+                parentController.sendNotification("Please enter a title");
+                return;
+            }
             new Request<Playlist>(YouTubeApplication.socket, "CreatePlaylist").send(createdPlaylist);
 //            Response<User> userResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Playlist>(){}.getType());
             YouTubeApplication.receiveResponse();

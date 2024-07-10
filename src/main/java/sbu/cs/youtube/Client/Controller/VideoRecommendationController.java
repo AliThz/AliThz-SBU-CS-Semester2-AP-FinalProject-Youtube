@@ -78,9 +78,12 @@ public class VideoRecommendationController implements Initializable {
     @FXML
     private Text txtViews;
 
+    private boolean creatable;
+
     private final int TITLE_MAX_LENGTH = 50;
 
     Popup popup = new Popup();
+    private LayoutController parentController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -129,8 +132,7 @@ public class VideoRecommendationController implements Initializable {
             button.setId(p.getId().toString());
             if (YouTubeApplication.theme.equals("Dark")) {
                 button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
-            }
-            else {
+            } else {
                 button.setStyle("-fx-background-color: rgb(200, 200, 200);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
             }
             button.setOnAction(event -> {
@@ -146,8 +148,7 @@ public class VideoRecommendationController implements Initializable {
         svgPath.setContent("M20 12h-8v8h-1v-8H3v-1h8V3h1v8h8z");
         if (YouTubeApplication.theme.equals("Dark")) {
             svgPath.setStyle("-fx-fill: black;-fx-scale-x: 1;-fx-scale-y: 1;");
-        }
-        else {
+        } else {
             svgPath.setStyle("-fx-fill: white;-fx-scale-x: 1;-fx-scale-y: 1;");
         }
         btnCreatePlaylist.setGraphic(svgPath);
@@ -222,6 +223,7 @@ public class VideoRecommendationController implements Initializable {
 
     //region [ - showDialog() - ]
     private void showDialog() {
+        creatable = true;
         Dialog<Playlist> dialog = new Dialog<>();
         dialog.setTitle("Create Playlist");
         dialog.setHeaderText("Create Playlist");
@@ -252,18 +254,22 @@ public class VideoRecommendationController implements Initializable {
         imageView.setFitHeight(100);
         Button uploadButton = new Button("Select Thumbnail", imageView);
 
-
         uploadButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Thumbnail");
             FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
             fileChooser.getExtensionFilters().add(extensionFilter);
-            newImage = fileChooser.showOpenDialog(hbxVideoRecommendation.getScene().getWindow());
+            newImage = fileChooser.showOpenDialog(vbxDetails.getScene().getWindow());
             if (newImage != null) {
                 imageView.setImage(new Image(newImage.toURI().toString()));
+            } else {
+                parentController.sendNotification("Please select a thumbnail");
+                creatable = false;
             }
         });
+
         uploadButton.getStyleClass().add("dlg-btn");
+
 
         grid.add(new Label("Title:"), 0, 0);
         grid.add(titleField, 1, 0);
@@ -281,20 +287,27 @@ public class VideoRecommendationController implements Initializable {
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), convertImageToByteArray(newImage.getAbsolutePath()));
+                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), newImage == null ? null : convertImageToByteArray(newImage.getAbsolutePath()));
             }
             return null;
         });
 
+
 //        Gson gson = new Gson();
+
 
         // Show the dialog and update the user if the update button is clicked
         dialog.showAndWait().ifPresent(createdPlaylist -> {
+            if (!creatable)
+                return;
+            if (createdPlaylist.getTitle().isEmpty()) {
+                parentController.sendNotification("Please enter a title");
+                return;
+            }
             new Request<Playlist>(YouTubeApplication.socket, "CreatePlaylist").send(createdPlaylist);
 //            Response<User> userResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Playlist>(){}.getType());
             YouTubeApplication.receiveResponse();
         });
-
     }
     //endregion
 
@@ -323,6 +336,7 @@ public class VideoRecommendationController implements Initializable {
 
     //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
+        this.parentController = layoutController;
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
         layoutController.btnMode.setOnAction(event -> {
