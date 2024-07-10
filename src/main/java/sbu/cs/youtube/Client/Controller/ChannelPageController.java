@@ -466,7 +466,7 @@ public class ChannelPageController implements Initializable {
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                return new User(fullNameField.getText(), emailField.getText(), avatarChanged ? convertImageToByteArray(newImage.getAbsolutePath()) : null, usernameField.getText(), passwordField.getText().isEmpty() ? YouTubeApplication.user.getPassword() : passwordField.getText());
+                return new User(fullNameField.getText(), emailField.getText().isEmpty()? YouTubeApplication.user.getEmail() : emailField.getText(), avatarChanged ? convertImageToByteArray(newImage.getAbsolutePath()) : null, usernameField.getText(), passwordField.getText().isEmpty() ? YouTubeApplication.user.getPassword() : passwordField.getText());
             }
             return null;
         });
@@ -550,7 +550,8 @@ public class ChannelPageController implements Initializable {
     //region [ - verifyEmail(String newEmail) - ]
 
     private boolean verifyEmail(String newEmail) {
-        if (newEmail.equals(YouTubeApplication.user.getEmail())) return true;
+        if (newEmail.equals(YouTubeApplication.user.getEmail()))
+            return true;
 
         Request<User> userRequest = new Request<>(YouTubeApplication.socket, "CheckExistingUser");
         userRequest.send(new User(newEmail, "", ""));
