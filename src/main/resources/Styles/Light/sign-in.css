@@ -1,0 +1,115 @@
+.background {
+    -fx-background-color : rgb(240,244,249);
+}
+
+.foreground {
+    -fx-background-color : white;
+    -fx-background-radius : 20;
+}
+
+.menu-guide {
+    -fx-text-fill: black;
+    -fx-fill: black;
+}
+
+/* -------------------------------- Google Logo -------------------------------- */
+.google-svg-1 {
+    -fx-fill : rgb(234,67,53);
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
+}
+.google-svg-2 {
+    -fx-fill : rgb(251,188,5);
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
+}
+.google-svg-3 {
+     -fx-fill : rgb(52,168,83);
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
+ }
+.google-svg-4 {
+     -fx-fill : rgb(66,133,244);
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
+ }
+
+/* -------------------------------- Bottom Buttons -------------------------------- */
+.bottom-btn {
+    -fx-background-color : transparent;
+    -fx-text-fill : black;
+    -fx-background-radius : 30;
+}
+.bottom-btn:hover {
+    -fx-background-color : rgb(225,229,234);
+}
+.bottom-btn:pressed {
+    -fx-background-color : rgb(221,225,230);
+}
+
+/* -------------------------------- Input Field -------------------------------- */
+.input-field {
+    -fx-text-fill: black;
+    -fx-background-color: transparent;
+    -fx-background-radius: 3;
+    -fx-border-color: rgb(116,119,117);
+    -fx-border-radius: 3;
+    -fx-pref-width : 304px;
+    -fx-pref-height : 56px;
+}
+
+.input-field:focused {
+    -fx-border-color: rgb(136,166,255);
+    -fx-border-width : 2;
+}
+
+
+/* -------------------------------- Create Account Button -------------------------------- */
+
+.createAcnt-btn {
+    -fx-background-color : transparent;
+    -fx-background-radius : 30;
+    -fx-text-fill : rgb(11,87,208);
+    -fx-font-weight : bold;
+    -fx-font-size : 13px;
+}
+
+.createAcnt-btn:hover {
+    -fx-background-color : rgb(244,247,252);
+}
+
+.createAcnt-btn:pressed {
+    -fx-background-color : rgb(214,227,247);
+}
+
+/* -------------------------------- Next Button -------------------------------- */
+
+.next-btn {
+    -fx-background-color : rgb(11,87,208);
+    -fx-background-radius : 30;
+    -fx-text-fill : white;
+    -fx-font-weight : bold;
+    -fx-font-size : 13px;
+}
+
+.next-btn:hover {
+    -fx-background-color : rgb(14,78,181);
+}
+
+.next-btn:pressed {
+    -fx-background-color : rgb(18,70,151);
+}
+
+/* -------------------------------- Log Section -------------------------------- */
+.error-svg {
+    -fx-fill : rgb(179,38,30);
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
+}
+
+.error-txt {
+    -fx-fill: rgb(179,38,30);
+}
+
+
+

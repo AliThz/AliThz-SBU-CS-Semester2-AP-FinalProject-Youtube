@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -10,50 +11,60 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="hbxVideoRecommendation" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="400.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/video-recommendation.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.VideoRecommendationController">
+<HBox fx:id="hbxVideoRecommendation" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="400.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/Dark/video-recommendation.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.VideoRecommendationController">
    <children>
       <ImageView fx:id="imgThumbnail" fitHeight="106.0" fitWidth="208.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../Images/Thumbnail.jpg" />
          </image>
       </ImageView>
-      <VBox fx:id="vbxDetails" alignment="CENTER" prefHeight="107.0" prefWidth="200.0">
+      <VBox fx:id="vbxDetails" alignment="CENTER" prefHeight="107.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
          <children>
-            <HBox prefHeight="70.0" prefWidth="174.0" VBox.vgrow="ALWAYS">
+            <HBox fx:id="hbxVideoDetail" prefHeight="70.0" prefWidth="174.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox alignment="CENTER_LEFT" prefHeight="89.0" prefWidth="176.0" spacing="5.0">
+                  <VBox alignment="CENTER_LEFT" prefHeight="109.0" prefWidth="124.0" spacing="5.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="A title for a video in youtube in youtube" wrappingWidth="170.13691759109497" VBox.vgrow="ALWAYS">
+                        <Text fx:id="txtVideoTitle" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="A title for a video in youtube in youtube" wrappingWidth="170.13691759109497">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Text>
-                        <Text fx:id="txtChannelName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel Name" />
+                        <Button fx:id="btnChannelName" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#getChannel" prefHeight="26.0" prefWidth="94.0" styleClass="btn-channel" text="Channel Name">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
                         <HBox fx:id="hbxViewsAndDate" alignment="BOTTOM_LEFT" prefHeight="10.0" prefWidth="188.0" spacing="5.0">
                            <children>
-                              <Text fx:id="txtViews" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Views">
+                              <Text fx:id="txtViews" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="Views">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="·">
+                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="·">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="txtDate" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Date">
+                              <Text fx:id="txtDate" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="txt" text="Date">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
                               </Text>
                            </children>
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
                         </HBox>
                      </children>
                   </VBox>
                   <Button fx:id="btnVideoPreviewOptions" mnemonicParsing="false" prefHeight="31.0" prefWidth="0.0" styleClass="add-btn" textFill="WHITE">
                      <graphic>
-                        <SVGPath fx:id="svgpthVideoPreviewOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" />
+                        <SVGPath fx:id="svgpthVideoPreviewOptions" content="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z" fill="WHITE" styleClass="txt" />
                      </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
                </children>
             </HBox>

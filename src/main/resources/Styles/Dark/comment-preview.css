@@ -1,0 +1,46 @@
+.hbx-main {
+    -fx-background-color: black;
+}
+
+.btn-like {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20;
+}
+
+.btn-like:hover {
+    -fx-background-color: rgb(33,33,33);
+}
+
+.btn-like:pressed {
+    -fx-background-color: rgb(41,41,41);
+}
+
+.svg-like {
+    -fx-fill: white;
+}
+
+.txt-username {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+
+.txt-time {
+    -fx-fill: rgb(144,144,144);
+}
+
+.txt-like-count {
+    -fx-fill: rgb(160,160,160);
+}
+
+.txt-comment {
+    -fx-fill: white;
+}
+
+.btn-reply:hover {
+    -fx-background-color: rgb(33,33,33);
+}
+
+.btn-reply:pressed {
+    -fx-background-color: rgb(41,41,41);
+}
+

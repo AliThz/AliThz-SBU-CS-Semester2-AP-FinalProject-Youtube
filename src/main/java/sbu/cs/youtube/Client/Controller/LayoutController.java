@@ -1,30 +1,43 @@
 package sbu.cs.youtube.Client.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import sbu.cs.youtube.Shared.POJO.*;
+import sbu.cs.youtube.Shared.Request;
+import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class LayoutController implements Initializable {
 
@@ -35,6 +48,18 @@ public class LayoutController implements Initializable {
     protected boolean isSignedIn;
 
     protected boolean isDarkMode = true;
+
+    @FXML
+    protected HBox hbxNavBar;
+
+    @FXML
+    protected HBox searchHbx;
+
+    @FXML
+    protected Button btnSearch;
+
+    @FXML
+    protected TextField searchField;
 
     @FXML
     protected SVGPath svgHome;
@@ -69,14 +94,29 @@ public class LayoutController implements Initializable {
     @FXML
     protected FlowPane flowPane;
 
+    @FXML
+    protected SVGPath modeSvg;
+
+    @FXML
+    protected ToggleButton btnMode;
+
+    private Button notificationsBtn;
+
+    private Popup popup = new Popup();
+
     //endregion
 
     //region [ - Methods - ]
 
     //region [ - initialize(URL location, ResourceBundle resources) - ]
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setMode();
+        if (YouTubeApplication.theme.equals("Light")) {
+            btnMode.setSelected(true);
+            modeSvg.setContent("M12 22C10.93 22 9.86998 21.83 8.83998 21.48L7.41998 21.01L8.83998 20.54C12.53 19.31 15 15.88 15 12C15 8.12 12.53 4.69 8.83998 3.47L7.41998 2.99L8.83998 2.52C9.86998 2.17 10.93 2 12 2C17.51 2 22 6.49 22 12C22 17.51 17.51 22 12 22ZM10.58 20.89C11.05 20.96 11.53 21 12 21C16.96 21 21 16.96 21 12C21 7.04 16.96 3 12 3C11.53 3 11.05 3.04 10.58 3.11C13.88 4.81 16 8.21 16 12C16 15.79 13.88 19.19 10.58 20.89Z");
+        }
+
         if (YouTubeApplication.user == null) {
             isSignedIn = false;
         } else {
@@ -85,20 +125,54 @@ public class LayoutController implements Initializable {
         setRightNavBarHBox();
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(15));
         flowPane.prefHeightProperty().bind(scrollPane.heightProperty());
+
+        if (YouTubeApplication.user == null) {
+            disableButtons();
+        } else {
+            flowPane.getChildren().removeFirst();
+        }
+        btnSearch.setOnAction(event -> search(event, searchField.getText()));
+
+    }
+    //endregion
+
+    //region [ - setMode() - ]
+    private void setMode() {
+        vbxLayout.getStylesheets().clear();
+        vbxLayout.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/nav-bar.css")).toExternalForm());
+        scrollPane.getStylesheets().clear();
+        scrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/home-section.css")).toExternalForm());
+        Separator separator = (Separator) hbxContent.getChildren().get(1);
+        separator.getStylesheets().clear();
+        separator.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
+        vbxSideBar.getStylesheets().clear();
+        if (!isExpanded) {
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
+        } else {
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-expanded.css")).toExternalForm());
+        }
+
+    }
+    //endregion
+
+    //region [ - disableButtons() - ]
+    private void disableButtons() {
+        btnBurger.setDisable(true);
+        hbxContent.getChildren().getFirst().setDisable(true);
+        searchHbx.setDisable(true);
     }
     //endregion
 
     //region [ - openSesame() - ]
-
     @FXML
     protected void openSesame() {
         if (isExpanded) {
             vbxSideBar.getStylesheets().clear();
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/side-bar-collapsed-dark.css")).toExternalForm());
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-collapsed.css")).toExternalForm());
             isExpanded = false;
         } else {
             vbxSideBar.getStylesheets().clear();
-            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/side-bar-expanded-dark.css")).toExternalForm());
+            vbxSideBar.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/side-bar-expanded.css")).toExternalForm());
             isExpanded = true;
         }
         setSideBarMenus();
@@ -137,7 +211,7 @@ public class LayoutController implements Initializable {
             yourChannelBtn.setGraphic(yourChannelPane);
             yourChannelBtn.getStyleClass().add("side-btn");
             yourChannelBtn.setTooltip(new Tooltip("Your Channel"));
-            yourChannelBtn.setOnAction(this::getYourChannelPage);
+            yourChannelBtn.setOnAction(this::getDashboard);
             //endregion
 
             //region [ - History Button - ]
@@ -152,7 +226,7 @@ public class LayoutController implements Initializable {
             historyBtn.setGraphic(historyPane);
             historyBtn.getStyleClass().add("side-btn");
             historyBtn.setTooltip(new Tooltip("History"));
-            historyBtn.setOnAction(this::getHistoryPage);
+            historyBtn.setOnAction(this::setYouSection);
             //endregion
 
             //region [ - Playlists Button - ]
@@ -167,7 +241,7 @@ public class LayoutController implements Initializable {
             playlistsBtn.setGraphic(playlistsPane);
             playlistsBtn.getStyleClass().add("side-btn");
             playlistsBtn.setTooltip(new Tooltip("Playlists"));
-            playlistsBtn.setOnAction(this::getHistoryPage);
+            playlistsBtn.setOnAction(this::setYouSection);
             //endregion
 
             //region [ - WatchLater Button - ]
@@ -182,7 +256,7 @@ public class LayoutController implements Initializable {
             watchLaterBtn.setGraphic(watchLaterPane);
             watchLaterBtn.getStyleClass().add("side-btn");
             watchLaterBtn.setTooltip(new Tooltip("Watch Later"));
-            watchLaterBtn.setOnAction(event1 -> getPlaylist(event1, "WatchLater"));
+            watchLaterBtn.setOnAction(this::getWatchLaterPage);
             //endregion
 
             //region [ - LikedVideos Button - ]
@@ -190,14 +264,14 @@ public class LayoutController implements Initializable {
             likedVideosSvg.getStyleClass().add("you-svg");
             Button likedVideosBtn = new Button();
             likedVideosSvg.setContent("M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11H3v10h4h1h9.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z M7,20H4v-8h3V20z M19.98,13.17l-1.34,6 C18.54,19.65,18.03,20,17.43,20H8v-8.61l5.6-6.06C13.79,5.12,14.08,5,14.38,5c0.26,0,0.5,0.11,0.63,0.3 c0.07,0.1,0.15,0.26,0.09,0.47l-1.52,4.94L13.18,12h1.35h4.23c0.41,0,0.8,0.17,1.03,0.46C19.92,12.61,20.05,12.86,19.98,13.17z");
-            Label likedVideosLbl = new Label("History");
+            Label likedVideosLbl = new Label("Liked");
             likedVideosLbl.getStyleClass().add("dashboard-lbl");
             FlowPane likedVideosPane = new FlowPane(likedVideosSvg, likedVideosLbl);
             likedVideosPane.getStyleClass().add("flow-pane");
             likedVideosBtn.setGraphic(likedVideosPane);
             likedVideosBtn.getStyleClass().add("side-btn");
             likedVideosBtn.setTooltip(new Tooltip("Liked Videos"));
-            likedVideosBtn.setOnAction(event -> getPlaylist(event, "LikedVideos"));
+            likedVideosBtn.setOnAction(this::setYouSection);
             //endregion
 
             Label exploreLbl = new Label("Explore");
@@ -227,7 +301,7 @@ public class LayoutController implements Initializable {
             trendingPane.getStyleClass().add("flow-pane");
             trendingBtn.setGraphic(trendingPane);
             trendingBtn.getStyleClass().add("side-btn");
-            trendingBtn.setOnAction(event -> getCategory(event, "Trending"));
+            trendingBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("1c577d77-1a69-4207-9642-b9d356e3082d"), trendingLbl.getText())));
             //endregion
 
             //region [ - Music Button - ]
@@ -241,7 +315,7 @@ public class LayoutController implements Initializable {
             musicPane.getStyleClass().add("flow-pane");
             musicBtn.setGraphic(musicPane);
             musicBtn.getStyleClass().add("side-btn");
-            musicBtn.setOnAction(event -> getCategory(event, "Music"));
+            musicBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("23278ae1-3944-44df-af8e-28ecaeffc771"), musicLbl.getText())));
             //endregion
 
             //region [ - Movies&TV Button - ]
@@ -255,7 +329,7 @@ public class LayoutController implements Initializable {
             moviesPane.getStyleClass().add("flow-pane");
             moviesBtn.setGraphic(moviesPane);
             moviesBtn.getStyleClass().add("side-btn");
-            moviesBtn.setOnAction(event -> getCategory(event, "Movies"));
+            moviesBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("8442cd0e-7d67-497a-a172-e09910dc12c0"), moviesLbl.getText())));
             //endregion
 
             //region [ - Gaming Button - ]
@@ -269,7 +343,7 @@ public class LayoutController implements Initializable {
             gamingPane.getStyleClass().add("flow-pane");
             gamingBtn.setGraphic(gamingPane);
             gamingBtn.getStyleClass().add("side-btn");
-            gamingBtn.setOnAction(event -> getCategory(event, "Gaming"));
+            gamingBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("8d68738b-e384-4681-9a48-ba4b42aaf2e7"), gamingLbl.getText())));
             //endregion
 
             //region [ - News Button - ]
@@ -283,7 +357,7 @@ public class LayoutController implements Initializable {
             newsPane.getStyleClass().add("flow-pane");
             newsBtn.setGraphic(newsPane);
             newsBtn.getStyleClass().add("side-btn");
-            newsBtn.setOnAction(event -> getCategory(event, "News"));
+            newsBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("dcc365a3-1671-49c7-a3ea-ae61f52ac629"), newsLbl.getText())));
             //endregion
 
             //region [ - Sports Button - ]
@@ -297,7 +371,7 @@ public class LayoutController implements Initializable {
             sportsPane.getStyleClass().add("flow-pane");
             sportsBtn.setGraphic(sportsPane);
             sportsBtn.getStyleClass().add("side-btn");
-            sportsBtn.setOnAction(event -> getCategory(event, "Sports"));
+            sportsBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("c1dddd73-ecca-4897-aaf4-f584bf3e26fa"), sportsLbl.getText())));
             //endregion
 
             //region [ - Learning Button - ]
@@ -311,7 +385,7 @@ public class LayoutController implements Initializable {
             learningPane.getStyleClass().add("flow-pane");
             learningBtn.setGraphic(learningPane);
             learningBtn.getStyleClass().add("side-btn");
-            learningBtn.setOnAction(event -> getCategory(event, "Learning"));
+            learningBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("518cfb98-b4a3-46c7-9533-e7cbb68e16f3"), learningLbl.getText())));
             //endregion
 
             //region [ - Fashion&Beauty Button - ]
@@ -325,7 +399,7 @@ public class LayoutController implements Initializable {
             fashionPane.getStyleClass().add("flow-pane");
             fashionBtn.setGraphic(fashionPane);
             fashionBtn.getStyleClass().add("side-btn");
-            fashionBtn.setOnAction(event -> getCategory(event, "Fashion"));
+            fashionBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("493a8465-40b6-4379-ae02-e302b797b6f9"), fashionLbl.getText())));
             //endregion
 
             //region [ - Podcasts Button - ]
@@ -339,7 +413,7 @@ public class LayoutController implements Initializable {
             podcastsPane.getStyleClass().add("flow-pane");
             podcastsBtn.setGraphic(podcastsPane);
             podcastsBtn.getStyleClass().add("side-btn");
-            podcastsBtn.setOnAction(event -> getCategory(event, "Podcasts"));
+            podcastsBtn.setOnAction(event -> getCategory(event, new Category(UUID.fromString("95e32988-1ee7-479a-9a1f-340bfc225893"), podcastsLbl.getText())));
             //endregion
 
             sideVbx.getChildren().addAll(trendingBtn, musicBtn, moviesBtn, gamingBtn, newsBtn, sportsBtn, learningBtn, fashionBtn, podcastsBtn);
@@ -358,12 +432,12 @@ public class LayoutController implements Initializable {
         }
     }
 
-
     //endregion
 
     //region [ - getCategory(ActionEvent event) - ]
-    private void getCategory(ActionEvent event, String category) {
+    private void getCategory(ActionEvent event, Category category) {
         setDefaultSvgs();
+        getCategoryPage(event, category);
     }
     //endregion
 
@@ -371,19 +445,13 @@ public class LayoutController implements Initializable {
 
     private void getPlaylist(ActionEvent event, String playlistName) {
         setDefaultSvgs();
+
     }
     //endregion
 
     //region [ - getHistoryPage(ActionEvent event) - ]
 
     private void getHistoryPage(ActionEvent event) {
-        setDefaultSvgs();
-    }
-    //endregion
-
-    //region [ - getYourChannelPage(ActionEvent event) - ]
-
-    private void getYourChannelPage(ActionEvent event) {
         setDefaultSvgs();
     }
     //endregion
@@ -397,6 +465,7 @@ public class LayoutController implements Initializable {
             signInSvg.setContent("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 1c4.96 0 9 4.04 9 9 0 1.42-.34 2.76-.93 3.96-1.53-1.72-3.98-2.89-7.38-3.03A3.996 3.996 0 0016 9c0-2.21-1.79-4-4-4S8 6.79 8 9c0 1.97 1.43 3.6 3.31 3.93-3.4.14-5.85 1.31-7.38 3.03C3.34 14.76 3 13.42 3 12c0-4.96 4.04-9 9-9zM9 9c0-1.65 1.35-3 3-3s3 1.35 3 3-1.35 3-3 3-3-1.35-3-3zm3 12c-3.16 0-5.94-1.64-7.55-4.12C6.01 14.93 8.61 13.9 12 13.9c3.39 0 5.99 1.03 7.55 2.98C17.94 19.36 15.16 21 12 21z");
             Label signInLbl = new Label();
             HBox signInHbx = new HBox();
+            signInHbx.setAlignment(Pos.CENTER);
 
             signInBtn.getStyleClass().add("signIn-btn");
             signInSvg.getStyleClass().add("signIn-svg");
@@ -419,7 +488,7 @@ public class LayoutController implements Initializable {
             Button createBtn = new Button();
             createBtn.getStyleClass().add("loggedIn-btn");
 
-            Button notificationsBtn = new Button();
+            notificationsBtn = new Button();
             notificationsBtn.getStyleClass().add("loggedIn-btn");
 
             Button accountBtn = new Button();
@@ -434,8 +503,15 @@ public class LayoutController implements Initializable {
             notificationsSvg.setContent("M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z");
             notificationsSvg.getStyleClass().add("notifications-svg");
 
-            Circle clip = new Circle(12, 12, 12);
-            Label accountImg = new Label();
+            Circle clip = new Circle(17, 17, 13);
+            ByteArrayInputStream bis;
+            bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
+            Image avatar = new Image(bis);
+            ImageView accountImg = new ImageView(avatar);
+
+            accountImg.fitWidthProperty().set(34);
+            accountImg.fitHeightProperty().set(34);
+
             accountImg.getStyleClass().add("account-img");
             accountImg.setClip(clip);
 
@@ -448,7 +524,19 @@ public class LayoutController implements Initializable {
             accountBtn.setTooltip(new Tooltip("Account Management"));
 
             createBtn.setOnAction(this::getCreatePage);
-            notificationsBtn.setOnAction(this::getNotificationsScene);
+
+            notificationsBtn.setOnAction(event -> {
+                getNotifications();
+                Bounds bounds = notificationsBtn.localToScreen(notificationsBtn.getBoundsInLocal());
+                popup.setX(bounds.getMinX() - 150);
+                popup.setY(bounds.getMinY() + bounds.getHeight());
+
+                if (popup.isShowing())
+                    popup.hide();
+                else
+                    popup.show((Stage) btnBurger.getScene().getWindow());
+            });
+
             accountBtn.setOnAction(this::getDashboard);
 
             hbxRightNavItem.getChildren().clear();
@@ -482,20 +570,47 @@ public class LayoutController implements Initializable {
 
     //endregion
 
-
     //region [ - setSubscriptionsSection(ActionEvent event) - ]
     @FXML
     void setSubscriptionsSection(ActionEvent event) {
         setDefaultSvgs();
         svgSubs.setContent("M20 7H4V6h16v1zm2 2v12H2V9h20zm-7 6-5-3v6l5-3zm2-12H7v1h10V3z");
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/subscription-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 
     //region [ - setYouSection(ActionEvent event) - ]
     @FXML
-    void setYouSection(ActionEvent event) {
+    protected void setYouSection(ActionEvent event) {
         setDefaultSvgs();
         svgYou.setContent("M4 20h14v1H3V6h1v14zM21 3v15H6V3h15zm-4 7.5L11 7v7l6-3.5z");
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/you-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 
@@ -503,22 +618,117 @@ public class LayoutController implements Initializable {
 
     protected void getDashboard(ActionEvent event) {
         setDefaultSvgs();
+
+        Request<User> videoRequest = new Request<>(YouTubeApplication.socket, "GetUserChannel");
+        videoRequest.send(new User(YouTubeApplication.user.getId()));
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+
     }
 
     //endregion
 
     //region [ - getNotificationsScene(ActionEvent event) - ]
-
-    protected void getNotificationsScene(ActionEvent event) {
+    protected void getNotifications() {
         setDefaultSvgs();
-    }
+        Gson gson = new Gson();
 
+        new Request<>(YouTubeApplication.socket, "GetUserNotifications").send(new User(YouTubeApplication.user.getId()));
+        Response<ArrayList<Notification>> notificationResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Notification>>>() {
+        }.getType());
+        ArrayList<Notification> notifications = notificationResponse.getBody();
+
+        VBox vbxNotifications = new VBox();
+        Text text = new Text("Notifications");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            vbxNotifications.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        } else {
+            vbxNotifications.setStyle("-fx-background-color: rgb(240, 240, 240);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(0,0,0); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        }
+        vbxNotifications.getChildren().add(text);
+
+        popup.getContent().clear();
+        popup.getContent().add(vbxNotifications);
+
+        for (var n : notifications) {
+            Label label = new Label(n.getMessage());
+            label.setId(n.getId().toString());
+            label.setOnMouseClicked(mouseEvent -> {
+                if (YouTubeApplication.theme.equals("Dark")) {
+                    label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                } else {
+                    label.setStyle("-fx-background-color: rgb(200, 200, 200);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                }
+                new Request<Notification>(YouTubeApplication.socket, "UpdateNotification").send(new Notification(UUID.fromString(label.getId()), true));
+                YouTubeApplication.receiveResponse();
+            });
+            if (n.isRead()) {
+                if (YouTubeApplication.theme.equals("Dark")) {
+                    label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                } else {
+                    label.setStyle("-fx-background-color: rgb(229, 229, 229);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-opacity: 0.5; -fx-cursor: DEFAULT;");
+                }
+            } else {
+                if (YouTubeApplication.theme.equals("Dark")) {
+                    label.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND");
+                } else {
+                    label.setStyle("-fx-background-color: rgb(204, 204, 204);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND");
+                }
+            }
+            vbxNotifications.getChildren().add(label);
+
+        }
+    }
+    //endregion
+
+    //region [ - changeMode(ActionEvent event) - ]
+    @FXML
+    protected void changeMode(ActionEvent event) {
+        if (btnMode.isSelected()) {
+            modeSvg.setContent("M12 22C10.93 22 9.86998 21.83 8.83998 21.48L7.41998 21.01L8.83998 20.54C12.53 19.31 15 15.88 15 12C15 8.12 12.53 4.69 8.83998 3.47L7.41998 2.99L8.83998 2.52C9.86998 2.17 10.93 2 12 2C17.51 2 22 6.49 22 12C22 17.51 17.51 22 12 22ZM10.58 20.89C11.05 20.96 11.53 21 12 21C16.96 21 21 16.96 21 12C21 7.04 16.96 3 12 3C11.53 3 11.05 3.04 10.58 3.11C13.88 4.81 16 8.21 16 12C16 15.79 13.88 19.19 10.58 20.89Z");
+            YouTubeApplication.theme = "Light";
+        } else {
+            modeSvg.setContent("M10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-15a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM1 9h2a1 1 0 1 1 0 2H1a1 1 0 0 1 0-2zm16 0h2a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2zm.071-6.071a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM5.757 14.243a1 1 0 0 1 0 1.414L4.343 17.07a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM4.343 2.929l1.414 1.414a1 1 0 0 1-1.414 1.414L2.93 4.343A1 1 0 0 1 4.343 2.93zm11.314 11.314l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 1 1 1.414-1.414z");
+            YouTubeApplication.theme = "Dark";
+        }
+
+        setMode();
+
+    }
     //endregion
 
     //region [ - getCreatePage(ActionEvent event) - ]
 
     protected void getCreatePage(ActionEvent event) {
         setDefaultSvgs();
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/create-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
 
     //endregion
@@ -545,7 +755,7 @@ public class LayoutController implements Initializable {
     //region [ - sendNotification(String text) - ]
 
     protected void sendNotification(String text) {
-        Notifications.create().text(text).hideAfter(Duration.seconds(2)).owner(hbxRightNavItem).position(Pos.BASELINE_RIGHT).threshold(3, Notifications.create().title("Notifications")).show();
+        Notifications.create().text(text).hideAfter(Duration.seconds(3)).owner(hbxRightNavItem).position(Pos.BASELINE_RIGHT).threshold(3, Notifications.create().title("Notifications")).show();
     }
 
 
@@ -557,18 +767,83 @@ public class LayoutController implements Initializable {
     }
     //endregion
 
-    //region [ -  - ]
-    public boolean getIsExpanded() {
-        return isExpanded;
-    }
-    //endregion
-
+    //region [ - setDefaultSvgs() - ]
     private void setDefaultSvgs() {
         svgHome.setContent("m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z");
         svgSubs.setContent("M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z");
         svgYou.setContent("m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z");
     }
+    //endregion
 
+    //region [ - getPlaylistPage(ActionEvent event) - ]
+    private void getWatchLaterPage(ActionEvent event) {
+        Gson gson = new Gson();
+
+        new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
+        Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
+        }.getType());
+        ArrayList<Playlist> playlists = playlistsResponse.getBody();
+
+        new Request<Playlist>(YouTubeApplication.socket, "GetPlaylist").send(new Playlist(playlists.getFirst().getId()));
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
+
+    //region [ - getCategoryPage(ActionEvent event, Category category) - ]
+    private void getCategoryPage(ActionEvent event, Category category) {
+        Gson gson = new Gson();
+        new Request<Category>(YouTubeApplication.socket, "GetCategoryVideos").send(category);
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
+
+    //region [ - search(ActionEvent event, String searchedText) - ]
+    private void search(ActionEvent event, String searchText) {
+        setDefaultSvgs();
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/search-section.fxml"));
+        try {
+            root = loader.load();
+            SearchSectionController searchSectionController = loader.getController();
+            searchSectionController.initialize(searchText);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        scene = new Scene(root, btnYou.getScene().getWidth(), btnYou.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
 
     //endregion
 

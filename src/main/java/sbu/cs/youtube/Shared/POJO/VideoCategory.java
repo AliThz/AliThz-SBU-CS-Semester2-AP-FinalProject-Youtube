@@ -16,6 +16,10 @@ public class VideoCategory {
         this.categoryId = categoryId;
     }
 
+    public VideoCategory(UUID categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public Video getVideo() {
         return video;
     }

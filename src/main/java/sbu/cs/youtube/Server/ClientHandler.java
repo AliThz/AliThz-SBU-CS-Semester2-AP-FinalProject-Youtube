@@ -10,6 +10,7 @@ import sbu.cs.youtube.Shared.Response;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ClientHandler implements Runnable {
 
@@ -138,6 +139,92 @@ public class ClientHandler implements Runnable {
             case "GetCommentLikesStatus":
                 getCommentLikesStatus();
                 break;
+            case "GetSubscription":
+                getSubscription();
+                break;
+            case "GetChannelVideos":
+                getChannelVideos();
+                break;
+            case "GetChannel":
+                getChannel();
+                break;
+            case "GetPlaylist":
+                GetPlaylist();
+                break;
+            case "GetUserPlaylists":
+                getUserPlaylists();
+                break;
+            case "GetUserPlaylistsBriefly":
+                getUserPlaylistsBriefly();
+                break;
+            case "AddVideoToPlaylist":
+                addVideoToPlaylist();
+                break;
+            case "GetLikedVideos":
+                getLikedVideos();
+                break;
+            case "GetHistory":
+                getHistory();
+                break;
+            case "GetUserVideos":
+                getUserVideos();
+                break;
+            case "GetVideoViewCount":
+                getVideoViewCount();
+                break;
+            case "CreateVideo":
+                createVideo();
+                break;
+            case "GetCategories":
+                getCategories();
+                break;
+            case "GetCategoryVideos":
+                getCategoryVideos();
+                break;
+            case "GetVideoCategories":
+                getVideoCategories();
+                break;
+            case "ChangeUserInfo":
+                changeUserInfo();
+                break;
+            case "CreatePlaylist":
+                createPlaylist();
+                break;
+            case "SearchVideo":
+                searchVideo();
+                break;
+            case "SearchChannel":
+                searchChannel();
+                break;
+            case "SearchPlaylist":
+                searchPlaylist();
+                break;
+            case "GetUserChannel":
+                getUserChannel();
+                break;
+            case "CreateNotification":
+                createNotification();
+                break;
+            case "CreateNotificationForSubscribers":
+                createNotificationForSubscribers();
+                break;
+            case "GetUserNotifications":
+                getUserNotifications();
+                break;
+            case "UpdateNotification" :
+                updateNotification();
+                break;
+            case "GetTrendingVideos" :
+                getTrendingVideos();
+                break;
+            case "DeleteVideo" :
+                deleteVideo();
+                break;
+            case "DeletePlaylist" :
+                deletePlaylist();
+                break;
+            default:
+                new Response<>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
     }
     //endregion
@@ -149,8 +236,8 @@ public class ClientHandler implements Runnable {
         Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<User> response;
 
-        User user = userRequest.getBody();
-        databaseManager.insertUser(user);
+        User requestedUser = userRequest.getBody();
+        User user = databaseManager.insertUser(requestedUser);
 
         response = new Response<>(client, userRequest.getType(), true, "Signed up successfully");
         response.send(user);
@@ -205,14 +292,14 @@ public class ClientHandler implements Runnable {
         if (user != null) {
             response = new Response<>(client, userRequest.getType(), true, "There is already a user with this email");
         } else {
-            response = new Response<>(client, userRequest.getType(), true, "User not found");
+            response = new Response<>(client, userRequest.getType(), true, "Available");
         }
 
         response.send(user);
     }
     //endregion
 
-    //region [ - GetRecommendedVideos() - ]
+    //region [ - getRecommendedVideos() - ]
     private void GetRecommendedVideos() {
         TypeToken<Request<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
         };
@@ -303,8 +390,7 @@ public class ClientHandler implements Runnable {
         if (userVideo.getLike() == null || !userVideo.getLike()) {
             requestedUserVideo.setLike(true);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video liked");
-        }
-        else {
+        } else {
             requestedUserVideo.setLike(null);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video unliked");
         }
@@ -327,7 +413,7 @@ public class ClientHandler implements Runnable {
         if (userVideo.getLike() == null || userVideo.getLike()) {
             requestedUserVideo.setLike(false);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video disliked");
-        } else{
+        } else {
             requestedUserVideo.setLike(null);
             response = new Response<>(client, userVideoRequest.getType(), true, "Video undisliked");
         }
@@ -419,23 +505,23 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
-    //region [ - getPlaylist - ]
+    //region [ - getVideo() - ]
     private void getVideo() {
         TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
         };
-        Request<Video> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
         Response<Video> response;
 
 
-        Video requestedVideo = userRequest.getBody();
+        Video requestedVideo = videoRequest.getBody();
         Video video;
 
         video = databaseManager.selectVideo(requestedVideo.getId());
 
         if (video != null) {
-            response = new Response<>(client, userRequest.getType(), true, "video received successfully");
+            response = new Response<>(client, videoRequest.getType(), true, "video received successfully");
         } else {
-            response = new Response<>(client, userRequest.getType(), true, "video not found");
+            response = new Response<>(client, videoRequest.getType(), true, "video not found");
         }
         response.send(video);
     }
@@ -468,6 +554,490 @@ public class ClientHandler implements Runnable {
         Response<Comment> response;
         response = new Response<>(client, commentRequest.getType(), true, "Comment likes status fetched");
         response.send(commentLikesStatus);
+    }
+    //endregion
+
+    //region [ - getSubscription() - ]
+    private void getSubscription() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectUserSubscriptionVideos(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "Subscription Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getChannelVideos() - ]
+
+    private void getChannelVideos() {
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        Channel channel = channelRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByChannel(channel.getId());
+
+        response = new Response<>(client, channelRequest.getType(), true, "ChannelVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getChannel() - ]
+    private void getChannel() {
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Channel> response;
+
+        Channel requestedChannel = channelRequest.getBody();
+        Channel channel;
+
+        channel = databaseManager.selectChannel(requestedChannel.getId());
+
+        if (channel != null) {
+            response = new Response<>(client, channelRequest.getType(), true, "channel received successfully");
+        } else {
+            response = new Response<>(client, channelRequest.getType(), true, "channel not found");
+        }
+        response.send(channel);
+    }
+    //endregion
+
+    //region [ - GetPlaylist() - ]
+    private void GetPlaylist() {
+        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Playlist> response;
+
+
+        Playlist requestedPlaylist = playlistRequest.getBody();
+        Playlist playlist;
+
+        playlist = databaseManager.selectPlaylist(requestedPlaylist.getId());
+
+        response = new Response<>(client, playlistRequest.getType(), true, "Playlist received successfully");
+        response.send(playlist);
+    }
+    //endregion
+
+    //region [ - getUserPlaylists() - ]
+    private void getUserPlaylists() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Playlist>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsBrieflyByUser(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "userPlaylists received successfully");
+        response.send(playlists);
+    }
+    //endregion
+
+    //region [ - addVideoToPlaylist() - ]
+    public void addVideoToPlaylist() {
+        TypeToken<Request<PlaylistDetail>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<PlaylistDetail> playlistDetailRequest = gson.fromJson(request, responseTypeToken.getType());
+        PlaylistDetail playlistDetail = playlistDetailRequest.getBody();
+
+        databaseManager.insertPlaylistDetail(playlistDetail);
+
+        Response<PlaylistDetail> response;
+        response = new Response<>(client, playlistDetailRequest.getType(), true, "Video Added");
+        response.send();
+    }
+    //endregion
+
+    //region [ - getLikedVideos() - ]
+
+    private void getLikedVideos() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectLikedVideos(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "LikedVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getHistory() - ]
+    private void getHistory() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectHistory(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "History Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getUserVideos() - ]
+    private void getUserVideos() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByCreator(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "UserVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - getVideoViewCount() - ]
+    private void getVideoViewCount() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Video requestedVideo = videoRequest.getBody();
+
+        Video videoViewCount = databaseManager.selectVideoViewCount(requestedVideo.getId());
+
+        Response<Video> response;
+        response = new Response<>(client, videoRequest.getType(), true, "Video View Count fetched");
+        response.send(videoViewCount);
+    }
+    //endregion
+
+    //region [ - createVideo() - ]
+    private void createVideo() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Video> response;
+
+        Video video = videoRequest.getBody();
+        String videoPath = "/Videos/" + video.getFileName();
+        try (FileOutputStream fos = new FileOutputStream("src/main/resources" + videoPath)) {
+            video.setPath(videoPath);
+            fos.write(video.getVideoBytes());
+            System.out.println("Video saved successfully to " + videoPath);
+        } catch (IOException e) {
+            System.err.println("Error while saving the video: " + e.getMessage());
+        }
+
+        String thumbnailPath = "/Images/" + video.getFileName().substring(0 , video.getFileName().length()-3) + "jpg" ;
+        try (FileOutputStream fos = new FileOutputStream("src/main/resources" + thumbnailPath)) {
+            video.setThumbnailPath(thumbnailPath);
+            fos.write(video.getThumbnailBytes());
+            System.out.println("Video saved successfully to " + thumbnailPath);
+        } catch (IOException e) {
+            System.err.println("Error while saving the video: " + e.getMessage());
+        }
+
+        databaseManager.insertVideo(video);
+        response = new Response<>(client, videoRequest.getType(), true, "Video created successfully");
+        response.send();
+    }
+    //endregion
+
+    //region [ - getCategories() - ]
+    private void getCategories() {
+        TypeToken<Request<ArrayList<Category>>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<ArrayList<Category>> categoriesRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Category>> response;
+
+        ArrayList<Category> categories = databaseManager.selectCategories();
+
+        response = new Response<>(client, categoriesRequest.getType(), true, "categories received successfully");
+        response.send(categories);
+    }
+    //endregion
+
+    //region [ - getCategoryVideos() - ]
+    private void getCategoryVideos() {
+        TypeToken<Request<Category>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Category> categoryRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Playlist> response;
+
+        Category category = categoryRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByCategory(category.getId());
+
+        Playlist categoryPlaylist = new Playlist();
+        categoryPlaylist.setTitle(category.getTitle());
+        categoryPlaylist.setPlaylistDetails(new ArrayList<>());
+        for (Video v : videos) {
+            categoryPlaylist.getPlaylistDetails().add(new PlaylistDetail(categoryPlaylist.getId(), v.getId(), v));
+        }
+
+        response = new Response<>(client, categoryRequest.getType(), true, "CategoryVideos Received Successfully");
+        response.send(categoryPlaylist);
+    }
+    //endregion
+
+    //region [ - getVideoCategories() - ]
+    private void getVideoCategories() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Category>> response;
+
+        Video video = videoRequest.getBody();
+        ArrayList<Category> videos = databaseManager.selectCategoriesByVideo(video.getId());
+
+        response = new Response<>(client, videoRequest.getType(), true, "VideoVideos Received Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - changeUserInfo() - ]
+    public void changeUserInfo() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        User user = userRequest.getBody();
+
+        if (user.getAvatarBytes() != null) {
+            String avatarPath = "/Images/" + user.getId() + ".jpg" ;
+            try (FileOutputStream fos = new FileOutputStream("src/main/resources" + avatarPath)) {
+                user.setAvatarPath(avatarPath);
+                fos.write(user.getAvatarBytes());
+                System.out.println("Video saved successfully to " + avatarPath);
+            } catch (IOException e) {
+                System.err.println("Error while saving the video: " + e.getMessage());
+            }
+        }
+
+        databaseManager.updateUser(user);
+        User updatedUser = databaseManager.selectUserBriefly(user.getId());
+
+        Response<User> response;
+        response = new Response<>(client, userRequest.getType(), true, "User Info Changed ");
+        response.send(updatedUser);
+    }
+    //endregion
+
+    //region [ - creatPlaylist() - ]
+    private void createPlaylist() {
+        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Playlist> response;
+
+        Playlist playlist = playlistRequest.getBody();
+
+        if (playlist.getThumbnailBytes() != null) {
+            String thumbnailPath = "/Images/" + playlist.getId() + ".jpg" ;
+            try (FileOutputStream fos = new FileOutputStream("src/main/resources" + thumbnailPath)) {
+                playlist.setThumbnailPath(thumbnailPath);
+                fos.write(playlist.getThumbnailBytes());
+                System.out.println("Video saved successfully to " + thumbnailPath);
+            } catch (IOException e) {
+                System.err.println("Error while saving the video: " + e.getMessage());
+            }
+        }
+
+        databaseManager.insertPlaylist(playlist);
+        response = new Response<>(client, playlistRequest.getType(), true, "Playlist created successfully");
+        response.send();
+    }
+    //endregion
+
+    //region [ - searchVideo() - ]
+
+    private void searchVideo() {
+        TypeToken<Request<String>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<String> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        String videoTitle = videoRequest.getBody();
+        ArrayList<Video> videos = databaseManager.selectVideosByTitle(videoTitle);
+
+        response = new Response<>(client, videoRequest.getType(), true, "Search For Video Successfully");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - searchChannel() - ]
+    private void searchChannel() {
+        TypeToken<Request<Channel>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Channel> channelRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Channel>> response;
+
+        Channel channel = channelRequest.getBody();
+        ArrayList<Channel> channels = databaseManager.selectChannelByTitle(channel.getTitle());
+
+        response = new Response<>(client, channelRequest.getType(), true, "Search For Channel Successfully");
+        response.send(channels);
+    }
+    //endregion
+
+    //region [ - searchChannel() - ]
+
+    private void searchPlaylist() {
+        TypeToken<Request<String>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<String> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Playlist>> response;
+
+        String searchText = playlistRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsByTitle(searchText);
+
+        response = new Response<>(client, playlistRequest.getType(), true, "Search For Playlist Successfully");
+        response.send(playlists);
+    }
+    //endregion
+
+    //region [ - getUserChannel() - ]
+    private void getUserChannel() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Channel> response;
+
+        User requestedUser = userRequest.getBody();
+        Channel channel;
+
+        channel = databaseManager.selectChannelByUser(requestedUser.getId());
+
+        if (channel != null) {
+            response = new Response<>(client, userRequest.getType(), true, "channel received successfully");
+        } else {
+            response = new Response<>(client, userRequest.getType(), true, "channel not found");
+        }
+        response.send(channel);
+    }
+    //endregion
+
+    //region [ - createNotification() - ]
+    private void createNotification() {
+        TypeToken<Request<Notification>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Notification> notificationRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Notification> response;
+
+        Notification notification = notificationRequest.getBody();
+
+        databaseManager.insertNotification(notification);
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification Received");
+        response.send();
+    }
+    //endregion
+
+    //region [ - createNotificationForSubscribers() - ]
+    private void createNotificationForSubscribers() {
+        TypeToken<Request<Notification>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Notification> notificationRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<Notification> response;
+
+        Notification notification = notificationRequest.getBody();
+
+        databaseManager.createNotificationForSubscribers(notification);
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification Received");
+        response.send();
+    }
+    //endregion
+
+    //region [ - getUserNotifications() - ]
+    private void getUserNotifications() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Notification>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Notification> notifications = databaseManager.selectNotificationsByUser(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "UserNotifications Received Successfully");
+        response.send(notifications);
+    }
+    //endregion
+
+    //region [ - updateNotification() - ]
+    public void updateNotification() {
+        TypeToken<Request<Notification>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Notification> notificationRequest = gson.fromJson(request, responseTypeToken.getType());
+        Notification notification = notificationRequest.getBody();
+
+        databaseManager.updateNotification(notification);
+
+        Response<Notification> response;
+        response = new Response<>(client, notificationRequest.getType(), true, "Notification Info Changed ");
+        response.send();
+    }
+    //endregion
+
+    //region [ - getUserPlaylists() - ]
+    private void getUserPlaylistsBriefly() {
+        TypeToken<Request<User>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<User> userRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Playlist>> response;
+
+        User user = userRequest.getBody();
+        ArrayList<Playlist> playlists = databaseManager.selectPlaylistsSoBrieflyByUser(user.getId());
+
+        response = new Response<>(client, userRequest.getType(), true, "userPlaylists received successfully");
+        response.send(playlists);
+    }
+    //endregion
+
+    //region [ - getTrendingVideos() - ]
+    private void getTrendingVideos() {
+        TypeToken<Request<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<ArrayList<Video>> videosRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        ArrayList<Video> videos = databaseManager.SelectTrendingVideos();
+
+        response = new Response<>(client, videosRequest.getType(), true, "Trending videos received  ");
+        response.send(videos);
+    }
+    //endregion
+
+    //region [ - deleteVideo - ]
+    public void deleteVideo() {
+        TypeToken<Request<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Video> videoRequest = gson.fromJson(request, responseTypeToken.getType());
+        Video video = videoRequest.getBody();
+
+        databaseManager.deleteVideo(video.getId());
+
+        Response<Video> response;
+        response = new Response<>(client, videoRequest.getType(), true, "Video Successfully deleted ");
+        response.send();
+    }
+    //endregion
+
+    //region [ - deletePlaylist - ]
+    public void deletePlaylist() {
+        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Playlist playlist = playlistRequest.getBody();
+
+        databaseManager.deletePlaylist(playlist.getId());
+
+        Response<Playlist> response;
+        response = new Response<>(client, playlistRequest.getType(), true, "Playlist Successfully deleted ");
+        response.send();
     }
     //endregion
 

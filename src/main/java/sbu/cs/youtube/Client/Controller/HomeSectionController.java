@@ -2,6 +2,7 @@ package sbu.cs.youtube.Client.Controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,6 +54,17 @@ public class HomeSectionController implements Initializable {
         layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
 
 
+        if (YouTubeApplication.user == null) {
+            return;
+        }
+
+        new Thread(() -> displayFeed(layoutController)).start();
+
+    }
+    //endregion
+
+    //region [ - displayFeed(LayoutController parentController) - ]
+    private void displayFeed(LayoutController parentController) {
         Request<ArrayList<Video>> userRequest = new Request<>(YouTubeApplication.socket, "GetRecommendedVideos");
         userRequest.send();
 
@@ -66,30 +78,33 @@ public class HomeSectionController implements Initializable {
         if (recommendedVideos == null) {
             return;
         }
-        for (var video : recommendedVideos) {
-            FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
-            VBox videoPreview;
+        Platform.runLater(() -> {
+            for (var video : recommendedVideos) {
+                FXMLLoader videoPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-preview.fxml"));
+                VBox videoPreview;
 
-            try {
+                try {
 //                layoutController.vbxLayout.prefHeightProperty().bind(mainPane.heightProperty());
-                videoPreview = videoPreviewLoader.load();
+                    videoPreview = videoPreviewLoader.load();
 //                videoPreview.prefWidthProperty().bind(mainPane.widthProperty().divide(6));
 //                videoPreview.prefHeightProperty().bind(mainPane.heightProperty().divide(6));
-                VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
-                if (videoPreviewController != null) {
-                    videoPreviewController.setVideo(video);
+                    VideoPreviewController videoPreviewController = videoPreviewLoader.getController();
+                    videoPreviewController.setParentController(parentController);
+                    if (videoPreviewController != null) {
+                        videoPreviewController.setVideo(video);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+
+                Button button = new Button();
+                button.getStyleClass().add("btn-video");
+                button.setGraphic(videoPreview);
+
+                button.setOnAction(event -> getVideo(event, video));
+                parentController.addToFlowPane(button);
             }
-
-            Button button = new Button();
-            button.getStyleClass().add("btn-video");
-            button.setGraphic(videoPreview);
-
-            button.setOnAction(event -> getVideo(event, video));
-            layoutController.addToFlowPane(button);
-        }
+        });
     }
     //endregion
 

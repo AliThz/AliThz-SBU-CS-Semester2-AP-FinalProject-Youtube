@@ -2,6 +2,7 @@ package sbu.cs.youtube.Shared;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import sbu.cs.youtube.Shared.POJO.Notification;
 
 import java.io.BufferedWriter;
@@ -56,15 +57,6 @@ public class Response<T> {
         write(jsonResponse);
     }
     //endregion
-
-//    //region [ - send(ArrayList<T> bodyList) - ]
-//    public void send(ArrayList<T> bodyList) {
-//        Gson gson = new Gson();
-//        this.bodyList = bodyList;
-//        String jsonResponse = gson.toJson(this);
-//        write(jsonResponse);
-//    }
-//    //endregion
 
     //region [ - Getters - ]
 

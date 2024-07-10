@@ -1,0 +1,121 @@
+.background {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.text {
+    -fx-text-fill: black;
+    -fx-fill: black;
+}
+
+.text-detail {
+    -fx-text-fill: rgb(50, 50, 50);
+    -fx-fill: rgb(50, 50, 50);
+}
+
+.btn-video {
+    -fx-background-color: white;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
+
+.btn-video:hover {
+    -fx-background-color: rgb(240,240,240);
+}
+
+.btn-video:pressed {
+    -fx-background-color: rgb(229,229,229);
+}
+
+.button-subscription {
+    -fx-background-color: rgb(240, 240, 240);
+    -fx-background-radius: 20;
+}
+
+.button-subscription:hover {
+    -fx-background-color: rgb(229,229,229);
+}
+
+.button-subscription:pressed {
+    -fx-background-color: rgb(204,204,204);
+}
+
+btn-upload {
+    -fx-background-color: transparent;
+}
+
+.svg {
+    -fx-fill: black;
+}
+
+/*--------------------------------------------------------------------------*/
+
+.dialog-pane {
+    -fx-background-color: rgb(255, 255, 255);
+    /*-fx-text-fill: black;*/
+    /*-fx-fill: black;*/
+}
+
+.text-field {
+    -fx-background-color: rgb(229, 229, 229);
+    -fx-text-fill: rgb(0, 0, 0);
+    -fx-prompt-text-fill: rgb(60,60,60);
+}
+
+.dlg-btn {
+    -fx-background-color: rgb(229,229,229);
+    -fx-text-fill: black;
+    -fx-alignment: center-left;
+}
+
+.dlg-btn:hover {
+    -fx-background-color: rgb(204,204,204);
+}
+
+.dlg-btn:pressed {
+    -fx-background-color: rgb(190,190,190);
+}
+
+/*--------------------------------------------------------------------------*/
+
+.tab-pane {
+    -fx-background-color: white;
+    -fx-border-color: white;
+    -fx-padding: 5px;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.tab-pane .tab-header-area .tab {
+    -fx-background-color: transparent;
+}
+
+.tab {
+    -fx-padding: 0 0 0 10;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+    -fx-fill: black;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: white
+}
+
+
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-text-fill: black;
+    -fx-fill: black;
+    -fx-background-color: transparent;
+    -fx-background-radius: 7 7 0 0;
+}
+.tab-pane .tab-header-area .tab:hover .tab-label {
+    -fx-background-color: rgb(229,229,229);
+}
+.tab-pane .tab-header-area .tab:selected .tab-label {
+    -fx-background-color: rgb(204,204,204);
+}
+

@@ -1,0 +1,57 @@
+.background {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.text {
+    -fx-text-fill: black;
+    -fx-fill: black;
+}
+
+.btn-view-all {
+    -fx-background-color: transparent;
+    -fx-border-color: rgb(204,204,204);
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-background-radius: 20;
+}
+
+.btn-view-all:hover {
+    -fx-background-color: rgb(240,240,240);
+}
+
+.btn-view-all:pressed {
+    -fx-background-color: rgb(229,229,229);
+}
+
+.scroll-pane {
+    -fx-background-color: white;
+    -fx-alignment: center;
+}
+
+.btn-view-channel {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20;
+    -fx-text-fill: black;
+}
+.btn-view-channel:hover {
+    -fx-background-color: rgb(204,204,204);
+}
+
+.btn-view-channel:pressed {
+    -fx-background-color: rgb(229,229,229);
+}
+
+.btn-video {
+    -fx-background-color: white;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
+
+.btn-video:hover {
+    -fx-background-color: rgb(240,240,240);
+}
+
+.btn-video:pressed {
+    -fx-background-color: rgb(229,229,229);
+}

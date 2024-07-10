@@ -45,6 +45,18 @@ public class User {
         viewedVideos = new ArrayList<>();
     }
 
+    public User(String fullName, String email, byte[] avatarBytes, String username, String password) {
+        this.fullName = fullName;
+        this.email = email;
+        this.avatarBytes = avatarBytes;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(UUID id) {
+        this.Id = id;
+    }
+
     public UUID getId() {
         return Id;
     }

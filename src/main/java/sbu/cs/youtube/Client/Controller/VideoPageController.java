@@ -2,52 +2,61 @@ package sbu.cs.youtube.Client.Controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.codec.digest.DigestUtils;
 import sbu.cs.youtube.Shared.POJO.*;
 import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
+import javax.imageio.ImageIO;
+
 public class VideoPageController implements Initializable {
 
     //region [ - Fields - ]
-
     private Video video;
 
     private ArrayList<Video> recommendedVideos;
 
     private Media media;
+    File newImage;
 
     private final ScrollPane recommendedVideosScrollPane = new ScrollPane();
     private final VBox vbxRecommendedVideos = new VBox();
@@ -80,9 +89,6 @@ public class VideoPageController implements Initializable {
 
     @FXML
     private Button btnBack;
-
-    @FXML
-    private Button btnPause;
 
     @FXML
     private Button btnPlayPause;
@@ -147,11 +153,26 @@ public class VideoPageController implements Initializable {
     @FXML
     private SVGPath svgDislike;
 
-    Boolean hasLiked = null;
+    @FXML
+    private ImageView imgAvatar;
 
-    MediaPlayer mediaPlayer;
-    MediaView mediaView;
+    private Boolean hasLiked = null;
 
+    private MediaPlayer mediaPlayer;
+
+    private MediaView mediaView;
+
+    private Slider volumeSlider;
+
+    private VBox videoStuff;
+
+    private StackPane videoStack;
+
+    private LayoutController parentController;
+
+    Popup popup = new Popup();
+
+    private boolean creatable;
 
     //endregion
 
@@ -160,6 +181,39 @@ public class VideoPageController implements Initializable {
     //region [ - initialize(URL location, ResourceBundle resources) - ]
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        //region [ - Bindings - ]
+        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getWidth));
+        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getHeight));
+        vbxLeft.prefWidthProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getWidth));
+        vbxLeft.prefHeightProperty().bind(videoScrollPane.viewportBoundsProperty().map(Bounds::getHeight));
+
+
+        hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
+        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0).add(30));
+        recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
+        vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        vbxRecommendedVideos.setSpacing(20);
+        vbxRecommendedVideos.getStyleClass().add("vbx-recommended-videos");
+        recommendedVideosScrollPane.getStyleClass().add("scroll-pane");
+        recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
+
+        //region [ - videoScrollPane - ]
+        videoScrollPane.getStyleClass().add("scroll-pane");
+        videoScrollPane.setFitToWidth(true);
+        videoScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
+        videoScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        videoScrollPane.setContent(vbxLeft);
+        videoScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        videoScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        hbx.getChildren().addAll(videoScrollPane, recommendedVideosScrollPane);
+        hbx.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
+        //endregion
+
+        //endregion
 
         //region [ - Video API - ]
         Gson gson = new Gson();
@@ -181,41 +235,175 @@ public class VideoPageController implements Initializable {
         UserVideo userVideo = userVideoResponse.getBody();
         System.out.println(userVideoResponse.getMessage());
 
-        if (userVideo != null)
-            hasLiked = userVideo.getLike();
+        if (userVideo != null) hasLiked = userVideo.getLike();
+
+        //todo set subscribe
+
         //endregion
+
+        if (video.getChannel().getCreatorId().equals(YouTubeApplication.user.getId())) {
+            btnSub.setVisible(false);
+        }
+
 
         setVideo();
-        setPlaybackButtons();
-        displayRecommendedVideos();
+        Thread mediaThread = new Thread(this::displayMedia);
+        mediaThread.start();
+        try {
+            mediaThread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+//        setPlaybackButtons();
+        new Thread(this::displayRecommendedVideos).start();
+//        displayRecommendedVideos();
+        new Thread(this::displayComments).start();
+//        displayComments();
 
-        //region [ - videoScrollPane - ]
-        videoScrollPane.getStyleClass().add("scroll-pane");
-        videoScrollPane.setFitToWidth(true);
-        videoScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0));
-        videoScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        videoScrollPane.setContent(vbxLeft);
-        videoScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        videoScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        hbx.getChildren().addAll(videoScrollPane, recommendedVideosScrollPane);
-        hbx.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        //endregion
+        anchrpnVideoPage.getStylesheets().clear();
+        anchrpnVideoPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-page.css")).toExternalForm());
+    }
+    //endregion
 
-        displayComments();
+    //region [ - setLikeCount() - ]
+    private void setLikeCount() {
+        Gson gson = new Gson();
+        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoLikesStatus");
+        videoRequest.send(new Video(video.getId()));
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+        video = videoResponse.getBody();
+
+        Platform.runLater(() -> {
+            txtViews.setText(String.valueOf(video.getViewCount()));
+            txtLikes.setText(String.valueOf(video.getLikes()));
+        });
+    }
+    //endregion
+
+    //region [ - setViewCount() - ]
+    private void setViewCount() {
+        Gson gson = new Gson();
+        Request<Video> videoRequest = new Request<>(YouTubeApplication.socket, "GetVideoViewCount");
+        videoRequest.send(new Video(video.getId()));
+        String response = YouTubeApplication.receiveResponse();
+        TypeToken<Response<Video>> responseTypeToken = new TypeToken<>() {
+        };
+        Response<Video> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+        video = videoResponse.getBody();
+
+        Platform.runLater(() -> {
+            txtViews.setText(String.valueOf(video.getViewCount()));
+        });
     }
     //endregion
 
     //region [ - displayMedia() - ]
-    private void displayMedia(Media media) {
+    private void displayMedia() {
 //        String videoPath = Paths.get("src/main/resources/Videos/Arcane2.mp4").toUri().toString();
 //        media = new Media(videoPath);
-        mediaPlayer = new MediaPlayer(media);
-        mediaView = new MediaView(mediaPlayer);
-        mediaView.setPreserveRatio(true);
-        mediaView.setSmooth(true);
-        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
-        vbxLeft.getChildren().addFirst(mediaView);
-        mediaPlayer.play();
+
+        File tempFile;
+        try {
+            tempFile = File.createTempFile("video", ".mp4");
+            tempFile.deleteOnExit();
+
+            // Write the byte array to the temporary file
+            try (FileOutputStream fos = new FileOutputStream(tempFile); ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = bais.read(buffer)) != -1) {
+                    fos.write(buffer, 0, length);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Create a Media object from the temporary file
+        media = new Media(tempFile.toURI().toString());
+
+        //region [ - Without Thread - ]
+//         mediaPlayer = new MediaPlayer(media);
+//        mediaView = new MediaView(mediaPlayer);
+//        mediaView.setPreserveRatio(true);
+//        mediaView.setSmooth(true);
+//        mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
+//        vbxLeft.getChildren().addFirst(mediaView);
+//        mediaPlayer.play();
+        //endregion
+
+        Platform.runLater(() -> {
+            mediaPlayer = new MediaPlayer(media);
+            mediaView = new MediaView(mediaPlayer);
+            mediaView.setPreserveRatio(true);
+            mediaView.setSmooth(true);
+            mediaView.fitWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 13.0 / 20.0).subtract(30));
+            videoStack = new StackPane();
+            videoStack.getChildren().add(mediaView);
+            vbxLeft.getChildren().addFirst(videoStack);
+            mediaPlayer.play();
+
+            setPlaybackButtons();
+
+            ByteArrayInputStream bis;
+            bis = new ByteArrayInputStream(YouTubeApplication.user.getAvatarBytes());
+            Image userProf = new Image(bis);
+            imgAvatar.setImage(userProf);
+
+            mediaView.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != oldScene) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.stop();
+                    }
+                }
+            });
+
+            //region [ -  - ]
+            SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
+
+            Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "CheckSubscriptionExistence");
+            subscriptionRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
+
+            String response = YouTubeApplication.receiveResponse();
+            Gson gson = new Gson();
+            TypeToken<Response<Subscription>> responseTypeToken = new TypeToken<>() {
+            };
+            Response<Subscription> subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
+            Subscription subscription = subscriptionResponse.getBody();
+
+            if (subscription != null) {
+                svgPath.setContent("M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z");
+                btnSub.setText("Subscribed");
+//                Request<Subscription> unsubRequest = new Request<>(YouTubeApplication.socket, "Unsubscribe");
+//                unsubRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
+
+            } else {
+                svgPath.setContent("m3.85 3.15-.7.7 3.48 3.48C6.22 8.21 6 9.22 6 10.32v5.15l-2 1.88V19h14.29l1.85 1.85.71-.71-17-16.99zM5 18v-.23l2-1.88v-5.47c0-.85.15-1.62.41-2.3L17.29 18H5zm5 2h4c0 1.1-.9 2-2 2s-2-.9-2-2zM9.28 5.75l-.7-.7c.43-.29.9-.54 1.42-.7v-.39c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v4.14l-1-1v-3.05c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03-.27.11-.51.24-.75.4z");
+                btnSub.setText("Unsubscribed");
+//                Request<Subscription> subRequest = new Request<>(YouTubeApplication.socket, "Subscribe");
+//                subRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
+            }
+//            YouTubeApplication.receiveResponse();
+            //endregion
+        });
+
+        btnSave.setOnAction(event -> {
+            save();
+            Bounds bounds = btnSave.localToScreen(btnSave.getBoundsInLocal());
+            popup.setX(bounds.getMinX() - 200);
+            popup.setY(bounds.getMinY() + bounds.getHeight());
+
+            if (popup.isShowing())
+                popup.hide();
+            else
+                popup.show((Stage) btnSave.getScene().getWindow());
+        });
+
     }
     //endregion
 
@@ -231,46 +419,38 @@ public class VideoPageController implements Initializable {
         Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
         recommendedVideos = videoResponse.getBody();
-        if (recommendedVideos != null) {
-            for (var v : recommendedVideos) {
-                if (video.getId().equals(v.getId())){
-                    continue;
-                }
-                FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
-                HBox videoRecommendation;
-                try {
-                    videoRecommendation = videoRecommendationLoader.load();
+        Platform.runLater(() -> {
+            if (recommendedVideos != null) {
+                for (var v : recommendedVideos) {
+                    if (video.getId().equals(v.getId())) {
+                        continue;
+                    }
+                    FXMLLoader videoRecommendationLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/video-recommendation.fxml"));
+                    HBox videoRecommendation;
+                    try {
+                        videoRecommendation = videoRecommendationLoader.load();
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     VideoRecommendationController videoRecommendationController = videoRecommendationLoader.getController();
                     if (videoRecommendationController != null) {
                         videoRecommendationController.setVideo(v);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+
+                    videoRecommendationController.setParentController(parentController);
+
+                    Button button = new Button();
+                    button.getStyleClass().add("btn-video");
+                    button.setGraphic(videoRecommendation);
+
+                    button.setOnAction(event -> getVideo(event, v));
+                    vbxRecommendedVideos.getChildren().add(button);
+                    VBox.setVgrow(videoRecommendation, Priority.ALWAYS);
                 }
-                Button button = new Button();
-                button.getStyleClass().add("btn-video");
-                button.setGraphic(videoRecommendation);
-
-                button.setOnAction(event -> getVideo(event, v));
-//                vbxRecommendedVideos.getChildren().add(videoRecommendation);
-                vbxRecommendedVideos.getChildren().add(button);
-                VBox.setVgrow(videoRecommendation, Priority.ALWAYS);
             }
-        }
+        });
 
-        hbx.prefWidthProperty().bind(anchrpnVideoPage.widthProperty());
-        vbxRecommendedVideos.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0).add(30));
-        recommendedVideosScrollPane.prefWidthProperty().bind(Bindings.multiply(anchrpnVideoPage.widthProperty(), 7.0 / 20.0));
-        vbxRecommendedVideos.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        recommendedVideosScrollPane.prefHeightProperty().bind(anchrpnVideoPage.heightProperty());
-        vbxRecommendedVideos.setSpacing(20);
-        vbxRecommendedVideos.getStyleClass().add("vbx-recommended-videos");
-
-
-        recommendedVideosScrollPane.getStyleClass().add("scroll-pane");
-        recommendedVideosScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        recommendedVideosScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        recommendedVideosScrollPane.setContent(vbxRecommendedVideos);
     }
     //endregion
 
@@ -296,7 +476,7 @@ public class VideoPageController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, anchrpnVideoPage.getScene().getWidth(), anchrpnVideoPage.getScene().getHeight());
+        scene = new Scene(root, vbxLeft.getScene().getWidth(), vbxLeft.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
     }
@@ -315,19 +495,41 @@ public class VideoPageController implements Initializable {
         video.setComments(commentsResponse.getBody());
         System.out.println(commentsResponse.getMessage());
 
-        vbxCommentSection.getChildren().remove(2, vbxCommentSection.getChildren().size());
-        for (var comment : video.getComments()) {
-            FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
-            Parent commentPreview;
-            try {
-                commentPreview = commentPreviewLoader.load();
-                CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
-                commentPreviewController.setComment(comment);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        //region [ - Without Thread - ]
+//        vbxCommentSection.getChildren().remove(2, vbxCommentSection.getChildren().size());
+//        for (var comment : video.getComments()) {
+//            FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
+//            Parent commentPreview;
+//            try {
+//                commentPreview = commentPreviewLoader.load();
+//                CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
+//                commentPreviewController.setComment(comment);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            vbxCommentSection.getChildren().add(commentPreview);
+//        }
+        //endregion
+
+//        vbxCommentSection.prefWidthProperty().bind(videoScrollPane.prefViewportWidthProperty());
+//        vbxCommentSection.prefHeightProperty().bind(videoScrollPane.prefViewportHeightProperty());
+
+        Platform.runLater(() -> {
+            vbxCommentSection.getChildren().remove(2, vbxCommentSection.getChildren().size());
+            for (var comment : video.getComments()) {
+                FXMLLoader commentPreviewLoader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/comment-preview.fxml"));
+                Parent commentPreview;
+                try {
+                    commentPreview = commentPreviewLoader.load();
+                    CommentPreviewController commentPreviewController = commentPreviewLoader.getController();
+                    commentPreviewController.setComment(comment);
+                    commentPreviewController.setParentController(parentController);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                vbxCommentSection.getChildren().add(commentPreview);
             }
-            vbxCommentSection.getChildren().add(commentPreview);
-        }
+        });
     }
     //endregion
 
@@ -338,14 +540,23 @@ public class VideoPageController implements Initializable {
         btnNext.setOnAction(this::next);
         btnVolume.setOnAction(this::volumeOff);
 
-        Slider timeSlider = new Slider();
+        Slider timeSlider = new Slider(0, 100, 0);
+
+        volumeSlider = new Slider(0, 100, 100);
+        volumeSlider.setOrientation(Orientation.HORIZONTAL);
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue() / 100 == 0) {
+                volumeOff(new ActionEvent());
+            } else volumeOn(new ActionEvent());
+            mediaPlayer.setVolume(newValue.doubleValue() / 100);
+        });
+        volumeSlider.getStyleClass().add("volumeSlider");
+        volumeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty().divide(12));
+
+
         timeSlider.prefWidthProperty().bind(mediaView.fitWidthProperty());
         timeSlider.prefHeightProperty().bind(mediaView.fitHeightProperty());
-        timeSlider.setMin(0);
-        timeSlider.setMax(100);
-        timeSlider.setValue(0);
         timeSlider.getStyleClass().add("timeSlider");
-
 
         // Create a ProgressBar
         ProgressBar progressBar = new ProgressBar(0);
@@ -373,8 +584,62 @@ public class VideoPageController implements Initializable {
             }
         });
 
+        Label currentTimeLabel = new Label("00:00");
+        Label totalTimeLabel = new Label("00:00");
 
-        hbxControls.getChildren().add(stackPane);
+        mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+            if (!timeSlider.isValueChanging()) {
+                timeSlider.setValue(newTime.toSeconds() / media.getDuration().toSeconds() * 100);
+            }
+            currentTimeLabel.setText(formatTime(newTime));
+        });
+
+        mediaPlayer.setOnReady(() -> {
+            Duration total = media.getDuration();
+            totalTimeLabel.setText(formatTime(total));
+        });
+
+        Button btnIncreaseSpeed = new Button("1.0x");
+        btnIncreaseSpeed.getStyleClass().add("btn-speed");
+        btnIncreaseSpeed.setOnAction(event -> {
+            double currentRate = mediaPlayer.getRate();
+            mediaPlayer.setRate(currentRate + 0.5);
+            if (mediaPlayer.getRate() > 2) mediaPlayer.setRate(0.5);
+            btnIncreaseSpeed.setText(mediaPlayer.getRate() + "x");
+        });
+
+        hbxControls.getChildren().add(4, volumeSlider);
+        HBox.setMargin(volumeSlider, new Insets(0, 10, 0, 0));
+        hbxControls.getChildren().addAll(currentTimeLabel, new Label(" / "), totalTimeLabel, new HBox(), btnIncreaseSpeed);
+        HBox.setHgrow(hbxControls.getChildren().get(8), Priority.ALWAYS);
+        videoStuff = new VBox(stackPane, hbxControls);
+        videoStuff.setAlignment(Pos.BOTTOM_CENTER);
+        videoStack.getChildren().add(videoStuff);
+        videoStack.setAlignment(Pos.CENTER);
+        videoStuff.setVisible(false);
+        videoStuff.setPadding(new Insets(0, 10, 0, 10));
+
+        videoStack.setOnMouseEntered(event -> {
+            videoStuff.setVisible(true);
+        });
+
+        videoStack.setOnMouseExited(event -> {
+            videoStuff.setVisible(false);
+        });
+
+        // Add key event handler to the scene
+        mediaView.getScene().setOnKeyPressed((KeyEvent event) -> {
+            if (event.getCode() == KeyCode.K) {
+                // Pause or play the video based on current status
+                if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                    mediaPlayer.pause();
+//                    pause(new ActionEvent());
+                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED || mediaPlayer.getStatus() == MediaPlayer.Status.READY || mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
+                    mediaPlayer.play();
+                }
+            }
+        });
+
         mediaPlayer.play();
 
     }
@@ -392,7 +657,10 @@ public class VideoPageController implements Initializable {
     //region [ - volumeOn(ActionEvent event) - ]
     private void volumeOn(ActionEvent event) {
         btnVolume.setOnAction(this::volumeOff);
-        mediaPlayer.setVolume(100);
+        if (volumeSlider.getValue() == 0) {
+            volumeSlider.setValue(20);
+        }
+        mediaPlayer.setVolume(volumeSlider.getValue() / 100);
         SVGPath svgPath = (SVGPath) btnVolume.getChildrenUnmodifiable().getFirst();
         svgPath.setContent("M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z");
     }
@@ -435,13 +703,18 @@ public class VideoPageController implements Initializable {
         txtVideoTitle.setText(video.getTitle());
         txtVideoDescription.setText(video.getDescription());
         txtChannelName.setText(video.getChannel().getTitle());
-        txtChannelSubscribres.setText(String.valueOf(video.getChannel().getSubscribers()));
+        txtChannelSubscribres.setText(String.valueOf(video.getChannel().getSubscriberCount()));
         LocalDateTime date = LocalDateTime.parse(video.getUploadDate());
         txtDate.setText(date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear());
-        txtViews.setText(String.valueOf(video.getViews()));
+        txtViews.setText(String.valueOf(video.getViewCount()));
         txtLikes.setText(String.valueOf(video.getLikes()));
 
-        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
+//        imgChannelProfile.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/ChannelProfile.png"))));
+        ByteArrayInputStream bis;
+        bis = new ByteArrayInputStream(video.getChannel().getCreator().getAvatarBytes());
+        Image videoThumbnail = new Image(bis);
+        imgChannelProfile.setImage(videoThumbnail);
+
 
         if (hasLiked == null) {
         } else if (hasLiked) {
@@ -450,31 +723,33 @@ public class VideoPageController implements Initializable {
             svgDislike.setContent("M18,4h3v10h-3V4z M5.23,14h4.23l-1.52,4.94C7.62,19.97,8.46,21,9.62,21c0.58,0,1.14-0.24,1.52-0.65L17,14V4H6.57 C5.5,4,4.59,4.67,4.38,5.61l-1.34,6C2.77,12.85,3.82,14,5.23,14z");
         }
 
+        //region [ - Getting Video Bytes - ]
+        //        File tempFile;
+//        try {
+//            tempFile = File.createTempFile("video", ".mp4");
+//            tempFile.deleteOnExit();
+//
+//            // Write the byte array to the temporary file
+//            try (FileOutputStream fos = new FileOutputStream(tempFile);
+//                 ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
+//                byte[] buffer = new byte[1024];
+//                int length;
+//                while ((length = bais.read(buffer)) != -1) {
+//                    fos.write(buffer, 0, length);
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//
+//        // Create a Media object from the temporary file
+//        Media media = new Media(tempFile.toURI().toString());
+//        displayMedia(media);
+//        displayMedia();
+        //endregion
 
-
-        File tempFile = null;
-        try {
-            tempFile = File.createTempFile("video", ".mp4");
-            tempFile.deleteOnExit();
-
-            // Write the byte array to the temporary file
-            try (FileOutputStream fos = new FileOutputStream(tempFile);
-                 ByteArrayInputStream bais = new ByteArrayInputStream(video.getVideoBytes())) {
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = bais.read(buffer)) != -1) {
-                    fos.write(buffer, 0, length);
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        // Create a Media object from the temporary file
-        Media media = new Media(tempFile.toURI().toString());
-        displayMedia(media);
 
     }
     //endregion
@@ -508,8 +783,14 @@ public class VideoPageController implements Initializable {
         }
 
         response = YouTubeApplication.receiveResponse();
+
         subscriptionResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(subscriptionResponse.getMessage());
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " subscribed your channel"));
+        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
+        };
+        response = YouTubeApplication.receiveResponse();
+        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
     }
     //endregion
 
@@ -526,10 +807,14 @@ public class VideoPageController implements Initializable {
             svgDislike.setContent(emptiedDislike);
             hasLiked = true;
             txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) + 1));
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " liked your video"));
+            YouTubeApplication.receiveResponse();
         } else if (hasLiked) {
             svgLike.setContent(emptiedLike);
             hasLiked = null;
             txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) - 1));
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " unliked your video"));
+            YouTubeApplication.receiveResponse();
         }
 
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "LikeVideo");
@@ -541,7 +826,6 @@ public class VideoPageController implements Initializable {
         };
         Response<UserVideo> userVideoResponse = gson.fromJson(response, responseTypeToken.getType());
         System.out.println(userVideoResponse.getMessage());
-
     }
     //endregion
 
@@ -558,9 +842,13 @@ public class VideoPageController implements Initializable {
             if (hasLiked != null && hasLiked)
                 txtLikes.setText(String.valueOf(Integer.parseInt(txtLikes.getText()) - 1));
             hasLiked = false;
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " disliked your video"));
+            YouTubeApplication.receiveResponse();
         } else if (!hasLiked) {
             svgDislike.setContent(emptiedDislike);
             hasLiked = null;
+            new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " undisliked your video"));
+            YouTubeApplication.receiveResponse();
         }
 
         Request<UserVideo> userVideoRequest = new Request<>(YouTubeApplication.socket, "DislikeVideo");
@@ -577,7 +865,64 @@ public class VideoPageController implements Initializable {
 
     //region [ - updateSave(ActionEvent event) - ]
     @FXML
-    private void updateSave(ActionEvent event) {
+    private void save() {
+        Gson gson = new Gson();
+        new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
+        Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
+        }.getType());
+        ArrayList<Playlist> playlists = playlistsResponse.getBody();
+
+        VBox vbxPlaylists = new VBox();
+        Text text = new Text("Add to Playlist");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        } else {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(240, 240, 240);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(0,0,0); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        }
+        vbxPlaylists.getChildren().add(text);
+
+        popup.getContent().clear();
+        popup.getContent().add(vbxPlaylists);
+
+        for (var p : playlists) {
+            Button button = new Button(p.getTitle());
+            button.setId(p.getId().toString());
+            if (YouTubeApplication.theme.equals("Dark")) {
+                button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            } else {
+                button.setStyle("-fx-background-color: rgb(200, 200, 200);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            }
+            button.setOnAction(event -> {
+                new Request<PlaylistDetail>(YouTubeApplication.socket, "AddVideoToPlaylist").send(new PlaylistDetail(UUID.fromString(button.getId()), video.getId()));
+                YouTubeApplication.receiveResponse();
+                popup.hide();
+            });
+            vbxPlaylists.getChildren().add(button);
+        }
+
+        Button btnCreatePlaylist = new Button("New Playlist");
+        SVGPath svgPath = new SVGPath();
+        svgPath.setContent("M20 12h-8v8h-1v-8H3v-1h8V3h1v8h8z");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            svgPath.setStyle("-fx-fill: black;-fx-scale-x: 1;-fx-scale-y: 1;");
+        } else {
+            svgPath.setStyle("-fx-fill: white;-fx-scale-x: 1;-fx-scale-y: 1;");
+        }
+        btnCreatePlaylist.setGraphic(svgPath);
+        if (YouTubeApplication.theme.equals("Dark")) {
+            btnCreatePlaylist.setStyle("-fx-background-color: rgb(176,176,176);-fx-background-radius:10;-fx-text-fill: rgb(0,0,0);-fx-fill: black; -fx-font-weight: bold;-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+        } else {
+            btnCreatePlaylist.setStyle("-fx-background-color: rgb(100,100,100);-fx-background-radius:10;-fx-text-fill: rgb(255,255,255);-fx-fill: white; -fx-font-weight: bold;-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+        }
+        vbxPlaylists.getChildren().add(btnCreatePlaylist);
+
+        btnCreatePlaylist.setOnAction(event -> {
+            showDialog();
+            popup.hide();
+        });
+
     }
     //endregion
 
@@ -587,7 +932,6 @@ public class VideoPageController implements Initializable {
         Request<Comment> commentRequest = new Request<>(YouTubeApplication.socket, "Comment");
         Comment comment = new Comment(txtComment.getText(), video.getId(), YouTubeApplication.user.getId(), null);
         commentRequest.send(comment);
-        txtComment.clear();
 
         String response = YouTubeApplication.receiveResponse();
         Gson gson = new Gson();
@@ -597,8 +941,179 @@ public class VideoPageController implements Initializable {
         System.out.println(commentResponse.getMessage());
 
         displayComments();
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " commented \"" + txtComment.getText() + "\" on your video"));
+        TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
+        };
+        response = YouTubeApplication.receiveResponse();
+        Response<Notification> notificationResponse = gson.fromJson(response, typeToken.getType());
+        txtComment.clear();
     }
     //endregion
+
+    //region [ - formatTime(Duration time) - ]
+    private String formatTime(Duration time) {
+        int minutes = (int) time.toMinutes();
+        int seconds = (int) time.toSeconds() % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+    //endregion
+
+    //region [ - setParentController(LayoutController layoutController) - ]
+    public void setParentController(LayoutController layoutController) {
+        this.parentController = layoutController;
+        EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
+
+        layoutController.btnMode.setOnAction(event -> {
+            if (existingHandler != null) {
+                existingHandler.handle(event);
+            }
+            anchrpnVideoPage.getStylesheets().clear();
+            anchrpnVideoPage.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/video-page.css")).toExternalForm());
+        });
+    }
+    //endregion
+
+    //region [ - getChannel(ActionEvent event) - ]
+    @FXML
+    private void getChannel(ActionEvent event) {
+        Request<Channel> videoRequest = new Request<>(YouTubeApplication.socket, "GetChannel");
+        videoRequest.send(new Channel(video.getChannelId()));
+
+        getChannelPage(event);
+    }
+    //endregion
+
+    //region [ - getChannelPage(ActionEvent event) - ]
+    private void getChannelPage(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/channel-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLeft.getScene().getWidth(), vbxLeft.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+    //endregion
+
+    //region [ - showDialog() - ]
+    private void showDialog() {
+        creatable = true;
+        Dialog<Playlist> dialog = new Dialog<>();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Create Playlist");
+
+        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/" + YouTubeApplication.theme + "/channel-page.css")).toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
+//        dialog.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/info.jpg")))));
+
+        // Set the button types
+        ButtonType updateButtonType = new ButtonType("Create", ButtonType.OK.getButtonData());
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonType.CANCEL.getButtonData());
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, cancelButtonType);
+
+        // Create the labels and fields
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField titleField = new TextField();
+        titleField.setPromptText("Title");
+        titleField.setText("");
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("Description");
+        descriptionField.setText("");
+        RadioButton isPublic = new RadioButton("Public");
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        Button uploadButton = new Button("Select Thumbnail", imageView);
+
+        uploadButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Thumbnail");
+            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            newImage = fileChooser.showOpenDialog(vbxLeft.getScene().getWindow());
+            if (newImage != null) {
+                imageView.setImage(new Image(newImage.toURI().toString()));
+            } else {
+                parentController.sendNotification("Please select a thumbnail");
+                creatable = false;
+            }
+        });
+
+        uploadButton.getStyleClass().add("dlg-btn");
+
+
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionField, 1, 1);
+        grid.add(new Label("Access:"), 0, 2);
+        grid.add(isPublic, 1, 2);
+        grid.add(new Label("Thumbnail:"), 0, 3);
+        grid.add(uploadButton, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setHeaderText(null); // Remove header text
+        dialog.setGraphic(null); // Remove header graphic if there is any
+
+        // Convert the result to a user object when the update button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), newImage == null ? null : convertImageToByteArray(newImage.getAbsolutePath()));
+            }
+            return null;
+        });
+
+
+//        Gson gson = new Gson();
+
+
+        // Show the dialog and update the user if the update button is clicked
+        dialog.showAndWait().ifPresent(createdPlaylist -> {
+            if (!creatable)
+                return;
+            if (createdPlaylist.getTitle().isEmpty()) {
+                parentController.sendNotification("Please enter a title");
+                return;
+            }
+            new Request<Playlist>(YouTubeApplication.socket, "CreatePlaylist").send(createdPlaylist);
+//            Response<User> userResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Playlist>(){}.getType());
+            YouTubeApplication.receiveResponse();
+        });
+    }
+    //endregion
+
+    //region [ - convertImageToByteArray(String imagePath, String type) - ]
+    private byte[] convertImageToByteArray(String imagePath) {
+        System.out.println("In ConvertImage Method");
+        byte[] imageBytes = null;
+        try {
+            // Load the image
+            File file = new File(imagePath);
+            BufferedImage bufferedImage = ImageIO.read(file);
+
+            // Convert BufferedImage to byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            baos.flush();
+            imageBytes = baos.toByteArray();
+            baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("End of ConvertImage Method");
+        return imageBytes;
+    }
+    //endregion
+
 
     //endregion
 

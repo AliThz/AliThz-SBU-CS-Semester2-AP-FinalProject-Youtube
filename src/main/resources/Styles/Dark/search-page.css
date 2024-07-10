@@ -1,0 +1,98 @@
+.background {
+    -fx-background-color : black;
+    -fx-border-width: 0px;
+    -fx-border-color : black;
+}
+
+.tab-pane {
+    -fx-background-color: rgb(0, 0, 0);
+    -fx-border-color: rgb(0, 0, 0);
+    -fx-padding: 5px;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: rgb(0, 0, 0);
+    -fx-border-color: rgb(0, 0, 0);
+}
+
+.tab-pane .tab-header-area .tab {
+    -fx-background-color: transparent;
+    /*-fx-background-color: rgb(0,0,0);*/
+}
+
+.tab {
+    -fx-padding: 0 0 0 10;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgb(0, 0, 0);
+    -fx-fill: rgb(0, 0, 0); /* Change this to your desired color */
+    /*-fx-background-color: rgb(0,0,0);*/
+}
+
+/* Change the background color of the tab header */
+.tab-pane .tab-header-background {
+    -fx-background-color: rgb(0, 0, 0); /* Change this to your desired color */
+}
+
+/*.tab-pane .tab-header-area {*/
+/*    -fx-text-fill: #336699; !* Change this to your desired color *!*/
+/*}*/
+/* Change the text color of all tab labels */
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-text-fill: rgb(255, 255, 255); /* Change this to your desired color */
+    -fx-fill: rgb(255, 255, 255); /* Change this to your desired color */
+    -fx-background-color: transparent;
+    -fx-background-radius: 7 7 0 0;
+}
+.tab-pane .tab-header-area .tab:hover .tab-label {
+    -fx-background-color: rgb(33,33,33);
+}
+.tab-pane .tab-header-area .tab:selected .tab-label {
+    -fx-background-color: rgb(41,41,41);
+}
+
+/*!* Optionally, change the text color of the selected tab label *!*/
+/*.tab-pane .tab-header-area .tab:selected .tab-label {*/
+/*    -fx-text-fill: #ff0000; !* Change this to your desired color *!*/
+/*    !*-fx-background-color: rgb(0,0,0);*!*/
+
+/*}*/
+
+/*.tab-pane .tab-header-area .tab-label {*/
+/*    -fx-text-fill: #336699; !* Change the text color to ensure visibility *!*/
+/*}*/
+
+
+
+.scroll-pane {
+    -fx-background-color: black;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: gray;
+    -fx-background-radius: 10;
+    -fx-pref-width: 15;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .increment-button {
+    -fx-background-color: rgb(0,0,0);
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+
+.scroll-bar .decrement-button {
+    -fx-background-color: rgb(0,0,0);
+    -fx-shape: "M 0 4 L 4 0 L 8 4 Z";
+}
+
+.scroll-bar .increment-arrow {
+    -fx-background-color: #000;
+}
+
+.scroll-bar .decrement-arrow {
+    -fx-background-color: #000;
+}

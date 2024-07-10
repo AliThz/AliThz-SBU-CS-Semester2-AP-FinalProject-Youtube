@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="vbxContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/sign-up-dark.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.SignUpController">
+<VBox fx:id="vbxContainer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/Light/sign-up.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.SignUpController">
    <children>
       <HBox prefHeight="392.0" prefWidth="659.0" styleClass="foreground">
          <children>
@@ -26,12 +26,12 @@
                         <SVGPath content="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z" styleClass="google-svg-1" />
                      </children>
                   </AnchorPane>
-                  <Label fx:id="lblTitle" prefHeight="42.0" prefWidth="367.0" text="Create a Google Account" textFill="WHITE">
+                  <Label fx:id="lblTitle" prefHeight="42.0" prefWidth="367.0" styleClass="menu-guide" text="Create a Google Account" textFill="WHITE">
                      <font>
                         <Font name="Open Sans SemiBold" size="20.0" />
                      </font>
                   </Label>
-                  <Text fx:id="txtDescription" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter your name and birthday" wrappingWidth="288.3152542114258">
+                  <Text fx:id="txtDescription" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="menu-guide" text="Enter your name and birthday" wrappingWidth="288.3152542114258">
                      <font>
                         <Font name="Open Sans Light" size="15.0" />
                      </font>
@@ -47,7 +47,7 @@
                         <Font size="18.0" />
                      </font>
                   </TextField>
-                  <DatePicker fx:id="birthDatePicker" prefHeight="48.0" prefWidth="272.0" promptText="Your Birthday" styleClass="date-picker1" stylesheets="@../../../Styles/sign-up-dark.css" />
+                  <DatePicker fx:id="birthDatePicker" prefHeight="48.0" prefWidth="272.0" promptText="Your Birthday" styleClass="date-picker" />
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0" prefWidth="247.0" VBox.vgrow="ALWAYS">
                      <children>
                         <Label prefHeight="30.0" prefWidth="96.0" text="Have an account?" textFill="WHITE" />

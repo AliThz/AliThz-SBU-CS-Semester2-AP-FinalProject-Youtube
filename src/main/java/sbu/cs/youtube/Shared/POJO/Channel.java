@@ -1,8 +1,6 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class Channel {
@@ -11,21 +9,24 @@ public class Channel {
     private UUID creatorId;
     private String title;
     private String description;
-    private int subscribers;
     private String profilePath;
     private byte[] profileBytes;
     private String dateCreated;
     private ArrayList<Subscription> subscriptions;
-
+    private int subscriberCount;
+    private int videoCounts;
     public Channel() {
         subscriptions = new ArrayList<>();
     }
-
     public Channel(UUID creatorId, String title) {
         Id = UUID.randomUUID();
         this.creatorId = creatorId;
         this.title = title;
         subscriptions = new ArrayList<>();
+    }
+
+    public Channel(UUID id) {
+        this.Id = id ;
     }
 
     public UUID getId() {
@@ -68,12 +69,12 @@ public class Channel {
         this.description = description;
     }
 
-    public int getSubscribers() {
-        return subscribers;
+    public int getSubscriberCount() {
+        return subscriberCount;
     }
 
-    public void setSubscribers(int subscribers) {
-        this.subscribers = subscribers;
+    public void setSubscriberCount(int subscriberCount) {
+        this.subscriberCount = subscriberCount;
     }
 
     public String getProfilePath() {
@@ -106,5 +107,13 @@ public class Channel {
 
     public void setSubscriptions(ArrayList<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
+    }
+
+    public int getVideoCounts() {
+        return videoCounts;
+    }
+
+    public void setVideoCounts(int videoCounts) {
+        this.videoCounts = videoCounts;
     }
 }

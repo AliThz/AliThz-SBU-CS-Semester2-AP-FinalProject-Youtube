@@ -1,6 +1,5 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -10,18 +9,18 @@ public class Video {
     private transient String thumbnailPath ;
     private byte[] thumbnailBytes;
     private transient String path;
-    private byte[] videoBytes ;
+    private byte[] videoBytes;
     private String description;
     private Channel channel;
     private UUID channelId;
-    private int views;
     private String uploadDate;
     private ArrayList<VideoCategory> categories;
     private ArrayList<UserVideo> viewers;
     private ArrayList<Comment> comments;
-
+    private int viewCount;
     private int likes;
     private int dislikes;
+    private String fileName ;
 
     public Video() {
         Id = UUID.randomUUID();
@@ -39,13 +38,25 @@ public class Video {
         this.comments = new ArrayList<>();
     }
 
-    public Video(String title, String description, UUID channelId, int views, String uploadDate) {
+    public Video(String title, String description, UUID channelId, int viewcount, String uploadDate) {
         Id = UUID.randomUUID();
         this.title = title;
         this.description = description;
         this.channelId = channelId;
-        this.views = views;
+        this.viewCount = viewcount;
         this.uploadDate = uploadDate;
+    }
+
+    public Video(String title, byte[] thumbnailBytes, byte[] videoBytes, String description, UUID creatorId, ArrayList<VideoCategory> categories, String fileName) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.thumbnailBytes = thumbnailBytes;
+        this.videoBytes = videoBytes;
+        this.description = description;
+        this.channel = new Channel();
+        this.channel.setCreatorId(creatorId);
+        this.categories = categories;
+        this.fileName = fileName;
     }
 
     public Video(UUID id) {
@@ -100,12 +111,12 @@ public class Video {
         this.channelId = channelId;
     }
 
-    public int getViews() {
-        return views;
+    public int getViewCount() {
+        return viewCount;
     }
 
-    public void setViews(int views) {
-        this.views = views;
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
     }
 
     public String getUploadDate() {
@@ -178,5 +189,13 @@ public class Video {
 
     public void setDislikes(int dislikes) {
         this.dislikes = dislikes;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

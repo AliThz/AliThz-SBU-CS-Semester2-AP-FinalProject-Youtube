@@ -1,0 +1,134 @@
+.background {
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
+
+.text {
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-fill: rgb(255, 255, 255);
+    /*-fx-text-fill: rgb(0, 0, 0);*/
+    /*-fx-fill: rgb(0, 0, 0);*/
+}
+
+.text-detail {
+    -fx-text-fill: rgb(200, 200, 200);
+    -fx-fill: rgb(200, 200, 200);
+}
+
+.btn-video {
+    -fx-background-color: black;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
+
+.btn-video:hover {
+    -fx-background-color: rgb(33, 33, 33);
+}
+
+.btn-video:pressed {
+    -fx-background-color: rgb(41, 41, 41);
+}
+
+.button-subscription {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 20;
+}
+
+.button-subscription:hover {
+    -fx-background-color: rgb(41, 41, 41);
+}
+
+.button-subscription:pressed {
+    -fx-background-color: rgb(50, 50, 50);
+}
+
+btn-upload {
+    -fx-background-color: transparent;
+}
+
+.svg {
+    -fx-fill: rgb(255, 255, 255);
+}
+
+/*--------------------------------------------------------------------------*/
+
+.dialog-pane {
+    -fx-background-color: rgb(0, 0, 0);
+    /*-fx-text-fill: black;*/
+    /*-fx-fill: black;*/
+}
+
+.text-field {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-prompt-text-fill: rgb(150,150,150);
+}
+
+.dlg-btn {
+    -fx-background-color: rgb(33,33,33);
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+}
+
+.dlg-btn:hover {
+    -fx-background-color: rgb(41,41,41);
+}
+
+.dlg-btn:hover {
+    -fx-background-color: rgb(60,60,60);
+}
+
+/*--------------------------------------------------------------------------*/
+
+.label {
+    -fx-text-fill: rgb(0, 0, 0);
+}
+
+.tab-pane {
+    -fx-background-color: rgb(0, 0, 0);
+    -fx-border-color: rgb(0, 0, 0);
+    -fx-padding: 5px;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: rgb(0, 0, 0);
+    -fx-border-color: rgb(0, 0, 0);
+}
+
+.tab-pane .tab-header-area .tab {
+    -fx-background-color: transparent;
+    /*-fx-background-color: rgb(0,0,0);*/
+}
+
+.tab {
+    -fx-padding: 0 0 0 10;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-fill: white; /* Change this to your desired color */
+    /*-fx-background-color: rgb(0,0,0);*/
+}
+
+/* Change the background color of the tab header */
+.tab-pane .tab-header-background {
+    -fx-background-color: rgb(0, 0, 0); /* Change this to your desired color */
+}
+
+/*.tab-pane .tab-header-area {*/
+/*    -fx-text-fill: #336699; !* Change this to your desired color *!*/
+/*}*/
+/* Change the text color of all tab labels */
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-text-fill: rgb(255, 255, 255); /* Change this to your desired color */
+    -fx-fill: rgb(255, 255, 255); /* Change this to your desired color */
+    -fx-background-color: transparent;
+    -fx-background-radius: 7 7 0 0;
+}
+
+.tab-pane .tab-header-area .tab:hover .tab-label {
+    -fx-background-color: rgb(33, 33, 33);
+}
+
+.tab-pane .tab-header-area .tab:selected .tab-label {
+    -fx-background-color: rgb(41, 41, 41);
+}

@@ -1,0 +1,53 @@
+.vbx-video-preview {
+    -fx-alignment : top-center;
+    -fx-background-color : white;
+    -fx-padding: 0;
+    -fx-pref-width: 260;
+    -fx-pref-height: 240;
+    -fx-spacing: 5;
+}
+
+
+.hbx-video-details {
+    -fx-alignment : top-center;
+    -fx-padding: 0 10;
+    -fx-spacing: 5;
+    -fx-background-color:transparent;
+}
+
+.vbx-text-details {
+    -fx-alignment: top-left;
+    -fx-background-color:transparent;
+}
+
+.add-btn {
+    -fx-background-color : transparent;
+    -fx-background-radius : 100;
+}
+
+.add-btn:hover {
+    -fx-background-color : rgb(229, 229, 229);
+}
+.add-btn:pressed {
+    -fx-background-color : rgb(204, 204, 204);
+}
+
+.btn-video {
+    -fx-background-color: white;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
+
+.text {
+    -fx-fill: black;
+}
+
+.add-svg {
+    -fx-fill: black;
+}
+
+.btn-channel {
+    -fx-background-color : transparent;
+    -fx-background-radius : 100;
+    -fx-text-fill: rgb(50,50,50);
+}

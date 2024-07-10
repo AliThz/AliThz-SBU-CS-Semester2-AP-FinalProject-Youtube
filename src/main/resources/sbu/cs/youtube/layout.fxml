@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -14,13 +15,13 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbxLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.LayoutController">
+<VBox fx:id="vbxLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" styleClass="background" stylesheets="@../../../Styles/Dark/nav-bar.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.LayoutController">
    <children>
-      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="939.0" spacing="5.0" styleClass="background" stylesheets="@../../../Styles/nav-bar-dark.css">
+      <HBox fx:id="hbxNavBar" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="939.0" spacing="5.0" styleClass="background">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="253.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="btnBurger" mnemonicParsing="false" onAction="#openSesame" styleClass="burger-btn">
+                  <Button fx:id="btnBurger" mnemonicParsing="false" onAction="#openSesame" prefHeight="34.0" prefWidth="27.0" styleClass="burger-btn">
                      <tooltip>
                         <Tooltip text="Expand">
                            <font>
@@ -32,7 +33,7 @@
                         <SVGPath content="M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z" styleClass="burger-svg" />
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="134.0" style="-fx-background-color: transparent;">
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="105.0" style="-fx-background-color: transparent;">
                      <graphic>
                         <AnchorPane prefHeight="22.0" prefWidth="86.0">
                            <children>
@@ -61,14 +62,14 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="476.0" spacing="10.0" styleClass="search-bar" HBox.hgrow="ALWAYS">
+            <HBox fx:id="searchHbx" alignment="CENTER" prefHeight="45.0" prefWidth="476.0" spacing="10.0" styleClass="search-bar" HBox.hgrow="ALWAYS">
                <children>
-                  <TextField prefHeight="37.0" prefWidth="335.0" promptText="Search" styleClass="search-field" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="searchField" prefHeight="37.0" prefWidth="335.0" promptText="Search" styleClass="search-field" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" styleClass="search-btn" HBox.hgrow="ALWAYS">
+                  <Button fx:id="btnSearch" mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" styleClass="search-btn" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="6.0" />
                      </font>
@@ -94,6 +95,10 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
+            <ToggleButton fx:id="btnMode" mnemonicParsing="false" onAction="#changeMode" prefHeight="34.0" prefWidth="34.0" styleClass="modeSwitch">
+               <graphic>
+                  <SVGPath fx:id="modeSvg" content="M10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-15a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM1 9h2a1 1 0 1 1 0 2H1a1 1 0 0 1 0-2zm16 0h2a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2zm.071-6.071a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM5.757 14.243a1 1 0 0 1 0 1.414L4.343 17.07a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM4.343 2.929l1.414 1.414a1 1 0 0 1-1.414 1.414L2.93 4.343A1 1 0 0 1 4.343 2.93zm11.314 11.314l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 1 1 1.414-1.414z" fill="WHITE" styleClass="mode-svg" />
+               </graphic></ToggleButton>
             <HBox fx:id="hbxRightNavItem" alignment="CENTER_RIGHT" prefHeight="82.0" prefWidth="244.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -104,7 +109,7 @@
          </padding></HBox>
       <HBox fx:id="hbxContent" prefHeight="467.0" prefWidth="939.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="vbxSideBar" prefHeight="458.0" prefWidth="76.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/side-bar-collapsed-dark.css">
+            <VBox fx:id="vbxSideBar" prefHeight="458.0" prefWidth="76.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/side-bar-collapsed.css">
                <children>
                   <Button mnemonicParsing="false" onAction="#setHomeSection" prefHeight="46.0" prefWidth="52.0" styleClass="side-btn">
                      <graphic>
@@ -183,14 +188,26 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            <Separator orientation="VERTICAL" prefHeight="466.0" prefWidth="0.0" styleClass="separator-vertical" stylesheets="@../../../Styles/side-bar-expanded-dark.css">
+            <Separator orientation="VERTICAL" prefHeight="466.0" prefWidth="0.0" styleClass="separator-vertical" stylesheets="@../../../Styles/Dark/side-bar-expanded.css">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </Separator>
-            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="466.0" prefWidth="718.0" stylesheets="@../../../Styles/home-section-dark.css" HBox.hgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="466.0" prefWidth="718.0" stylesheets="@../../../Styles/Dark/home-section.css" HBox.hgrow="ALWAYS">
                <content>
-                  <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="850.0" styleClass="flwpane" />
+                  <FlowPane fx:id="flowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="850.0" styleClass="flwpane">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="94.0" prefWidth="406.0" styleClass="vbx-welcome">
+                           <children>
+                              <Label prefHeight="58.0" prefWidth="262.0" styleClass="lbl-welcome" text="Try signing in to get started" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label styleClass="lbl-guide" text="Then start watching videos to help us build a feed of videos you'll love." textFill="WHITE" />
+                           </children>
+                        </VBox>
+                     </children></FlowPane>
                </content>
             </ScrollPane>
          </children>
