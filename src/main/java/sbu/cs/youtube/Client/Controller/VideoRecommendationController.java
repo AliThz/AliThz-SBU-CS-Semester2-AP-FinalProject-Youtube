@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -140,6 +141,28 @@ public class VideoRecommendationController implements Initializable {
             vbxPlaylists.getChildren().add(button);
         }
 
+        Button btnCreatePlaylist = new Button("New Playlist");
+        SVGPath svgPath = new SVGPath();
+        svgPath.setContent("M20 12h-8v8h-1v-8H3v-1h8V3h1v8h8z");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            svgPath.setStyle("-fx-fill: black;-fx-scale-x: 1;-fx-scale-y: 1;");
+        }
+        else {
+            svgPath.setStyle("-fx-fill: white;-fx-scale-x: 1;-fx-scale-y: 1;");
+        }
+        btnCreatePlaylist.setGraphic(svgPath);
+        if (YouTubeApplication.theme.equals("Dark")) {
+            btnCreatePlaylist.setStyle("-fx-background-color: rgb(176,176,176);-fx-background-radius:10;-fx-text-fill: rgb(0,0,0);-fx-fill: black; -fx-font-weight: bold;-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+        } else {
+            btnCreatePlaylist.setStyle("-fx-background-color: rgb(100,100,100);-fx-background-radius:10;-fx-text-fill: rgb(255,255,255);-fx-fill: white; -fx-font-weight: bold;-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+        }
+        vbxPlaylists.getChildren().add(btnCreatePlaylist);
+
+        btnCreatePlaylist.setOnAction(event -> {
+            showDialog();
+            popup.hide();
+        });
+
     }
 
     //region [ - addThumbnail(String src) - ]
@@ -225,11 +248,9 @@ public class VideoRecommendationController implements Initializable {
         descriptionField.setText("");
         RadioButton isPublic = new RadioButton("Public");
         ImageView imageView = new ImageView();
-//        ImageView imageView = new ImageView(avatar);
-//        imageView.setFitWidth(100);
-//        imageView.setFitHeight(100);
-//        Button uploadButton = new Button("", imageView);
-        Button uploadButton = new Button("Select Thumbnail");
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        Button uploadButton = new Button("Select Thumbnail", imageView);
 
 
         uploadButton.setOnAction(event -> {
@@ -238,9 +259,11 @@ public class VideoRecommendationController implements Initializable {
             FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
             fileChooser.getExtensionFilters().add(extensionFilter);
             newImage = fileChooser.showOpenDialog(hbxVideoRecommendation.getScene().getWindow());
-            imageView.setImage(new Image(newImage.toURI().toString()));
+            if (newImage != null) {
+                imageView.setImage(new Image(newImage.toURI().toString()));
+            }
         });
-        uploadButton.getStyleClass().add("btn-upload");
+        uploadButton.getStyleClass().add("dlg-btn");
 
         grid.add(new Label("Title:"), 0, 0);
         grid.add(titleField, 1, 0);
@@ -271,6 +294,7 @@ public class VideoRecommendationController implements Initializable {
 //            Response<User> userResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Playlist>(){}.getType());
             YouTubeApplication.receiveResponse();
         });
+
     }
     //endregion
 

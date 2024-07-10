@@ -174,7 +174,7 @@ public class PlaylistPageController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, hbxPlaylistPage.getScene().getWidth(), hbxPlaylistPage.getScene().getHeight());
+        scene = new Scene(root, 1920, 1080);
         stage.setScene(scene);
         stage.show();
     }
