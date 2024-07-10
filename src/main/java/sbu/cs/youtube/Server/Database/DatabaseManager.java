@@ -1751,23 +1751,6 @@ public class DatabaseManager {
                 video.setVideoBytes(convertVideoToByteArray(video.getPath()));
             }
 
-            stmt = c.prepareStatement("""
-                SELECT
-                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ? AND "Like" = true) AS "VideoLikes",
-                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ? AND "Like" = false) AS "VideoDislikes",
-                    (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = ?) AS "VideoViewCount"
-                """);
-            stmt.setObject(1, Id);
-            stmt.setObject(2, Id);
-            stmt.setObject(3, Id);
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                video.setLikes(rs.getInt("VideoLikes"));
-                video.setDislikes(rs.getInt("VideoDislikes"));
-                video.setViewCount(rs.getInt("VideoViewCount"));
-            }
-
             rs.close();
             stmt.close();
             c.close();
@@ -2793,15 +2776,21 @@ public class DatabaseManager {
         PreparedStatement stmt;
         ArrayList<Comment> comments = null;
         try {
-
             System.out.println("Opened database successfully (selectComments(base on videoId))");
             c = DriverManager.getConnection(URL, USER, PASSWORD);
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM "ContentManagement"."Comment" 
-                    WHERE "VideoId" = ?;
-                    """);
+                SELECT c.*, COALESCE(likes.CommentLikes, 0) AS CommentLikes
+                FROM "ContentManagement"."Comment" c
+                LEFT JOIN (
+                    SELECT "CommentId", COUNT("UserId") AS CommentLikes
+                    FROM "ContentManagement"."UserComment"
+                    WHERE "Like" = true
+                    GROUP BY "CommentId"
+                ) likes ON c."Id" = likes."CommentId"
+                WHERE c."VideoId" = ?;
+                """);
             stmt.setObject(1, videoId);
             ResultSet rs = stmt.executeQuery();
 
@@ -2813,6 +2802,7 @@ public class DatabaseManager {
                 comment.setContent(rs.getString("Message"));
                 comment.setSenderId(UUID.fromString(rs.getString("SenderId")));
                 comment.setSender(selectUserBriefly(comment.getSenderId()));
+                comment.setLikes(rs.getInt("CommentLikes"));
                 if (rs.getString("ParentCommentId") != null) {
                     comment.setParentCommentId(UUID.fromString(rs.getString("ParentCommentId")));
                     comment.setParentComment(selectComment(comment.getParentCommentId()));
