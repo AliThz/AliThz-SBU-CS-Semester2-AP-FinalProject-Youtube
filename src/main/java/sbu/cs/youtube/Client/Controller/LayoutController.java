@@ -256,7 +256,7 @@ public class LayoutController implements Initializable {
             watchLaterBtn.setGraphic(watchLaterPane);
             watchLaterBtn.getStyleClass().add("side-btn");
             watchLaterBtn.setTooltip(new Tooltip("Watch Later"));
-            watchLaterBtn.setOnAction(event -> getPlaylist(event, "WatchLater"));
+            watchLaterBtn.setOnAction(this::getWatchLaterPage);
             //endregion
 
             //region [ - LikedVideos Button - ]
@@ -445,6 +445,7 @@ public class LayoutController implements Initializable {
 
     private void getPlaylist(ActionEvent event, String playlistName) {
         setDefaultSvgs();
+
     }
     //endregion
 
@@ -771,6 +772,33 @@ public class LayoutController implements Initializable {
         svgHome.setContent("m12 4.44 7 6.09V20h-4v-6H9v6H5v-9.47l7-6.09m0-1.32-8 6.96V21h6v-6h4v6h6V10.08l-8-6.96z");
         svgSubs.setContent("M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z");
         svgYou.setContent("m11 7 6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z");
+    }
+    //endregion
+
+    //region [ - getPlaylistPage(ActionEvent event) - ]
+    private void getWatchLaterPage(ActionEvent event) {
+        Gson gson = new Gson();
+
+        new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
+        Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
+        }.getType());
+        ArrayList<Playlist> playlists = playlistsResponse.getBody();
+
+        new Request<Playlist>(YouTubeApplication.socket, "GetPlaylist").send(new Playlist(playlists.getFirst().getId()));
+
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sbu/cs/youtube/playlist-section.fxml"));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, vbxLayout.getScene().getWidth(), vbxLayout.getScene().getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
     //endregion
 

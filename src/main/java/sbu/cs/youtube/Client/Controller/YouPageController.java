@@ -267,15 +267,22 @@ public class YouPageController implements Initializable {
 
     //region [ - displayWatchLater() - ]
     private void displayWatchLater() {
-        Request<User> userRequest = new Request<>(YouTubeApplication.socket, "GetHistory");
-        userRequest.send(new User(user.getId()));
+        new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
+        Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
+        }.getType());
+        ArrayList<Playlist> playlists = playlistsResponse.getBody();
 
+        new Request<Playlist>(YouTubeApplication.socket, "GetPlaylist").send(new Playlist(playlists.getFirst().getId()));
         String response = YouTubeApplication.receiveResponse();
-        TypeToken<Response<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        TypeToken<Response<Playlist>> responseTypeToken = new TypeToken<>() {
         };
-        Response<ArrayList<Video>> videoResponse = gson.fromJson(response, responseTypeToken.getType());
+        Response<Playlist> videoResponse = gson.fromJson(response, responseTypeToken.getType());
 
-        ArrayList<Video> videos = videoResponse.getBody();
+        Playlist playlist = videoResponse.getBody();
+        ArrayList<Video> videos = new ArrayList<>();
+        for (var pd : playlist.getPlaylistDetails()) {
+            videos.add(pd.getVideo());
+        }
         Platform.runLater(() -> {
             if (videos != null) {
                 for (var v : videos) {
