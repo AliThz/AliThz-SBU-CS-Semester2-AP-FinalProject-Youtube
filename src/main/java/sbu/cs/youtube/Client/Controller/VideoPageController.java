@@ -244,7 +244,13 @@ public class VideoPageController implements Initializable {
 
 
         setVideo();
-        new Thread(this::displayMedia).start();
+        Thread mediaThread = new Thread(this::displayMedia);
+        mediaThread.start();
+        try {
+            mediaThread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 //        setPlaybackButtons();
         new Thread(this::displayRecommendedVideos).start();
 //        displayRecommendedVideos();

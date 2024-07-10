@@ -271,7 +271,7 @@ public class LayoutController implements Initializable {
             likedVideosBtn.setGraphic(likedVideosPane);
             likedVideosBtn.getStyleClass().add("side-btn");
             likedVideosBtn.setTooltip(new Tooltip("Liked Videos"));
-            likedVideosBtn.setOnAction(event -> getPlaylist(event, "LikedVideos"));
+            likedVideosBtn.setOnAction(this::setYouSection);
             //endregion
 
             Label exploreLbl = new Label("Explore");
