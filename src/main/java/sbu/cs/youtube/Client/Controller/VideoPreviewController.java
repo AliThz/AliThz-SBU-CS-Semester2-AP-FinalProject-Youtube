@@ -3,7 +3,6 @@ package sbu.cs.youtube.Client.Controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -28,8 +26,6 @@ import sbu.cs.youtube.Shared.Request;
 import sbu.cs.youtube.Shared.Response;
 import sbu.cs.youtube.YouTubeApplication;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -78,17 +74,24 @@ public class VideoPreviewController implements Initializable {
 //            event.consume();
 //            save(event);
 //        });
-
-        btnVideoPreviewOptions.setOnMouseEntered(event -> {
+        btnVideoPreviewOptions.setOnAction(event -> {
+            save();
             event.consume();
-            save(event);
+            Bounds bounds = btnVideoPreviewOptions.localToScreen(btnVideoPreviewOptions.getBoundsInLocal());
+            popup.setX(bounds.getMinX());
+            popup.setY(bounds.getMinY() + bounds.getHeight());
+
+            if (popup.isShowing())
+                popup.hide();
+            else
+                popup.show((Stage) btnVideoPreviewOptions.getScene().getWindow());
+
         });
 
 //        // Consume mouse events on the inner button to prevent propagation to the outer button
 //        btnVideoPreviewOptions.addEventFilter(MouseEvent.MOUSE_PRESSED, Event::consume);
 //        btnVideoPreviewOptions.addEventFilter(MouseEvent.MOUSE_RELEASED, Event::consume);
 //        btnVideoPreviewOptions.addEventFilter(MouseEvent.MOUSE_CLICKED, Event::consume);
-
 
 
 //        final boolean[] innerButtonClicked = {false};
@@ -149,7 +152,7 @@ public class VideoPreviewController implements Initializable {
     //endregion
 
     //region [ - save(ActionEvent event) - ]
-    private void save(MouseEvent event) {
+    public void save() {
         Gson gson = new Gson();
         new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
         Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
@@ -157,52 +160,43 @@ public class VideoPreviewController implements Initializable {
         ArrayList<Playlist> playlists = playlistsResponse.getBody();
 
         VBox vbxPlaylists = new VBox();
-        vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
-//        vbxPlaylists.getStyleClass().add("vbxNotification");
         Text text = new Text("Add to Playlist");
-        text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        } else {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(240, 240, 240);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(0,0,0); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        }
         vbxPlaylists.getChildren().add(text);
 
-        popup.hide();
+        popup.getContent().clear();
         popup.getContent().add(vbxPlaylists);
-        Stage stage = (Stage) btnVideoPreviewOptions.getScene().getWindow();
 
 
         for (var p : playlists) {
             Button button = new Button(p.getTitle());
             button.setId(p.getId().toString());
-            button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
-            button.setOnMouseClicked(mouseEvent -> {
-//                vbxPlaylists.getChildren().remove(vbxPlaylists.getChildren().indexOf(button));
+            if (YouTubeApplication.theme.equals("Dark")) {
+                button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            }
+            else {
+                button.setStyle("-fx-background-color: rgb(200, 200, 200);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            }
+            button.setOnAction(event -> {
                 new Request<PlaylistDetail>(YouTubeApplication.socket, "AddVideoToPlaylist").send(new PlaylistDetail(UUID.fromString(button.getId()), video.getId()));
                 YouTubeApplication.receiveResponse();
-                popup.hide();
             });
-
-//            button.getStyleClass().add("lblNotification");
             vbxPlaylists.getChildren().add(button);
-//        button.setOnAction(event1 -> {
-//            System.out.println("hello");
-//        });
         }
 
 
-        Bounds bounds = btnVideoPreviewOptions.localToScreen(btnVideoPreviewOptions.getBoundsInLocal());
-        popup.setX(bounds.getMinX() - 200);
-        popup.setY(bounds.getMinY() + bounds.getHeight());
-
-        btnVideoPreviewOptions.setOnAction(event1 -> {
-            if (popup.isShowing())
-                popup.hide();
-            else
-                popup.show(stage);
-        });
     }
     //endregion
 
     //region [ - setVideo(Video video) - ]
     public void setVideo(Video video) {
-        this.video= video;
+        this.video = video;
         String summarizedTitle = video.getTitle();
         if (summarizedTitle.length() > TITLE_MAX_LENGTH) {
             summarizedTitle = summarizedTitle.substring(0, TITLE_MAX_LENGTH);

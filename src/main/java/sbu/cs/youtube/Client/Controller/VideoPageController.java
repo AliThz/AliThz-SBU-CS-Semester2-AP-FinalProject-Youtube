@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -167,6 +166,8 @@ public class VideoPageController implements Initializable {
     private StackPane videoStack;
 
     private LayoutController parentController;
+
+    Popup popup = new Popup();
 
     //endregion
 
@@ -344,6 +345,18 @@ public class VideoPageController implements Initializable {
                     }
                 }
             });
+        });
+
+        btnSave.setOnAction(event -> {
+            save();
+            Bounds bounds = btnSave.localToScreen(btnSave.getBoundsInLocal());
+            popup.setX(bounds.getMinX() - 200);
+            popup.setY(bounds.getMinY() + bounds.getHeight());
+
+            if (popup.isShowing())
+                popup.hide();
+            else
+                popup.show((Stage) btnSave.getScene().getWindow());
         });
     }
     //endregion
@@ -805,7 +818,7 @@ public class VideoPageController implements Initializable {
 
     //region [ - updateSave(ActionEvent event) - ]
     @FXML
-    private void updateSave(ActionEvent event) {
+    private void save() {
         Gson gson = new Gson();
         new Request<>(YouTubeApplication.socket, "GetUserPlaylistsBriefly").send(new User(YouTubeApplication.user.getId()));
         Response<ArrayList<Playlist>> playlistsResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Response<ArrayList<Playlist>>>() {
@@ -813,50 +826,56 @@ public class VideoPageController implements Initializable {
         ArrayList<Playlist> playlists = playlistsResponse.getBody();
 
         VBox vbxPlaylists = new VBox();
-        vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
-//        vbxPlaylists.getStyleClass().add("vbxNotification");
         Text text = new Text("Add to Playlist");
-        text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(20, 20, 20);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(255,255,255); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        } else {
+            vbxPlaylists.setStyle("-fx-background-color: rgb(240, 240, 240);-fx-background-radius:20;-fx-padding: 15;-fx-spacing: 10");
+            text.setStyle("-fx-fill: rgb(0,0,0); -fx-font-weight: bold; -fx-font-size: 15px;-fx-padding: 10;");
+        }
         vbxPlaylists.getChildren().add(text);
 
-        Popup popup = new Popup();
-        popup.hide();
+        popup.getContent().clear();
         popup.getContent().add(vbxPlaylists);
-        Stage stage = (Stage) btnSave.getScene().getWindow();
-
 
         for (var p : playlists) {
             Button button = new Button(p.getTitle());
             button.setId(p.getId().toString());
-            button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
-            button.setOnMouseClicked(mouseEvent -> {
-//                vbxPlaylists.getChildren().remove(vbxPlaylists.getChildren().indexOf(button));
+            if (YouTubeApplication.theme.equals("Dark")) {
+                button.setStyle("-fx-background-color: rgb(70, 70, 70);-fx-background-radius:10;-fx-text-fill: rgb(255, 255, 255);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            } else {
+                button.setStyle("-fx-background-color: rgb(200, 200, 200);-fx-background-radius:10;-fx-text-fill: rgb(0, 0, 0);-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+            }
+            button.setOnAction(event -> {
                 new Request<PlaylistDetail>(YouTubeApplication.socket, "AddVideoToPlaylist").send(new PlaylistDetail(UUID.fromString(button.getId()), video.getId()));
                 YouTubeApplication.receiveResponse();
-                popup.hide();
             });
             vbxPlaylists.getChildren().add(button);
         }
 
         Button btnCreatePlaylist = new Button("New Playlist");
-        btnCreatePlaylist.setStyle("-fx-background-color: rgb(176,176,176);-fx-background-radius:10;-fx-text-fill: rgb(0,0,0); -fx-font-weight: bold;-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+        SVGPath svgPath = new SVGPath();
+        svgPath.setContent("M20 12h-8v8h-1v-8H3v-1h8V3h1v8h8z");
+        if (YouTubeApplication.theme.equals("Dark")) {
+            svgPath.setStyle("-fx-fill: black;-fx-scale-x: 1;-fx-scale-y: 1;");
+        }
+        else {
+            svgPath.setStyle("-fx-fill: white;-fx-scale-x: 1;-fx-scale-y: 1;");
+        }
+        btnCreatePlaylist.setGraphic(svgPath);
+        if (YouTubeApplication.theme.equals("Dark")) {
+            btnCreatePlaylist.setStyle("-fx-background-color: rgb(176,176,176);-fx-background-radius:10;-fx-text-fill: rgb(0,0,0);-fx-fill: black; -fx-font-weight: bold;-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+        } else {
+            btnCreatePlaylist.setStyle("-fx-background-color: rgb(100,100,100);-fx-background-radius:10;-fx-text-fill: rgb(255,255,255);-fx-fill: white; -fx-font-weight: bold;-fx-alignment: center;-fx-text-alignment: center;-fx-tile-alignment: center; -fx-padding: 10; -fx-cursor: HAND;");
+        }
         vbxPlaylists.getChildren().add(btnCreatePlaylist);
 
-        btnCreatePlaylist.setOnMouseEntered(mouseEvent -> {
+        btnCreatePlaylist.setOnAction(event -> {
             showDialog();
             popup.hide();
         });
 
-        Bounds bounds = btnSave.localToScreen(btnSave.getBoundsInLocal());
-        popup.setX(bounds.getMinX() - 200);
-        popup.setY(bounds.getMinY() + bounds.getHeight());
-
-        btnSave.setOnAction(event1 -> {
-            if (popup.isShowing())
-                popup.hide();
-            else
-                popup.show(stage);
-        });
     }
     //endregion
 
@@ -875,7 +894,7 @@ public class VideoPageController implements Initializable {
         System.out.println(commentResponse.getMessage());
 
         displayComments();
-        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " commented \"" + txtComment.getText() +"\" on your video"));
+        new Request<>(YouTubeApplication.socket, "CreateNotification").send(new Notification(video.getChannel().getCreatorId(), YouTubeApplication.user.getUsername() + " commented \"" + txtComment.getText() + "\" on your video"));
         TypeToken<Response<Notification>> typeToken = new TypeToken<>() {
         };
         response = YouTubeApplication.receiveResponse();
@@ -996,7 +1015,7 @@ public class VideoPageController implements Initializable {
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(),  convertImageToByteArray(newImage.getAbsolutePath()));
+                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), convertImageToByteArray(newImage.getAbsolutePath()));
             }
             return null;
         });

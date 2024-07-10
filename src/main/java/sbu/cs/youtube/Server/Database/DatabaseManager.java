@@ -811,7 +811,7 @@ public class DatabaseManager {
             c.setAutoCommit(false);
 
             stmt = c.prepareStatement("""
-                    SELECT * FROM "UserManagement"."Notification" WHERE "UserId" = ? , "IsRead" = false;
+                    SELECT * FROM "UserManagement"."Notification" WHERE "UserId" = ? AND "IsRead" = false;
                     """);
             stmt.setObject(1, userId);
             ResultSet rs = stmt.executeQuery();
