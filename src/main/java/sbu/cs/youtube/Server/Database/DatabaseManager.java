@@ -1337,8 +1337,7 @@ public class DatabaseManager {
                         (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
                     FROM "ContentManagement"."Video" 
                     WHERE \"ChannelId\" = ?;
-                    """)
-            ;
+                    """);
 
             stmt.setObject(1, channelId);
             ResultSet rs = stmt.executeQuery();
@@ -2555,6 +2554,7 @@ public class DatabaseManager {
     //endregion
 
     //    region [ - deletePlaylist(UUID Id) - ] Tested
+
     public void deletePlaylist(UUID Id) {
         Connection c;
         PreparedStatement stmt;
@@ -2583,6 +2583,7 @@ public class DatabaseManager {
             System.exit(0);
         }
     }
+
     //endregion
 
     //endregion

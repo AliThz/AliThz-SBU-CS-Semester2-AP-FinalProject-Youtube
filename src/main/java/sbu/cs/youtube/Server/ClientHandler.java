@@ -220,6 +220,9 @@ public class ClientHandler implements Runnable {
             case "DeleteVideo" :
                 deleteVideo();
                 break;
+            case "DeletePlaylist" :
+                deletePlaylist();
+                break;
             default:
                 new Response<>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
@@ -1019,6 +1022,21 @@ public class ClientHandler implements Runnable {
 
         Response<Video> response;
         response = new Response<>(client, videoRequest.getType(), true, "Video Successfully deleted ");
+        response.send();
+    }
+    //endregion
+
+    //region [ - deletePlaylist - ]
+    public void deletePlaylist() {
+        TypeToken<Request<Playlist>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<Playlist> playlistRequest = gson.fromJson(request, responseTypeToken.getType());
+        Playlist playlist = playlistRequest.getBody();
+
+        databaseManager.deletePlaylist(playlist.getId());
+
+        Response<Playlist> response;
+        response = new Response<>(client, playlistRequest.getType(), true, "Playlist Successfully deleted ");
         response.send();
     }
     //endregion
