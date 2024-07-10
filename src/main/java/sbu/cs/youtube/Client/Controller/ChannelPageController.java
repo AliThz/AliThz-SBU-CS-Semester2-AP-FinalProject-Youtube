@@ -220,6 +220,8 @@ public class ChannelPageController implements Initializable {
                 tilePaneVideo.getChildren().add(button);
             }
 
+            if (YouTubeApplication.user.getId().equals(channel.getCreatorId()))
+                return;
             SVGPath svgPath = (SVGPath) btnSub.getChildrenUnmodifiable().getFirst();
 
             Request<Subscription> subscriptionRequest = new Request<>(YouTubeApplication.socket, "CheckSubscriptionExistence");
@@ -244,6 +246,7 @@ public class ChannelPageController implements Initializable {
                 Request<Subscription> subRequest = new Request<>(YouTubeApplication.socket, "Subscribe");
                 subRequest.send(new Subscription(YouTubeApplication.user.getId(), channel.getId()));
             }
+            YouTubeApplication.receiveResponse();
             //endregion
         });
     }
@@ -270,7 +273,7 @@ public class ChannelPageController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1920, 1080);
+        scene = new Scene(root, vbxChannelPage.getScene().getWidth(), vbxChannelPage.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
     }

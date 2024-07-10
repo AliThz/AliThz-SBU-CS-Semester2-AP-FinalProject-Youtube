@@ -163,7 +163,7 @@ public class SearchPageController {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1920, 1080);
+        scene = new Scene(root, vbxSearchPage.getScene().getWidth(), vbxSearchPage.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
     }

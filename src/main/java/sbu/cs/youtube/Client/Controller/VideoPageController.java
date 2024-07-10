@@ -372,6 +372,7 @@ public class VideoPageController implements Initializable {
                 Request<Subscription> subRequest = new Request<>(YouTubeApplication.socket, "Subscribe");
                 subRequest.send(new Subscription(YouTubeApplication.user.getId(), video.getChannelId()));
             }
+            YouTubeApplication.receiveResponse();
             //endregion
         });
 
@@ -459,7 +460,7 @@ public class VideoPageController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1920, 1080);
+        scene = new Scene(root, vbxLeft.getScene().getWidth(), vbxLeft.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
     }

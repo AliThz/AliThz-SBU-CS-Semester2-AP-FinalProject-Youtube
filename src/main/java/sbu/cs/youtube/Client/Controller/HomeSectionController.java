@@ -129,7 +129,7 @@ public class HomeSectionController implements Initializable {
             throw new RuntimeException(e);
         }
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1920, 1080);
+        scene = new Scene(root, mainPane.getScene().getWidth(), mainPane.getScene().getHeight());
         stage.setScene(scene);
         stage.show();
     }
