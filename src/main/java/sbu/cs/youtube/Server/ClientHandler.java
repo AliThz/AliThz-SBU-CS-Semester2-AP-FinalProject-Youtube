@@ -214,6 +214,9 @@ public class ClientHandler implements Runnable {
             case "UpdateNotification" :
                 updateNotification();
                 break;
+            case "GetTrendingVideos" :
+                getTrendingVideos();
+                break;
             default:
                 new Response<>(client , objectRequest.getType() , false , "Invalid Request").send();
         }
@@ -290,7 +293,7 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
-    //region [ - GetRecommendedVideos() - ]
+    //region [ - getRecommendedVideos() - ]
     private void GetRecommendedVideos() {
         TypeToken<Request<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
         };
@@ -988,6 +991,19 @@ public class ClientHandler implements Runnable {
     }
     //endregion
 
+    //region [ - getTrendingVideos() - ]
+    private void getTrendingVideos() {
+        TypeToken<Request<ArrayList<Video>>> responseTypeToken = new TypeToken<>() {
+        };
+        Request<ArrayList<Video>> videosRequest = gson.fromJson(request, responseTypeToken.getType());
+        Response<ArrayList<Video>> response;
+
+        ArrayList<Video> videos = databaseManager.SelectTrendingVideos();
+
+        response = new Response<>(client, videosRequest.getType(), true, "Trending videos received  ");
+        response.send(videos);
+    }
+    //endregion
 
     //endregion
 

@@ -894,7 +894,7 @@ public class DatabaseManager {
                     UPDATE "UserManagement"."Notification" SET "IsRead" = ?  
                     WHERE \"Id\" = ?;
                     """);
-            stmt.setBoolean(1, false);
+            stmt.setBoolean(1, true);
             stmt.setObject(2, notification.getId());
             stmt.executeUpdate();
 
@@ -1470,6 +1470,58 @@ public class DatabaseManager {
         }
         return videos;
     }
+    //endregion
+
+    //region [ - SelectTrendingVideos - ]
+
+    public ArrayList<Video> SelectTrendingVideos() {
+        Connection c;
+        Statement stmt;
+        PreparedStatement stmt1;
+        ArrayList<Video> videos = null;
+        try {
+
+            System.out.println("Opened database successfully (selectVideosBriefly)");
+            c = DriverManager.getConnection(URL, USER, PASSWORD);
+            c.setAutoCommit(false);
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("""
+                    SELECT "Title", "Id", "UploadDate", "ThumbnailPath", "Description", "ChannelId",
+                           (SELECT COUNT("UserId") FROM "ContentManagement"."UserVideo" WHERE "VideoId" = "Video"."Id") AS "VideoViewCount"
+                    FROM "ContentManagement"."Video"
+                    ORDER BY "VideoViewCount" DESC
+                    LIMIT 10;
+                    """);
+
+            videos = new ArrayList<>();
+            while (rs.next()) {
+                Video video = new Video();
+                video.setId(UUID.fromString(rs.getString("Id")));
+                video.setTitle(rs.getString("Title"));
+                video.setDescription(rs.getString("Description"));
+                video.setChannelId(UUID.fromString(rs.getString("ChannelId")));
+                video.setChannel(selectChannelBriefly(video.getChannelId()));
+                video.setThumbnailPath(rs.getString("ThumbnailPath"));
+                video.setThumbnailBytes(convertImageToByteArray(video.getThumbnailPath()));
+                Timestamp timestamp = Timestamp.valueOf(rs.getString("UploadDate"));
+                video.setUploadDate(timestamp.toLocalDateTime().toString());
+                video.setViewCount(rs.getInt("VideoViewCount"));
+
+                videos.add(video);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+            System.out.println("Operation done successfully (selectVideosBriefly)");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return videos;
+    }
+
     //endregion
 
     //region [ - selectLikedVideos (UUID userId) - ]
@@ -3223,6 +3275,7 @@ public class DatabaseManager {
     //endregion
 
     //endregion
+
 
     //endregion
 
