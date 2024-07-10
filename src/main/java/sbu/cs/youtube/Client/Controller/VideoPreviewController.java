@@ -61,6 +61,8 @@ public class VideoPreviewController implements Initializable {
     Popup popup = new Popup();
     File newImage;
     private final int TITLE_MAX_LENGTH = 50;
+    private LayoutController parentController;
+    private boolean creatable;
     //endregion
 
     //region [ - Methods - ]
@@ -253,6 +255,7 @@ public class VideoPreviewController implements Initializable {
 
     //region [ - setParentController(LayoutController layoutController) - ]
     public void setParentController(LayoutController layoutController) {
+        this.parentController = layoutController;
         EventHandler<ActionEvent> existingHandler = layoutController.btnMode.getOnAction();
 
         layoutController.btnMode.setOnAction(event -> {
@@ -267,6 +270,7 @@ public class VideoPreviewController implements Initializable {
 
     //region [ - showDialog() - ]
     private void showDialog() {
+        creatable = true;
         Dialog<Playlist> dialog = new Dialog<>();
         dialog.setTitle("Create Playlist");
         dialog.setHeaderText("Create Playlist");
@@ -297,7 +301,6 @@ public class VideoPreviewController implements Initializable {
         imageView.setFitHeight(100);
         Button uploadButton = new Button("Select Thumbnail", imageView);
 
-
         uploadButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Thumbnail");
@@ -306,9 +309,14 @@ public class VideoPreviewController implements Initializable {
             newImage = fileChooser.showOpenDialog(vbxVideoPreview.getScene().getWindow());
             if (newImage != null) {
                 imageView.setImage(new Image(newImage.toURI().toString()));
+            } else {
+                parentController.sendNotification("Please select a thumbnail");
+                creatable = false;
             }
         });
+
         uploadButton.getStyleClass().add("dlg-btn");
+
 
         grid.add(new Label("Title:"), 0, 0);
         grid.add(titleField, 1, 0);
@@ -326,15 +334,23 @@ public class VideoPreviewController implements Initializable {
         // Convert the result to a user object when the update button is clicked
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), convertImageToByteArray(newImage.getAbsolutePath()));
+                return new Playlist(titleField.getText(), descriptionField.getText(), YouTubeApplication.user.getId(), isPublic.isSelected(), newImage == null ? null : convertImageToByteArray(newImage.getAbsolutePath()));
             }
             return null;
         });
 
+
 //        Gson gson = new Gson();
+
 
         // Show the dialog and update the user if the update button is clicked
         dialog.showAndWait().ifPresent(createdPlaylist -> {
+            if (!creatable)
+                return;
+            if (createdPlaylist.getTitle().isEmpty()) {
+                parentController.sendNotification("Please enter a title");
+                return;
+            }
             new Request<Playlist>(YouTubeApplication.socket, "CreatePlaylist").send(createdPlaylist);
 //            Response<User> userResponse = gson.fromJson(YouTubeApplication.receiveResponse(), new TypeToken<Playlist>(){}.getType());
             YouTubeApplication.receiveResponse();
