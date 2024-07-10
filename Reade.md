@@ -1,6 +1,6 @@
 # YouTube Project
 
-### A Simulation of YouTube's Core Features
+### A Clone of YouTube
 
 This project is a clone of **Youtube**, created using JavaFX for educational purposes. It aims to replicate the user experience of browsing, uploading, and interacting with video content on a platform similar to YouTube.
 
@@ -13,15 +13,14 @@ This project is a clone of **Youtube**, created using JavaFX for educational pur
 - **Subscriptions**: Subscribe to channels to get updates on new videos.
 - **Search Functionality**: Search for videos by title, description, or tags.
 - **Responsive UI**: JavaFX-based design for accessibility on various devices.
-- **Recommendations**: Video recommendations based on user activity and preferences.
 - **Client-Server Flow**: Efficient handling of client-server communication to ensure smooth performance.
 - **Database Management**: Efficient database ERD and mapping for robust data handling.
 
 ## Technology Stack
 
-- **Frontend**: JavaFX
-- **Backend**: Java with Spring Boot
-- **Database**: PostgresSql
+- **Front-End**: JavaFX
+- **Back-End**: Java
+- **Database**: PostgresSQL
 - **Package Manager**: Maven
 
 ## Demonstration of UML and ERD
