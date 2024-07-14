@@ -6,10 +6,20 @@ module sbu.cs.youtube {
     requires org.kordamp.bootstrapfx.core;
     requires java.desktop;
     requires java.sql;
+    requires com.google.gson;
     requires org.controlsfx.controls;
+    requires javafx.media;
+    requires java.base;
+    requires org.postgresql.jdbc;
+    requires org.apache.commons.codec;
 
+
+    opens sbu.cs.youtube.Shared.POJO to com.google.gson;
+    opens sbu.cs.youtube.Shared to com.google.gson;
+//    opens java.time to com.google.gson;
     opens sbu.cs.youtube to javafx.fxml;
     exports sbu.cs.youtube;
+    exports sbu.cs.youtube.Shared.POJO;
     exports sbu.cs.youtube.Client.Controller;
     opens sbu.cs.youtube.Client.Controller to javafx.fxml;
 }

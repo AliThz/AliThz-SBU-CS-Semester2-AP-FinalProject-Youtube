@@ -10,12 +10,15 @@ public class Category {
 
     public Category() {
         Id = UUID.randomUUID();
-        this.videoCategories = new ArrayList<>();
     }
 
     public Category(String title) {
         Id = UUID.randomUUID();
-        this.videoCategories = new ArrayList<>();
+        this.title = title;
+    }
+
+    public Category(UUID id, String title) {
+        this.Id = id;
         this.title = title;
     }
 

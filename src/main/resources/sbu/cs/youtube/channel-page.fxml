@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="vbxChannelPage" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="850.0" spacing="10.0" styleClass="background" stylesheets="@../../../Styles/Dark/channel-page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sbu.cs.youtube.Client.Controller.ChannelPageController">
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <children>
+      <HBox fx:id="hbxChannelDetails" alignment="CENTER_LEFT" prefHeight="131.0" prefWidth="906.0" spacing="20.0">
+         <children>
+            <ImageView fx:id="imgAvatar" fitHeight="128.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+               <image>
+                  <Image url="@../../../Images/DefaultAvatar.jpg" />
+               </image>
+            </ImageView>
+            <VBox fx:id="vbxChannelDetails" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="677.0" spacing="2.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Text fx:id="txtChannelTitle" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Channel Title">
+                     <font>
+                        <Font name="System Bold" size="25.0" />
+                     </font>
+                  </Text>
+                  <HBox prefHeight="14.0" prefWidth="678.0" spacing="5.0">
+                     <children>
+                        <Text fx:id="txtUsername" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="\@Userame" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="•" />
+                        <Text fx:id="txtSubscribersCount" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="Subscribers" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="•" />
+                        <Text fx:id="txtVideosCount" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="Videos" />
+                     </children>
+                  </HBox>
+                  <Text fx:id="txtChannelDescription" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-detail" text="Channel Description">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <HBox fx:id="hbxButtons" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="btnSub" mnemonicParsing="false" onAction="#updateSub" prefHeight="30.0" prefWidth="118.0" styleClass="button-subscription" text="Unsubscribed" HBox.hgrow="ALWAYS">
+                           <padding>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </padding>
+                           <graphic>
+                              <SVGPath content="m3.85 3.15-.7.7 3.48 3.48C6.22 8.21 6 9.22 6 10.32v5.15l-2 1.88V19h14.29l1.85 1.85.71-.71-17-16.99zM5 18v-.23l2-1.88v-5.47c0-.85.15-1.62.41-2.3L17.29 18H5zm5 2h4c0 1.1-.9 2-2 2s-2-.9-2-2zM9.28 5.75l-.7-.7c.43-.29.9-.54 1.42-.7v-.39c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v4.14l-1-1v-3.05c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03-.27.11-.51.24-.75.4z" styleClass="svg" />
+                           </graphic>
+                        </Button>
+                        <Button fx:id="btnEditCredentials" graphicTextGap="10.0" mnemonicParsing="false" onAction="#showDialog" prefHeight="36.0" prefWidth="130.0" styleClass="button-subscription" text="Edit Credentials" HBox.hgrow="ALWAYS">
+                           <padding>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </padding>
+                           <graphic>
+                              <SVGPath content="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z" fill="WHITE" styleClass="svg" />
+                           </graphic>
+                        </Button>
+                        <Button graphicTextGap="10.0" mnemonicParsing="false" onAction="#logOut" prefHeight="36.0" prefWidth="118.0" styleClass="button-subscription" text="Sign Out">
+                           <padding>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </padding>
+                           <graphic>
+                              <SVGPath content="M20 3v18H8v-1h11V4H8V3h12zm-8.9 12.1.7.7 4.4-4.4L11.8 7l-.7.7 3.1 3.1H3v1h11.3l-3.2 3.3z" fill="RED" styleClass="svg" />
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+          <Tab fx:id="tabVideo" closable="false" text="Videos">
+               <content>
+                  <ScrollPane fx:id="scrlpnVideo" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="0.0" prefWidth="807.0" vbarPolicy="NEVER">
+                     <content>
+                        <TilePane fx:id="tilePaneVideo" hgap="10.0" prefHeight="250.0" prefWidth="806.0" styleClass="background" vgap="10.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                           </padding></TilePane>
+                     </content>
+                  </ScrollPane>
+               </content>
+          </Tab>
+          <Tab fx:id="tabPlaylist" closable="false" text="Playlists">
+               <content>
+                  <ScrollPane fx:id="scrlpnPlaylist" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="0.0" prefWidth="807.0" vbarPolicy="NEVER">
+                     <content>
+                        <TilePane fx:id="tilePanePlaylist" hgap="10.0" prefHeight="229.0" prefWidth="806.0" styleClass="background" vgap="10.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                           </padding></TilePane>
+                     </content>
+                  </ScrollPane>
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>

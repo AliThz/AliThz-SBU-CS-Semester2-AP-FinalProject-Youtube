@@ -1,0 +1,65 @@
+.vbx-video-preview {
+    -fx-alignment: top-center;
+    -fx-background-color: white;
+    -fx-padding: 0;
+    -fx-pref-width: 260;
+    -fx-pref-height: 220;
+    -fx-spacing: 5;
+}
+
+.btn-video {
+    -fx-background-color: white;
+    -fx-padding: 6;
+    -fx-background-radius: 5;
+}
+
+.btn-video:hover {
+    -fx-background-color: rgb(229,229,229);
+}
+
+.btn-video:pressed {
+    -fx-background-color: rgb(204,204,204);
+}
+
+.hbx-video-details {
+    -fx-alignment: top-center;
+    -fx-padding: 0 10;
+    -fx-spacing: 5;
+    -fx-background-color: transparent;
+}
+
+.vbx-text-details {
+    -fx-alignment: top-left;
+    -fx-background-color: transparent;
+}
+
+.view-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20;
+    -fx-text-fill: black;
+}
+
+.view-btn:hover {
+    -fx-background-color: rgb(229, 229, 229);
+}
+
+.view-btn:pressed {
+    -fx-background-color: rgb(204, 204, 204);
+}
+
+.txt {
+    -fx-fill: black;
+}
+
+.add-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 100;
+}
+
+.add-btn:hover {
+    -fx-background-color: rgb(229, 229, 229);
+}
+
+.add-btn:pressed {
+    -fx-background-color: rgb(204, 204, 204);
+}

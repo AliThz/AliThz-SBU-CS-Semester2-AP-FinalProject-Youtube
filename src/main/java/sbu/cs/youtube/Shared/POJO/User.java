@@ -1,31 +1,39 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class User {
     private UUID Id;
     private String fullName;
     private String email;
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
+    private String avatarPath;
+    private byte[] avatarBytes;
     private String username;
     private String password;
-    private LocalDateTime joinDate;
+    private String joinDate;
     private ArrayList<Subscription> subscriptions;
     private ArrayList<Notification> notifications;
-    private ArrayList<VideoLike> likedVideos;
+    private ArrayList<UserVideo> viewedVideos;
+    private ArrayList<UserComment> viewedComments;
+
 
     public User() {
         Id = UUID.randomUUID();
         subscriptions = new ArrayList<>();
         notifications = new ArrayList<>();
-        likedVideos = new ArrayList<>();
+        viewedVideos = new ArrayList<>();
     }
 
-    public User(String fullName, String email, String username, String password, LocalDateTime dateOfBirth) {
+    public User(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String fullName, String email, String username, String password, String dateOfBirth) {
         Id = UUID.randomUUID();
         this.fullName = fullName;
         this.email = email;
@@ -34,7 +42,19 @@ public class User {
         this.dateOfBirth = dateOfBirth;
         subscriptions = new ArrayList<>();
         notifications = new ArrayList<>();
-        likedVideos = new ArrayList<>();
+        viewedVideos = new ArrayList<>();
+    }
+
+    public User(String fullName, String email, byte[] avatarBytes, String username, String password) {
+        this.fullName = fullName;
+        this.email = email;
+        this.avatarBytes = avatarBytes;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(UUID id) {
+        this.Id = id;
     }
 
     public UUID getId() {
@@ -61,11 +81,11 @@ public class User {
         this.email = email;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDateTime dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -85,11 +105,11 @@ public class User {
         this.password = password;
     }
 
-    public LocalDateTime getJoinDate() {
+    public String getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(LocalDateTime joinDate) {
+    public void setJoinDate(String joinDate) {
         this.joinDate = joinDate;
     }
 
@@ -109,11 +129,33 @@ public class User {
         this.notifications = notifications;
     }
 
-    public ArrayList<VideoLike> getLikedVideos() {
-        return likedVideos;
+    public ArrayList<UserVideo> getViewedVideos() {
+        return viewedVideos;
     }
 
-    public void setLikedVideos(ArrayList<VideoLike> likedVideos) {
-        this.likedVideos = likedVideos;
+    public void setViewedVideos(ArrayList<UserVideo> viewedVideos) {
+        this.viewedVideos = viewedVideos;
+    }
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
+    public byte[] getAvatarBytes() {
+        return avatarBytes;
+    }
+
+    public void setAvatarBytes(byte[] avatarBytes) {
+        this.avatarBytes = avatarBytes;
+    }
+
+    public ArrayList<UserComment> getViewedComments() {
+        return viewedComments;
+    }
+
+    public void setViewedComments(ArrayList<UserComment> viewedComments) {
+        this.viewedComments = viewedComments;
     }
 }

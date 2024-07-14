@@ -1,8 +1,6 @@
 package sbu.cs.youtube.Shared.POJO;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class Channel {
@@ -11,19 +9,24 @@ public class Channel {
     private UUID creatorId;
     private String title;
     private String description;
-    private int subscribers;
-    private LocalDateTime dateCreated;
+    private String profilePath;
+    private byte[] profileBytes;
+    private String dateCreated;
     private ArrayList<Subscription> subscriptions;
-
+    private int subscriberCount;
+    private int videoCounts;
     public Channel() {
         subscriptions = new ArrayList<>();
     }
-
     public Channel(UUID creatorId, String title) {
         Id = UUID.randomUUID();
         this.creatorId = creatorId;
         this.title = title;
         subscriptions = new ArrayList<>();
+    }
+
+    public Channel(UUID id) {
+        this.Id = id ;
     }
 
     public UUID getId() {
@@ -66,19 +69,35 @@ public class Channel {
         this.description = description;
     }
 
-    public int getSubscribers() {
-        return subscribers;
+    public int getSubscriberCount() {
+        return subscriberCount;
     }
 
-    public void setSubscribers(int subscribers) {
-        this.subscribers = subscribers;
+    public void setSubscriberCount(int subscriberCount) {
+        this.subscriberCount = subscriberCount;
     }
 
-    public LocalDateTime getDateCreated() {
+    public String getProfilePath() {
+        return profilePath;
+    }
+
+    public void setProfilePath(String profilePath) {
+        this.profilePath = profilePath;
+    }
+
+    public byte[] getProfileBytes() {
+        return profileBytes;
+    }
+
+    public void setProfileBytes(byte[] profileBytes) {
+        this.profileBytes = profileBytes;
+    }
+
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(LocalDateTime dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -88,5 +107,13 @@ public class Channel {
 
     public void setSubscriptions(ArrayList<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
+    }
+
+    public int getVideoCounts() {
+        return videoCounts;
+    }
+
+    public void setVideoCounts(int videoCounts) {
+        this.videoCounts = videoCounts;
     }
 }

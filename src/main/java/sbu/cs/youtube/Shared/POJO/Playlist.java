@@ -6,20 +6,33 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Playlist {
-    private UUID Id ;
-    private String title ;
-    private String description ;
-
-//    private Thumnail thumnail ;
-    private User creator ;
-    private UUID creatorId ;
-    private boolean isPublic ;
-    private LocalDateTime dateCreated ;
+    private UUID Id;
+    private String thumbnailPath;
+    private byte[] thumbnailBytes;
+    private String title;
+    private String description;
+    private User creator;
+    private UUID creatorId;
+    private boolean isPublic;
+    private String dateCreated;
     private ArrayList<PlaylistDetail> playlistDetails;
+    private int videos;
+
+    public Playlist(UUID id) {
+        this.Id = id;
+    }
+
+    public int getVideos() {
+        return videos;
+    }
+
+    public void setVideos(int videos) {
+        this.videos = videos;
+    }
 
     public Playlist() {
         Id = UUID.randomUUID();
-        this.playlistDetails = new ArrayList<>();
+//        this.playlistDetails = new ArrayList<>();
     }
 
     public Playlist(String title, String description, UUID creatorId, boolean isPublic) {
@@ -28,7 +41,16 @@ public class Playlist {
         this.description = description;
         this.creatorId = creatorId;
         this.isPublic = isPublic;
-        this.playlistDetails = new ArrayList<>();
+//        this.playlistDetails = new ArrayList<>();
+    }
+
+    public Playlist(String title, String description, UUID creatorId, boolean isPublic, byte[] thumbnailBytes) {
+        Id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.creatorId = creatorId;
+        this.isPublic = isPublic;
+        this.thumbnailBytes = thumbnailBytes;
     }
 
     public UUID getId() {
@@ -79,11 +101,11 @@ public class Playlist {
         isPublic = aPublic;
     }
 
-    public LocalDateTime getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(LocalDateTime dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -93,5 +115,21 @@ public class Playlist {
 
     public void setPlaylistDetails(ArrayList<PlaylistDetail> playlistDetails) {
         this.playlistDetails = playlistDetails;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
+    }
+
+    public byte[] getThumbnailBytes() {
+        return thumbnailBytes;
+    }
+
+    public void setThumbnailBytes(byte[] thumbnailBytes) {
+        this.thumbnailBytes = thumbnailBytes;
     }
 }

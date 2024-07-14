@@ -9,9 +9,11 @@ public class Subscription {
     private UUID subscriberId ;
     private Channel channel ;
     private UUID channelId ;
-    private LocalDateTime joinDate ;
+    private String joinDate ;
 
     public Subscription() {
+        channel = new Channel();
+        subscriber = new User();
     }
 
     public Subscription(UUID subscriberId, UUID channelId) {
@@ -51,11 +53,11 @@ public class Subscription {
         this.channelId = channelId;
     }
 
-    public LocalDateTime getJoinDate() {
+    public String getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(LocalDateTime joinDate) {
+    public void setJoinDate(String joinDate) {
         this.joinDate = joinDate;
     }
 }

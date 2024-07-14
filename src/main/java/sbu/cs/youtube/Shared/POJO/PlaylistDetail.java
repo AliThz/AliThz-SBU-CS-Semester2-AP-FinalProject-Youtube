@@ -9,7 +9,7 @@ public class PlaylistDetail {
     private UUID playlistId;
     private Video video;
     private UUID videoId;
-    private LocalDateTime dateAdded;
+    private String dateAdded;
     private int number;
 
     public PlaylistDetail() {
@@ -18,6 +18,12 @@ public class PlaylistDetail {
     public PlaylistDetail(UUID playlistId, UUID videoId) {
         this.playlistId = playlistId;
         this.videoId = videoId;
+    }
+
+    public PlaylistDetail(UUID playlistId, UUID videoId, Video video) {
+        this.playlistId = playlistId;
+        this.videoId = videoId;
+        this.video = video;
     }
 
     public Playlist getPlaylist() {
@@ -52,11 +58,11 @@ public class PlaylistDetail {
         this.videoId = videoId;
     }
 
-    public LocalDateTime getDateAdded() {
+    public String getDateAdded() {
         return dateAdded;
     }
 
-    public void setDateAdded(LocalDateTime dateAdded) {
+    public void setDateAdded(String dateAdded) {
         this.dateAdded = dateAdded;
     }
 
