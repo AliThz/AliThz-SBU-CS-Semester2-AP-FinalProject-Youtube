@@ -1,0 +1,139 @@
+/* -------------------------------- BackGround -------------------------------- */
+.background {
+    -fx-background-color : black;
+    -fx-pref-width : 206px;
+    -fx-spacing : 10px;
+    -fx-padding: 15px;
+}
+
+/* -------------------------------- Home Button -------------------------------- */
+.home-svg {
+    -fx-fill : white;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
+}
+
+.home-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 15;
+    -fx-pref-width : 42px;
+    -fx-pref-height : 12px;
+}
+
+/* -------------------------------- Subscriptions Button -------------------------------- */
+.subscriptions-svg {
+    -fx-fill : white;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
+}
+
+.subscriptions-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 15;
+    -fx-pref-width : 89px;
+    -fx-pref-height : 22px;
+}
+
+/* -------------------------------- You Button -------------------------------- */
+.you-svg {
+    -fx-fill : white;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
+}
+
+.you-arrow-svg {
+    -fx-fill : white;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
+}
+
+.you-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 15;
+    -fx-pref-width : 25px;
+    -fx-pref-height : 22px;
+}
+
+/* -------------------------------- Side Button Group -------------------------------- */
+.side-btn {
+    -fx-background-color : transparent;
+    -fx-pref-width : 199px;
+    -fx-pref-height : 36px;
+}
+
+.side-btn:hover {
+    -fx-background-color : rgb(33, 33, 33);
+    -fx-background-radius : 8;
+}
+
+.side-btn:pressed {
+    -fx-background-color : rgb(41, 41, 41);
+}
+
+/* -------------------------------- Separator -------------------------------- */
+.separator-vertical .line {
+    -fx-border-color : rgb(33,33,33);
+    -fx-border-width : 1;
+}
+
+.separator-horizontal .line {
+    -fx-border-color : rgb(33,33,33);
+    -fx-border-width : 1;
+}
+/* -------------------------------- Expanded Side Bar -------------------------------- */
+.flow-pane {
+    -fx-alignment : center-left;
+    -fx-vgap: 10px;
+    -fx-hgap: 40px;
+}
+
+/* -------------------------------- Dashboard (You Section) -------------------------------- */
+.dashboard-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 15;
+}
+
+.split-menu-button .arrow-button {
+    -fx-background-color: black;
+    -fx-border-color : black;
+}
+.split-menu-button {
+    -fx-background-color : black;
+    -fx-border-color : black;
+    -fx-text-fill: black;
+}
+
+/* -------------------------------- Categories -------------------------------- */
+.side-scroll-pane-vbox {
+    -fx-background-color : black;
+    -fx-spacing : 5px;
+}
+
+.side-scroll-pane {
+    -fx-background-color : black;
+    -fx-border-color : black;
+}
+
+.side-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgb(41,41,41);
+    -fx-background-radius: 10;
+}
+
+.side-scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgb(33, 33, 33);
+    -fx-background-radius: 10;
+}
+
+.category-lbl {
+    -fx-text-fill : white;
+    -fx-font-size : 11;
+}
+
+.category-svg {
+    -fx-fill : white;
+    -fx-scale-x : 1.2;
+    -fx-scale-y : 1.2;
+}
+
+.
+
