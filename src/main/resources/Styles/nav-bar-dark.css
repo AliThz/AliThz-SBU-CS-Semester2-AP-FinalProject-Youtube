@@ -1,12 +1,20 @@
+/* -------------------------------- BackGround -------------------------------- */
 .background {
     -fx-background-color : black;
 }
 
+/* -------------------------------- Youtube Logo -------------------------------- */
+.youtube-svg {
+        -fx-fill : white;
+        -fx-scale-x : 1.2;
+        -fx-scale-y : 1.2;
+}
+
+/* -------------------------------- Burger Button -------------------------------- */
 .burger-svg {
-    -fx-shape : "M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z";
-    -fx-background-color : white;
-    -fx-pref-width : 18px;
-    -fx-pref-height : 11px;
+    -fx-fill : white;
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
 }
 
 .burger-btn {
@@ -24,26 +32,34 @@
     -fx-background-color : rgb(41, 41, 41);
 }
 
+/* -------------------------------- Search Bar -------------------------------- */
 .search-field {
     -fx-background-color : transparent;
     -fx-text-fill : white;
 }
 
-.search-btn {
-    -fx-shape : "M16.296 16.996a8 8 0 11.707-.708l3.909 3.91-.707.707-3.909-3.909ZM18 11a7 7 0 11-14 0 7 7 0 0114 0Z";
-    -fx-border-color : white;
-    -fx-border-width : 1;
-    -fx-background-color : black;
-    -fx-pref-width: 22px;
-    -fx-pref-height: 22px;
+.search-svg {
+    -fx-fill : white;
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
 }
 
-.search-btn:hover {
-    -fx-border-color : red;
+.search-svg:hover {
+    -fx-fill : red;
+}
+
+.search-svg:pressed {
+    -fx-fill : rgb(139, 0, 0);
+}
+
+.search-btn {
+    -fx-background-color : transparent;
+    -fx-background-radius : 100;
+    -fx-border-radius : 100;
 }
 
 .search-btn:pressed {
-    -fx-border-color : rgb(139, 0, 0);
+    -fx-background-color : rgb(41, 41, 41);
 }
 
 .search-bar {
@@ -57,12 +73,11 @@
     -fx-background-color : rgb(33,33,33);
 }
 
+/* -------------------------------- SignIn Button -------------------------------- */
 .signIn-svg {
-    -fx-shape : "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 1c4.96 0 9 4.04 9 9 0 1.42-.34 2.76-.93 3.96-1.53-1.72-3.98-2.89-7.38-3.03A3.996 3.996 0 0016 9c0-2.21-1.79-4-4-4S8 6.79 8 9c0 1.97 1.43 3.6 3.31 3.93-3.4.14-5.85 1.31-7.38 3.03C3.34 14.76 3 13.42 3 12c0-4.96 4.04-9 9-9zM9 9c0-1.65 1.35-3 3-3s3 1.35 3 3-1.35 3-3 3-3-1.35-3-3zm3 12c-3.16 0-5.94-1.64-7.55-4.12C6.01 14.93 8.61 13.9 12 13.9c3.39 0 5.99 1.03 7.55 2.98C17.94 19.36 15.16 21 12 21z";
-    -fx-background-color : rgb(62, 166, 255);
-    -fx-border-color : rgb(62, 166, 255);
-    -fx-pref-width: 20px;
-    -fx-pref-height: 20px;
+    -fx-fill : rgb(62, 166, 255);
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
 }
 
 .signIn-lbl {
@@ -90,20 +105,21 @@
     -fx-background-color : rgb(41, 41, 41);
 }
 
+/* -------------------------------- Create Button -------------------------------- */
 .create-svg {
-    -fx-shape : "M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h14v-6.39l4 1.83V8.56l-4 1.83V6m1-1v3.83L22 7v8l-4-1.83V19H2V5h16z";
-    -fx-background-color : white;
-    -fx-pref-width: 25px;
-    -fx-pref-height: 19px;
+    -fx-fill : white;
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
 }
 
+/* -------------------------------- Notifications Button -------------------------------- */
 .notifications-svg {
-    -fx-shape : "M10 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm10-2.65V19H4v-1.65l2-1.88v-5.15C6 7.4 7.56 5.1 10 4.34v-.38c0-1.42 1.49-2.5 2.99-1.76.65.32 1.01 1.03 1.01 1.76v.39c2.44.75 4 3.06 4 5.98v5.15l2 1.87zm-1 .42-2-1.88v-5.47c0-2.47-1.19-4.36-3.13-5.1-1.26-.53-2.64-.5-3.84.03C8.15 6.11 7 7.99 7 10.42v5.47l-2 1.88V18h14v-.23z";
-    -fx-border-color : white;
-    -fx-pref-width: 20px;
-    -fx-pref-height: 25px;
+    -fx-fill : white;
+    -fx-scale-x : 1;
+    -fx-scale-y : 1;
 }
 
+/* -------------------------------- Account Button -------------------------------- */
 .account-img {
     -fx-background-image: url("../Images/SrgtSajjad.jpg");
     -fx-background-repeat: no-repeat;
@@ -113,6 +129,7 @@
     -fx-pref-height: 23px;
 }
 
+/* -------------------------------- LoggedIn Button Group -------------------------------- */
 .loggedIn-btn {
     -fx-background-radius : 100;
     -fx-background-color : transparent;
